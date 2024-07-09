@@ -1,22 +1,21 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import { ReactNode } from 'react';
+import Header from '../components/Header';
+import '../styles/globals.css';
 
-const inter = Inter({ subsets: ["latin"] });
+interface LayoutProps {
+  children: ReactNode;
+}
 
-export const metadata: Metadata = {
-  title: "More Market",
-  description: "Created by Adixon",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const RootLayout = ({ children }: LayoutProps) => {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head />
+      <body>
+        <Header />
+        <main>{children}</main>
+      </body>
     </html>
   );
-}
+};
+
+export default RootLayout;
