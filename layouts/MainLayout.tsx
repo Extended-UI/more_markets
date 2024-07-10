@@ -9,7 +9,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div>
       <Header />
-      <main>{children}</main>
+      <div  style={{ marginTop: '90px' }} >
+        <main >{children}</main>
+      </div>
     </div>
   ); 
 };

@@ -10,7 +10,7 @@ const FlowButton = () => {
         <span>Flow</span>
       </div>
       <div className='h-full border-l  flex border-gray-600 items-center justify-center px-2' >
-        <Icon icon="caret-down" className="text-[#888888]text-2xl cursor-pointer" />
+        <Icon icon="caret-down" className="text-[#888888] text-xl cursor-pointer" />
       </div>
     </button>
   );

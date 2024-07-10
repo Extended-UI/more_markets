@@ -5,8 +5,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 // Solid icons
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-// Brand icons
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+
 
 // Regular icons
 // import { faSmile } from '@fortawesome/free-regular-svg-icons';
