@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import Header from '../components/header/Header';
 import '../styles/globals.css';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import MainLayout from '@/layouts/MainLayout';
 
 interface LayoutProps {
