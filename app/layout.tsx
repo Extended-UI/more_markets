@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import Header from '../components/Header';
+import Header from '../components/header/Header';
 import '../styles/globals.css';
+import MainLayout from '@/layouts/MainLayout';
 
 interface LayoutProps {
   children: ReactNode;
@@ -9,10 +10,11 @@ interface LayoutProps {
 const RootLayout = ({ children }: LayoutProps) => {
   return (
     <html lang="en">
-      <head />
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
       <body>
-        <Header />
-        <main>{children}</main>
+        <MainLayout>{children}</MainLayout>
       </body>
     </html>
   );

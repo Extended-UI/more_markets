@@ -1,5 +1,9 @@
 const EarnPage: React.FC = () => {
-    return <div>Welcome to the Earn Page 33</div>;
+    return (
+    <div className="mt-14">
+      <h1>MORE Vaults</h1>
+    </div>
+    );
   };
   
   export default EarnPage;
