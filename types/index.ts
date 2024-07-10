@@ -1,1 +1,1 @@
-export * from './investmentTypes';
+export * from './investmentData';
