@@ -176,14 +176,17 @@ const MoreTable: React.FC<Props> = ({ isEarn }) => {
                         <td className="py-4 px-6 items-center h-full">{item.collateral.join(" ")}</td>
                         <td className="py-4 px-6 items-center h-full">{item.unsecured.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                         <td className="py-4 px-6 items-center h-full justify-end flex  "><div className='py-2' >{item.unsecuredAPY.toFixed(1)}%</div></td>
-                        <td className="py-4 px-6 items-center h-full"><ButtonDialog color='#cf711e' buttonText='Deposit' > 
+                        <td className="py-4 px-6 items-center h-full"><ButtonDialog color='primary' buttonText='Deposit' > 
                         {(closeModal) => (
-          <>
-            <h1>Modal Content</h1>
-            <p>This is the content inside the modal.</p>
-            <button onClick={closeModal}>Close Modal</button>
-          </>
-        )}
+                            <>
+                            <div className='w-full h-full bg-white  rounded-[3%]' >
+                            <h1>Modal Content</h1>
+                                <p>This is the content inside the modal.</p>
+                                <button onClick={closeModal}>Close Modal</button>
+                            </div>
+                               
+                            </>
+                            )}
                             
                              </ButtonDialog></td>
                     </tr>
