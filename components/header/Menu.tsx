@@ -8,7 +8,7 @@ const Menu: FC = () => {
     const pathname = usePathname();
 
     return (
-        <div className="flex space-x-16 text-[14px] h-11 mt-4">
+        <div className="flex space-x-16 text-[14px] h-11 mt-4 text-white">
             <Link href="/earn" className={`${pathname === '/earn' ? 'glowing-text' : ''} hover:text-orange-500`}>
                 Earn
             </Link>
