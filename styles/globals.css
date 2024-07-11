@@ -66,6 +66,10 @@ html, body {
   pointer-events: none; /* Ensures the pseudo-element doesn't interfere with interactions */
 }
 
+.light-font {
+  font-weight: 100 !important; /* Using !important to ensure override, use judiciously */
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

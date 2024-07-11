@@ -2,11 +2,16 @@
 
 import { InvestmentData } from '@/types';
 import React from 'react';
+import Icon from '../FontAwesomeIcon';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import TableHeaderCell from './MoreTableHeader';
+
+interface Props {
+    isEarn: boolean;
+  }
 
 
-
-
-const Table: React.FC<{ investments: InvestmentData[] }> = () => {
+const MoreTable: React.FC<Props> = ({ isEarn }) => {
 
 
     const investments: InvestmentData[] = [
@@ -143,39 +148,39 @@ const Table: React.FC<{ investments: InvestmentData[] }> = () => {
       ];
 
 
-
-  return (
-    <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="py-3 px-6">Deposit Token</th>
-            <th scope="col" className="py-3 px-6">Net APY</th>
-            <th scope="col" className="py-3 px-6">Total Deposits</th>
-            <th scope="col" className="py-3 px-6">Curator</th>
-            <th scope="col" className="py-3 px-6">Collateral</th>
-            <th scope="col" className="py-3 px-6">Unsecured</th>
-            <th scope="col" className="py-3 px-6">Unsecured APY</th>
-            <th scope="col" className="py-3 px-6">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {investments.map((item, index) => (
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
-              <td className="py-4 px-6">{item.tokenSymbol}</td>
-              <td className="py-4 px-6">{item.netAPY.toFixed(1)}%</td>
-              <td className="py-4 px-6">{item.totalDeposits}$</td>
-              <td className="py-4 px-6">{item.curator}</td>
-              <td className="py-4 px-6">{item.collateral.join(" ")}$</td>
-              <td className="py-4 px-6">{item.unsecured}</td>
-              <td className="py-4 px-6">{item.unsecuredAPY.toFixed(1)}%</td>
-              <td className="py-4 px-6"><button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deposit</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-export default Table;
+      return (
+<div className="overflow-x-auto relative rounded-[15px]">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 border border-gray-800 " >
+                <thead className="bg-[#212121] h-20 dark:text-gray-400 text-xs text-white uppercase"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
+                <tr className="rounded-t-lg">
+                    <th className="w-48 rounded-tl-lg"><TableHeaderCell title="Deposit Token" /></th>
+                    <th><TableHeaderCell title="Net APY" /></th>
+                    <th><TableHeaderCell title="Total Deposits" /></th>
+                    <th><TableHeaderCell title="Curator" /></th>
+                    <th><TableHeaderCell title="Collateral" /></th>
+                    <th><TableHeaderCell title="Unsecured" /></th>
+                    <th className="w-48" ><TableHeaderCell title="Unsecured APY" /></th>
+                    <th className="w-28" ></th>
+                </tr>
+                </thead>
+                <tbody className="bg-transparent">
+                {investments.map((item, index, arr) => (
+                    <tr key={index} 
+                        style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
+                        className={`last:border-b-0  ${index % 2 === 0 ? 'bg-transparent' : 'bg-gray-100 dark:bg-[#191919]'}`}>
+                        <td className="py-4 px-6 items-center h-full">{item.tokenSymbol}</td>
+                        <td className="py-4 px-6 items-center h-full">{item.netAPY.toFixed(1)}%</td>
+                        <td className="py-4 px-6 items-center h-full">{item.totalDeposits.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                        <td className="py-4 px-6 items-center h-full">{item.curator}</td>
+                        <td className="py-4 px-6 items-center h-full">{item.collateral.join(" ")}</td>
+                        <td className="py-4 px-6 items-center h-full">{item.unsecured.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                        <td className="py-4 px-6 items-center h-full justify-end flex  "><div className='py-2' >{item.unsecuredAPY.toFixed(1)}%</div></td>
+                        <td className="py-4 px-6 items-center h-full"><button className="text-[12px] border border-primary px-3 py-2 rounded-[5px] dark:text-primary bg-primary bg-opacity-10 ">Deposit</button></td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+            </div>
+      );
+    };
+export default MoreTable;
