@@ -66,6 +66,40 @@ html, body {
   pointer-events: none; /* Ensures the pseudo-element doesn't interfere with interactions */
 }
 
+input {
+  background-color: #222;
+  border: none;
+  color: #fff;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.more-bg-primary {
+  background-color: #141414;
+}
+
+.more-bg-secondary {
+  background-color: #1e1e1e;  
+}
+
+.more-text-gray {
+  color: #757575;
+}
+
+.more-input-text-color {
+  color: #fff;
+}
+
+.more-input-bg-color {
+  background-color: #000;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
