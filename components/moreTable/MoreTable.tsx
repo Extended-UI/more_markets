@@ -1,10 +1,11 @@
-
+"use client"
 
 import { InvestmentData } from '@/types';
 import React from 'react';
 import Icon from '../FontAwesomeIcon';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import TableHeaderCell from './MoreTableHeader';
+import ButtonDialog from '../buttonDialog/buttonDialog';
 
 interface Props {
     isEarn: boolean;
@@ -175,7 +176,16 @@ const MoreTable: React.FC<Props> = ({ isEarn }) => {
                         <td className="py-4 px-6 items-center h-full">{item.collateral.join(" ")}</td>
                         <td className="py-4 px-6 items-center h-full">{item.unsecured.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                         <td className="py-4 px-6 items-center h-full justify-end flex  "><div className='py-2' >{item.unsecuredAPY.toFixed(1)}%</div></td>
-                        <td className="py-4 px-6 items-center h-full"><button className="text-[12px] border border-primary px-3 py-2 rounded-[5px] dark:text-primary bg-primary bg-opacity-10 ">Deposit</button></td>
+                        <td className="py-4 px-6 items-center h-full"><ButtonDialog color='#cf711e' buttonText='Deposit' > 
+                        {(closeModal) => (
+          <>
+            <h1>Modal Content</h1>
+            <p>This is the content inside the modal.</p>
+            <button onClick={closeModal}>Close Modal</button>
+          </>
+        )}
+                            
+                             </ButtonDialog></td>
                     </tr>
                 ))}
                 </tbody>
