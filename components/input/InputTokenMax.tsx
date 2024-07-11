@@ -22,11 +22,10 @@ const InputTokenMax: React.FC<Props> = ({ type, value, onChange, placeholder, mi
         value={value}
         onChange={onChange}
         className="input input-bordered text-left text-3xl w-full max-w-xs more-input-text-color more-input-bg-color"
-        placeholder={placeholder}
-        min={min}
+        placeholder={placeholder}        
       />      
       <div className="text-l">{token}</div>      
-      <MoreButton text="Max" onClick={() => setMax(balance)} color="#F5841F" />
+      <MoreButton text="Max" onClick={() => setMax(balance)} color="gray" />
     </div>
   );
 };
