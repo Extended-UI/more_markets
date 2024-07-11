@@ -1,9 +1,8 @@
 "use client";
 import React, { useState } from 'react';
-import InputTokenMax from '../input/InputTokenMax';
-import TotalVolumeToken from '../token/TotalVolumeToken';
-import MoreButton from '../moreButton/MoreButton';
 import VaultDepositSet from './VaultDepositSet';
+import VaultDepositConfirm from './VaultDepositConfirm';
+import VaultDepositSummary from './VaultDepositSummary';
 
 interface Props {
   title: string;
@@ -13,51 +12,36 @@ interface Props {
   ltv: string;
   totalDeposit: number;
   totalTokenAmount: number;
+  curator: string;
 }
 
-const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount }) => {
-  const [deposit, setDeposit] = useState<number>(0);
+const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator }) => {
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeposit(parseFloat(event.target.value));
-  };
-
-  const handleSetMax = (maxValue: number) => {
-    setDeposit(maxValue);
-  };
-
+  const [step, setStep] = useState(1);
+  const [amount, setAmount] = useState(0);
 
   const handleDeposit = () => {
-    console.log("DEPOSIT")
+    console.log("DEPOSIT DONE")
+    setStep(2);
   };
 
-  const handleCancel = () => {
-    console.log("CANCEL")
-  };
-
-
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-      console.log('Submitting deposit:', deposit);
-      // Simulate an API call
-      // const response = await fetch('/api/deposit', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ token, deposit }),
-      // });
-      // const data = await response.json();
-      // console.log('Deposit response:', data);
-    } catch (error) {
-      console.error('Error submitting deposit:', error);
+  const renderStep = () => {
+    switch(step) {
+      case 1:
+        return <VaultDepositSet title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number) => handleDeposit()} />;
+      case 2:
+        return <VaultDepositConfirm title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} curator={curator} amount={amount}/>;
+      case 3:
+        return <VaultDepositSummary title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} />;
+      default:
+        return null; // ou une vue par défaut
     }
   };
 
-  const balanceString = balance.toString();
-
-  return (    
-    <VaultDepositSet title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96}></VaultDepositSet>
+  return (
+    <div>
+      {renderStep()}
+    </div>
   );
 };
 

@@ -12,9 +12,10 @@ interface Props {
   ltv: string;
   totalDeposit: number;
   totalTokenAmount: number;
+  setAmount: (amount: number) => void;
 }
 
-const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount }) => {
+const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, setAmount }) => {
   const [deposit, setDeposit] = useState<number>(0);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +29,9 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
 
   const handleDeposit = () => {
     console.log("DEPOSIT")
+    if (deposit > 0) {
+      setAmount(deposit);
+    }    
   };
 
   const handleCancel = () => {

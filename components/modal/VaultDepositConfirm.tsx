@@ -3,18 +3,22 @@ import React, { useState } from 'react';
 import InputTokenMax from '../input/InputTokenMax';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import MoreButton from '../moreButton/MoreButton';
+import DepositTokenAmount from '../token/DepositTokenAmount';
 
 interface Props {
   title: string;
   token: string;
+  curator: string;
   balance: number;
   apy: number;
   ltv: string;
   totalDeposit: number;
   totalTokenAmount: number;
+  amount: number;
 }
 
-const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount }) => {
+const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator, amount }) => {
+
   const [deposit, setDeposit] = useState<number>(0);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,29 +62,19 @@ const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalD
   return (
     <div className='more-bg-secondary'>
       <form onSubmit={handleSubmit}>
-        <div className="text-xl mb-10 px-4 pt-5">{title}</div>
-        <div className="text-l mb-5 px-4">Deposit {token}</div>
-        <div className='more-bg-primary px-4'>
-          <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>
+        <div className="text-xl mb-10 px-4 pt-5">Review Transaction</div>
+        <div className="text-l mb-1 px-4 pt-5">{title}</div>
+        <div className="flex flex-row justify-between items-center">
+          <div className="text-l mb-5 px-4"><span className="more-text-gray">Curator:</span> {curator}</div>
+          <div className="text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> {ltv}</div>
         </div>
-        <div className="text-right more-text-gray">Balance: {balance} {token}</div>        
-        <div className="flex justify-end mt-7">
+        <div className='more-bg-primary px-4'>
+          <DepositTokenAmount token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
+        </div>        
+        <div className="py-5 px-5">By confirming this transaction, you agree to the Terms of Use and the services provisions relating to the MORE Protocol Vault.</div>
+        <div className="flex justify-end py-5 more-bg-primary">
           <div className='mr-5'><MoreButton text="Cancel" onClick={() => handleCancel()} color="gray" /></div>
           <MoreButton text="Deposit" onClick={() => handleDeposit()} color="primary" />
-        </div>
-        <div className='more-bg-primary px-4'>
-          <div className="flex justify-between mt-10">        
-            <div>APY:</div>
-            <div>{apy}<span className="more-text-gray">%</span></div>
-          </div>
-          <div className="flex justify-between mt-10">        
-            <div>Total Deposits</div>
-            <div>{totalDeposit} <span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
-          </div>
-          <div className="flex justify-between mt-10">        
-            <div>Liquidation LTV</div>
-            <div className="text-primary">{ltv}</div>
-          </div>  
         </div>              
       </form>
     </div>
