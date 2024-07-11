@@ -6,6 +6,7 @@ import Icon from '../FontAwesomeIcon';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import TableHeaderCell from './MoreTableHeader';
 import ButtonDialog from '../buttonDialog/buttonDialog';
+import VaultDeposit from '../modal/VaultDeposit';
 
 interface Props {
     isEarn: boolean;
@@ -179,12 +180,9 @@ const MoreTable: React.FC<Props> = ({ isEarn }) => {
                         <td className="py-4 px-6 items-center h-full"><ButtonDialog color='primary' buttonText='Deposit' > 
                         {(closeModal) => (
                             <>
-                            <div className='w-full h-full bg-white  rounded-[3%]' >
-                            <h1>Modal Content</h1>
-                                <p>This is the content inside the modal.</p>
-                                <button onClick={closeModal}>Close Modal</button>
+                            <div className="artboard phone-1">
+                            <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96}></VaultDeposit>
                             </div>
-                               
                             </>
                             )}
                             

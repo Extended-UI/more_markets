@@ -24,6 +24,11 @@ const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalD
     setDeposit(balance);
   };
 
+  const handleSetMax = (maxValue: number) => {
+    setDeposit(maxValue);
+  };
+
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
@@ -49,7 +54,7 @@ const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalD
         <div className="text-xl mb-10">{title}</div>
         <div className="text-l mb-5">Deposit {token}</div>
         <div>
-          <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance} />
+          <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>
         </div>
         <div className="text-right more-text-gray">Balance: {balance} {token}</div>        
         <div className="flex justify-end mt-7">

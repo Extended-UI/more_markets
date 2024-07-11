@@ -1,4 +1,5 @@
 import React from 'react';
+import MoreButton from '../moreButton/MoreButton';
 
 interface Props {
   type: string;
@@ -9,13 +10,11 @@ interface Props {
   min?: string;
   max?: string;  
   balance: number;
+  setMax: (maxValue: number) => void;
 }
 
-const InputTokenMax: React.FC<Props> = ({ type, value, onChange, placeholder, min, max, token, balance }) => {
-
-  const setMaxWithBalance = () => {
-    max = balance.toString();
-  };
+const InputTokenMax: React.FC<Props> = ({ type, value, onChange, placeholder, min, max, token, balance, setMax }) => {
+  
   return (
     <div className='w-full more-bg-primary flex justify-center items-center space-x-4'>
       <input
@@ -25,10 +24,9 @@ const InputTokenMax: React.FC<Props> = ({ type, value, onChange, placeholder, mi
         className="input input-bordered text-left text-3xl w-full max-w-xs more-input-text-color more-input-bg-color"
         placeholder={placeholder}
         min={min}
-        max={max}
       />      
-      <div className="text-l">{token}</div>
-      <button type="button" className="btn btn-outline btn-info">Max</button>
+      <div className="text-l">{token}</div>      
+      <MoreButton text="Max" onClick={() => setMax(balance)} color="#F5841F" />
     </div>
   );
 };
