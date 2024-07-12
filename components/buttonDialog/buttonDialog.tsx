@@ -33,7 +33,7 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children
 
       {/* Modal */}
       <div className="modal" role="dialog">
-        <div className="modal-box max-w-full px-[10px] py-[10px]  sm:min-w-[430px] sm:w-[40%] w-[90%] h-[50%] rounded-[5%] bg-[#343434]">
+        <div className="modal-box max-w-full px-[10px] py-[10px]  sm:min-w-[430px] sm:w-[40%] w-[90%] rounded-[5%] bg-[#343434]">
           {children(toggleModal)}
         </div>
         <label className="modal-backdrop" htmlFor="my_modal_7">Close</label>

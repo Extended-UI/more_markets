@@ -9,10 +9,10 @@ const Menu: FC = () => {
 
     return (
         <div className="flex space-x-16 text-[14px] h-11 mt-4 text-white">
-            <Link href="/earn" className={`${pathname === '/earn' ? 'glowing-text' : ''} hover:text-orange-500`}>
+            <Link href="/earn" className={`${pathname === '/earn' ? 'glowing-text-primary' : ''} hover:text-primary`}>
                 Earn
             </Link>
-            <Link href="/borrow" className={`${pathname === '/borrow' ? 'glowing-text' : ''} hover:text-orange-500`}>
+            <Link href="/borrow" className={`${pathname === '/borrow' ? 'glowing-text-secondary' : ''} hover:text-secondary`}>
                 Borrow
             </Link>
         </div>

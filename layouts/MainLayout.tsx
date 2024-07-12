@@ -7,7 +7,7 @@ interface MainLayoutProps {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
-    <div>
+    <div style={{ maxWidth: '1380px' , margin :'0 auto'}} >
       <Header />
       <div  style={{ marginTop: '90px' }} >
         <main >{children}</main>

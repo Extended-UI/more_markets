@@ -60,19 +60,19 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
   const balanceString = balance.toString();
 
   return (
-    <div className='more-bg-secondary'>
+    <div className='more-bg-secondary w-full rounded-[20px]'>
       <form onSubmit={handleSubmit}>
         <div className="text-xl mb-10 px-4 pt-5">{title}</div>
         <div className="text-l mb-5 px-4">Deposit {token}</div>
         <div className='more-bg-primary px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>
         </div>
-        <div className="text-right more-text-gray">Balance: {balance} {token}</div>        
-        <div className="flex justify-end mt-7">
+        <div className="text-right more-text-gray px-4">Balance: {balance} {token}</div>        
+        <div className="flex justify-end mt-7 mb-7 px-4">
           <div className='mr-5'><MoreButton text="Cancel" onClick={() => handleCancel()} color="gray" /></div>
           <MoreButton text="Deposit" onClick={() => handleDeposit()} color="primary" />
         </div>
-        <div className='more-bg-primary px-4'>
+        <div className='more-bg-primary px-4 rounded-b-[10px] py-2'>
           <div className="flex justify-between mt-10">        
             <div>APY:</div>
             <div>{apy}<span className="more-text-gray">%</span></div>
@@ -81,7 +81,7 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
             <div>Total Deposits</div>
             <div>{totalDeposit} <span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
           </div>
-          <div className="flex justify-between mt-10">        
+          <div className="flex justify-between mt-10 pb-4 ">        
             <div>Liquidation LTV</div>
             <div className="text-primary">{ltv}</div>
           </div>  
