@@ -20,19 +20,32 @@ const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalD
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
 
-  const handleDeposit = () => {
-    console.log("DEPOSIT DONE")
+  const handleSetDeposit = () => {
+    console.log("DEPOSIT SET")
     setStep(2);
   };
+
+
+  const handleValidDeposit = () => {
+    console.log("DEPOSIT VALID")
+    setStep(3);
+  };
+
+
+  const handleProcessDone = () => {
+    console.log("DEPOSIT DONE")
+  };
+
+  
 
   const renderStep = () => {
     switch(step) {
       case 1:
-        return <VaultDepositSet title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number) => handleDeposit()} />;
+        return <VaultDepositSet title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number) => handleSetDeposit()} />;
       case 2:
-        return <VaultDepositConfirm title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} curator={curator} amount={amount}/>;
+        return <VaultDepositConfirm title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} curator={curator} amount={amount}  validDeposit={() => handleValidDeposit()} />;
       case 3:
-        return <VaultDepositSummary title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} />;
+        return <VaultDepositSummary title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()}  />;
       default:
         return null; // ou une vue par défaut
     }

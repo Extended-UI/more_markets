@@ -15,23 +15,16 @@ interface Props {
   totalDeposit: number;
   totalTokenAmount: number;
   amount: number;
+  validDeposit: () => void;
 }
 
-const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator, amount }) => {
+const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator, amount, validDeposit }) => {
 
   const [deposit, setDeposit] = useState<number>(0);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeposit(parseFloat(event.target.value));
-  };
 
-  const handleSetMax = (maxValue: number) => {
-    setDeposit(maxValue);
-  };
-
-
-  const handleDeposit = () => {
-    console.log("DEPOSIT")
+  const handleDeposit = () => {    
+    validDeposit();
   };
 
   const handleCancel = () => {

@@ -3,7 +3,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 // Solid icons
-import { faCaretDown, faCaretUp ,faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretUp ,faCircleInfo, faCircleCheck, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -13,7 +13,9 @@ import { faCaretDown, faCaretUp ,faCircleInfo } from '@fortawesome/free-solid-sv
 library.add(  
     faCaretDown,
     faCaretUp,
-    faCircleInfo
+    faCircleInfo,
+    faCircleCheck,
+    faCircle
 );
 
 interface IconProps {

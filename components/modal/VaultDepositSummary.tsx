@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import InputTokenMax from '../input/InputTokenMax';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import MoreButton from '../moreButton/MoreButton';
+import Icon from '../FontAwesomeIcon';
+import DepositTokenAmount from '../token/DepositTokenAmount';
 
 interface Props {
   title: string;
@@ -12,77 +14,23 @@ interface Props {
   ltv: string;
   totalDeposit: number;
   totalTokenAmount: number;
+  processDone: () => void;
 }
 
-const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount }) => {
-  const [deposit, setDeposit] = useState<number>(0);
+const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, processDone }) => {
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeposit(parseFloat(event.target.value));
-  };
-
-  const handleSetMax = (maxValue: number) => {
-    setDeposit(maxValue);
-  };
-
-
-  const handleDeposit = () => {
-    console.log("DEPOSIT")
-  };
-
-  const handleCancel = () => {
-    console.log("CANCEL")
-  };
-
-
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-      console.log('Submitting deposit:', deposit);
-      // Simulate an API call
-      // const response = await fetch('/api/deposit', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ token, deposit }),
-      // });
-      // const data = await response.json();
-      // console.log('Deposit response:', data);
-    } catch (error) {
-      console.error('Error submitting deposit:', error);
-    }
-  };
-
-  const balanceString = balance.toString();
-
+  
   return (
-    <div className='more-bg-secondary'>
-      <form onSubmit={handleSubmit}>
-        <div className="text-xl mb-10 px-4 pt-5">{title}</div>
-        <div className="text-l mb-5 px-4">Deposit {token}</div>
-        <div className='more-bg-primary px-4'>
-          <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>
-        </div>
-        <div className="text-right more-text-gray">Balance: {balance} {token}</div>        
-        <div className="flex justify-end mt-7">
-          <div className='mr-5'><MoreButton text="Cancel" onClick={() => handleCancel()} color="gray" /></div>
-          <MoreButton text="Deposit" onClick={() => handleDeposit()} color="primary" />
-        </div>
-        <div className='more-bg-primary px-4'>
-          <div className="flex justify-between mt-10">        
-            <div>APY:</div>
-            <div>{apy}<span className="more-text-gray">%</span></div>
-          </div>
-          <div className="flex justify-between mt-10">        
-            <div>Total Deposits</div>
-            <div>{totalDeposit} <span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
-          </div>
-          <div className="flex justify-between mt-10">        
-            <div>Liquidation LTV</div>
-            <div className="text-primary">{ltv}</div>
-          </div>  
+    <div className='more-bg-secondary'>      
+        <div className="text-xl mb-10 px-4 pt-5">Transaction Confirmation</div>
+        <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Execute the following actions</div>
+        <div className='more-bg-primary px-4 mx-5'> 
+          <DepositTokenAmount token={token} amount={14.56} ltv={ltv} totalTokenAmount={totalTokenAmount} />
+        </div>        
+        <div className="text-l my-5 px-4"><span><Icon icon="circle" className="text-xl cursor-pointer mr-5" /></span>Transaction 0×47b3...bv87 has been successfully executed.</div>
+        <div className='more-bg-primary px-4 h-10 py-2'>
+          <div className='mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl'>Confirming transaction... Browse MORE vaults while you wait.</div>                  
         </div>              
-      </form>
     </div>
   );
 };
