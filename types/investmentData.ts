@@ -3,7 +3,7 @@ export interface InvestmentData {
     netAPY: number;
     totalDeposits: number;
     totalValueUSD: number;
-    curator: number;
+    curator: string;
     collateral: string[];
     unsecured: number;
     unsecuredAPY: number;
