@@ -56,7 +56,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                 {depositData.map((item, index, arr) => (
                     <tr key={index} 
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
-                        className={`last:border-b-0 text-[12px]  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
+                        className={`last:border-b-0 text-[12px]  cursor-pointer  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                         <td className="py-4 px-6 items-center h-full">
                         <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.tokenName.toLocaleLowerCase()} ></IconToken></div>{item.tokenName}</div>
                         </td>

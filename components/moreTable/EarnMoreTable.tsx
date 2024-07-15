@@ -10,10 +10,13 @@ import VaultDeposit from '../modal/VaultDeposit';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import IconToken from '../token/IconToken';
 import ListIconToken from '../token/ListIconToken';
+import { useRouter } from 'next/navigation';
 
+interface Props {
+  inDetail? : boolean
+}
 
-
-const EarnMoreTable: React.FC<{}> = () => {
+const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
 
 
     const investments: InvestmentData[] = [
@@ -149,7 +152,11 @@ const EarnMoreTable: React.FC<{}> = () => {
         }
       ];
 
+      const router = useRouter();
 
+      const goToDetail = (item :InvestmentData ) => {
+        router.push('/earn/'+item.tokenSymbol);
+      };
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <table className="w-full text-sm text-left  text-gray-400 border border-gray-800 " >
@@ -162,14 +169,14 @@ const EarnMoreTable: React.FC<{}> = () => {
                     <th style={{ width: '200px' }}><TableHeaderCell title="Collateral" /></th>
                     <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Unsecured" /></div></th>
                     <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Unsecured APY" /></div></th>
-                    <th style={{ width: '100px' }}></th>
+                    {inDetail && <th style={{ width: '100px' }}></th>}
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">
                 {investments.map((item, index, arr) => (
-                    <tr key={index} 
+                    <tr key={index} onClick={() => goToDetail(item)}
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
-                        className={`last:border-b-0 text-[12px]  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
+                        className={`last:border-b-0 text-[12px]  cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                         <td className="py-4 px-6 items-center h-full">
                           <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='usdc' ></IconToken></div>{item.tokenSymbol}</div>
                         </td>
@@ -197,16 +204,16 @@ const EarnMoreTable: React.FC<{}> = () => {
                           </div>
                         </td>
                         <td className="py-4 px-6 items-center justify-end h-full  flex  "><div className='py-4' >{item.unsecuredAPY.toFixed(1)}%</div></td>
-                        <td className="py-4 px-6  items-center justify-end h-full"><ButtonDialog color='primary' buttonText='Deposit' > 
-                        {(closeModal) => (
-                            <>
-                            <div className="h-full w-full">
-                            <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
-                            </div>
-                            </>
-                            )}
-                            
-                             </ButtonDialog></td>
+                        {inDetail &&  <td className="py-4 px-6  items-center justify-end h-full">
+                          <ButtonDialog color='primary' buttonText='Deposit' > 
+                              {(closeModal) => (
+                                  <>
+                                  <div className="h-full w-full">
+                                  <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
+                                  </div>
+                                  </>
+                                )}          
+                            </ButtonDialog></td>}
                     </tr>
                 ))}
                 </tbody>

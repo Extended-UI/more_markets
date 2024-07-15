@@ -44,8 +44,11 @@ interface ButtonProps {
 
   return (
     <button
-      type='button'
-      onClick={onClick}
+      type='button'      
+      onClick={(e) => {
+        onClick();
+        e.stopPropagation();
+      }}  
       className={classes}
       style={defaultStyle}
     >
