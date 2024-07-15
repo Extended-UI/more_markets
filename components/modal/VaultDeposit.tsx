@@ -13,9 +13,10 @@ interface Props {
   totalDeposit: number;
   totalTokenAmount: number;
   curator: string;
+  closeModal: () => void;
 }
 
-const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator }) => {
+const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator, closeModal }) => {
 
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
@@ -41,11 +42,11 @@ const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalD
   const renderStep = () => {
     switch(step) {
       case 1:
-        return <VaultDepositSet title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number) => handleSetDeposit()} />;
+        return <VaultDepositSet title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number) => handleSetDeposit()}  closeModal={closeModal} />;
       case 2:
-        return <VaultDepositConfirm title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} curator={curator} amount={amount}  validDeposit={() => handleValidDeposit()} />;
+        return <VaultDepositConfirm title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} curator={curator} amount={amount}  validDeposit={() => handleValidDeposit()}  closeModal={closeModal}/>;
       case 3:
-        return <VaultDepositSummary title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()}  />;
+        return <VaultDepositSummary title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()} closeModal={closeModal}   />;
       default:
         return null; // ou une vue par défaut
     }

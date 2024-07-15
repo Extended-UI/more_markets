@@ -13,9 +13,10 @@ interface Props {
   totalDeposit: number;
   totalTokenAmount: number;
   setAmount: (amount: number) => void;
+  closeModal: () => void;
 }
 
-const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, setAmount }) => {
+const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, setAmount, closeModal }) => {
   const [deposit, setDeposit] = useState<number>(0);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +70,7 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
         </div>
         <div className="text-right more-text-gray px-4">Balance: {balance} {token}</div>        
         <div className="flex justify-end mt-7 mb-7 px-4">
-          <div className='mr-5'><MoreButton text="Cancel" onClick={() => handleCancel()} color="gray" /></div>
+          <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
           <MoreButton text="Deposit" onClick={() => handleDeposit()} color="primary" />
         </div>
         <div className='more-bg-primary px-4 rounded-b-[10px] py-2'>

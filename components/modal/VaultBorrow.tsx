@@ -1,29 +1,39 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import VaultBorrowSet from './VaultBorrowSet';
+import VaultBorrowSummary from './VaultBorrowSummary';
 
 
 interface Props {
   title: string;
   token: string;
-  balance: number;
+  balanceToken: number;
+  balanceFlow: number;
   apy: number;
   ltv: string;
   totalDeposit: number;
   totalTokenAmount: number;
   curator: string;
   credora: string;
+  closeModal: () => void;
 }
 
-const VaultBorrow: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator, credora }) => {
-
-  console.log('STEP 1')
+const VaultBorrow: React.FC<Props> = ({ title, token, balanceToken, balanceFlow, apy, ltv, totalDeposit, totalTokenAmount, curator, credora, closeModal }) => {
 
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
 
-  const handleSetDeposit = () => {
-    console.log("DEPOSIT SET")
+  // Réinitialiser l'étape quand le composant reçoit de nouvelles props, typiquement quand il est affiché
+  useEffect(() => {
+    // Réinitialisation de l'état quand la modale est fermée
+    console.log('MOUNT')
+    return () => {
+      setStep(1); // Réinitialise l'étape à 1 quand le composant est démonté
+    };
+  }, []);
+  const handleSetBorrow = (amount: number, borrow: number) => {
+    console.log("BORROW SET")
+    console.log(amount, borrow)
     setStep(2);
   };
 
@@ -38,17 +48,12 @@ const VaultBorrow: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDe
     console.log("DEPOSIT DONE")
   };
 
-  console.log('STEP 2')
-
-  const renderStep = () => {
-    console.log('STEP 3')
+  const renderStep = () => {    
     switch(step) {
       case 1:
-        return <VaultBorrowSet credora={credora} title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number) => handleSetDeposit()} />;
-      // case 2:
-      //   return <VaultBorrowConfirm title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} curator={curator} amount={amount}  validDeposit={() => handleValidDeposit()} />;
-      // case 3:
-      //   return <VaultBorrowSummary title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()}  />;
+        return <VaultBorrowSet credora={credora} title={title} token={token} balanceToken={balanceToken}  balanceFlow={balanceFlow}  apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number, borrow: number) => handleSetBorrow(amount, borrow)}  closeModal={() => closeModal()}/>;
+      case 2:
+      return <VaultBorrowSummary title={title} token={token} balance={balanceToken} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()}   closeModal={() => closeModal()} />;
       default:
         return null; // ou une vue par défaut
     }

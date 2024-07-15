@@ -1,4 +1,5 @@
 // components/Button.tsx
+"use client";
 import React, { CSSProperties, ReactNode, useEffect, useState } from 'react';
 
 
@@ -43,6 +44,7 @@ interface ButtonProps {
 
   return (
     <button
+      type='button'
       onClick={onClick}
       className={classes}
       style={defaultStyle}

@@ -16,9 +16,10 @@ interface Props {
   totalTokenAmount: number;
   amount: number;
   validDeposit: () => void;
+  closeModal: () => void;
 }
 
-const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator, amount, validDeposit }) => {
+const VaultDepositConfirm: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator, amount, validDeposit, closeModal }) => {
 
   const [deposit, setDeposit] = useState<number>(0);
 
@@ -66,7 +67,7 @@ const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalD
         </div>        
         <div className="py-5 px-5">By confirming this transaction, you agree to the Terms of Use and the services provisions relating to the MORE Protocol Vault.</div>
         <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4">
-          <div className='mr-5'><MoreButton text="Cancel" onClick={() => handleCancel()} color="gray" /></div>
+          <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
           <MoreButton text="Deposit" onClick={() => handleDeposit()} color="primary" />
         </div>              
       </form>
@@ -74,4 +75,4 @@ const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalD
   );
 };
 
-export default VaultDeposit;
+export default VaultDepositConfirm;

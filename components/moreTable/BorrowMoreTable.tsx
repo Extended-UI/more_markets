@@ -10,6 +10,7 @@ import VaultDeposit from '../modal/VaultDeposit';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import { BorrowData } from '@/types/borrowData';
 import IconToken from '../token/IconToken';
+import VaultBorrow from '../modal/VaultBorrow';
 
 
 
@@ -79,7 +80,7 @@ const EarnMoreTable: React.FC<{}> = () => {
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
-                                  <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse'></VaultDeposit>
+                                  <VaultBorrow title='USDMax' token='USDC' apy={14.1} balanceToken={473.18} balanceFlow={785.45} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' credora='AAA' closeModal={() => closeModal()} ></VaultBorrow>
                                   </div>
                                   </>
                                   )}                            

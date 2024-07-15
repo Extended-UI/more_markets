@@ -79,7 +79,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
-                                  <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse'></VaultDeposit>
+                                  <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
                                   </div>
                                   </>
                                   )}                            
@@ -89,7 +89,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
-                                  <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse'></VaultDeposit>
+                                  <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
                                   </div>
                                   </>
                                   )}                            
