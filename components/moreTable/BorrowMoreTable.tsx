@@ -9,6 +9,7 @@ import ButtonDialog from '../buttonDialog/buttonDialog';
 import VaultDeposit from '../modal/VaultDeposit';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import { BorrowData } from '@/types/borrowData';
+import IconToken from '../token/IconToken';
 
 
 
@@ -33,7 +34,7 @@ const EarnMoreTable: React.FC<{}> = () => {
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <table className="w-full text-sm text-left  text-gray-400 border border-gray-800 " >
-                <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white uppercase"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
+                <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Collateral Token" /></th>
                     <th style={{ width: '120px' }}><TableHeaderCell title="NLoan Token" /></th>
@@ -50,10 +51,10 @@ const EarnMoreTable: React.FC<{}> = () => {
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
                         className={`last:border-b-0 text-[12px]  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                         <td className="py-4 px-6 items-center h-full">
-                          <div className='flex' ><div className='mr-2 w-6 h-6'><img src="./assets/usdc.png" /></div>{item.collateralToken}</div>
+                          <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.collateralToken}</div>
                         </td>
                         <td className="py-4 px-6 items-center h-full  ">
-                         <div className='flex' ><div className='mr-2 w-6 h-6'><img src="./assets/usdc.png" /></div>{item.loanToken}</div> 
+                         <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='adx' ></IconToken></div>{item.loanToken}</div> 
                         </td> 
                         <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center' >
