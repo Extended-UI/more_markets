@@ -1,16 +1,15 @@
 import React from 'react';
 
 interface IconTokenProps {
-    imageName: string;
+    tokenName: string,
+    className?: string,
 }
 
-const IconToken: React.FC<IconTokenProps> = ({ imageName }) => {
+const IconToken: React.FC<IconTokenProps> = ({ tokenName, className }) => {
     return (
-        <div className="flex">
-            <div className="mr-2 w-6 h-6">
-                <img src={`./assets/tokens/${imageName}.svg`} alt={imageName} />
+            <div className={`${className}`}>
+                <img src={`./assets/tokens/${tokenName}.svg`} alt={tokenName} />
             </div>
-        </div>
     );
 };
 
