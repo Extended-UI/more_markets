@@ -8,6 +8,8 @@ import TableHeaderCell from './MoreTableHeader';
 import ButtonDialog from '../buttonDialog/buttonDialog';
 import VaultDeposit from '../modal/VaultDeposit';
 import TotalVolumeToken from '../token/TotalVolumeToken';
+import IconToken from '../token/IconToken';
+import ListIconToken from '../token/ListIconToken';
 
 
 
@@ -21,7 +23,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 3289.62,
           totalValueUSD: 1.96,
           curator: "Flowverse",
-          collateral: ["💰", "💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "btc", "add"],
           unsecured: 7890.12,
           unsecuredAPY: 16.8
         },
@@ -31,7 +33,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 5432.10,
           totalValueUSD: 3.25,
           curator: "AXA",
-          collateral: ["💰", "💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "btc", "add"],
           unsecured: 6543.21,
           unsecuredAPY: 13.5
         },
@@ -41,7 +43,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 7654.32,
           totalValueUSD: 1.55,
           curator: "Enjin",
-          collateral: ["💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "ada", "add", "aave"],
           unsecured: 4321.09,
           unsecuredAPY: 17.5
         },
@@ -51,7 +53,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 2987.65,
           totalValueUSD: 5.02,
           curator: "Plygon",
-          collateral: ["💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "ada", "add", "aave"],
           unsecured: 8765.43,
           unsecuredAPY: 15.9
         },
@@ -60,8 +62,8 @@ const EarnMoreTable: React.FC<{}> = () => {
           netAPY: 15.3,
           totalDeposits: 4567.89,
           totalValueUSD: 2.89,
-          curator: "Ether",
-          collateral: ["💰", "💰", "💰", "💰", "💰"],
+          curator: "adder",
+          collateral: ["usdc", "algo", "add"],
           unsecured: 8765.43,
           unsecuredAPY: 18.5
         },
@@ -71,7 +73,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 9876.54,
           totalValueUSD: 6.34,
           curator: "Metaverse",
-          collateral: ["💰", "💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "algo", "add"],
           unsecured: 3210.98,
           unsecuredAPY: 14.7
         },
@@ -81,7 +83,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 1234.56,
           totalValueUSD: 0.75,
           curator: "Bitcoin",
-          collateral: ["💰", "💰", "💰"],
+          collateral: ["usdc", "0xbtc", "ada"],
           unsecured: 6789.01,
           unsecuredAPY: 15.9
         },
@@ -91,27 +93,27 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 6789.01,
           totalValueUSD: 3.99,
           curator: "Bitcoin",
-          collateral: ["💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "btc", "add", "aave"],
           unsecured: 9876.54,
           unsecuredAPY: 12.3
         },
         {
-          tokenSymbol: "WBTC",
+          tokenSymbol: "Walgo",
           netAPY: 15.3,
           totalDeposits: 3210.98,
           totalValueUSD: 1.87,
           curator: "Bitcoin",
-          collateral: ["💰", "💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "algo", "add"],
           unsecured: 4567.89,
           unsecuredAPY: 7.8
         },
         {
-          tokenSymbol: "WETH",
+          tokenSymbol: "Wadd",
           netAPY: 8.9,
           totalDeposits: 8765.43,
           totalValueUSD: 5.67,
           curator: "Bitcoin",
-          collateral: ["💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "btc", "add", "aave"],
           unsecured: 2987.65,
           unsecuredAPY: 4.6
         },
@@ -121,7 +123,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 4321.09,
           totalValueUSD: 2.45,
           curator: "Bitcoin",
-          collateral: ["💰", "💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "algo", "add"],
           unsecured: 7654.32,
           unsecuredAPY: 8.2
         },
@@ -131,7 +133,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 6543.21,
           totalValueUSD: 3.67,
           curator: "Bitcoin",
-          collateral: ["💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "btc", "add", "aave"],
           unsecured: 5432.10,
           unsecuredAPY: 14.6
         },
@@ -141,7 +143,7 @@ const EarnMoreTable: React.FC<{}> = () => {
           totalDeposits: 7890.12,
           totalValueUSD: 4.98,
           curator: "Bitcoin",
-          collateral: ["💰", "💰", "💰", "💰", "💰"],
+          collateral: ["usdc", "algo", "add"],
           unsecured: 3289.62,
           unsecuredAPY: 7.5
         }
@@ -169,7 +171,7 @@ const EarnMoreTable: React.FC<{}> = () => {
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
                         className={`last:border-b-0 text-[12px]  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                         <td className="py-4 px-6 items-center h-full">
-                          <div className='flex' ><div className='mr-2 w-6 h-6'><img src="./assets/usdc.png" /></div>{item.tokenSymbol}</div>
+                          <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='usdc' ></IconToken></div>{item.tokenSymbol}</div>
                         </td>
                         <td className="py-4 px-6 items-center h-full  ">
                           <div className='flex gap-1 justify-end' >
@@ -186,7 +188,7 @@ const EarnMoreTable: React.FC<{}> = () => {
                         <td className="py-4 px-6 items-center h-full">
                           <div className='flex' ><div className='mr-2 w-5 h-5'><img src="./assets/usdc.png" /></div>{item.curator}</div>
                         </td>
-                        <td className="py-4  items-center h-full">{item.collateral.join(" ")}</td>
+                        <td className="py-4  items-center h-full"><ListIconToken className="w-6 h-6" iconNames={item.collateral} ></ListIconToken></td>
                         <td className="py-4 px-6 items-center   h-full ">
                           <div className='flex gap-1 justify-center gap-2' >
                             <div className='text-[white] ' >{item.totalDeposits}</div> 
