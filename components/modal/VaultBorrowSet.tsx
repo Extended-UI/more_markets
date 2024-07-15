@@ -73,7 +73,7 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balance, apy, 
         <div className='more-bg-primary px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token="Flow" balance={balance}  setMax={handleSetMax}/>
         </div>
-        <div className="text-right more-text-gray px-4">Balance: {balance} {token}</div>                
+        <div className="text-right more-text-gray px-4">Balance: {balance} FLOW</div>                
         <div className="flex justify-end mt-7 mb-7 px-4">
           <div className='mr-5'><MoreButton text="Cancel" onClick={() => handleCancel()} color="gray" /></div>
           <MoreButton text="Borrow" onClick={() => handleDeposit()} color="secondary" />
