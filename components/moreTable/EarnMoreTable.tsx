@@ -153,7 +153,7 @@ const EarnMoreTable: React.FC<{}> = () => {
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <table className="w-full text-sm text-left  text-gray-400 border border-gray-800 " >
-                <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white uppercase"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
+                <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Deposit Token" /></th>
                     <th style={{ width: '120px' }}><TableHeaderCell title="Net APY" /></th>
@@ -186,7 +186,7 @@ const EarnMoreTable: React.FC<{}> = () => {
                           </div>
                         </td>
                         <td className="py-4 px-6 items-center h-full">
-                          <div className='flex' ><div className='mr-2 w-5 h-5'><img src="./assets/usdc.png" /></div>{item.curator}</div>
+                          <div className='flex' ><div className='mr-2 w-5 h-5'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div>
                         </td>
                         <td className="py-4  items-center h-full"><ListIconToken className="w-6 h-6" iconNames={item.collateral} ></ListIconToken></td>
                         <td className="py-4 px-6 items-center   h-full ">
