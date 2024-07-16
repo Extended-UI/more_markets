@@ -3,7 +3,7 @@ import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import InfosBorrowDetails from "@/components/details/InfosBorrowDetail";
 import { useRouter } from "next/navigation";
 
-const borrowDetailPage: React.FC = () => {
+const BorrowDetailPage: React.FC = () => {
   const router = useRouter();
 
   // Check if the router is ready and has populated all its fields
@@ -21,4 +21,4 @@ const borrowDetailPage: React.FC = () => {
   );
 };
 
-export default borrowDetailPage;
+export default BorrowDetailPage;
