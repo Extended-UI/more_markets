@@ -16,7 +16,7 @@ const config: Config = {
       colors: {
         primary: '#F58420',
         secondary: '#1DA1F2',
-        white:  '#b0afb2'
+        white:  '#E0DFE3'
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

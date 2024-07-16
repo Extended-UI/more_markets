@@ -11,6 +11,7 @@ import TotalVolumeToken from '../token/TotalVolumeToken';
 import { BorrowData } from '@/types/borrowData';
 import IconToken from '../token/IconToken';
 import VaultBorrow from '../modal/VaultBorrow';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -31,7 +32,11 @@ const EarnMoreTable: React.FC<{}> = () => {
     { collateralToken: "WETH", loanToken: "WETH", liquidationLTV: "88% / 123%", borrowAPY: "8.9%", utilization: "4.6%", totalDeposits: "8,765.43", totalValueUSD: "$5.67M" }
   ];
 
+  const router = useRouter();
 
+      const goToDetail = (item :BorrowData ) => {
+        router.push('/borrow/'+item.collateralToken);
+      };
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <table className="w-full text-sm text-left  text-gray-400 border border-gray-800 " >
@@ -48,9 +53,9 @@ const EarnMoreTable: React.FC<{}> = () => {
                 </thead>
                 <tbody className="bg-transparent">
                 {sampleLoans.map((item, index, arr) => (
-                    <tr key={index} 
+                    <tr key={index} onClick={()=> goToDetail(item)}
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
-                        className={`last:border-b-0 text-[12px]  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
+                        className={`last:border-b-0 text-[12px] cursor-pointer  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                         <td className="py-4 px-6 items-center h-full">
                           <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.collateralToken}</div>
                         </td>
@@ -76,15 +81,18 @@ const EarnMoreTable: React.FC<{}> = () => {
                           </div>
                         </td>
                         <td className="py-4 px-6  items-center justify-end h-full">
+                        <div onClick={(event) => event.stopPropagation()}>
                           <ButtonDialog color='secondary' buttonText='Borrow' > 
-                              {(closeModal) => (
-                                  <>
-                                  <div className=" w-full h-full">
-                                  <VaultBorrow title='USDMax' token={item.collateralToken} apy={14.1} balanceToken={473.18} balanceFlow={785.45} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' credora='AAA' closeModal={closeModal} ></VaultBorrow>
-                                  </div>
-                                  </>
-                                  )}                            
-                          </ButtonDialog></td>
+                                {(closeModal) => (
+                                    <>
+                                    <div className=" w-full h-full">
+                                    <VaultBorrow title='USDMax' token={item.collateralToken} apy={14.1} balanceToken={473.18} balanceFlow={785.45} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' credora='AAA' closeModal={closeModal} ></VaultBorrow>
+                                    </div>
+                                    </>
+                                    )}                            
+                            </ButtonDialog>
+                          </div>
+                          </td>
                     </tr>
                 ))}
                 </tbody>

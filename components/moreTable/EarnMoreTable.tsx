@@ -205,7 +205,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                         </td>
                         <td className="py-4 px-6 items-center justify-end h-full  flex  "><div className='py-4' >{item.unsecuredAPY.toFixed(1)}%</div></td>
                         {inDetail &&  <td className="py-4 px-6  items-center justify-end h-full">
-                          <ButtonDialog color='primary' buttonText='Deposit' > 
+                          <div onClick={(event) => event.stopPropagation()}>
+                            <ButtonDialog color='primary' buttonText='Deposit' > 
                               {(closeModal) => (
                                   <>
                                   <div className="h-full w-full">
@@ -213,7 +214,10 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                                   </div>
                                   </>
                                 )}          
-                            </ButtonDialog></td>}
+                            </ButtonDialog>
+
+                          </div>
+                          </td>}
                     </tr>
                 ))}
                 </tbody>

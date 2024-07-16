@@ -47,7 +47,7 @@ interface ButtonProps {
       type='button'      
       onClick={(e) => {
         onClick();
-        e.stopPropagation();
+        
       }}  
       className={classes}
       style={defaultStyle}

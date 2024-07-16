@@ -37,6 +37,7 @@ const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalD
     console.log("DEPOSIT DONE")
   };
 
+  console.log("test", apy);
   
 
   const renderStep = () => {
