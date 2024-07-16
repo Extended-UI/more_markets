@@ -76,7 +76,7 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
         <div className='more-bg-primary px-4 rounded-b-[10px] py-2'>
           <div className="flex justify-between mt-10">        
             <div>APY:</div>
-            <div>{apy}<span className="more-text-gray">%</span></div>
+            <div>{apy}<span className="more-text-gray">%8888</span></div>
           </div>
           <div className="flex justify-between mt-10">        
             <div>Total Deposits</div>
