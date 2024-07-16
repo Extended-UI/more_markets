@@ -11,8 +11,6 @@ interface ButtonDialogProps {
 
 const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children }) => {
 
-  
-
   const backgroundStyle = {
     backgroundColor: `${color}1A`,
   };
