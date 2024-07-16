@@ -1,6 +1,8 @@
 "use client"
 import HeaderEarnDetail from "@/components/details/HeaderEarnDetail";
+import InfosEarnDetails from "@/components/details/InfosEarnDetail";
 import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
+import DetailEarnMoreTable from "@/components/moreTable/DetailEarnMoreTable";
 import EarnMoreTable from "@/components/moreTable/EarnMoreTable";
 import { useRouter } from "next/navigation";
 
@@ -14,9 +16,10 @@ const EarnDetailPage: React.FC = () => {
     <div>
       <div className="mb-8">
         <HeaderEarnDetail></HeaderEarnDetail>
+        <InfosEarnDetails></InfosEarnDetails>
       </div>
-      <h1 className="text-4xl mb-8">MORE Vaults</h1>
-      <EarnMoreTable inDetail = {false }/>
+      <h1 className="text-4xl mt-16 mb-8">Vault Breakdown</h1>
+      <DetailEarnMoreTable />
     </div>
   );
 };
