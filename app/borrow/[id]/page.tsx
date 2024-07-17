@@ -1,6 +1,8 @@
 "use client"
+import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
 import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import InfosBorrowDetails from "@/components/details/InfosBorrowDetail";
+import PositionMoreTable from "@/components/moreTable/PositionMoreTable";
 import { useRouter } from "next/navigation";
 
 const BorrowDetailPage: React.FC = () => {
@@ -14,8 +16,9 @@ const BorrowDetailPage: React.FC = () => {
       <div className="mb-8">
         <HeaderBorrowDetail></HeaderBorrowDetail>
         <InfosBorrowDetails></InfosBorrowDetails>
+        <PositionMoreTable></PositionMoreTable>
+        <ActivityBorrowDetail></ActivityBorrowDetail>
       </div>
-      <h1 className="text-4xl mt-16 mb-8">Vault Breakdown</h1>
       
     </div>
   );

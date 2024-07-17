@@ -11,8 +11,9 @@ const InfosBorrowDetails = () => {
             <InfoDetailGrey title='Available Liquidity' className="flex-1 m-2"><span className='text-[#888888] font-[600] ' >$</span><span className='text-white'>194.7k</span> </InfoDetailGrey>
             <InfoDetailGrey title='1D Borrow APY' className="flex-1 m-2"><span className='text-white' >17.1</span><span className='text-[#888888] font-[600] '>%</span></InfoDetailGrey>
         </div>
+        <h1 className="text-2xl mt-16 mb-8">Open a position</h1>
         <div className="flex  w-full">
-            <InfoDetail title='Credora Min/Avg' className="flex-1 m-2"><span className='text-white font-[600] ' >BBB/AA</span> </InfoDetail>
+            <InfoDetail title='Credora Min/Avg'  className="flex-1 m-2"><span className='text-white font-[600] ' >BBB/AA</span> </InfoDetail>
             <InfoDetail title='Unsecured Borrow' className="flex-1 m-2"><span className='text-[#888888] font-[600] ' >$</span><span className='text-white'>194.7k</span> </InfoDetail>
             <InfoDetail title='Unsecured Borrow APY' className="flex-1 m-2"><span className='text-white' >17.1</span><span className='text-[#888888] font-[600] '>%</span></InfoDetail>
             <InfoDetail title='Performance APY' className="flex-1 m-2"><span className='text-white' >20</span><span className='text-[#888888] font-[600] '>%</span></InfoDetail>
