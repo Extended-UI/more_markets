@@ -97,13 +97,7 @@ const TransactionsMoreTable: React.FC<Props> = () => {
       const startIndex = (currentPage - 1) * itemsPerPage;
       const [currentPageData, setCurrentPageData] = useState<DetailEarnData[]>([]);
     
-      useEffect(() => {
-        console.log("dj", currentPage);
-        
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const newPageData = tableData.slice(startIndex, startIndex + itemsPerPage);
-        setCurrentPageData(newPageData);
-    }, [currentPage, tableData]);
+      
      
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16 w-full"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
