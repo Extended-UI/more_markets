@@ -16,15 +16,7 @@ ChartJS.register(
 );
 
 
-interface Dataset {
-  label: string;
-  data: number[];
-  borderColor?: string;
-  backgroundColor?: string;
-  fill?: boolean;
-  pointRadius?: number;
-  borderWidth?: number;  
-}
+
 
 interface Props {  
   labelsX: string[], // Obligatoire
@@ -38,31 +30,6 @@ interface Props {
   maxY?: number, // Optionnel
   guideLines?: any[], // Optionnel
 }
-
-let datasets = [];
-//labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-// [
-//   {
-//     label: "Revenue",
-//     data: [65, 59, 80, 81, 56, 55],
-//     borderColor: 'rgb(75, 192, 192)',
-//     backgroundColor: 'rgba(75, 192, 192, .2)', // Couleur de fond avec transparence
-//     fill: true, // Activer le remplissage
-//     tension: 0.0,
-//     pointRadius: 0,
-//     borderWidth: 2,
-//   },
-//   {
-//     label: "Expenses",
-//     data: [28, 48, 40, 19, 86, 27],
-//     borderColor: 'rgb(255, 99, 132)',
-//     backgroundColor: 'rgba(255, 99, 132, 0.2)', // Couleur de fond avec transparence
-//     fill: true, // Activer le remplissage
-//     tension: 0.0,
-//     pointRadius: 0,
-//     borderWidth: 2,
-//   }
-// ]
 
 function getColor(color?:string, transpary?:number):string {
 
@@ -254,7 +221,7 @@ const [chartAnnotations, setAnnotations] = useState<any[]>([]);
     },
     plugins: {
       legend: {
-        display: true,
+        display: false,
         position: 'top' as const
       },
       annotation: {

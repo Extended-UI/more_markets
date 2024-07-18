@@ -21,10 +21,11 @@ library.add(
 interface IconProps {
   icon: IconProp;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-const Icon: React.FC<IconProps> = ({ icon, className }) => {
-  return <FontAwesomeIcon icon={icon} className={className} />;
+const Icon: React.FC<IconProps> = ({ icon, className, style }) => {
+  return <FontAwesomeIcon icon={icon} className={className} style={style} />;
 };
 
 export default Icon;
