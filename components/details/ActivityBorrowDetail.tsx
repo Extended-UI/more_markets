@@ -5,6 +5,8 @@ import SuppliersMoreTable from '../moreTable/SuppliersMoreTable';
 import BorrowDetailPage from '@/app/borrow/[id]/page';
 import BorrowersMoreTable from '../moreTable/BorrowersMoreTable';
 import TransactionsMoreTable from '../moreTable/TransactionMoreTable';
+import LiquidationInfo from './LiquidationInfo';
+import SecondTransactionsMoreTable from '../moreTable/SecondTransactionMoreTable';
 
 const ActivityBorrowDetail = () => {
   return (
@@ -14,6 +16,8 @@ const ActivityBorrowDetail = () => {
             <SuppliersMoreTable></SuppliersMoreTable>
             <BorrowersMoreTable></BorrowersMoreTable>
             <TransactionsMoreTable></TransactionsMoreTable>
+            <LiquidationInfo></LiquidationInfo>
+            <SecondTransactionsMoreTable></SecondTransactionsMoreTable>
         </div>
     </div>
     

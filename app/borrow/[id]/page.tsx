@@ -1,5 +1,6 @@
 "use client"
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
+import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import InfosBorrowDetails from "@/components/details/InfosBorrowDetail";
 import PositionMoreTable from "@/components/moreTable/PositionMoreTable";
@@ -16,6 +17,7 @@ const BorrowDetailPage: React.FC = () => {
       <div className="mb-8">
         <HeaderBorrowDetail></HeaderBorrowDetail>
         <InfosBorrowDetails></InfosBorrowDetails>
+        <GraphsBorrowDetails></GraphsBorrowDetails>
         <PositionMoreTable></PositionMoreTable>
         <ActivityBorrowDetail></ActivityBorrowDetail>
       </div>

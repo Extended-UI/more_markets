@@ -11,7 +11,7 @@ interface Props {
   
 }
 
-const TransactionsMoreTable: React.FC<Props> = () => {
+const SecondTransactionsMoreTable: React.FC<Props> = () => {
 
 
     const tableData: DetailEarnData[] = [
@@ -39,54 +39,6 @@ const TransactionsMoreTable: React.FC<Props> = () => {
             unsecuredBorrowValue: "$3.67M",
             unsecuredAPY: "12 hours ago"
           },
-          {
-            allocation: "yellow",
-            supplyAmount: "7,654.32",
-            supplyCurrency: "USDA",
-            supplyValue: "$1.55M",
-            collateral: ["usdc", "btc", "add", "ada"],
-            liquidationLTV: "Borrow",
-            credoraRating: "CC+ / A-",
-            unsecuredBorrowAmount: "4,321.09",
-            unsecuredBorrowValue: "$2.45M",
-            unsecuredAPY: "12 minutes ago"
-          },
-          {
-            allocation: "orange",
-            supplyAmount: "3,288.62",
-            supplyCurrency: "USDC",
-            supplyValue: "$1.96M",
-            collateral: ["usdc", "btc", "add", "ada"],
-            liquidationLTV: "Repay",
-            credoraRating: "CCC+ / BBB",
-            unsecuredBorrowAmount: "7,890.12",
-            unsecuredBorrowValue: "$4.98M",
-            unsecuredAPY: "12 minutes ago"
-          },
-          {
-            allocation: "green",
-            supplyAmount: "5,432.10",
-            supplyCurrency: "USDT",
-            supplyValue: "$3.25M",
-            collateral: ["usdc", "btc", "add", "ada","ant"],
-            liquidationLTV: "Borrow",
-            credoraRating: "BB+ / AA-",
-            unsecuredBorrowAmount: "6,543.21",
-            unsecuredBorrowValue: "$3.67M",
-            unsecuredAPY: "1 minutes ago"
-          },
-          {
-            allocation: "yellow",
-            supplyAmount: "7,654.32",
-            supplyCurrency: "USDA",
-            supplyValue: "$1.55M",
-            collateral: ["usdc", "btc", "add", "ada"],
-            liquidationLTV: "Borrow",
-            credoraRating: "CC+ / A-",
-            unsecuredBorrowAmount: "4,321.09",
-            unsecuredBorrowValue: "$2.45M",
-            unsecuredAPY: "12 minutes ago"
-          },
           
       ];
       const itemsPerPage = 5;
@@ -112,10 +64,13 @@ const TransactionsMoreTable: React.FC<Props> = () => {
                 <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Date & Time" /></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Wallet" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Liquidation Wallet" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Liquidator" /></div></th>
                     <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Hash" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Transaction Type" /></div></th>
-                    <th style={{ width: '200px' }}> <div className='flex justify-center'><TableHeaderCell title="Amount" /> </div></th>
+                    <th style={{ width: '200px' }}> <div className='flex justify-center'><TableHeaderCell title="Collateral Sized" /> </div></th>
+                    <th style={{ width: '200px' }}> <div className='flex justify-center'><TableHeaderCell title="Loan Repaid" /> </div></th>
+                    <th style={{ width: '200px' }}> <div className='flex justify-center'><TableHeaderCell title="Realized Bad Dept" /> </div></th>
+
                 </tr>
                 </thead>
                 <tbody className="bg-transparent ">
@@ -125,7 +80,7 @@ const TransactionsMoreTable: React.FC<Props> = () => {
                         className={`last:border-b-0 text-[12px]  cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                        
 
-                       <td className="py-4 px-6  items-center justify-end h-full ">
+                       <td className="py-4 px-6  items-center  h-full ">
                             <div className='flex gap-1 justify-start' ><div className='text-[white] ' >{item.unsecuredAPY}</div></div>
                         </td>
 
@@ -140,11 +95,27 @@ const TransactionsMoreTable: React.FC<Props> = () => {
                         <td className="py-4 px-6  items-center  h-full ">
                             <span>0x1234...xxyz</span>
                         </td>
+
+                        <td className="py-4 px-6  items-center  h-full ">
+                            <span>0x1234...xxyz</span>
+                        </td>
                         
                          
 
-                        <td className="py-4 px-6  items-center justify-end h-full ">
-                            <div className='flex gap-1 justify-center' ><div className='text-[white] ' >{item.liquidationLTV}</div> </div>
+                        <td className="py-4  items-center h-full ">
+                          <div className='flex gap-1 justify-center items-center gap-2' >
+                            <div className='text-[white] ' >{item.supplyAmount}</div> 
+                            <div>{item.supplyCurrency}</div> 
+                            <TotalVolumeToken>{item.supplyValue}</TotalVolumeToken>                          
+                          </div>
+                        </td> 
+
+                        <td className="py-4  items-center h-full ">
+                          <div className='flex gap-1 justify-center items-center gap-2' >
+                            <div className='text-[white] ' >{item.supplyAmount}</div> 
+                            <div>{item.supplyCurrency}</div> 
+                            <TotalVolumeToken>{item.supplyValue}</TotalVolumeToken>                          
+                          </div>
                         </td> 
 
                         <td className="py-4  items-center h-full ">
@@ -160,9 +131,8 @@ const TransactionsMoreTable: React.FC<Props> = () => {
                 </tbody>
             </table>
            
-                <Pagination totalItems={tableData.length} ></Pagination>
 
         </div>
       );
     };
-export default TransactionsMoreTable;
+export default SecondTransactionsMoreTable;
