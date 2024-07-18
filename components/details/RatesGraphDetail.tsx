@@ -58,7 +58,8 @@ console.log(weeklyPercentages);
 
   return (
     <>
-      <div className="mockup-window border-[#343434] border w-full h-full" style={{backgroundColor:"#181818"}}><MoreGraphicLinear labelsX={labelsX} datasets={datasets}  guideLines={guideLines}></MoreGraphicLinear></div>
+        <div className="text-xl mb-5">Rates</div>
+        <div className="mockup-window border-[#343434] border w-full h-full" style={{backgroundColor:"#181818"}}><MoreGraphicLinear labelsX={labelsX} datasets={datasets}  guideLines={guideLines}></MoreGraphicLinear></div>
     </>
   )
 }
