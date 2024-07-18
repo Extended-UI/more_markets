@@ -191,10 +191,10 @@ const [annotations, setAnnotations] = useState<any[]>([]);
 
     setChartLabels(labelsX);
     setChartDatasets(updatedDatasets);
-  }, [datasets, isFill, borderWidth, pointRadius, transparency]);
+  }, [datasets, labelsX, isFill, borderWidth, pointRadius, transparency]);
 
   const inputData = {
-    labels: labelsX,
+    labels: chartLabels,
     datasets: chartDatasets
   };
 
