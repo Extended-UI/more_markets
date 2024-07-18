@@ -38,22 +38,27 @@ const weeklyPercentages = generateWeeklyData();
 console.log(weeklyPercentages);
 
 
-  // const labelsX = Array.from(weeklyPercentages.keys());  
+  const labelsX = Array.from(weeklyPercentages.keys());  
 
-  // const datasets = [
-  //     {
-  //       label: "Pains",
-  //       data: Array.from(weeklyPercentages.values()),
-  //       borderColor:'#1DA1F2',        
-  //       backgroundColor: '#1DA1F2'
-  //     },
-  //   ]
+  const datasets = [
+      {
+        label: "Data",
+        data: Array.from(weeklyPercentages.values()),
+        borderColor:'#1DA1F2',        
+        backgroundColor: '#1DA1F2'
+      },
+    ]
+
+  const guideLines = [
+    {"labelX":"2024-03-25", "name":"Important Date"},
+    {"labelX":"2024-04-21", "name":"Super Date"},
+  ]
     
   
 
   return (
     <>
-      <div className="mockup-window border-base-300 border"><MoreGraphicLinear labelsX={[]} datasets={[]} ></MoreGraphicLinear></div>
+      <div className="mockup-window border-base-300 border"><MoreGraphicLinear labelsX={labelsX} datasets={datasets}  guideLines={guideLines}></MoreGraphicLinear></div>
     </>
   )
 }

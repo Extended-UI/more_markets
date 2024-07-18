@@ -36,6 +36,7 @@ interface Props {
   pointRadius?: number, // Optionnel
   minY?: number, // Optionnel
   maxY?: number, // Optionnel
+  guideLines?: any[], // Optionnel
 }
 
 let datasets = [];
@@ -90,9 +91,6 @@ function getColor(color?:string, transpary?:number):string {
     colorString = colorString.replace(")", "," + transpary / 100 + ")");
   }
 
-  console.log('>-- COLOR 2 --<')
-  console.log(colorString)
-
   return colorString;
   
 }
@@ -125,7 +123,7 @@ function randomPercentage(): number {
 
 
 
-const MoreGraphicLinear = ({ datasets, labelsX, isFill, signY, borderWidth, pointRadius, transparency, minY, maxY }: Props) => {
+const MoreGraphicLinear = ({ datasets, labelsX, isFill, signY, borderWidth, pointRadius, transparency, minY, maxY, guideLines }: Props) => {
 
   if (signY === undefined) {
     signY = "";
@@ -138,7 +136,7 @@ const MoreGraphicLinear = ({ datasets, labelsX, isFill, signY, borderWidth, poin
 // Utilisation de l'interface Dataset pour typifier l'état
 const [chartDatasets, setChartDatasets] = useState<Dataset[]>([]);
 const [chartLabels, setChartLabels] = useState<string[]>([]);
-const [annotations, setAnnotations] = useState<any[]>([]);
+const [chartAnnotations, setAnnotations] = useState<any[]>([]);
 
 
 
@@ -191,6 +189,47 @@ const [annotations, setAnnotations] = useState<any[]>([]);
 
     setChartLabels(labelsX);
     setChartDatasets(updatedDatasets);
+
+    if (guideLines !== undefined) {
+      let guideLinesData: any = {};
+      let y = 0;
+      for (let i = 0; i < guideLines.length; i++) {
+        let label = "line" + (i+1);
+        let data: any = {};
+        data[label] = {
+            type: 'line', // Assurez-vous d'utiliser des valeurs littérales pour 'type'
+            xMin: guideLines[i]['labelX'],
+            xMax: guideLines[i]['labelX'],
+            borderColor: 'white',
+            borderWidth: 1,
+            borderDash: [5, 5], //
+            label: {
+              display: true,
+              backgroundColor: 'rgba(255, 255, 255, 0.0)',
+              content: guideLines[i]['name'],  // Le contenu du label
+              position: 'end',          // La position du label ('start', 'center', 'end')              
+              color: 'white',             // Couleur du texte du label
+              font: {
+                weight: 'normal', // Correct use of fontWeight
+                size: 12,   
+              },
+              xAdjust: 0,
+              yAdjust: y += 20
+            }         
+          };  
+          
+        guideLinesData = {
+          ...guideLinesData,
+          ...data,
+        };
+        
+      }
+
+      console.log("guideLinesData");
+      console.log(guideLinesData);
+      setAnnotations(guideLinesData);
+    }    
+
   }, [datasets, labelsX, isFill, borderWidth, pointRadius, transparency]);
 
   const inputData = {
@@ -219,7 +258,7 @@ const [annotations, setAnnotations] = useState<any[]>([]);
         position: 'top' as const
       },
       annotation: {
-        annotations: annotations 
+        annotations: chartAnnotations 
         }
       }          
   };
