@@ -106,28 +106,6 @@ const [chartLabels, setChartLabels] = useState<string[]>([]);
 const [chartAnnotations, setAnnotations] = useState<any[]>([]);
 
 
-
-  // line1: {
-  //   type: 'line', // Assurez-vous d'utiliser des valeurs littérales pour 'type'
-  //   xMin: '2024-03-25',
-  //   xMax: '2024-03-25',
-  //   borderColor: 'white',
-  //   borderWidth: 1,
-  //   borderDash: [5, 5], //
-  //   label: {
-  //     display: true,
-  //     content: 'Important Date',  // Le contenu du label
-  //     position: 'start',          // La position du label ('start', 'center', 'end')              
-  //     color: 'white',             // Couleur du texte du label
-  //     font: {
-  //       weight: 'normal', // Correct use of fontWeight
-  //       size: 12,   
-  //     },
-  //     xAdjust: 0,
-  //     yAdjust: -20
-  //   }         
-  // },      
-
   useEffect(() => {
 
     if (datasets.length === 0) {

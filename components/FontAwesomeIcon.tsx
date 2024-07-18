@@ -3,7 +3,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 // Solid icons
-import { faCaretDown, faCaretUp ,faCircleInfo, faCircleCheck, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretUp ,faCircleInfo, faCircleCheck, faCircle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -15,17 +15,20 @@ library.add(
     faCaretUp,
     faCircleInfo,
     faCircleCheck,
-    faCircle
+    faCircle,
+    faEye,
+    faEyeSlash,
 );
 
 interface IconProps {
   icon: IconProp;
   className?: string;
   style?: React.CSSProperties;
+  onClick?: () => void;
 }
 
-const Icon: React.FC<IconProps> = ({ icon, className, style }) => {
-  return <FontAwesomeIcon icon={icon} className={className} style={style} />;
+const Icon: React.FC<IconProps> = ({ icon, className, style, onClick }) => {
+  return <FontAwesomeIcon icon={icon} className={className} style={style} onClick={onClick} />;
 };
 
 export default Icon;

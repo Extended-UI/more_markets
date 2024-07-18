@@ -6,4 +6,5 @@ interface Dataset {
     fill?: boolean;
     pointRadius?: number;
     borderWidth?: number;  
+    percentage?: number;
   }

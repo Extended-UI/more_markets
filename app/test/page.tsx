@@ -1,6 +1,7 @@
 "use client";
 
 import MoreGraphicLinear from '@/components/graphics/MoreGraphicsLinear';
+import MoreGraphicsV1 from '@/components/graphics/MoreGraphicsV1';
 import MoreGraphicsV2 from '@/components/graphics/MoreGraphicsV2';
 import MoreGraphicsV3 from '@/components/graphics/MoreGraphicsV3';
 import React from 'react'
@@ -13,7 +14,7 @@ function generateWeeklyData(): Map<string, number> {
 
   let money = 0
   let cnt = 52
-  let moneyStep = 300 / cnt
+  let moneyStep = 100 / cnt
   for (let week = 0; week < cnt; week++) {
       // Calculer la date de début de chaque semaine
       const currentDate = new Date(startDate.getTime());
@@ -24,7 +25,7 @@ function generateWeeklyData(): Map<string, number> {
 
       // Ajouter la date et le pourcentage aléatoire à la map
       money += moneyStep
-      data.set(dateString, money + Math.random() * 30);
+      data.set(dateString, money + Math.random() * 10);
   }
 
   return data;
@@ -101,18 +102,38 @@ const Test = () => {
       // Utiliser la fonction pour générer les données
       const weeklyPercentages = generateWeeklyData();
       const labelsX = Array.from(weeklyPercentages.keys());  
+      const percentages1 = Array.from(weeklyPercentages.values())
+      const percentages2 = Array.from(weeklyPercentages.values()).sort(() => Math.random() - 0.1)
+      const percentages3 = Array.from(weeklyPercentages.values()).sort(() => Math.random() - 0.1)
+      
+      
       const datasets = [
           {
-            label: "Data",
-            data: Array.from(weeklyPercentages.values()),
+            label: "Supply APY",
+            data: percentages1,
             borderColor:'#1DA1F2',        
-            backgroundColor: '#1DA1F2'
+            backgroundColor: '#1DA1F2',
+            percentage: 11.41
           },
+          {
+            label: "Borrow APY",
+            data: percentages2,
+            borderColor:'#A1F21D',        
+            backgroundColor: '#A1F21D',
+            percentage: 12.98
+          },
+          {
+            label: "Borrow APY at Target",
+            data: percentages3,
+            borderColor:'#F21DA1',        
+            backgroundColor: '#F21DA1',
+            percentage: 13.15
+          },                    
         ]
 
   return (
     <>
-      <div className="mockup-window border-base-300 border"><MoreGraphicsV3  datasets={datasets} labelsX={labelsX} total={"$100M"}></MoreGraphicsV3></div>
+      <div className="mockup-window border-base-300 border"><MoreGraphicsV1  datasets={datasets} labelsX={labelsX}></MoreGraphicsV1></div>
     </>
   )
 }
