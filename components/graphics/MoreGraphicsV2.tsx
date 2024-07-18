@@ -18,8 +18,7 @@ interface Props {
 
 const MoreGraphicsV2 = ({ datasets, labelsX, comment, isFill, signY, borderWidth, pointRadius, transparency, minY, maxY, guideLines }: Props) => {
   return (
-    <>
-        <div className="text-xl mb-5 pl-7">Base Interest Rate Model</div>
+    <>        
         <div><MoreGraphicLinear datasets={datasets} labelsX={labelsX} signY='%' maxY={maxY}></MoreGraphicLinear></div>
         <div className="grid grid-cols-2 gap-4 p-4">            
             {datasets.map((dataset) => (
