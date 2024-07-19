@@ -74,7 +74,7 @@ const BIRGraphBorrowDetail = () => {
 
   return (
     <>
-        <div className="text-xl mb-5 ">Base Interest Rate Model</div>
+        <div className="text-2xl mb-5 ">Base Interest Rate Model</div>
         <div className="mockup-window border-[#343434] border p-4" style={{backgroundColor:"#181818"}} ><MoreGraphicsV2  datasets={datasets} labelsX={labelsX} comment='Learn MORE about ratings and how to get rated here.'></MoreGraphicsV2></div>
     </>
   )

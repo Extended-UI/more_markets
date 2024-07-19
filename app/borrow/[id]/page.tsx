@@ -17,8 +17,8 @@ const BorrowDetailPage: React.FC = () => {
       <div className="mb-8 p-3">
         <HeaderBorrowDetail></HeaderBorrowDetail>
         <InfosBorrowDetails></InfosBorrowDetails>
-        <GraphsBorrowDetails></GraphsBorrowDetails>
         <PositionMoreTable></PositionMoreTable>
+        <GraphsBorrowDetails></GraphsBorrowDetails>
         <ActivityBorrowDetail></ActivityBorrowDetail>
       </div>
       

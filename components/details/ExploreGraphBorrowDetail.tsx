@@ -112,7 +112,7 @@ const ExploreGraphBorrowDetail = () => {
 
   return (
     <>
-        <div className="text-xl mb-5">Total Borrow</div>                       
+        <div className="text-2xl mb-5">Total Borrow</div>                       
 
          <div className="mockup-window border-[#343434] border p-4" style={{backgroundColor:"#181818"}} ><MoreGraphicsV3  datasets={datasets} labelsX={labelsX} total={"$100M"}></MoreGraphicsV3></div>
     </>

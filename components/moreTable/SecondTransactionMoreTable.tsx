@@ -68,7 +68,7 @@ const SecondTransactionsMoreTable: React.FC<Props> = () => {
                 </tr>
                 </thead>
                 <tbody className="bg-transparent ">
-                {currentPageData.map((item, index, arr) => (
+                {tableData.map((item, index, arr) => (
                     <tr key={index} 
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
                         className={`last:border-b-0 text-[12px]  cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
