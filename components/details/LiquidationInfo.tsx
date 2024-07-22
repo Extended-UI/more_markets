@@ -5,9 +5,14 @@ import TotalVolumeToken from '../token/TotalVolumeToken';
 
 const LiquidationInfo = () => {
   return (
-    <div className='flex w-full flex-col'>
-        <h1 className="text-2xl mt-16 mb-8">Liquidations</h1>
-        <div className="flex  w-full">
+    <div className='flex w-full flex-col overflow-visible'>
+        <h1 className="text-2xl mt-16 mb-8 ">Liquidations</h1>
+        <div className="flex  w-full overflow-x-auto" style={{
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none', // Works in Firefox
+            msOverflowStyle: 'none', // Works in IE and Edge
+            width: 'calc(100% + 2rem)', position: 'relative', left: '0'
+        }}>
             <InfoDetailGrey title='Unrealized Bad Dept' className="flex-1 m-2"><span className='text-[#888888] font-[600] ' >$</span><span className='text-white'>9,46K</span> </InfoDetailGrey>
             <InfoDetailGrey title='Realized Bad Dept' className="flex-1 m-2"><span className='text-[#888888] font-[600] ' >$</span><span className='text-white'>194.7k</span> </InfoDetailGrey>
             <InfoDetailGrey title='Outstanding Debt Tokens' className="flex-1 m-2"><div className="flex "> <span className='text-white' >171,554.01</span><div className='text-[18px] flex items-center' ><TotalVolumeToken>1.66M</TotalVolumeToken></div></div></InfoDetailGrey>

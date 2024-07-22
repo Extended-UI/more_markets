@@ -49,7 +49,11 @@ const MoreGraphicsV1: React.FC<Props> =  ({ datasets, labelsX, comment, isFill, 
 
   return (
     <>
-      <div className="p-2 flex justify-between items-center">                    
+      <div className="p-2 flex justify-between items-center overflow-x-auto"  style={{
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none', // Works in Firefox
+            msOverflowStyle: 'none', // Works in IE and Edge
+        }}>                    
         <div className="p-2 flex justify-center items-center">                                    
           {datasets.map((dataset) => (
             <div key={dataset.label} className="mr-16">

@@ -9,13 +9,16 @@ import Menu from './Menu';
 const Header: FC = () => {
 
     return (
-        <header className=" pt-2 p-4">
-            <nav className="  flex justify-between items-center">
-                <div className="flex items-center space-x-4">
-                    <Image src={logo} alt="Logo" width={35} height={35} />
+        <header className=" pt-2">
+            <nav className="  flex sm:flex-row flex-col justify-between items-center">
+                <div className=" w-full flex justify-between items-center">
+                    <div className="flex items-center space-x-4">
+                        <Image src={logo} alt="Logo" width={35} height={35} />
+                    </div>
+                    <Menu></Menu>
                 </div>
-                <Menu></Menu>
-                <div className="flex space-x-4">
+                
+                <div className="w-full flex justify-end space-x-4 mt-10 sm:mt-0">
                     <FlowButton></FlowButton>
                     <AddressBadge></AddressBadge>
                 </div>

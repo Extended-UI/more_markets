@@ -4,21 +4,21 @@ import IconToken from "../token/IconToken";
 
 const HeaderEarnDetail: React.FC = () => {
     return (
-    <div className="flex w-full items-center justify-between my-4">
+    <div className="flex flex-col sm:flex-row gap-8 w-full items-center justify-between my-4">
         <div className="flex items-center gap-10">
-        <div className="flex gap-2 items-center text-[25px] items-start">
-            <IconToken tokenName="usdc" className="w-10 h-10" />
-            <div>USD max</div>
+            <div className="flex gap-2 items-center text-[25px] items-start">
+                <IconToken tokenName="usdc" className="w-10 h-10" />
+                <div>USD max</div>
+            </div>
+            <div className="flex gap-2 items-center text-[14px] pt-2 leading-normal">
+                <IconToken tokenName="abt" className="w-6 h-6 " />
+                <div>USD max</div>
+            </div>
+            <div className="flex gap-2 items-center text-[14px] pt-2 leading-normal">
+                <IconToken tokenName="usdt" className="w-6 h-6 " />
+                <div>USD max</div>
+            </div>
         </div>
-        <div className="flex gap-2 items-center text-[14px] pt-2 leading-normal">
-            <IconToken tokenName="abt" className="w-6 h-6 " />
-            <div>USD max</div>
-        </div>
-        <div className="flex gap-2 items-center text-[14px] pt-2 leading-normal">
-            <IconToken tokenName="usdt" className="w-6 h-6 " />
-            <div>USD max</div>
-        </div>
-    </div>
         <div className="flex gap-2">
             <ButtonDialog color='primary' buttonText='Deposit' > 
                         {(closeModal) => (
