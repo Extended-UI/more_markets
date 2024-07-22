@@ -1,8 +1,8 @@
 export interface DepositData {
     tokenName: string;
-    apy: string;
-    depositAmount: string;
+    apy: number;
+    depositAmount: number;
     curator: string;
-    depositValueUSD: string;
+    depositValueUSD: number;
     collaterals : string[]
 }

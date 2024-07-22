@@ -8,7 +8,7 @@ interface Props {
 
 const TotalVolumeToken: React.FC<Props> = ({ children }) => {  
   return (
-    <span className='badge badge-outline more-text-gray'>
+    <span className='badge py-4 badge-outline text-grey bg-[#262626]'>
       ${children}M
     </span>
   )

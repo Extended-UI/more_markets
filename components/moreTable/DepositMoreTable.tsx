@@ -12,6 +12,8 @@ import { BorrowData } from '@/types/borrowData';
 import IconToken from '../token/IconToken';
 import { DepositData } from '@/types/depositData';
 import ListIconToken from '../token/ListIconToken';
+import FormatPourcentage from '../tools/formatPourcentage';
+import FormatTokenMillion from '../tools/formatTokenMillion';
 
 
 
@@ -22,18 +24,18 @@ const DepositMoreTable: React.FC<{}> = () => {
     const depositData: DepositData[] = [
         {
           tokenName: "USDC",
-          apy: "14.1",
+          apy: 14.1,
           curator : "Flowverse",
-          depositAmount: "3,289.62",
-          depositValueUSD: "$1.96M",
+          depositAmount: 3289.62,
+          depositValueUSD: 1.96,
          collaterals:["usdc", "ada", "add", "aave"]
         },
         {
           tokenName: "USDT",
-          apy: "12.3",
+          apy: 12.3,
           curator : "Metaverse",
-          depositAmount: "5,432.10",
-          depositValueUSD: "$3.25M",
+          depositAmount: 5432.10,
+          depositValueUSD: 3.25,
           collaterals:[ "ada", "add", "aave"]
         }
       ];
@@ -61,14 +63,10 @@ const DepositMoreTable: React.FC<{}> = () => {
                         <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.tokenName.toLocaleLowerCase()} ></IconToken></div>{item.tokenName}</div>
                         </td>
                         <td className="py-4 px-6 items-center h-full flex  ">
-                         <div className='flex items-center text-white' >{item.apy}</div>% 
+                          <FormatPourcentage value={item.apy} ></FormatPourcentage>
                         </td> 
                         <td className="py-4 px-6 items-center   h-full ">
-                          <div className='flex gap-1 justify-center gap-2' >
-                            <div className='text-[white] ' >{item.depositAmount}</div> 
-                            <div>{item.tokenName}</div> 
-                            <TotalVolumeToken>{item.depositValueUSD}</TotalVolumeToken>
-                          </div>
+                          <FormatTokenMillion value={item.depositAmount} token={item.tokenName} totalValue={item.depositValueUSD} ></FormatTokenMillion> 
                         </td>
                         <td className="py-4 px-6 items-center h-full  ">
                          <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div> 
