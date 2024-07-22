@@ -7,4 +7,5 @@ export interface InvestmentData {
     collateral: string[];
     unsecured: number;
     unsecuredAPY: number;
+    credoraRating: string;
   }

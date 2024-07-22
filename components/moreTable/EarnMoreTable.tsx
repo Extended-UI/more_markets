@@ -11,6 +11,8 @@ import TotalVolumeToken from '../token/TotalVolumeToken';
 import IconToken from '../token/IconToken';
 import ListIconToken from '../token/ListIconToken';
 import { useRouter } from 'next/navigation';
+import FormatPourcentage from '../tools/formatPourcentage';
+import FormatTokenMillion from '../tools/formatTokenMillion';
 
 interface Props {
   inDetail? : boolean
@@ -28,7 +30,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Flowverse",
           collateral: ["usdc", "btc", "add"],
           unsecured: 7890.12,
-          unsecuredAPY: 16.8
+          unsecuredAPY: 16.8,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "USDT",
@@ -38,7 +41,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "AXA",
           collateral: ["usdc", "btc", "add"],
           unsecured: 6543.21,
-          unsecuredAPY: 13.5
+          unsecuredAPY: 13.5,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "USDA",
@@ -48,7 +52,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Enjin",
           collateral: ["usdc", "ada", "add", "aave"],
           unsecured: 4321.09,
-          unsecuredAPY: 17.5
+          unsecuredAPY: 17.5,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "USDC",
@@ -58,7 +63,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Plygon",
           collateral: ["usdc", "ada", "add", "aave"],
           unsecured: 8765.43,
-          unsecuredAPY: 15.9
+          unsecuredAPY: 15.9,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "USDT",
@@ -68,7 +74,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "adder",
           collateral: ["usdc", "algo", "add"],
           unsecured: 8765.43,
-          unsecuredAPY: 18.5
+          unsecuredAPY: 18.5,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "USDT",
@@ -78,7 +85,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Metaverse",
           collateral: ["usdc", "algo", "add"],
           unsecured: 3210.98,
-          unsecuredAPY: 14.7
+          unsecuredAPY: 14.7,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "USDA",
@@ -88,7 +96,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Bitcoin",
           collateral: ["usdc", "0xbtc", "ada"],
           unsecured: 6789.01,
-          unsecuredAPY: 15.9
+          unsecuredAPY: 15.9,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "DAI",
@@ -98,7 +107,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Bitcoin",
           collateral: ["usdc", "btc", "add", "aave"],
           unsecured: 9876.54,
-          unsecuredAPY: 12.3
+          unsecuredAPY: 12.3,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "Walgo",
@@ -108,7 +118,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Bitcoin",
           collateral: ["usdc", "algo", "add"],
           unsecured: 4567.89,
-          unsecuredAPY: 7.8
+          unsecuredAPY: 7.8,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "Wadd",
@@ -118,7 +129,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Bitcoin",
           collateral: ["usdc", "btc", "add", "aave"],
           unsecured: 2987.65,
-          unsecuredAPY: 4.6
+          unsecuredAPY: 4.6,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "USDA",
@@ -128,7 +140,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Bitcoin",
           collateral: ["usdc", "algo", "add"],
           unsecured: 7654.32,
-          unsecuredAPY: 8.2
+          unsecuredAPY: 8.2,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "USDT",
@@ -138,7 +151,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Bitcoin",
           collateral: ["usdc", "btc", "add", "aave"],
           unsecured: 5432.10,
-          unsecuredAPY: 14.6
+          unsecuredAPY: 14.6,
+          credoraRating: "B / AA+",
         },
         {
           tokenSymbol: "DAI",
@@ -148,7 +162,8 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
           curator: "Bitcoin",
           collateral: ["usdc", "algo", "add"],
           unsecured: 3289.62,
-          unsecuredAPY: 7.5
+          unsecuredAPY: 7.5,
+          credoraRating: "B / AA+",
         }
       ];
 
@@ -169,42 +184,44 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                     <th style={{ width: '200px' }}><TableHeaderCell title="Collateral" /></th>
                     <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Unsecured" /></div></th>
                     <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Unsecured APY" /></div></th>
-                    {inDetail && <th style={{ width: '100px' }}></th>}
+                    <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Credora Rating" /></div></th>
+                    {inDetail && (
+                      <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121', zIndex: 1, boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
+                    )}
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">
                 {investments.map((item, index, arr) => (
                     <tr key={index} onClick={() => goToDetail(item)}
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
-                        className={`last:border-b-0 text-[12px]  cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
+                        className={`last:border-b-0 text-[12px] border border-[#202020] cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'bg-[#191919]'}`}>
                         <td className="py-4 px-6 items-center h-full">
-                          <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='usdc' ></IconToken></div>{item.tokenSymbol}</div>
+                          <div className='flex items-center text-white' ><div className='mr-2 w-6 h-6'><IconToken tokenName='usdc' ></IconToken></div>{item.tokenSymbol}</div>
                         </td>
                         <td className="py-4 px-6 items-center h-full  ">
                           <div className='flex gap-1 justify-end' >
-                            <div className='text-[white] ' >{item.netAPY.toFixed(1)}</div> %
+                            <FormatPourcentage value={item.netAPY} ></FormatPourcentage>
                           </div>
                         </td>
                         <td className="py-4  items-center h-full ">
-                          <div className='flex gap-1 justify-center gap-2' >
-                            <div className='text-[white] ' >{item.totalDeposits}</div> 
-                            <div>{item.tokenSymbol}</div> 
-                            <TotalVolumeToken>{item.totalValueUSD}</TotalVolumeToken>
-                          </div>
+                          <FormatTokenMillion value={item.totalDeposits} token={item.tokenSymbol} totalValue={item.totalValueUSD} ></FormatTokenMillion>                          
                         </td>
                         <td className="py-4 px-6 items-center h-full">
-                          <div className='flex' ><div className='mr-2 w-5 h-5'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div>
+                          <div className='flex text-white' ><div className='mr-2 w-5 h-5'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div>
                         </td>
                         <td className="py-4  items-center h-full"><ListIconToken className="w-6 h-6" iconNames={item.collateral} ></ListIconToken></td>
                         <td className="py-4 px-6 items-center   h-full ">
-                          <div className='flex gap-1 justify-center gap-2' >
-                            <div className='text-[white] ' >{item.totalDeposits}</div> 
-                            <div>{item.tokenSymbol}</div> 
-                            <TotalVolumeToken>{item.unsecured}</TotalVolumeToken>
+                          <FormatTokenMillion value={item.totalDeposits} token={item.tokenSymbol} totalValue={item.unsecured} ></FormatTokenMillion> 
+                        </td>
+                        <td className="py-4 px-6 items-center  h-full "> 
+                          <div className='flex gap-1 justify-end' >
+                            <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage>
                           </div>
                         </td>
-                        <td className="py-4 px-6 items-center justify-end h-full  flex  "><div className='py-4' >{item.unsecuredAPY.toFixed(1)}%</div></td>
-                        {inDetail &&  <td className="py-4 px-6  items-center justify-end h-full">
+                        <td className="py-4  items-center h-full ">
+                            <div className='py-4 flex justify-center text-white' >{item.credoraRating}</div>
+                        </td>
+                        {inDetail &&  <td   style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? 'bg-transparent' : 'bg-[#191919]'}` }}>
                           <div onClick={(event) => event.stopPropagation()}>
                             <ButtonDialog color='primary' buttonText='Deposit' > 
                               {(closeModal) => (

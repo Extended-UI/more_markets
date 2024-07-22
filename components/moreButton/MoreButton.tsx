@@ -40,7 +40,7 @@ interface ButtonProps {
       opacity: 0.9,
     };
   // Combining default class with any additional classes provided
-  const classes = `btn text-[12px] px-3 py-2 rounded-[5px] ${className || ''}`;
+  const classes = ` h-10 border text-[12px] px-3  rounded-[5px] ${className || ''}`;
 
   return (
     <button
