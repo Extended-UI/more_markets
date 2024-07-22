@@ -24,7 +24,12 @@ const MoreGraphicsV3 = ({ datasets, labelsX, comment, isFill, signY, borderWidth
             <div className="p-2">                    
               <div className='text-secondary text-3xl'>{ total }</div>                         
             </div>
-             <div>
+             <div className=' flex flex-row sm:flex-col overflow-x-auto'  style={{
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none', // Works in Firefox
+                msOverflowStyle: 'none', // Works in IE and Edge
+            }}>              
+              
               <button className="btn btn-active btn-neutral mr-5 more-text-gray">Total Borrow</button>
               <button className="btn btn-active btn-neutral mr-5 more-text-gray">Total Supply</button>
               <button className="btn btn-active btn-neutral mr-5 more-text-gray">Liquidity</button>
