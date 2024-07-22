@@ -1,5 +1,6 @@
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDeposit from "../modal/VaultDepositConfirm";
+import VaultDetail from "../modal/VaultDetail";
 import IconToken from "../token/IconToken";
 
 const HeaderEarnDetail: React.FC = () => {
@@ -37,11 +38,11 @@ const HeaderEarnDetail: React.FC = () => {
                         {(closeModal) => (
                             <>
                             <div className="h-full w-full">
-                            <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' amount={0} validDeposit={function (): void {
+                            <VaultDetail title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' amount={0} validDeposit={function (): void {
                                     throw new Error("Function not implemented.");
                                 } } closeModal={function (): void {
                                     throw new Error("Function not implemented.");
-                                } }></VaultDeposit>
+                                } }></VaultDetail>
                             </div>
                             </>
                         )}          

@@ -72,7 +72,7 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balanceToken, 
   return (
     <div className='more-bg-secondary w-full rounded-[20px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-xl mb-10 px-4 pt-5">Borrow FLOW</div>
+        <div className="text-xl mb-10 px-4 pt-5 text-white">Borrow FLOW</div>
         <div className="text-l mb-1 px-4">Deposit {token} Collateral</div>
         <div className='more-bg-primary px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceTokenString}  placeholder={`Deposit ${token}`}  token={token} balance={balanceToken}  setMax={handleSetMaxToken}/>
@@ -93,19 +93,19 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balanceToken, 
         <div className='more-bg-primary px-4 rounded-b-[10px] py-2'>
           <div className="flex justify-between mt-10">        
             <div>1D Borrow APY:</div>
-            <div>{apy}<span className="more-text-gray">%</span></div>
+            <div className="text-white">{apy}<span className="more-text-gray">%</span></div>
           </div>
           <div className="flex justify-between mt-10 pb-4 ">        
             <div>Your Premium Liquidation LTV</div>
-            <div className="text-primary">{ltv}</div>
+            <div className="text-white">{ltv}</div>
           </div>            
           <div className="flex justify-between mt-10">        
             <div>Total Deposits</div>
-            <div>{totalDeposit} <span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
+            <div className="text-white">{totalDeposit} <span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
           </div>
           <div className="flex justify-between mt-10 pb-4 ">        
             <div>Your Credora Rating</div>
-            <div className="text-primary">{credora}</div>
+            <div className="text-white">{credora}</div>
           </div>             
         </div>              
       </form>

@@ -65,7 +65,7 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
   return (
     <div className='more-bg-secondary w-full rounded-[20px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-xl mb-10 px-4 pt-5">{title}</div>
+        <div className="text-2xl mb-10 px-4 pt-5 text-white">{title}</div>
         <div className="text-l mb-5 px-4">Deposit {token}</div>
         <div className='more-bg-primary px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>

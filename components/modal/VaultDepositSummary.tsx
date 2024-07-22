@@ -24,9 +24,9 @@ const VaultDepositSummary: React.FC<Props> = ({ title, token, balance, apy, ltv,
   
   return (
     <div className='more-bg-secondary h-full rounded-[20px]'>      
-        <div className="text-xl mb-10 px-4 pt-5">Transaction Confirmation</div>
+        <div className="text-xl mb-10 px-4 pt-5 text-white">Transaction Confirmation</div>
         <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Execute the following actions</div>
-        <div className='more-bg-primary px-4 mx-5'> 
+        <div className='more-bg-primary px-4 mx-5 text-white'> 
           <DepositTokenAmount token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div>        
         <div className="text-l my-5 px-4"><span><Icon icon="circle" className="text-xl cursor-pointer mr-5" /></span>Transaction 0×47b3...bv87 has been successfully executed.</div>
