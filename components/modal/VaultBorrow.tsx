@@ -22,6 +22,7 @@ const VaultBorrow: React.FC<Props> = ({ title, token, balanceToken, balanceFlow,
 
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
+  const [borrow, setBorrow] = useState(0);
 
   // Réinitialiser l'étape quand le composant reçoit de nouvelles props, typiquement quand il est affiché
   useEffect(() => {
@@ -35,6 +36,8 @@ const VaultBorrow: React.FC<Props> = ({ title, token, balanceToken, balanceFlow,
     console.log("BORROW SET")
     console.log(amount, borrow)
     setStep(2);
+    setAmount(amount);
+    setBorrow(borrow);
   };
 
 
@@ -53,7 +56,7 @@ const VaultBorrow: React.FC<Props> = ({ title, token, balanceToken, balanceFlow,
       case 1:
         return <VaultBorrowSet credora={credora} title={title} token={token} balanceToken={balanceToken}  balanceFlow={balanceFlow}  apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number, borrow: number) => handleSetBorrow(amount, borrow)}  closeModal={closeModal}/>;
       case 2:
-      return <VaultBorrowSummary title={title} token={token} balance={balanceToken} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()}   closeModal={closeModal} />;
+      return <VaultBorrowSummary  amount={amount} borrow={borrow}  title={title} token={token} balance={balanceToken} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()}   closeModal={closeModal} />;
       default:
         return null; // ou une vue par défaut
     }

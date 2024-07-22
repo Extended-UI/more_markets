@@ -15,11 +15,13 @@ interface Props {
   ltv: string;
   totalDeposit: number;
   totalTokenAmount: number;
+  amount: number;
+  borrow: number;
   processDone: () => void;
   closeModal: () => void;
 }
 
-const VaultBorrowSummary: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, processDone, closeModal }) => {
+const VaultBorrowSummary: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, amount, borrow, processDone, closeModal }) => {
 
 
 
@@ -36,10 +38,10 @@ const VaultBorrowSummary: React.FC<Props> = ({ title, token, balance, apy, ltv, 
         <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Approve the bundler to spend 12.35 {token} (via permit)</div>   
         <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Execute the following actions</div>                
         <div className='more-bg-primary px-4 mx-5'> 
-          <DepositTokenAmount token={token} amount={14.56} ltv={ltv} totalTokenAmount={totalTokenAmount} />
+          <DepositTokenAmount token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div>   
         <div className='more-bg-primary px-4 mx-5'> 
-          <BorrowTokenAmount token={title} amount={13.41} ltv={ltv} totalTokenAmount={totalTokenAmount} />
+          <BorrowTokenAmount token={title} amount={borrow} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div> 
         <div className="flex justify-end mt-7 mb-7 px-4">
           <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>          

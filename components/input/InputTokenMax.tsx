@@ -21,16 +21,16 @@ const InputTokenMax: React.FC<Props> = ({ type, value, onChange, placeholder, mi
   
   return (
     <div className='w-full more-bg-primary flex justify-center items-center space-x-4'>      
-      <input
+      <input      
         type={type}
         value={value}
         onChange={onChange}
-        className="input input-bordered text-left text-3xl w-full max-w-xs more-input-text-color more-input-bg-color"
+        className="input input-bordered text-left text-3xl w-full more-input-text-color more-input-bg-color h-20"
         placeholder={placeholder}        
       />      
       <IconToken tokenName={logo} ></IconToken>
       <div className="text-l">{token}</div>      
-      <MoreButton text="Max" onClick={() => setMax(balance)} color="gray" />
+      <MoreButton text="Max" onClick={() => setMax(balance)} color="gray" className='h-1 w-20' />
     </div>
   );
 };

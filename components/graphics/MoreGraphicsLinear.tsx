@@ -183,7 +183,6 @@ const [chartAnnotations, setAnnotations] = useState<any[]>([]);
   };
 
   const options: ChartOptions<"line"> = {
-
     scales: {
       y: {
         beginAtZero: true,

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import InputTokenMax from '../input/InputTokenMax';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import MoreButton from '../moreButton/MoreButton';
+import FormatNumber from '../tools/formatNumber';
 
 interface Props {
   title: string;
@@ -58,6 +59,7 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
     }
   };
 
+
   const balanceString = balance.toString();
 
   return (
@@ -73,14 +75,17 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
           <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
           <MoreButton text="Deposit" onClick={() => handleDeposit()} color="primary" />
         </div>
+        <div className='w-[50%] mx-15 flex justify-center mx-auto'>
+          <div className='glowing-text-primary w-full'></div>
+        </div>
         <div className='more-bg-primary px-4 rounded-b-[10px] py-2'>
           <div className="flex justify-between mt-10">        
             <div>APY:</div>
-            <div>{apy}<span className="more-text-gray">%8888</span></div>
+            <div>{apy}<span className="more-text-gray">%</span></div>
           </div>
           <div className="flex justify-between mt-10">        
             <div>Total Deposits</div>
-            <div>{totalDeposit} <span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
+            <div ><FormatNumber value={totalDeposit} /><span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
           </div>
           <div className="flex justify-between mt-10 pb-4 ">        
             <div>Liquidation LTV</div>

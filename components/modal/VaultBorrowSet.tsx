@@ -87,6 +87,9 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balanceToken, 
           <div className='mr-5' ><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
           <MoreButton text="Borrow" onClick={() => handleBorrow()} color="secondary" />
         </div>
+        <div className='w-[50%] mx-15 flex justify-center mx-auto'>
+          <div className='glowing-text-secondary w-full'></div>
+        </div>        
         <div className='more-bg-primary px-4 rounded-b-[10px] py-2'>
           <div className="flex justify-between mt-10">        
             <div>1D Borrow APY:</div>

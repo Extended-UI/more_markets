@@ -1,5 +1,6 @@
 import React from 'react'
 import TotalVolumeToken from './TotalVolumeToken';
+import IconToken from './IconToken';
 
 interface Props {    
     token: string;
@@ -14,6 +15,7 @@ interface Props {
       <div className="flex flex-row justify-between items-center h-20">
         <div className='text-2xl'>Deposit</div>        
         <div className="flex flex-row items-center">
+            <IconToken tokenName={token}  className='mr-4 w-6'></IconToken>
             <div className="text-xl mr-2">{amount}</div>    
             <div className="text-xl mr-2 more-text-gray">{token}</div>                        
             <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken>
