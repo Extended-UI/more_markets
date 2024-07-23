@@ -33,7 +33,7 @@ const VaultBorrowSummary: React.FC<Props> = ({ title, token, balance, apy, ltv, 
   
   return (
     <div className='more-bg-secondary h-full rounded-[20px]'>      
-        <div className="text-xl mb-10 px-4 pt-5 text-white">Transaction Confirmation</div>
+        <div className="text-xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
         <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Authorize the MORE to execute multiple actions in a single transaction when updating your positions</div>
         <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Approve the bundler to spend 12.35 {token} (via permit)</div>   
         <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Execute the following actions</div>                

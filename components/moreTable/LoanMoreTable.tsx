@@ -42,8 +42,8 @@ const LoanMoreTable: React.FC<{}> = () => {
 
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <table className="w-full text-sm text-left  text-gray-400 border border-gray-800 " >
-                <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
+        <table className="w-full text-sm text-left   border border-gray-800 " >
+                <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '100px' }} className="rounded-tl-lg"><TableHeaderCell title="Collateral" /></th>
                     <th style={{ width: '220px' }}><div className='flex justify-end pr-8 '><TableHeaderCell title="Loan" /></div></th>
@@ -62,7 +62,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                         </td>
                         <td className="py-4 max-w-[120px] items-center   h-full ">
                           <div className='flex gap-1 justify-center gap-2' >
-                            <div className='text-[white] ' >{item.amount}</div> 
+                            <div  >{item.amount}</div> 
                             <div>{item.token}</div> 
                             <TotalVolumeToken>{item.valueUSD}</TotalVolumeToken>
                           </div>
@@ -70,11 +70,11 @@ const LoanMoreTable: React.FC<{}> = () => {
                         
                         <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center' >
-                            <div className='text-[white] ' >{item.liquidationLTV}</div> 
+                            <div  >{item.liquidationLTV}</div> 
                           </div> 
                         </td>
                         <td className="py-4 items-center h-full   ">
-                         <div className='flex flex-row items-center justify-end text-white' >{item.borrowAPY}% </div>
+                         <div className='flex flex-row items-center justify-end ' >{item.borrowAPY}% </div>
                         </td> 
                         <td className="py-4 px-6 flex gap-2 items-center justify-end h-full">
                           <ButtonDialog color='secondary' buttonText='Borrow' > 

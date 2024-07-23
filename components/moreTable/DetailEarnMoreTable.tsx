@@ -114,8 +114,8 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
       };
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <table className="w-full text-sm text-left  text-gray-400 border border-gray-800 " >
-                <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
+        <table className="w-full text-sm text-left   border border-gray-800 " >
+                <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Allocation" /></th>
                     <th style={{ width: '120px' }}  > <div className='flex justify-center'><TableHeaderCell title="Supply" /></div></th>
@@ -134,12 +134,12 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
                        
                         <td className="py-4 px-6 items-center h-full  ">
                           <div className='flex gap-1 justify-center' >
-                            <div className='text-[white] ' >{item.allocation}</div> %
+                            <div className=' ' >{item.allocation}</div> %
                           </div>
                         </td>
                         <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center gap-2' >
-                            <div className='text-[white] ' >{item.supplyAmount}</div> 
+                            <div className=' ' >{item.supplyAmount}</div> 
                             <div>{item.supplyCurrency}</div> 
                             <TotalVolumeToken>{item.supplyValue}</TotalVolumeToken>
                           </div>
@@ -155,14 +155,14 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
 
                         <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center gap-2' >
-                            <div className='text-[white] ' >{item.unsecuredBorrowAmount}</div> 
+                            <div className=' ' >{item.unsecuredBorrowAmount}</div> 
                             <div>{item.supplyCurrency}</div> 
                             <TotalVolumeToken>{item.unsecuredBorrowValue}</TotalVolumeToken>
                           </div>
                         </td>
                         
                         <td className="py-4 px-6 items-center justify-end h-full  flex  "><div className='flex gap-1 justify-center' >
-                            <div className='text-[white] ' >{item.unsecuredAPY}</div> %
+                            <div className=' ' >{item.unsecuredAPY}</div> %
                           </div></td>
                     </tr>
                 ))}

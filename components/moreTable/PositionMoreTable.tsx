@@ -40,8 +40,8 @@ const PositionMoreTable: React.FC<Props> = () => {
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <h1 className="text-2xl mt-16 mb-8">Open a position</h1>
-        <table className="w-full text-sm text-left  text-gray-400 border border-gray-800 " >
-                <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
+        <table className="w-full text-sm text-left   border border-gray-800 " >
+                <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Collateral" /></th>
                     <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Loan" /></div></th>
@@ -60,7 +60,7 @@ const PositionMoreTable: React.FC<Props> = () => {
                        <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center items-center gap-2' >
                             <div className='mr-2 w-8 h-8'><IconToken tokenName='usdt' ></IconToken></div>
-                            <div className='text-[white] ' >{item.supplyAmount}</div> 
+                            <div className=' ' >{item.supplyAmount}</div> 
                             <div>{item.supplyCurrency}</div> 
                             <TotalVolumeToken>{item.supplyValue}</TotalVolumeToken>
                           </div>
@@ -69,7 +69,7 @@ const PositionMoreTable: React.FC<Props> = () => {
                         <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center items-center gap-2' >
                             <div className='mr-2 w-8 h-8'><IconToken tokenName='usdt' ></IconToken></div>
-                            <div className='text-[white] ' >{item.supplyAmount}</div> 
+                            <div className=' ' >{item.supplyAmount}</div> 
                             <div>{item.supplyCurrency}</div> 
                             <TotalVolumeToken>{item.supplyValue}</TotalVolumeToken>
                           </div>
@@ -79,7 +79,7 @@ const PositionMoreTable: React.FC<Props> = () => {
                         
 
                         <td className="py-4 px-6  items-center justify-end h-full ">
-                            <div className='flex gap-1 justify-center' ><div className='text-[white] ' >{item.unsecuredAPY}</div> % </div>
+                            <div className='flex gap-1 justify-center' ><div className=' ' >{item.unsecuredAPY}</div> % </div>
                         </td>
                         
                         <td className="py-4 px-6  items-center  h-full flex justify-center">

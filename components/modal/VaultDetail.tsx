@@ -56,10 +56,10 @@ const VaultDetail: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDe
   return (
     <div className='more-bg-secondary rounded-[20px] h-full w-full'>
       <form onSubmit={handleSubmit}>
-        <div className="mb-7 px-4 pt-5 text-white text-xl">{title}</div>
-        <div className="text-xl mb-1 px-4 pt-5 text-white">Vault Strategy</div>
+        <div className="mb-7 px-4 pt-5  text-xl">{title}</div>
+        <div className="text-xl mb-1 px-4 pt-5 ">Vault Strategy</div>
         <div className="flex flex-row justify-between items-center">
-          <div className="text-l mb-5 px-4"><span className="more-text-gray">Curator:</span><span className="text-white ml-3">{curator}</span></div>
+          <div className="text-l mb-5 px-4"><span className="more-text-gray">Curator:</span><span className=" ml-3">{curator}</span></div>
           <div className="text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> {ltv}</div>
         </div>
         <div className='more-bg-primary px-4 text-gray'>
@@ -76,7 +76,7 @@ const VaultDetail: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDe
           </div>
           <div className="flex justify-between mt-5">        
             <div>Vault Deployment Date</div>
-            <div className="text-white">July 2024</div>
+            <div className="">July 2024</div>
           </div>            
           <div className="flex justify-between mt-5">        
             <div>Guardian Address</div>

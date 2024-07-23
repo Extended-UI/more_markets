@@ -9,7 +9,7 @@ interface Props {
   const TableHeaderCell: React.FC<Props> = ({ title, additionalClasses }) => {
     return (
       <>
-      <div className={` px-3 flex flex-row items-center gap-3 text-[#b0afb2] text-[10px] ${additionalClasses}`}>
+      <div className={` px-3 flex flex-row items-center gap-3  text-[10px] ${additionalClasses}`}>
         <div className="flex flex-col items-center">
           <Icon icon="caret-up" className="text-[#545454] text-m cursor-pointer" />
           <Icon icon="caret-down" className="text-[#545454] text-m cursor-pointer" />

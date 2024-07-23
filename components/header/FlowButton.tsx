@@ -4,7 +4,7 @@ import Icon from '../FontAwesomeIcon';
 
 const FlowButton = () => {
   return (
-    <button className="flex h-10 items-center border-[0.5px] border-gray-600 text-white  rounded-[5px] space-x-2" style={{ backgroundColor: '#212121' }}>
+    <button className="flex h-10 items-center border-[0.5px] border-gray-600   rounded-[5px] space-x-2" style={{ backgroundColor: '#212121' }}>
       <div className='px-5 flex h-full items-center' >
         <div className="w-5 h-5 bg-[#13EF8B] rounded-full mr-2 "></div>
         <span>Flow</span>

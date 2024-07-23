@@ -16,18 +16,24 @@
   }
 }
 
+@layer base {
+  body {
+    @apply text-white;
+  }
+}
+
 html {
   background-color: #141414 !important;
   padding: 0;
   margin: 0;
   font-family: Inter, sans-serif;  
-  color: #ffffff;
+  color: #E0DFE3;
   font-size: 11px;
   font-weight: 100;
 }
 
 body{
-  color: #fff;
+  color: #E0DFE3;
   background-color: #141414;
   padding: 0 5% ;
   height: 100%;

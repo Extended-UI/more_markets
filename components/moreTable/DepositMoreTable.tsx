@@ -43,8 +43,8 @@ const DepositMoreTable: React.FC<{}> = () => {
 
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <table className="w-full text-sm text-left  text-gray-400 border border-gray-800 " >
-                <thead className="bg-[#212121] h-20 text-gray-400 text-xs text-white"     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
+        <table className="w-full text-sm text-left   border border-gray-800 " >
+                <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Deposit Token" /></th>
                     <th style={{ width: '120px' }}><TableHeaderCell title="Net Apy" /></th>
@@ -62,7 +62,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                         <td className="py-4 px-6 items-center h-full">
                         <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.tokenName.toLocaleLowerCase()} ></IconToken></div>{item.tokenName}</div>
                         </td>
-                        <td className="py-4 px-6 items-center h-full flex  ">
+                        <td className="py-4 px-6 items-center h-full   ">
                           <FormatPourcentage value={item.apy} ></FormatPourcentage>
                         </td> 
                         <td className="py-4 px-6 items-center   h-full ">
