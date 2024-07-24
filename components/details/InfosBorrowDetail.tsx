@@ -23,10 +23,10 @@ const InfosBorrowDetails = () => {
             msOverflowStyle: 'none', // Works in IE and Edge
             width: 'calc(100% + 2rem)', position: 'relative', left: '0'
         }}>
-            <InfoDetail title='Credora Min/Avg'  className="flex-1 m-2 min-w-[200px]"><span className=' font-[600] ' >BBB/AA</span> </InfoDetail>
-            <InfoDetail title='Unsecured Borrow' className="flex-1 m-2 min-w-[200px]"><span className='text-[#888888] font-[600] ' >$</span><span className=''>194.7k</span> </InfoDetail>
-            <InfoDetail title='Unsecured Borrow APY' className="flex-1 m-2 min-w-[200px]"><span className='' >17.1</span><span className='text-[#888888] font-[600] '>%</span></InfoDetail>
-            <InfoDetail title='Performance APY' className="flex-1 m-2 min-w-[200px]"><span className='' >20</span><span className='text-[#888888] font-[600] '>%</span></InfoDetail>
+            <InfoDetail title='Your Credora Rating'  className="flex-1 m-2 min-w-[200px]"><span className=' font-[600] ' >BBB/AA</span> </InfoDetail>
+            <InfoDetail title='Your LiquidationLTV' className="flex-1 m-2 min-w-[200px]"><span className='text-[#888888] font-[600] ' >$</span><span className=''>194.7k</span> </InfoDetail>
+            <InfoDetail title='Unsecured Loan Limit' className="flex-1 m-2 min-w-[200px]"><span className='' >17.1</span><span className='text-[#888888] font-[600] '>%</span></InfoDetail>
+            <InfoDetail title='1D Unsecured APY' className="flex-1 m-2 min-w-[200px]"><span className='' >20</span><span className='text-[#888888] font-[600] '>%</span></InfoDetail>
         </div>
     </div>
     

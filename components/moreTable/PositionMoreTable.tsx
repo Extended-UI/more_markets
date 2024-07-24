@@ -13,6 +13,9 @@ import ListIconToken from '../token/ListIconToken';
 import { useRouter } from 'next/navigation';
 import { DetailEarnData } from '@/types/detailEarnData';
 import VaultBorrow from '../modal/VaultBorrow';
+import FormatTokenMillion from '../tools/formatTokenMillion';
+import FormatTwoPourcentage from '../tools/formatTwoPourcentage';
+import FormatPourcentage from '../tools/formatPourcentage';
 
 interface Props {
   
@@ -23,16 +26,17 @@ const PositionMoreTable: React.FC<Props> = () => {
 
     const tableData: DetailEarnData[] = [
         {
-          allocation: "16.8",
-          supplyAmount: "3,288.62",
+          allocation: 16.8,
+          supplyAmount: 3288.62,
           supplyCurrency: "USDC",
-          supplyValue: "$1.96M",
+          supplyValue: 1.96,
           collateral: ["usdc", "btc", "add", "ada"],
-          liquidationLTV: "90% / 125%",
+          liquidationLTV: 90 ,
+          liquidationLTV2: 130 ,
           credoraRating: "CCC+ / BBB",
-          unsecuredBorrowAmount: "7,890.12",
-          unsecuredBorrowValue: "$4.98M",
-          unsecuredAPY: "16.8"
+          unsecuredBorrowAmount: 7890.12,
+          unsecuredBorrowValue: 4.98,
+          unsecuredAPY: 16.8
         },
       ];
 
@@ -60,26 +64,26 @@ const PositionMoreTable: React.FC<Props> = () => {
                        <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center items-center gap-2' >
                             <div className='mr-2 w-8 h-8'><IconToken tokenName='usdt' ></IconToken></div>
-                            <div className=' ' >{item.supplyAmount}</div> 
-                            <div>{item.supplyCurrency}</div> 
-                            <TotalVolumeToken>{item.supplyValue}</TotalVolumeToken>
+                            <FormatTokenMillion value={item.supplyAmount} totalValue={item.supplyValue} token={item.supplyCurrency} ></FormatTokenMillion>
                           </div>
                         </td>  
 
                         <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center items-center gap-2' >
                             <div className='mr-2 w-8 h-8'><IconToken tokenName='usdt' ></IconToken></div>
-                            <div className=' ' >{item.supplyAmount}</div> 
-                            <div>{item.supplyCurrency}</div> 
-                            <TotalVolumeToken>{item.supplyValue}</TotalVolumeToken>
+                            <FormatTokenMillion value={item.supplyAmount} totalValue={item.supplyValue} token={item.supplyCurrency} totalDanger={true} ></FormatTokenMillion>
                           </div>
                         </td>                        
                         
-                        <td className="py-4 px-6 items-center flex  "><div className=' flex justify-center w-full py-4 ' >{item.liquidationLTV}</div></td>
+                        <td className="py-4 px-6 items-center flex  ">
+                          <div className=' flex justify-center w-full py-4 ' >
+                            <FormatTwoPourcentage value={item.liquidationLTV} value2={item.liquidationLTV2} ></FormatTwoPourcentage>
+                          </div>
+                        </td>
                         
 
                         <td className="py-4 px-6  items-center justify-end h-full ">
-                            <div className='flex gap-1 justify-center' ><div className=' ' >{item.unsecuredAPY}</div> % </div>
+                            <div className='flex gap-1 justify-center' > <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage> </div>
                         </td>
                         
                         <td className="py-4 px-6  items-center  h-full flex justify-center">

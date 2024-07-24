@@ -1,13 +1,17 @@
 export interface DetailEarnData {
-    allocation: string;
-    supplyAmount: string;
+    allocation?: number;
+    allocationColor?: string;
+    supplyAmount: number;
     supplyCurrency: string;
-    supplyValue: string;
+    supplyValue: number;
     collateral: string[];
-    liquidationLTV: string;
+    liquidationLTV: number;
+    liquidationLTV2: number;
     credoraRating: string;
-    unsecuredBorrowAmount: string;
-    unsecuredBorrowValue: string;
-    unsecuredAPY: string;
+    unsecuredBorrowAmount: number;
+    unsecuredBorrowValue: number;
+    unsecuredAPY: number;
+    transaction?:string;
+    time?:string;
   }
   

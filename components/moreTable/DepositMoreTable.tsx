@@ -51,7 +51,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                     <th style={{ width: '200px' }}><div className='flex justify-center '><TableHeaderCell title="My Deposit" /></div></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Curator" /></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Collateral" /></th>
-                    <th style={{ width: '200px' }}></th>
+                    <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121', zIndex: 1, boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">
@@ -72,7 +72,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                          <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div> 
                         </td> 
                         <td className="py-4  items-center h-full"><ListIconToken className="w-6 h-6" iconNames={item.collaterals} ></ListIconToken></td>
-                        <td className="py-4 px-6 flex gap-2 items-center justify-end h-full">
+                        <td className="py-4 px-6 flex gap-2 items-center justify-end h-full"  style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                           <ButtonDialog color='primary' buttonText='Deposit More' > 
                               {(closeModal) => (
                                   <>

@@ -194,7 +194,7 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                 {investments.map((item, index, arr) => (
                     <tr key={index} onClick={() => goToDetail(item)}
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
-                        className={`last:border-b-0 text-[12px] border border-[#202020] cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'bg-[#191919]'}`}>
+                        className={`last:border-b-0 text-[12px] border border-[#202020] cursor-pointer ${index % 2 === 0 ? 'bg-[#141414]' : 'bg-[#191919]'}`}>
                         <td className="py-4 px-6 items-center h-full">
                           <div className='flex items-center ' ><div className='mr-2 w-6 h-6'><IconToken tokenName='usdc' ></IconToken></div>{item.tokenSymbol}</div>
                         </td>
@@ -221,7 +221,7 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                         <td className="py-4  items-center h-full ">
                             <div className='py-4 flex justify-center' >{item.credoraRating}</div>
                         </td>
-                        {inDetail &&  <td   style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? 'bg-transparent' : 'bg-[#191919]'}` }}>
+                        {inDetail &&  <td   style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                           <div onClick={(event) => event.stopPropagation()}>
                             <ButtonDialog color='primary' buttonText='Deposit' > 
                               {(closeModal) => (

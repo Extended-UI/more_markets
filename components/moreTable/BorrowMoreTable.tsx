@@ -12,6 +12,9 @@ import { BorrowData } from '@/types/borrowData';
 import IconToken from '../token/IconToken';
 import VaultBorrow from '../modal/VaultBorrow';
 import { useRouter } from 'next/navigation';
+import FormatTwoPourcentage from '../tools/formatTwoPourcentage';
+import FormatPourcentage from '../tools/formatPourcentage';
+import FormatTokenMillion from '../tools/formatTokenMillion';
 
 
 
@@ -20,16 +23,16 @@ const EarnMoreTable: React.FC<{}> = () => {
 
 
   const sampleLoans: BorrowData[] = [
-    { collateralToken: "USDC", loanToken: "DAI", liquidationLTV: "90% / 125%", borrowAPY: "14.1%", utilization: "16.8%", totalDeposits: "3,289.62", totalValueUSD: "$1.96M" },
-    { collateralToken: "USDT", loanToken: "USDA", liquidationLTV: "85% / 130%", borrowAPY: "12.3%", utilization: "13.5%", totalDeposits: "5,432.10", totalValueUSD: "$3.25M" },
-    { collateralToken: "USDA", loanToken: "USDA", liquidationLTV: "95% / 120%", borrowAPY: "8.6%", utilization: "17.5%", totalDeposits: "7,654.32", totalValueUSD: "$1.55M" },
-    { collateralToken: "USDC", loanToken: "WETH", liquidationLTV: "92% / 128%", borrowAPY: "4.9%", utilization: "15.9%", totalDeposits: "2,987.65", totalValueUSD: "$5.02M" },
-    { collateralToken: "USDT", loanToken: "WETH", liquidationLTV: "88% / 123%", borrowAPY: "15.8%", utilization: "18.5%", totalDeposits: "4,567.89", totalValueUSD: "$2.89M" },
-    { collateralToken: "USDT", loanToken: "DAI", liquidationLTV: "93% / 127%", borrowAPY: "14.7%", utilization: "14.7%", totalDeposits: "9,876.54", totalValueUSD: "$6.34M" },
-    { collateralToken: "USDA", loanToken: "USDA", liquidationLTV: "85% / 130%", borrowAPY: "13.8%", utilization: "15.9%", totalDeposits: "1,234.56", totalValueUSD: "$0.75M" },
-    { collateralToken: "DAI", loanToken: "DAI", liquidationLTV: "92% / 128%", borrowAPY: "12.7%", utilization: "12.3%", totalDeposits: "6,789.01", totalValueUSD: "$3.99M" },
-    { collateralToken: "WBTC", loanToken: "WETH", liquidationLTV: "90% / 125%", borrowAPY: "15.3%", utilization: "7.8%", totalDeposits: "3,210.98", totalValueUSD: "$1.87M" },
-    { collateralToken: "WETH", loanToken: "WETH", liquidationLTV: "88% / 123%", borrowAPY: "8.9%", utilization: "4.6%", totalDeposits: "8,765.43", totalValueUSD: "$5.67M" }
+    { collateralToken: "USDC", loanToken: "DAI", liquidationLTV: 90, liquidationLTV2 : 130, borrowAPY: 14.1, utilization: 16.8, totalDeposits: 3289.62, totalValueUSD: 1.96 },
+    { collateralToken: "USDT", loanToken: "USDA", liquidationLTV: 85, liquidationLTV2 : 130, borrowAPY: 12.3, utilization: 13.5, totalDeposits: 5432.10, totalValueUSD: 3.25 },
+    { collateralToken: "USDA", loanToken: "USDA", liquidationLTV: 95, liquidationLTV2 : 130, borrowAPY: 8.6, utilization: 17.5, totalDeposits: 7654.32, totalValueUSD: 1.55 },
+    { collateralToken: "USDC", loanToken: "WETH", liquidationLTV: 92, liquidationLTV2 : 130, borrowAPY: 4.9, utilization: 15.9, totalDeposits: 2987.65, totalValueUSD: 5.02 },
+    { collateralToken: "USDT", loanToken: "WETH", liquidationLTV: 88, liquidationLTV2 : 130, borrowAPY: 15.8, utilization: 18.5, totalDeposits: 4567.89, totalValueUSD: 2.89 },
+    { collateralToken: "USDT", loanToken: "DAI", liquidationLTV: 93, liquidationLTV2 : 130, borrowAPY: 14.7, utilization: 14.7, totalDeposits: 9876.54, totalValueUSD: 6.34 },
+    { collateralToken: "USDA", loanToken: "USDA", liquidationLTV: 85, liquidationLTV2 : 130, borrowAPY: 13.8, utilization: 15.9, totalDeposits: 1234.56, totalValueUSD: 0.75 },
+    { collateralToken: "DAI", loanToken: "DAI", liquidationLTV: 92, liquidationLTV2 : 130, borrowAPY: 12.7, utilization: 12.3, totalDeposits: 6789.01, totalValueUSD: 3.99 },
+    { collateralToken: "WBTC", loanToken: "WETH", liquidationLTV: 90, liquidationLTV2 : 130, borrowAPY: 15.3, utilization: 7.8, totalDeposits: 3210.98, totalValueUSD: 1.87 },
+    { collateralToken: "WETH", loanToken: "WETH", liquidationLTV: 88, liquidationLTV2 : 130, borrowAPY: 8.9, utilization: 4.6, totalDeposits: 8765.43, totalValueUSD: 5.67 }
   ];
 
   const router = useRouter();
@@ -48,7 +51,7 @@ const EarnMoreTable: React.FC<{}> = () => {
                     <th style={{ width: '200px' }}><TableHeaderCell title="1D Borrow APY" /></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Utilisation" /></th>
                     <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Total Deposits" /></div></th>
-                    <th style={{ width: '100px' }}></th>
+                    <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121', zIndex: 1, boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">
@@ -64,23 +67,22 @@ const EarnMoreTable: React.FC<{}> = () => {
                         </td> 
                         <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center' >
-                            <div  >{item.liquidationLTV}</div> %
-                          </div> 
+                            <FormatTwoPourcentage value={item.liquidationLTV} value2={item.liquidationLTV2}></FormatTwoPourcentage>
+                          </div>                           
                         </td>
                         <td className="py-4 px-6 items-center h-full">
-                          <div className='flex' ><div className='mr-2 w-5 h-5'></div>{item.borrowAPY}</div>
-                        </td>
-                        <td className="py-4 px-6 items-center h-full">
-                          <div className='flex' ><div className='mr-2 w-5 h-5'></div>{item.utilization}</div>
-                        </td>
-                        <td className="py-4 px-6 items-center   h-full ">
-                          <div className='flex gap-1 justify-center gap-2' >
-                            <div >{item.totalDeposits}</div> 
-                            <div>{item.loanToken}</div> 
-                            <TotalVolumeToken>{item.totalValueUSD}</TotalVolumeToken>
+                          <div className='flex justify-start' >
+                            <FormatPourcentage value={item.borrowAPY} ></FormatPourcentage>
                           </div>
                         </td>
-                        <td className="py-4 px-6  items-center justify-end h-full">
+                        <td className="py-4 px-6 items-center h-full">
+                          <div className='flex' ><FormatPourcentage value={item.utilization} ></FormatPourcentage></div>
+                        </td>
+                        <td className="py-4 px-6 items-center   h-full ">
+                          <FormatTokenMillion value={item.totalDeposits} token={item.loanToken} totalValue={item.totalDeposits} ></FormatTokenMillion>
+                        </td>
+                        <td className="py-4 px-6  items-center justify-end h-full" 
+                        style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                         <div onClick={(event) => event.stopPropagation()}>
                           <ButtonDialog color='secondary' buttonText='Borrow' > 
                                 {(closeModal) => (

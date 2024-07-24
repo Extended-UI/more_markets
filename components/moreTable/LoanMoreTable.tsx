@@ -13,6 +13,9 @@ import IconToken from '../token/IconToken';
 import { DepositData } from '@/types/depositData';
 import ListIconToken from '../token/ListIconToken';
 import { LoanData } from '@/types/loandData';
+import FormatTokenMillion from '../tools/formatTokenMillion';
+import FormatTwoPourcentage from '../tools/formatTwoPourcentage';
+import FormatPourcentage from '../tools/formatPourcentage';
 
 
 
@@ -23,18 +26,20 @@ const LoanMoreTable: React.FC<{}> = () => {
     const loansData: LoanData[] = [
         {
           token: "USDC",
-          amount: "3,289.62",
-          valueUSD: "$1.96M",
-          liquidationLTV: "90% / 125%",
-          borrowAPY: "14.1",
+          amount: 3289.62,
+          valueUSD: 1.96,
+          liquidationLTV: 90 ,
+          liquidationLTV2: 125,
+          borrowAPY: 14.1,
          
         },
         {
           token: "USDT",
-          amount: "5,432.10",
-          valueUSD: "$3.25M",
-          liquidationLTV: "85% / 130%",
-          borrowAPY: "12.3",
+          amount: 5432.10,
+          valueUSD: 3.25,
+          liquidationLTV: 85 ,
+          liquidationLTV2: 125,
+          borrowAPY: 12.3,
           
         }
       ];
@@ -47,8 +52,8 @@ const LoanMoreTable: React.FC<{}> = () => {
                 <tr className="rounded-t-lg">
                     <th style={{ width: '100px' }} className="rounded-tl-lg"><TableHeaderCell title="Collateral" /></th>
                     <th style={{ width: '220px' }}><div className='flex justify-end pr-8 '><TableHeaderCell title="Loan" /></div></th>
-                    <th style={{ width: '150px' }}><div className='flex justify-center '><TableHeaderCell title="Liquidation LTV" /></div></th>
-                    <th style={{ width: '150px' }}><div className='flex justify-end '><TableHeaderCell title="1D Borrow APY" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-center '><TableHeaderCell title="Liquidation LTV" /></div></th>
+                    <th style={{ width: '150px' }}><div className='flex justify-start '><TableHeaderCell title="1D Borrow APY" /></div></th>
                     <th ></th>
                 </tr>
                 </thead>
@@ -61,20 +66,18 @@ const LoanMoreTable: React.FC<{}> = () => {
                         <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.token.toLocaleLowerCase()} ></IconToken></div>{item.token}</div>
                         </td>
                         <td className="py-4 max-w-[120px] items-center   h-full ">
-                          <div className='flex gap-1 justify-center gap-2' >
-                            <div  >{item.amount}</div> 
-                            <div>{item.token}</div> 
-                            <TotalVolumeToken>{item.valueUSD}</TotalVolumeToken>
-                          </div>
+                          <FormatTokenMillion value={item.amount} token={item.token} totalValue={item.valueUSD} ></FormatTokenMillion>
                         </td>
                         
                         <td className="py-4  items-center h-full ">
                           <div className='flex gap-1 justify-center' >
-                            <div  >{item.liquidationLTV}</div> 
+                            <FormatTwoPourcentage value={item.liquidationLTV} value2={item.liquidationLTV2} ></FormatTwoPourcentage>
                           </div> 
                         </td>
                         <td className="py-4 items-center h-full   ">
-                         <div className='flex flex-row items-center justify-end ' >{item.borrowAPY}% </div>
+                          <div className='flex justify-start ml-3' >
+                            <FormatPourcentage value={item.borrowAPY} ></FormatPourcentage>
+                          </div>
                         </td> 
                         <td className="py-4 px-6 flex gap-2 items-center justify-end h-full">
                           <ButtonDialog color='secondary' buttonText='Borrow' > 

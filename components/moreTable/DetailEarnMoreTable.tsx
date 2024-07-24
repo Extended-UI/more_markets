@@ -12,6 +12,9 @@ import IconToken from '../token/IconToken';
 import ListIconToken from '../token/ListIconToken';
 import { useRouter } from 'next/navigation';
 import { DetailEarnData } from '@/types/detailEarnData';
+import FormatTokenMillion from '../tools/formatTokenMillion';
+import FormatPourcentage from '../tools/formatPourcentage';
+import FormatTwoPourcentage from '../tools/formatTwoPourcentage';
 
 interface Props {
   
@@ -22,88 +25,95 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
 
     const tableData: DetailEarnData[] = [
         {
-          allocation: "16.8",
-          supplyAmount: "3,288.62",
+          allocation: 16.8,
+          supplyAmount: 3288.62,
           supplyCurrency: "USDC",
-          supplyValue: "$1.96M",
+          supplyValue: 1.96,
           collateral: ["usdc", "btc", "add", "ada"],
-          liquidationLTV: "90% / 125%",
+          liquidationLTV: 130,
+          liquidationLTV2: 80,
           credoraRating: "CCC+ / BBB",
-          unsecuredBorrowAmount: "7,890.12",
-          unsecuredBorrowValue: "$4.98M",
-          unsecuredAPY: "16.8"
+          unsecuredBorrowAmount: 7890.12,
+          unsecuredBorrowValue: 4.98,
+          unsecuredAPY: 16.8
         },
         {
-          allocation: "13.5",
-          supplyAmount: "5,432.10",
+          allocation: 13.5,
+          supplyAmount: 5432.10,
           supplyCurrency: "USDT",
-          supplyValue: "$3.25M",
+          supplyValue: 3.25,
           collateral: ["usdc", "btc", "add", "ada","ant"],
-          liquidationLTV: "85% / 130%",
+          liquidationLTV: 130,
+          liquidationLTV2: 80,
           credoraRating: "BB+ / AA-",
-          unsecuredBorrowAmount: "6,543.21",
-          unsecuredBorrowValue: "$3.67M",
-          unsecuredAPY: "13.5"
+          unsecuredBorrowAmount: 6543.21,
+          unsecuredBorrowValue: 3.67,
+          unsecuredAPY: 13.5
         },
         {
-          allocation: "17.5",
-          supplyAmount: "7,654.32",
+          allocation: 17.5,
+          supplyAmount: 7654.32,
           supplyCurrency: "USDA",
-          supplyValue: "$1.55M",
+          supplyValue: 1.55,
           collateral: ["usdc", "btc", "add", "ada"],
-          liquidationLTV: "95% / 120%",
+          liquidationLTV: 130,
+          liquidationLTV2: 80,
           credoraRating: "CC+ / A-",
-          unsecuredBorrowAmount: "4,321.09",
-          unsecuredBorrowValue: "$2.45M",
-          unsecuredAPY: "17.5"
+          unsecuredBorrowAmount: 4321.09,
+          unsecuredBorrowValue: 2.45,
+          unsecuredAPY: 17.5
         },
         {
-          allocation: "15.9",
-          supplyAmount: "2,987.65",
+          allocation: 15.9,
+          supplyAmount: 2987.65,
           supplyCurrency: "USDC",
-          supplyValue: "$5.02M",
+          supplyValue: 5.02,
           collateral: ["usdc", "btc", "add", "ada"],
-          liquidationLTV: "92% / 128%",
+          liquidationLTV: 130,
+          liquidationLTV2: 80,
           credoraRating: "CCC / BBB+",
-          unsecuredBorrowAmount: "8,765.43",
-          unsecuredBorrowValue: "$5.67M",
-          unsecuredAPY: "15.9"
+          unsecuredBorrowAmount: 8765.43,
+          unsecuredBorrowValue: 5.67,
+          unsecuredAPY: 15.9
         },
         {
-          allocation: "18.5",
-          supplyAmount: "4,567.89",
+          allocation: 18.5,
+          supplyAmount: 4567.89,
           supplyCurrency: "USDT",
-          supplyValue: "$2.89M",
+          supplyValue: 2.89,
           collateral: ["ant"],
-          liquidationLTV: "88% / 123%",
+          liquidationLTV: 130,
+          liquidationLTV2: 80,
           credoraRating: "B+ / AA",
-          unsecuredBorrowAmount: "8,765.43",
-          unsecuredBorrowValue: "$1.87M",
-          unsecuredAPY: "18.5"
+          unsecuredBorrowAmount: 8765.43,
+          unsecuredBorrowValue: 1.87,
+          unsecuredAPY: 18.5
         },
         {
-          allocation: "14.7",
-          supplyAmount: "9,878.54",
+          allocation: 14.7,
+          supplyAmount: 9878.54,
           supplyCurrency: "USDT",
-          supplyValue: "$6.34M",
+          supplyValue: 6.34,
           collateral: [ "btc", "add", "ada"],
-          liquidationLTV: "93% / 127%",
+          liquidationLTV: 130,
+          liquidationLTV2: 80,
           credoraRating: "BB / A+",
-          unsecuredBorrowAmount: "3,210.98",
-          unsecuredBorrowValue: "$3.99M",
-          unsecuredAPY: "14.7"
+          unsecuredBorrowAmount: 3210.98,
+          unsecuredBorrowValue: 3.99,
+          unsecuredAPY: 14.7
         },
         {
-          allocation: "15.9",
-          supplyAmount: "1,234.56",
+          allocation: 15.9,
+          supplyAmount: 1234.56,
           supplyCurrency: "USDA",
-          supplyValue: "$0.75M",
+          supplyValue: 0.75,
           collateral: ["usdc", "btc", "add", "ada"],
-          liquidationLTV: "85% / 130%",
+          liquidationLTV: 130,
+          liquidationLTV2: 80,
           credoraRating: "B / AA+",
-          unsecuredBorrowAmount: "6,789.01",
-          unsecuredBorrowValue: "$0.75M",
-          unsecuredAPY: "15.9"
+          unsecuredBorrowAmount: 6789.01,
+          unsecuredBorrowValue: 0.75,
+          unsecuredAPY: 15.9
         }
       ];
 
@@ -117,8 +127,8 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
-                    <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Allocation" /></th>
-                    <th style={{ width: '120px' }}  > <div className='flex justify-center'><TableHeaderCell title="Supply" /></div></th>
+                    <th style={{ width: '140px' }} className="rounded-tl-lg  "><div className='flex justify-center'><TableHeaderCell title="Allocation" /></div></th>
+                    <th style={{ width: '120px' }}  > <div className='flex justify-end'><TableHeaderCell title="Supply" /></div></th>
                     <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Collateral" /></div></th>
                     <th style={{ width: '200px' }}> <div className='flex justify-end'><TableHeaderCell title="Liquidation LTV" /> </div></th>
                     <th style={{ width: '200px' }}> <div className='flex justify-center'><TableHeaderCell title="Credora Rating" /> </div></th>
@@ -133,20 +143,16 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
                         className={`last:border-b-0 text-[12px]  cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                        
                         <td className="py-4 px-6 items-center h-full  ">
-                          <div className='flex gap-1 justify-center' >
-                            <div className=' ' >{item.allocation}</div> %
+                          <div className='flex justify-end ' >
+                            <FormatPourcentage value={item.allocation} ></FormatPourcentage>
                           </div>
                         </td>
                         <td className="py-4  items-center h-full ">
-                          <div className='flex gap-1 justify-center gap-2' >
-                            <div className=' ' >{item.supplyAmount}</div> 
-                            <div>{item.supplyCurrency}</div> 
-                            <TotalVolumeToken>{item.supplyValue}</TotalVolumeToken>
-                          </div>
+                          <FormatTokenMillion value={item.supplyAmount} token={item.supplyCurrency} totalValue={item.supplyValue} ></FormatTokenMillion> 
                         </td>                        
                         <td className="py-4  items-center h-full"><div className='flex justify-center'><ListIconToken className="w-6 h-6 " iconNames={item.collateral} ></ListIconToken></div></td>
                         
-                        <td className="py-4 px-6 items-center flex  "><div className=' flex justify-center py-4 ' >{item.liquidationLTV}</div></td>
+                        <td className="py-4 px-6 items-center  "><div className=' flex justify-end py-4 ' > <FormatTwoPourcentage value={item.liquidationLTV2} value2={item.liquidationLTV}></FormatTwoPourcentage> </div></td>
                         
 
                         <td className="py-4  items-center h-full ">
@@ -154,16 +160,12 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
                         </td>
 
                         <td className="py-4  items-center h-full ">
-                          <div className='flex gap-1 justify-center gap-2' >
-                            <div className=' ' >{item.unsecuredBorrowAmount}</div> 
-                            <div>{item.supplyCurrency}</div> 
-                            <TotalVolumeToken>{item.unsecuredBorrowValue}</TotalVolumeToken>
-                          </div>
+                          <FormatTokenMillion value={item.unsecuredBorrowAmount} token={item.supplyCurrency} totalValue={item.unsecuredBorrowValue} ></FormatTokenMillion> 
                         </td>
                         
-                        <td className="py-4 px-6 items-center justify-end h-full  flex  "><div className='flex gap-1 justify-center' >
-                            <div className=' ' >{item.unsecuredAPY}</div> %
-                          </div></td>
+                        <td className="py-4 px-6 items-center justify-end h-full   ">
+                          <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage>
+                        </td>
                     </tr>
                 ))}
                 </tbody>
