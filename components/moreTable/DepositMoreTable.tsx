@@ -48,7 +48,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Deposit Token" /></th>
                     <th style={{ width: '120px' }}><TableHeaderCell title="Net Apy" /></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-center '><TableHeaderCell title="My Deposit" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start '><TableHeaderCell title="My Deposit" /></div></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Curator" /></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Collateral" /></th>
                     <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121', zIndex: 1, boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
@@ -59,19 +59,21 @@ const DepositMoreTable: React.FC<{}> = () => {
                     <tr key={index} 
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
                         className={`last:border-b-0 text-[12px]  cursor-pointer  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
-                        <td className="py-4 px-6 items-center h-full">
-                        <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.tokenName.toLocaleLowerCase()} ></IconToken></div>{item.tokenName}</div>
+                        <td className="py-4 px-6 items-start h-full">
+                        <div className='flex items-start' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.tokenName.toLocaleLowerCase()} ></IconToken></div>{item.tokenName}</div>
                         </td>
-                        <td className="py-4 px-6 items-center h-full   ">
-                          <FormatPourcentage value={item.apy} ></FormatPourcentage>
+                        <td className="py-4 px-6 items-start h-full   ">
+                          <div className='flex justify-start' >
+                            <FormatPourcentage value={item.apy} ></FormatPourcentage>
+                          </div>
                         </td> 
-                        <td className="py-4 px-6 items-center   h-full ">
+                        <td className=" items-start   h-full ">
                           <FormatTokenMillion value={item.depositAmount} token={item.tokenName} totalValue={item.depositValueUSD} ></FormatTokenMillion> 
                         </td>
-                        <td className="py-4 px-6 items-center h-full  ">
-                         <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div> 
+                        <td className="py-4 px-6 items-start h-full  ">
+                         <div className='flex items-start' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div> 
                         </td> 
-                        <td className="py-4  items-center h-full"><ListIconToken className="w-6 h-6" iconNames={item.collaterals} ></ListIconToken></td>
+                        <td className="py-4  items-start h-full"><ListIconToken className="w-6 h-6" iconNames={item.collaterals} ></ListIconToken></td>
                         <td className="py-4 px-6 flex gap-2 items-center justify-end h-full"  style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                           <ButtonDialog color='primary' buttonText='Deposit More' > 
                               {(closeModal) => (

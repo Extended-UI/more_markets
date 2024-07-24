@@ -143,11 +143,11 @@ const BorrowersMoreTable: React.FC<Props> = () => {
                           </div>
                         </td>  
                         
-                        <td className=" items-center justify-end h-full ">
+                        <td className=" items-center justify-start h-full ">
                             <div className='flex gap-1 justify-start ml-3' ><div  >{item.unsecuredAPY}</div></div>
                         </td> 
 
-                        <td className=" items-center justify-end h-full ">
+                        <td className=" items-center justify-start h-full ">
                             <div className='flex gap-1 justify-start ml-3' >
                               <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage>
                             </div>                            
@@ -157,7 +157,7 @@ const BorrowersMoreTable: React.FC<Props> = () => {
                 ))}
                 </tbody>
             </table>
-            <div className='w-full flex justify-end my-4 mr-4' >
+            <div className='w-full flex justify-start my-4 mr-4' >
                 <Pagination totalItems={tableData.length} ></Pagination>
             </div>
 

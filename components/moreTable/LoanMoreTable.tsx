@@ -51,8 +51,8 @@ const LoanMoreTable: React.FC<{}> = () => {
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '100px' }} className="rounded-tl-lg"><TableHeaderCell title="Collateral" /></th>
-                    <th style={{ width: '220px' }}><div className='flex justify-end pr-8 '><TableHeaderCell title="Loan" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-center '><TableHeaderCell title="Liquidation LTV" /></div></th>
+                    <th style={{ width: '220px' }}><div className='flex justify-start pr-8 '><TableHeaderCell title="Loan" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start '><TableHeaderCell title="Liquidation LTV" /></div></th>
                     <th style={{ width: '150px' }}><div className='flex justify-start '><TableHeaderCell title="1D Borrow APY" /></div></th>
                     <th ></th>
                 </tr>
@@ -70,7 +70,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                         </td>
                         
                         <td className="py-4  items-center h-full ">
-                          <div className='flex gap-1 justify-center' >
+                          <div className='flex gap-1 justify-start' >
                             <FormatTwoPourcentage value={item.liquidationLTV} value2={item.liquidationLTV2} ></FormatTwoPourcentage>
                           </div> 
                         </td>

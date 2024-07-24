@@ -46,11 +46,11 @@ const EarnMoreTable: React.FC<{}> = () => {
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Collateral Token" /></th>
-                    <th style={{ width: '120px' }}><TableHeaderCell title="NLoan Token" /></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-center '><TableHeaderCell title="Liquidation  LTV" /></div></th>
+                    <th style={{ width: '200px' }}><TableHeaderCell title="Loan Token" /></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start '><TableHeaderCell title="Liquidation  LTV" /></div></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="1D Borrow APY" /></th>
-                    <th style={{ width: '200px' }}><TableHeaderCell title="Utilisation" /></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Total Deposits" /></div></th>
+                    <th style={{ width: '300px' }}><TableHeaderCell title="Utilisation" /></th>
+                    <th style={{ width: '300px' }}><div className='flex justify-start'><TableHeaderCell title="Total Deposits" /></div></th>
                     <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121', zIndex: 1, boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
                 </tr>
                 </thead>
@@ -66,7 +66,7 @@ const EarnMoreTable: React.FC<{}> = () => {
                          <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='adx' ></IconToken></div>{item.loanToken}</div> 
                         </td> 
                         <td className="py-4  items-center h-full ">
-                          <div className='flex gap-1 justify-center' >
+                          <div className='flex gap-1 justify-start' >
                             <FormatTwoPourcentage value={item.liquidationLTV} value2={item.liquidationLTV2}></FormatTwoPourcentage>
                           </div>                           
                         </td>
@@ -79,9 +79,11 @@ const EarnMoreTable: React.FC<{}> = () => {
                           <div className='flex' ><FormatPourcentage value={item.utilization} ></FormatPourcentage></div>
                         </td>
                         <td className="py-4 px-6 items-center   h-full ">
-                          <FormatTokenMillion value={item.totalDeposits} token={item.loanToken} totalValue={item.totalDeposits} ></FormatTokenMillion>
+                          <div className='flex justify-start' >
+                            <FormatTokenMillion value={item.totalDeposits} token={item.loanToken} totalValue={item.totalDeposits} ></FormatTokenMillion>
+                          </div>
                         </td>
-                        <td className="py-4 px-6  items-center justify-end h-full" 
+                        <td className="py-4 px-6  items-center justify-start h-full" 
                         style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                         <div onClick={(event) => event.stopPropagation()}>
                           <ButtonDialog color='secondary' buttonText='Borrow' > 

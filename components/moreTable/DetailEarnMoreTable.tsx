@@ -127,13 +127,13 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
-                    <th style={{ width: '140px' }} className="rounded-tl-lg  "><div className='flex justify-center'><TableHeaderCell title="Allocation" /></div></th>
-                    <th style={{ width: '120px' }}  > <div className='flex justify-end'><TableHeaderCell title="Supply" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-center'><TableHeaderCell title="Collateral" /></div></th>
-                    <th style={{ width: '200px' }}> <div className='flex justify-end'><TableHeaderCell title="Liquidation LTV" /> </div></th>
-                    <th style={{ width: '200px' }}> <div className='flex justify-center'><TableHeaderCell title="Credora Rating" /> </div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Unsecured Borrow" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Unsecured APY" /></div></th>
+                    <th style={{ width: '140px' }} className="rounded-tl-lg  "><div className='flex justify-start'><TableHeaderCell title="Allocation" /></div></th>
+                    <th style={{ width: '200px' }}  > <div className='flex justify-start'><TableHeaderCell title="Supply" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Collateral" /></div></th>
+                    <th style={{ width: '200px' }}> <div className='flex justify-start'><TableHeaderCell title="Liquidation LTV" /> </div></th>
+                    <th style={{ width: '200px' }}> <div className='flex justify-start'><TableHeaderCell title="Credora Rating" /> </div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured Borrow" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured APY" /></div></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">
@@ -143,28 +143,32 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
                         className={`last:border-b-0 text-[12px]  cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                        
                         <td className="py-4 px-6 items-center h-full  ">
-                          <div className='flex justify-end ' >
-                            <FormatPourcentage value={item.allocation} ></FormatPourcentage>
+                          <div className='flex justify-start ' >
+                            <FormatPourcentage value={item.allocation || 1.6} ></FormatPourcentage>
                           </div>
                         </td>
                         <td className="py-4  items-center h-full ">
-                          <FormatTokenMillion value={item.supplyAmount} token={item.supplyCurrency} totalValue={item.supplyValue} ></FormatTokenMillion> 
+                          <div className='flex justify-start' >
+                            <FormatTokenMillion value={item.supplyAmount} token={item.supplyCurrency} totalValue={item.supplyValue} ></FormatTokenMillion> 
+                          </div>
                         </td>                        
-                        <td className="py-4  items-center h-full"><div className='flex justify-center'><ListIconToken className="w-6 h-6 " iconNames={item.collateral} ></ListIconToken></div></td>
+                        <td className="py-4  items-center h-full"><div className='flex justify-start'><ListIconToken className="w-6 h-6 " iconNames={item.collateral} ></ListIconToken></div></td>
                         
-                        <td className="py-4 px-6 items-center  "><div className=' flex justify-end py-4 ' > <FormatTwoPourcentage value={item.liquidationLTV2} value2={item.liquidationLTV}></FormatTwoPourcentage> </div></td>
+                        <td className="py-4 px-6 items-center  "><div className=' flex justify-start py-4 ' > <FormatTwoPourcentage value={item.liquidationLTV2} value2={item.liquidationLTV}></FormatTwoPourcentage> </div></td>
                         
 
                         <td className="py-4  items-center h-full ">
-                            <div className='py-4 flex justify-center' >{item.credoraRating}</div>
+                            <div className='py-4 flex justify-start' >{item.credoraRating}</div>
                         </td>
 
                         <td className="py-4  items-center h-full ">
                           <FormatTokenMillion value={item.unsecuredBorrowAmount} token={item.supplyCurrency} totalValue={item.unsecuredBorrowValue} ></FormatTokenMillion> 
                         </td>
                         
-                        <td className="py-4 px-6 items-center justify-end h-full   ">
-                          <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage>
+                        <td className="py-4 px-6 items-center  h-full   ">
+                          <div className='flex justify-start' >
+                            <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage>
+                          </div>
                         </td>
                     </tr>
                 ))}

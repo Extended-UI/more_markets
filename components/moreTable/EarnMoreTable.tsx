@@ -179,12 +179,12 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Deposit Token" /></th>
                     <th style={{ width: '120px' }}><TableHeaderCell title="Net APY" /></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Total Deposits" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Total Deposits" /></div></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Curator" /></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Collateral" /></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Unsecured" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Unsecured APY" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-end'><TableHeaderCell title="Credora Rating" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured APY" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Credora Rating" /></div></th>
                     {inDetail && (
                       <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121', zIndex: 1, boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
                     )}
@@ -199,7 +199,7 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                           <div className='flex items-center ' ><div className='mr-2 w-6 h-6'><IconToken tokenName='usdc' ></IconToken></div>{item.tokenSymbol}</div>
                         </td>
                         <td className="py-4 px-6 items-center h-full  ">
-                          <div className='flex gap-1 justify-end' >
+                          <div className='flex gap-1 justify-start' >
                             <FormatPourcentage value={item.netAPY} ></FormatPourcentage>
                           </div>
                         </td>
@@ -214,12 +214,12 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                           <FormatTokenMillion value={item.totalDeposits} token={item.tokenSymbol} totalValue={item.unsecured} ></FormatTokenMillion> 
                         </td>
                         <td className="py-4 px-6 items-center  h-full "> 
-                          <div className='flex gap-1 justify-end' >
+                          <div className='flex gap-1 justify-start' >
                             <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage>
                           </div>
                         </td>
                         <td className="py-4  items-center h-full ">
-                            <div className='py-4 flex justify-center' >{item.credoraRating}</div>
+                            <div className='py-4 flex justify-start' >{item.credoraRating}</div>
                         </td>
                         {inDetail &&  <td   style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                           <div onClick={(event) => event.stopPropagation()}>
