@@ -19,8 +19,8 @@ function generateWeeklyData(): Map<string, number> {
       // Formater la date en chaîne de caractères "YYYY-MM-DD"
       // const dateString = currentDate.toISOString().split('T')[0];
 
-      // Formater date Jour + Mois sur 3 caratères 
-      const dateString = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      // Formater date Jour + Mois sur 3 caratères, le jour est en premier puis le mois 
+      const dateString = currentDate.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
 
       // Ajouter la date et le pourcentage aléatoire à la map
       money += moneyStep
