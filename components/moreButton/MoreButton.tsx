@@ -21,7 +21,7 @@ interface ButtonProps {
               setMyColor("#cf711e");
               break;
           case "secondary":
-              setMyColor("#1c8dd3");
+              setMyColor("#cf711e");
               break;
           case "grey":
               setMyColor("#737373");

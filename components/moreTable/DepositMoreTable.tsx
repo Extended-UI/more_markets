@@ -85,7 +85,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                                   )}                            
                           </ButtonDialog>
                           
-                          <ButtonDialog color='secondary' buttonText='Withdraw' > 
+                          <ButtonDialog color='grey' buttonText='Withdraw' > 
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
