@@ -18,9 +18,8 @@ function generateWeeklyData(): Map<string, number> {
       // Calculer la date de début de chaque semaine
       const currentDate = new Date(startDate.getTime());
       currentDate.setDate(startDate.getDate() + week * 7);
-
-      // Formater la date en chaîne de caractères "YYYY-MM-DD"
-      const dateString = currentDate.toISOString().split('T')[0];
+      
+      const dateString = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
       // Ajouter la date et le pourcentage aléatoire à la map
       money += moneyStep
@@ -112,9 +111,9 @@ const ExploreGraphBorrowDetail = () => {
 
   return (
     <>
-        <div className="text-2xl mb-5">Total Borrow</div>                       
+        <div className="text-2xl mb-5">Total Borrow </div>                       
 
-         <div className="mockup-window border-[#343434] border p-4" style={{backgroundColor:"#181818"}} ><MoreGraphicsV3  datasets={datasets} labelsX={labelsX} total={"$100M"}></MoreGraphicsV3></div>
+         <div className="mockup-window border-[#343434] border p-4" style={{backgroundColor:"#181818"}} ><MoreGraphicsV3  datasets={datasets} labelsX={labelsX} total={"$100M"} isFill={true} transparency={5}></MoreGraphicsV3></div>
     </>
   )
 }

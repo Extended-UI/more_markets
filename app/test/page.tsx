@@ -20,8 +20,7 @@ function generateWeeklyData(): Map<string, number> {
       const currentDate = new Date(startDate.getTime());
       currentDate.setDate(startDate.getDate() + week * 7);
 
-      // Formater la date en chaîne de caractères "YYYY-MM-DD"
-      const dateString = currentDate.toISOString().split('T')[0];
+      const dateString = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
       // Ajouter la date et le pourcentage aléatoire à la map
       money += moneyStep

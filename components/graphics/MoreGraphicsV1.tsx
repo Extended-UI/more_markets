@@ -83,8 +83,8 @@ const MoreGraphicsV1: React.FC<Props> =  ({ datasets, labelsX, comment, isFill, 
                 </ul>
               </div>                       
             </div> 
-      </div>      
-      <div><MoreGraphicLinear key={JSON.stringify(filteredDatasets)} datasets={filteredDatasets} labelsX={labelsX} /></div>      
+      </div>            
+      <div><MoreGraphicLinear key={JSON.stringify(filteredDatasets)} datasets={filteredDatasets} labelsX={labelsX} isFill={isFill} transparency={transparency} signY={signY} borderWidth={borderWidth} pointRadius={pointRadius} minY={minY} maxY={maxY} guideLines={guideLines} /></div>      
     </>
   )
 }

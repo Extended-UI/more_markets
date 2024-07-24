@@ -48,7 +48,7 @@ const MoreGraphicsV3 = ({ datasets, labelsX, comment, isFill, signY, borderWidth
               </div>                       
              </div>            
         </div>
-        <div><MoreGraphicLinear datasets={datasets} labelsX={labelsX}></MoreGraphicLinear></div>
+        <div><MoreGraphicLinear datasets={datasets} labelsX={labelsX} isFill={isFill} transparency={transparency} signY={signY} borderWidth={borderWidth} pointRadius={pointRadius} minY={minY} maxY={maxY} guideLines={guideLines}></MoreGraphicLinear></div>
     </>
   )
 }

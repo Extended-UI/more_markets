@@ -1,9 +1,5 @@
 "use client";
-
-import MoreGraphicLinear from '@/components/graphics/MoreGraphicsLinear';
 import MoreGraphicsV1 from '@/components/graphics/MoreGraphicsV1';
-import MoreGraphicsV2 from '@/components/graphics/MoreGraphicsV2';
-import MoreGraphicsV3 from '@/components/graphics/MoreGraphicsV3';
 import React from 'react'
 
 
@@ -21,7 +17,10 @@ function generateWeeklyData(): Map<string, number> {
       currentDate.setDate(startDate.getDate() + week * 7);
 
       // Formater la date en chaîne de caractères "YYYY-MM-DD"
-      const dateString = currentDate.toISOString().split('T')[0];
+      // const dateString = currentDate.toISOString().split('T')[0];
+
+      // Formater date Jour + Mois sur 3 caratères 
+      const dateString = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
       // Ajouter la date et le pourcentage aléatoire à la map
       money += moneyStep
@@ -134,7 +133,7 @@ const RatesGraphDetail = () => {
   return (
     <>
       <div className="text-2xl mb-5 ">Rates</div>
-      <div className="mockup-window border-base-300 border"><MoreGraphicsV1  datasets={datasets} labelsX={labelsX}></MoreGraphicsV1></div>
+      <div className="mockup-window border-base-300 border"><MoreGraphicsV1  datasets={datasets} labelsX={labelsX} isFill={true} transparency={5}></MoreGraphicsV1></div>
     </>
   )
 }
