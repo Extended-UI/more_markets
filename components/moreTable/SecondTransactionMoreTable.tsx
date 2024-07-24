@@ -82,7 +82,7 @@ const SecondTransactionsMoreTable: React.FC<Props> = () => {
                        
 
                        <td className="py-4 px-6  items-center  h-full ">
-                            <div className='flex gap-1 justify-start' ><div className=' ' >{item.unsecuredAPY}</div></div>
+                            <div className='flex gap-1 justify-start' ><div className=' ' >{item.time}</div></div>
                         </td>
 
                         <td className="py-4 px-6  items-center  h-full flex justify-start">

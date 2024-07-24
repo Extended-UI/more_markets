@@ -62,7 +62,7 @@ const VaultDetail: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDe
           <div className="text-l mb-5 px-4"><span className="more-text-gray">Curator:</span><span className=" ml-3">{curator}</span></div>
           <div className="text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> {ltv}</div>
         </div>
-        <div className='more-bg-primary px-4 text-gray'>
+        <div className='px-4 my-4 text-gray'>
         This is a blurb that describes the strategy of the vault and any specific information that the curator might want to communicate to depositors.
         It can include things like the rationale, the risk tolerance, any calculations or other information that is helpful to the user. This text should be limited to 4 lines (however many characters that makes since this is about that.
         </div>        
