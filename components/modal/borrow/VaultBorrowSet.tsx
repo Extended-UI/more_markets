@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from 'react';
-import InputTokenMax from '../input/InputTokenMax';
-import TotalVolumeToken from '../token/TotalVolumeToken';
-import MoreButton from '../moreButton/MoreButton';
+import InputTokenMax from '../../input/InputTokenMax';
+import TotalVolumeToken from '../../token/TotalVolumeToken';
+import MoreButton from '../../moreButton/MoreButton';
 
 interface Props {
   title: string;

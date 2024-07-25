@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from 'react';
-import InputTokenMax from '../input/InputTokenMax';
-import TotalVolumeToken from '../token/TotalVolumeToken';
-import MoreButton from '../moreButton/MoreButton';
-import DepositTokenAmount from '../token/DepositTokenAmount';
+import InputTokenMax from '../../input/InputTokenMax';
+import TotalVolumeToken from '../../token/TotalVolumeToken';
+import MoreButton from '../../moreButton/MoreButton';
+import TokenAmount from '@/components/token/TokenAmount';
 
 interface Props {
   title: string;
@@ -63,7 +63,7 @@ const VaultDepositConfirm: React.FC<Props> = ({ title, token, balance, apy, ltv,
           <div className="text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> {ltv}</div>
         </div>
         <div className='more-bg-primary px-4 '>
-          <DepositTokenAmount token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
+          <TokenAmount title="Deposit" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div>        
         <div className="py-5 px-5">By confirming this transaction, you agree to the <a className='underline' href="#goto">Terms of Use</a> and the services provisions relating to the MORE Protocol Vault.</div>
         <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4">

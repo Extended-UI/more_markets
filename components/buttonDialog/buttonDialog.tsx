@@ -16,10 +16,9 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children
 
   useEffect(() => {
       setModalId(`my_modal_${Math.random().toString(36).slice(2, 11)}`);
-  }, []); // Se déclenche une fois après le montage initial
+  }, []); // Triggers once after initial mount
 
   if (!modalId) return null; 
-
 
   const backgroundStyle = {
     backgroundColor: `${color}1A`,
@@ -34,15 +33,14 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children
   return (
     <div>
       {/* The button to open modal : THIS IS DAISY UI IT ONLY WORK WITH htmlFor */}
-      
-      <MoreButton text={buttonText} color={color} onClick={toggleModal} ></MoreButton>
+      <MoreButton text={buttonText} color={color} onClick={toggleModal}></MoreButton>
 
       {/* Hidden checkbox to control modal */}
       <input type="checkbox" id={modalId} className="modal-toggle" />
 
       {/* Modal */}
       <div className="modal" role="dialog">
-        <div className="modal-box max-w-full px-[10px] py-[10px]  sm:min-w-[430px] sm:w-[40%] w-[90%] rounded-[5%] bg-[#343434]">
+        <div className="modal-box max-w-full px-[10px] py-[10px] sm:min-w-[430px] sm:w-[40%] w-[90%] rounded-[5%] bg-[#343434]">
           {children(toggleModal)}
         </div>
         <label className="modal-backdrop" htmlFor={modalId}>Close</label>

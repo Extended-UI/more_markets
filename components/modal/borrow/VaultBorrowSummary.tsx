@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from 'react';
-import InputTokenMax from '../input/InputTokenMax';
-import TotalVolumeToken from '../token/TotalVolumeToken';
-import MoreButton from '../moreButton/MoreButton';
-import Icon from '../FontAwesomeIcon';
-import DepositTokenAmount from '../token/DepositTokenAmount';
-import BorrowTokenAmount from '../token/BorrowTokenAmount';
+import InputTokenMax from '../../input/InputTokenMax';
+import TotalVolumeToken from '../../token/TotalVolumeToken';
+import MoreButton from '../../moreButton/MoreButton';
+import Icon from '../../FontAwesomeIcon';
+import TokenAmount from '@/components/token/TokenAmount';
+import BorrowTokenAmount from '../../token/BorrowTokenAmount';
 
 interface Props {
   title: string;
@@ -38,7 +38,7 @@ const VaultBorrowSummary: React.FC<Props> = ({ title, token, balance, apy, ltv, 
         <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Approve the bundler to spend 12.35 {token} (via permit)</div>   
         <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Execute the following actions</div>                
         <div className='more-bg-primary px-4 mx-5'> 
-          <DepositTokenAmount token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
+          <TokenAmount title="Borrow" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div>   
         <div className='more-bg-primary px-4 mx-5'> 
           <BorrowTokenAmount token={title} amount={borrow} ltv={ltv} totalTokenAmount={totalTokenAmount} />

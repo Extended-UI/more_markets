@@ -20,7 +20,7 @@ const InputTokenMax: React.FC<Props> = ({ type, value, onChange, placeholder, mi
   if (token  === 'Flow') logo = 'abt';
   
   return (
-    <div className='w-full more-bg-primary flex justify-center items-center space-x-4'>      
+    <div className='w-full  rounded-[8px] more-input-bg-color flex justify-center items-center px-4 gap-4 '>      
       <input      
         type={type}
         value={value}

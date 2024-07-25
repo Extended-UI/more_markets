@@ -1,5 +1,5 @@
 import ButtonDialog from "../buttonDialog/buttonDialog";
-import VaultDeposit from "../modal/VaultDepositConfirm";
+import VaultDeposit from "../modal/deposit/VaultDepositConfirm";
 import VaultDetail from "../modal/VaultDetail";
 import IconToken from "../token/IconToken";
 

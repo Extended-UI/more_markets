@@ -6,11 +6,11 @@ import Icon from '../FontAwesomeIcon';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import TableHeaderCell from './MoreTableHeader';
 import ButtonDialog from '../buttonDialog/buttonDialog';
-import VaultDeposit from '../modal/VaultDeposit';
+import VaultDeposit from '../modal/deposit/VaultDeposit';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import { BorrowData } from '@/types/borrowData';
 import IconToken from '../token/IconToken';
-import VaultBorrow from '../modal/VaultBorrow';
+import VaultBorrow from '../modal/borrow/VaultBorrow';
 import { useRouter } from 'next/navigation';
 import FormatTwoPourcentage from '../tools/formatTwoPourcentage';
 import FormatPourcentage from '../tools/formatPourcentage';
@@ -51,7 +51,7 @@ const EarnMoreTable: React.FC<{}> = () => {
                     <th style={{ width: '200px' }}><TableHeaderCell title="1D Borrow APY" /></th>
                     <th style={{ width: '300px' }}><TableHeaderCell title="Utilisation" /></th>
                     <th style={{ width: '300px' }}><div className='flex justify-start'><TableHeaderCell title="Total Deposits" /></div></th>
-                    <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121', zIndex: 1, boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
+                    <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121',  boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">
@@ -84,7 +84,7 @@ const EarnMoreTable: React.FC<{}> = () => {
                           </div>
                         </td>
                         <td className="py-4 px-6  items-center justify-start h-full" 
-                        style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
+                        style={{ paddingRight:10 ,position: 'sticky', right: 0,   backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                         <div onClick={(event) => event.stopPropagation()}>
                           <ButtonDialog color='secondary' buttonText='Borrow' > 
                                 {(closeModal) => (

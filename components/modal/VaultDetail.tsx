@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import InputTokenMax from '../input/InputTokenMax';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import MoreButton from '../moreButton/MoreButton';
-import DepositTokenAmount from '../token/DepositTokenAmount';
+import TokenAmount from '../token/TokenAmount';
 
 interface Props {
   title: string;

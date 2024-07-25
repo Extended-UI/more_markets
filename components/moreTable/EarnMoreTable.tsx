@@ -6,7 +6,7 @@ import Icon from '../FontAwesomeIcon';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import TableHeaderCell from './MoreTableHeader';
 import ButtonDialog from '../buttonDialog/buttonDialog';
-import VaultDeposit from '../modal/VaultDeposit';
+import VaultDeposit from '../modal/deposit/VaultDeposit';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import IconToken from '../token/IconToken';
 import ListIconToken from '../token/ListIconToken';
@@ -173,7 +173,7 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
         router.push('/earn/'+item.tokenSymbol);
       };
       return (
-<div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+<div className="overflow-x-auto  rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
@@ -186,7 +186,7 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                     <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured APY" /></div></th>
                     <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Credora Rating" /></div></th>
                     {inDetail && (
-                      <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121', zIndex: 1, boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
+                      <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121',  boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
                     )}
                 </tr>
                 </thead>
@@ -221,7 +221,7 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                         <td className="py-4  items-center h-full ">
                             <div className='py-4 flex justify-start' >{item.credoraRating}</div>
                         </td>
-                        {inDetail &&  <td   style={{ paddingRight:10 ,position: 'sticky', right: 0,  zIndex: 1, backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
+                        {inDetail &&  <td   style={{ paddingRight:10 ,position: 'sticky', right: 0,   backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                           <div onClick={(event) => event.stopPropagation()}>
                             <ButtonDialog color='primary' buttonText='Deposit' > 
                               {(closeModal) => (

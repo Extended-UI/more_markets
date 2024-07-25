@@ -6,7 +6,7 @@ import Icon from '../FontAwesomeIcon';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import TableHeaderCell from './MoreTableHeader';
 import ButtonDialog from '../buttonDialog/buttonDialog';
-import VaultDeposit from '../modal/VaultDeposit';
+import VaultDeposit from '../modal/deposit/VaultDeposit';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import IconToken from '../token/IconToken';
 import ListIconToken from '../token/ListIconToken';
