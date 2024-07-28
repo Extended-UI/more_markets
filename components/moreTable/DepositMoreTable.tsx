@@ -1,14 +1,9 @@
 "use client"
 
-import { InvestmentData } from '@/types';
 import React from 'react';
-import Icon from '../FontAwesomeIcon';
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import TableHeaderCell from './MoreTableHeader';
 import ButtonDialog from '../buttonDialog/buttonDialog';
 import VaultDeposit from '../modal/deposit/VaultDeposit';
-import TotalVolumeToken from '../token/TotalVolumeToken';
-import { BorrowData } from '@/types/borrowData';
 import IconToken from '../token/IconToken';
 import { DepositData } from '@/types/depositData'; 
 import ListIconToken from '../token/ListIconToken';
@@ -47,9 +42,10 @@ const DepositMoreTable: React.FC<{}> = () => {
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
+                    <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Vault Name" /></th>
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Deposit Token" /></th>
-                    <th style={{ width: '120px' }}><TableHeaderCell title="Net Apy" /></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-start '><TableHeaderCell title="My Deposit" /></div></th>
+                    <th style={{ width: '200px' }}><TableHeaderCell title="Net Apy" /></th>
+                    <th style={{ width: '300px' }}><div className='flex justify-start '><TableHeaderCell title="My Deposit" /></div></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Curator" /></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Collateral" /></th>
                     <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121',  boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
@@ -63,13 +59,18 @@ const DepositMoreTable: React.FC<{}> = () => {
                         <td className="py-4 px-6 items-start h-full">
                         <div className='flex items-start' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.tokenName.toLocaleLowerCase()} ></IconToken></div>{item.tokenName}</div>
                         </td>
+                        <td className="py-4 px-6 items-start h-full">
+                          <div className='flex items-start' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.tokenName.toLocaleLowerCase()} ></IconToken></div>{item.tokenName}</div>
+                        </td>
                         <td className="py-4 px-6 items-start h-full   ">
                           <div className='flex justify-start' >
                             <FormatPourcentage value={item.apy} ></FormatPourcentage>
                           </div>
                         </td> 
                         <td className=" items-start   h-full ">
-                          <FormatTokenMillion value={item.depositAmount} token={item.tokenName} totalValue={item.depositValueUSD} ></FormatTokenMillion> 
+                          <div className='flex justify-start' >
+                            <FormatTokenMillion value={item.depositAmount} token={item.tokenName} totalValue={item.depositValueUSD} ></FormatTokenMillion> 
+                          </div>
                         </td>
                         <td className="py-4 px-6 items-start h-full  ">
                          <div className='flex items-start' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div> 

@@ -4,6 +4,8 @@ import InputTokenMax from '../../input/InputTokenMax';
 import TotalVolumeToken from '../../token/TotalVolumeToken';
 import MoreButton from '../../moreButton/MoreButton';
 import FormatNumber from '../../tools/formatNumber';
+import ListIconToken from '@/components/token/ListIconToken';
+import IconToken from '@/components/token/IconToken';
 
 interface Props {
   title: string;
@@ -66,11 +68,15 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
     <div className='more-bg-secondary w-full rounded-[20px]'>
       <form onSubmit={handleSubmit}>
         <div className="text-2xl mb-10 px-4 pt-5 ">{title}</div>
+        <div className='flex items-center mb-10 px-4 gap-2' >
+          <IconToken  className='w-8 h-8' tokenName={'usdc'} ></IconToken>
+          <div className="text-2xl   flex items-center'"> {token} Vault</div>
+        </div>
         <div className="text-l mb-5 px-4">Deposit {token}</div>
-        <div className='more-bg-primary px-4'>
+        <div className=' px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>
         </div>
-        <div className="text-right more-text-gray px-4">Balance: {balance} {token}</div>        
+        <div className="text-right more-text-gray px-4 mt-4">Balance: {balance} {token}</div>        
         <div className="flex justify-end mt-7 mb-7 px-4">
           <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
           <MoreButton text="Deposit" onClick={() => handleDeposit()} color="primary" />

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import InputTokenMax from '../../input/InputTokenMax';
 import TotalVolumeToken from '../../token/TotalVolumeToken';
 import MoreButton from '../../moreButton/MoreButton';
+import ListIconToken from '@/components/token/ListIconToken';
 
 interface Props {
   title: string;
@@ -72,17 +73,21 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balanceToken, 
   return (
     <div className='more-bg-secondary w-full rounded-[20px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-xl mb-10 px-4 pt-5 ">Borrow FLOW</div>
+        <div className="text-2xl mb-10 px-4 pt-5 ">Borrow FLOW</div>
+        <div className='flex items-center mb-10 px-8 gap-2' >
+          <ListIconToken iconNames={["usdc", "abt"]} className='w-7 h-7' ></ListIconToken>
+          <div className="text-l   flex items-center'"> {token} / USDA</div>
+        </div>
         <div className="text-l mb-1 px-4">Deposit {token} Collateral</div>
-        <div className='more-bg-primary px-4'>
+        <div className=' py-2 px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceTokenString}  placeholder={`Deposit ${token}`}  token={token} balance={balanceToken}  setMax={handleSetMaxToken}/>
         </div>
-        <div className="text-right more-text-gray px-4">Balance: {balanceToken} {token}</div> 
-        <div className="text-l mb-1 px-4 mt-3">Borrow FLOW</div>
-        <div className='more-bg-primary px-4'>
+        <div className="text-right more-text-gray py-2 px-4">Balance: {balanceToken} {token}</div> 
+        <div className="text-l mb-1 px-4 py-2 mt-3">Borrow FLOW</div>
+        <div className=' px-4'>
           <InputTokenMax type="number" value={borrow} onChange={handleInputChange} min="0" max={balanceFlowString}  placeholder={`Deposit ${balanceFlow}`}  token="Flow" balance={balanceFlow}  setMax={handleSetMaxFlow}/>
         </div>
-        <div className="text-right more-text-gray px-4">Balance: {balanceFlow} FLOW</div>                
+        <div className="text-right more-text-gray py-2 px-4">Balance: {balanceFlow} FLOW</div>                
         <div className="flex justify-end mt-7 mb-7 px-4">
           <div className='mr-5' ><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
           <MoreButton text="Borrow" onClick={() => handleBorrow()} color="secondary" />

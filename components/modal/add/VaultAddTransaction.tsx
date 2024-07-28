@@ -16,20 +16,20 @@ interface Props {
   balance: number;
   apy: number;
   ltv: string;
-  totalWithdraw: number;
+  totalAdd: number;
   totalTokenAmount: number;
   amount: number;
-  validWithdraw: () => void;
+  validAdd: () => void;
   closeModal: () => void;
 }
 
-const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy, ltv, totalWithdraw, totalTokenAmount, curator, amount, validWithdraw, closeModal }) => {
+const VaultAddTransaction: React.FC<Props> = ({ title, token, balance, apy, ltv, totalAdd, totalTokenAmount, curator, amount, validAdd, closeModal }) => {
 
-  const [deposit, setWithdraw] = useState<number>(0);
+  const [deposit, setAdd] = useState<number>(0);
 
 
-  const handleWithdraw = () => {    
-    validWithdraw();
+  const handleAdd = () => {    
+    validAdd();
   };
 
   const handleCancel = () => {
@@ -49,7 +49,7 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
       //   body: JSON.stringify({ token, deposit }),
       // });
       // const data = await response.json();
-      // console.log('Withdraw response:', data);
+      // console.log('Add response:', data);
     } catch (error) {
       console.error('Error submitting deposit:', error);
     }
@@ -67,7 +67,7 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
           <div className="flex gap-2 text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> <FormatTwoPourcentage value={90} value2={125} ></FormatTwoPourcentage> </div>
         </div>
         <div className='more-bg-primary px-8 rounded-t-[5px] '>
-          <TokenAmount title="Withdraw" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
+          <TokenAmount title="Add" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div>   
         <div className='more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 '>
           <div className='text-grey pb-4' > Position Change </div>
@@ -82,11 +82,11 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
         <div className="py-5 px-2">By confirming this transaction, you agree to the <a className='underline' href="#goto">Terms of Use</a> and the services provisions relating to the MORE Protocol Vault.</div>
         <div className="flex justify-end py-5  rounded-b-[20px] px-4">
           <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton text="Withdraw" onClick={() => handleWithdraw()} color="primary" />
+          <MoreButton text="Add" onClick={() => handleAdd()} color="primary" />
         </div>              
       </form>
     </div>
   );
 };
 
-export default VaultWithdrawTransaction;
+export default VaultAddTransaction;

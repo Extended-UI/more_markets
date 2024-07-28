@@ -177,6 +177,7 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
+                    <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Vault Name" /></th>
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Deposit Token" /></th>
                     <th style={{ width: '120px' }}><TableHeaderCell title="Net APY" /></th>
                     <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Total Deposits" /></div></th>
@@ -195,6 +196,9 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                     <tr key={index} onClick={() => goToDetail(item)}
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
                         className={`last:border-b-0 text-[12px] border border-[#202020] cursor-pointer ${index % 2 === 0 ? 'bg-[#141414]' : 'bg-[#191919]'}`}>
+                        <td className="py-4 px-6 items-center h-full">
+                          <div className='flex items-center ' ><div className='mr-2 w-6 h-6'><IconToken tokenName='usdc' ></IconToken></div>{item.tokenSymbol}</div>
+                        </td>
                         <td className="py-4 px-6 items-center h-full">
                           <div className='flex items-center ' ><div className='mr-2 w-6 h-6'><IconToken tokenName='usdc' ></IconToken></div>{item.tokenSymbol}</div>
                         </td>

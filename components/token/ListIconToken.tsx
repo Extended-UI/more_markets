@@ -3,7 +3,7 @@ import IconToken from './IconToken';
 
 interface ListIconTokenProps {
     iconNames: string[],
-    className: string
+    className?: string
 }
 
 const ListIconToken: React.FC<ListIconTokenProps> = ({ iconNames, className }) => {

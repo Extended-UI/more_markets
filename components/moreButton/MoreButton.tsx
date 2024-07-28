@@ -38,9 +38,11 @@ interface ButtonProps {
       backgroundColor: `${myColor}1A`,
       color: myColor,
       opacity: 0.9,
+      width: 'auto',
+      whiteSpace: 'nowrap'
     };
   // Combining default class with any additional classes provided
-  const classes = ` h-10 border text-[12px] px-4  rounded-[5px] ${className || ''}`;
+  const classes = `  h-10 border text-[12px]  px-4 rounded-[5px] ${className || ''}`;
 
   return (
     <button

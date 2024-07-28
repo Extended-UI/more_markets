@@ -1,9 +1,7 @@
 "use client"
 
-import { InvestmentData } from '@/types';
 import React from 'react';
 import Icon from '../FontAwesomeIcon';
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import TableHeaderCell from './MoreTableHeader';
 import ButtonDialog from '../buttonDialog/buttonDialog';
 import VaultDeposit from '../modal/deposit/VaultDeposit';
@@ -17,6 +15,9 @@ import FormatTokenMillion from '../tools/formatTokenMillion';
 import FormatTwoPourcentage from '../tools/formatTwoPourcentage';
 import FormatPourcentage from '../tools/formatPourcentage';
 import VaultWithdraw from '../modal/withdraw/VaultWithdraw';
+import VaultRepay from '../modal/repay/VaultRepay';
+import VaultWithdrawBorrow from '../modal/withdrawBorrow/VaultWithdrawBorrow';
+import VaultAdd from '../modal/add/VaultAdd';
 
 
 
@@ -72,7 +73,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                                 {(closeModal) => (
                                     <>
                                     <div className=" w-full h-full">
-                                    <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
+                                    <VaultAdd title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalAdd={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultAdd>
                                     </div>
                                     </>
                                     )}                            
@@ -82,7 +83,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                                 {(closeModal) => (
                                     <>
                                     <div className=" w-full h-full">
-                                    <VaultWithdraw title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalWithdraw={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultWithdraw>
+                                    <VaultWithdrawBorrow title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalWithdraw={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultWithdrawBorrow>
                                     </div>
                                     </>
                                     )}                            
@@ -98,7 +99,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
-                                  <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
+                                  <VaultDeposit title='Withdraw' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
                                   </div>
                                   </>
                                   )}                            
@@ -108,7 +109,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
-                                  <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
+                                  <VaultRepay title='Repay' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalRepay={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultRepay>
                                   </div>
                                   </>
                                   )}                            
