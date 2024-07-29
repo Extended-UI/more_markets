@@ -65,7 +65,7 @@ const VaultRepayTransaction: React.FC<Props> = ({ title, token, balance, apy, lt
   return (
     <div className='more-bg-secondary rounded-[20px] h-full w-full px-8 py-4'>
       <form onSubmit={handleSubmit}>
-        <div className="mb-10  pt-5  text-xl">Review Transaction</div>
+        <div className="mb-10  pt-5  text-4xl">Review Transaction</div>
         <div className='flex items-center mb-10  gap-2' >
           <ListIconToken iconNames={["usdc", "abt"]} className='w-7 h-7' ></ListIconToken>
           <div className="text-l   flex items-center'"> {token} / USDA</div>
