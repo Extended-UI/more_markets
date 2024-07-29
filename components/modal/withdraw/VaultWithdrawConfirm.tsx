@@ -36,7 +36,7 @@ const VaultWithdrawConfirm: React.FC<Props> = ({ title, token, balance, apy, ltv
         
         <div className="flex items-center text-l mb-5 px-4"><span><CheckCircleIcon  className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" /></span>Transaction 0x7854...854xs has been succefully executed</div>
         <div className="flex justify-end py-5  rounded-b-[20px] px-4">
-          <div className='mr-5'><MoreButton text="Done" onClick={closeModal} color="secondary" /></div>
+          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Done" onClick={closeModal} color="secondary" /></div>
         </div>              
     </div>
   );

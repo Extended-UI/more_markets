@@ -95,8 +95,8 @@ const VaultAddSet: React.FC<Props> = ({ title, token, balance, apy, ltv, totalAd
 
         </div>
         <div className="flex justify-end mt-7 mb-7 px-4">
-          <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton text="Confirm" onClick={() => handleAdd()} color="primary" />
+          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-2xl py-2' text="Confirm" onClick={() => handleAdd()} color="primary" />
         </div>
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-primary w-full'></div>

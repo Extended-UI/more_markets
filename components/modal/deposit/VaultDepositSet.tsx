@@ -67,19 +67,15 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
   return (
     <div className='more-bg-secondary w-full rounded-[20px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-2xl mb-10 px-4 pt-5 ">{title}</div>
-        <div className='flex items-center mb-10 px-4 gap-2' >
-          <IconToken  className='w-8 h-8' tokenName={'usdc'} ></IconToken>
-          <div className="text-2xl   flex items-center'"> {token} Vault</div>
-        </div>
+        <div className="text-2xl mb-10 px-4 pt-10 ">{title}</div>
         <div className="text-l mb-5 px-4">Deposit {token}</div>
         <div className=' px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>
         </div>
         <div className="text-right more-text-gray px-4 mt-4">Balance: {balance} {token}</div>        
         <div className="flex justify-end mt-7 mb-7 px-4">
-          <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton text="Deposit" onClick={() => handleDeposit()} color="primary" />
+          <div className='mr-5 '><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-2xl py-2'  text="Deposit" onClick={() => handleDeposit()} color="primary" />
         </div>
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-primary w-full'></div>

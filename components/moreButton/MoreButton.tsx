@@ -18,10 +18,10 @@ interface ButtonProps {
       console.log('Initial color', color);
       switch (color) {
           case "primary":
-              setMyColor("#cf711e");
+              setMyColor("#F58420");
               break;
           case "secondary":
-              setMyColor("#cf711e");
+              setMyColor("#F58420");
               break;
           case "grey":
               setMyColor("#737373");
@@ -42,7 +42,7 @@ interface ButtonProps {
       whiteSpace: 'nowrap'
     };
   // Combining default class with any additional classes provided
-  const classes = `  h-10 border text-[12px]  px-4 rounded-[5px] ${className || ''}`;
+  const classes = `  min-h-10 border   px-4 rounded-[5px] ${className || ''}`;
 
   return (
     <button

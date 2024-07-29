@@ -73,11 +73,7 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balanceToken, 
   return (
     <div className='more-bg-secondary w-full rounded-[20px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-2xl mb-10 px-4 pt-5 ">Borrow FLOW</div>
-        <div className='flex items-center mb-10 px-8 gap-2' >
-          <ListIconToken iconNames={["usdc", "abt"]} className='w-7 h-7' ></ListIconToken>
-          <div className="text-l   flex items-center'"> {token} / USDA</div>
-        </div>
+        <div className="text-2xl mb-10 px-4 pt-5 ">Borrow</div>
         <div className="text-l mb-1 px-4">Deposit {token} Collateral</div>
         <div className=' py-2 px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceTokenString}  placeholder={`Deposit ${token}`}  token={token} balance={balanceToken}  setMax={handleSetMaxToken}/>
@@ -89,8 +85,8 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balanceToken, 
         </div>
         <div className="text-right more-text-gray py-2 px-4">Balance: {balanceFlow} FLOW</div>                
         <div className="flex justify-end mt-7 mb-7 px-4">
-          <div className='mr-5' ><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton text="Borrow" onClick={() => handleBorrow()} color="secondary" />
+          <div className='mr-5' ><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-2xl py-2' text="Borrow" onClick={() => handleBorrow()} color="secondary" />
         </div>
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-secondary w-full'></div>

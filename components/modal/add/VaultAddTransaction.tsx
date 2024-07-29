@@ -81,8 +81,8 @@ const VaultAddTransaction: React.FC<Props> = ({ title, token, balance, apy, ltv,
 
         <div className="py-5 px-2">By confirming this transaction, you agree to the <a className='underline' href="#goto">Terms of Use</a> and the services provisions relating to the MORE Protocol Vault.</div>
         <div className="flex justify-end py-5  rounded-b-[20px] px-4">
-          <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton text="Add" onClick={() => handleAdd()} color="primary" />
+          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-2xl py-2' text="Add" onClick={() => handleAdd()} color="primary" />
         </div>              
       </form>
     </div>

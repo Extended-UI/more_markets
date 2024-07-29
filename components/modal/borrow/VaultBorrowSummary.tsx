@@ -6,6 +6,7 @@ import MoreButton from '../../moreButton/MoreButton';
 import Icon from '../../FontAwesomeIcon';
 import TokenAmount from '@/components/token/TokenAmount';
 import BorrowTokenAmount from '../../token/BorrowTokenAmount';
+import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
 interface Props {
   title: string;
@@ -34,9 +35,9 @@ const VaultBorrowSummary: React.FC<Props> = ({ title, token, balance, apy, ltv, 
   return (
     <div className='more-bg-secondary h-full rounded-[20px]'>      
         <div className="text-xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
-        <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Authorize the MORE to execute multiple actions in a single transaction when updating your positions</div>
-        <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Approve the bundler to spend 12.35 {token} (via permit)</div>   
-        <div className="text-l mb-5 px-4"><span><Icon icon="circle-check" className="text-secondary text-xl cursor-pointer mr-5" /></span>Execute the following actions</div>                
+        <div className="text-l flex mb-5 px-4"><span><CheckCircleIcon  className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" /></span>Authorize the MORE to execute multiple actions in a single transaction when updating your positions</div>
+        <div className="text-l flex mb-5 px-4"><span><CheckCircleIcon  className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" /></span>Approve the bundler to spend 12.35 {token} (via permit)</div>   
+        <div className="text-l flex mb-5 px-4"><span><CheckCircleIcon  className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" /></span>Execute the following actions</div>                
         <div className='more-bg-primary px-4 mx-5'> 
           <TokenAmount title="Borrow" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div>   
@@ -44,7 +45,7 @@ const VaultBorrowSummary: React.FC<Props> = ({ title, token, balance, apy, ltv, 
           <BorrowTokenAmount token={title} amount={borrow} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div> 
         <div className="flex justify-end mt-7 mb-7 px-4">
-          <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>          
+          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>          
         </div>                       
         <div className="text-l my-5 px-4"><span><Icon icon="circle" className="text-xl cursor-pointer mr-5" /></span>Transaction 0×47b3...bv87 has been successfully executed.</div>
         <div className='more-bg-primary px-4  py-2  rounded-b-[20px]' onClick={closeModal}>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import MoreButton from '../moreButton/MoreButton';
 
 interface ButtonDialogProps {
@@ -11,40 +11,38 @@ interface ButtonDialogProps {
 
 const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children }) => {
 
-  // Generate a unique id for the modal
-  const [modalId, setModalId] = useState('');
+  // State to control modal visibility
+  const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-      setModalId(`my_modal_${Math.random().toString(36).slice(2, 11)}`);
-  }, []); // Triggers once after initial mount
-
-  if (!modalId) return null; 
-
-  const backgroundStyle = {
-    backgroundColor: `${color}1A`,
-  };
-
-  // Function to programmatically close the modal by clicking the label associated with the checkbox
   const toggleModal = () => {
-    console.log("toggleModal: ", modalId);
-    document.getElementById(modalId)?.click();
+    setIsOpen(!isOpen);
   };
 
   return (
     <div>
-      {/* The button to open modal : THIS IS DAISY UI IT ONLY WORK WITH htmlFor */}
-      <MoreButton text={buttonText} color={color} onClick={toggleModal}></MoreButton>
-
-      {/* Hidden checkbox to control modal */}
-      <input type="checkbox" id={modalId} className="modal-toggle" />
+      {/* The button to open modal */}
+      <MoreButton text={buttonText} color={color} onClick={toggleModal} />
 
       {/* Modal */}
-      <div className="modal" role="dialog">
-        <div className="modal-box max-w-full px-[10px] py-[10px] sm:min-w-[430px] sm:w-[40%] w-[90%] rounded-[5%] bg-[#343434]">
-          {children(toggleModal)}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center"
+          role="dialog"
+          style={{ zIndex: 1000000 }}
+        >
+          <div 
+            className="fixed inset-0 bg-black opacity-50"
+            onClick={toggleModal}
+            style={{ zIndex: 999999 }}
+          ></div>
+          <div 
+            className="modal-box max-w-full px-[10px] py-[10px] sm:min-w-[430px] sm:w-[40%] w-[90%] rounded-[5%] bg-[#343434]"
+            style={{ zIndex: 1000001 }}
+          >
+            {children(toggleModal)}
+          </div>
         </div>
-        <label className="modal-backdrop" htmlFor={modalId}>Close</label>
-      </div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import InputTokenMax from '../input/InputTokenMax';
 import TotalVolumeToken from '../token/TotalVolumeToken';
 import MoreButton from '../moreButton/MoreButton';
 import TokenAmount from '../token/TokenAmount';
+import IconToken from '../token/IconToken';
 
 interface Props {
   title: string;
@@ -57,9 +58,12 @@ const VaultDetail: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDe
     <div className='more-bg-secondary rounded-[20px] h-full w-full'>
       <form onSubmit={handleSubmit}>
         <div className="mb-7 px-4 pt-5  text-xl">{title}</div>
-        <div className="text-xl mb-1 px-4 pt-5 ">Vault Strategy</div>
+        <div className="text-xl mb-1 px-4 pt-5 pb-5 ">Vault Strategy</div>
         <div className="flex flex-row justify-between items-center">
-          <div className="text-l mb-5 px-4"><span className="more-text-gray">Curator:</span><span className=" ml-3">{curator}</span></div>
+          <div className="text-l flex items-center gap-2 flex mb-5 px-4"><span className="more-text-gray">Curator:</span>
+              <IconToken  className='w-6 h-6' tokenName={token} ></IconToken>
+              <span >{curator}</span>
+          </div>
           <div className="text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> {ltv}</div>
         </div>
         <div className='px-4 my-4 text-gray'>

@@ -81,13 +81,13 @@ const VaultRepaySet: React.FC<Props> = ({ title, token, balance, apy, ltv, total
           <div className="text-m text-grey pl-2  flex justify-end items-center'">Balance {balance} {token}</div>
         </div>
         <div className="flex justify-end mt-7 mb-7 px-8">
-          <div className='mr-5'><MoreButton text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton text="Confirm" onClick={() => handleRepay()} color="primary" />
+          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-2xl py-2' text="Confirm" onClick={() => handleRepay()} color="primary" />
         </div>
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-primary w-full'></div>
         </div>
-        <div className='flex  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4 '>
+        <div className='flex text-xl  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4 '>
           <div className="flex w-full justify-between ">        
             <div>Borrow APY / Projected Borrow APY</div>
             <div><span className="more-text-gray">n/a</span></div>

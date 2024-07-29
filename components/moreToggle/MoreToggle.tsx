@@ -57,11 +57,11 @@ const ToggleMore: React.FC<ToggleMoreProps> = ({ defaultChecked = false }) => {
 
         .toggle-checkbox:checked + .toggle-label::before {
             transform: translateX(-24px); // Adjusted so that it does not overlap the edge when toggled
-            background-color: rgba(255, 165, 0, 1); // Orange color when active
+            background-color: #F58420; // Orange color when active
         }
 
         .toggle-checkbox:checked + .toggle-label {
-            background-color: rgba(255, 165, 0, 0.1);
+            background-color: #F584201A;
         }
         `}</style>
     </div>
