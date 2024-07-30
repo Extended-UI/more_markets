@@ -191,6 +191,8 @@ const [chartAnnotations, setAnnotations] = useState<any[]>([]);
         max: maxY ?? undefined, // Valeur maximale de l'axe Y
         ticks: {   
           stepSize: 1,  // Chaque unité sur l'axe aura un tick
+          autoSkip: true,
+          autoSkipPadding: 50,          
           // Ajout de l'unité "€" après chaque valeur
           callback: function(value: any) {
             return  beforeSignY +  `${value}` + afterSignY;
