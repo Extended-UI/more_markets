@@ -5,7 +5,8 @@ import Icon from '../FontAwesomeIcon'
 interface Props {  
     labelsX: string[], // Obligatoire
     datasets: Dataset[], // Obligatoire
-    signY?: string, // Optionnel
+    beforeSignY?: string, // Optionnel
+    afterSignY?: string, // Optionnel
     isFill?: boolean, // Optionnel
     transparency?: number, // Optionnel
     borderWidth?: number, // Optionnel
@@ -17,7 +18,7 @@ interface Props {
     total?: string, // Optionnel
   }
 
-const MoreGraphicsV3 = ({ datasets, labelsX, comment, isFill, signY, borderWidth, pointRadius, transparency, minY, maxY, guideLines, total }: Props) => {
+const MoreGraphicsV3 = ({ datasets, labelsX, comment, isFill, beforeSignY, afterSignY, borderWidth, pointRadius, transparency, minY, maxY, guideLines, total }: Props) => {
   return (
     <>
         <div className="p-2 flex justify-between items-center">                    
@@ -48,7 +49,7 @@ const MoreGraphicsV3 = ({ datasets, labelsX, comment, isFill, signY, borderWidth
               </div>                       
              </div>            
         </div>
-        <div><MoreGraphicLinear datasets={datasets} labelsX={labelsX} isFill={isFill} transparency={transparency} signY={signY} borderWidth={borderWidth} pointRadius={pointRadius} minY={minY} maxY={maxY} guideLines={guideLines}></MoreGraphicLinear></div>
+        <div><MoreGraphicLinear datasets={datasets} labelsX={labelsX} isFill={isFill} transparency={transparency} afterSignY={afterSignY} beforeSignY={beforeSignY} borderWidth={borderWidth} pointRadius={pointRadius} minY={minY} maxY={maxY} guideLines={guideLines}></MoreGraphicLinear></div>
     </>
   )
 }

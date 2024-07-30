@@ -8,9 +8,8 @@ function generateWeeklyData(): Map<string, number> {
   const startDate = new Date('2024-01-01');
   const data = new Map<string, number>();
 
-  let money = 0
+  let x = 15
   let cnt = 52
-  let moneyStep = 100 / cnt
   for (let week = 0; week < cnt; week++) {
       // Calculer la date de début de chaque semaine
       const currentDate = new Date(startDate.getTime());
@@ -23,12 +22,20 @@ function generateWeeklyData(): Map<string, number> {
       const dateString = currentDate.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
 
       // Ajouter la date et le pourcentage aléatoire à la map
-      money += moneyStep
-      data.set(dateString, money + Math.random() * 10);
+      x = getRandomInteger(10, 30, x, 3);
+      data.set(dateString, x);
   }
 
   return data;
 }
+
+
+function getRandomInteger(min:number, max:number, reference:number, range:number): number {
+  min = Math.max(min, reference - range);  // Assure que le minimum n'est pas inférieur à 10
+  max = Math.min(max, reference + range);  // Assure que le maximum ne dépasse pas 30
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 
 
 const RatesGraphDetail = () => {
@@ -110,22 +117,22 @@ const RatesGraphDetail = () => {
           {
             label: "Supply APY",
             data: percentages1,
-            borderColor:'#1DA1F2',        
-            backgroundColor: '#1DA1F2',
+            borderColor:'#1e97eb',        
+            backgroundColor: '#1e97eb',
             percentage: 11.41
           },
           {
             label: "Borrow APY",
             data: percentages2,
-            borderColor:'#A1F21D',        
-            backgroundColor: '#A1F21D',
+            borderColor:'#6636e2',        
+            backgroundColor: '#6636e2',
             percentage: 12.98
           },
           {
             label: "Borrow APY at Target",
             data: percentages3,
-            borderColor:'#F21DA1',        
-            backgroundColor: '#F21DA1',
+            borderColor:'#2cb35e',        
+            backgroundColor: '#2cb35e',
             percentage: 13.15
           },                    
         ]
@@ -133,7 +140,7 @@ const RatesGraphDetail = () => {
   return (
     <>
       <div className="text-2xl mb-5 ">Rates</div>
-      <div className="mockup-window border-base-300 border"><MoreGraphicsV1  datasets={datasets} labelsX={labelsX} isFill={true} transparency={5}></MoreGraphicsV1></div>
+      <div className="mockup-window border-base-300 border"><MoreGraphicsV1  datasets={datasets} labelsX={labelsX} isFill={true} transparency={5} afterSignY='%'></MoreGraphicsV1></div>
     </>
   )
 }

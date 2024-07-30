@@ -19,7 +19,7 @@ interface Props {
 const MoreGraphicsV2 = ({ datasets, labelsX, comment, isFill, signY, borderWidth, pointRadius, transparency, minY, maxY, guideLines }: Props) => {
   return (
     <>        
-        <div><MoreGraphicLinear datasets={datasets} labelsX={labelsX} signY='%' isFill={isFill} transparency={transparency} borderWidth={borderWidth} pointRadius={pointRadius} minY={minY} maxY={maxY} guideLines={guideLines}></MoreGraphicLinear></div>
+        <div><MoreGraphicLinear datasets={datasets} labelsX={labelsX} afterSignY='%' isFill={isFill} transparency={transparency} borderWidth={borderWidth} pointRadius={pointRadius} minY={minY} maxY={maxY} guideLines={guideLines}></MoreGraphicLinear></div>
         <div className="grid grid-cols-2 gap-4 p-4">            
             {datasets.map((dataset) => (
                 <div key={dataset.label} className="p-2 flex justify-start items-center">

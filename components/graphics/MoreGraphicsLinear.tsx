@@ -21,7 +21,8 @@ ChartJS.register(
 interface Props {  
   labelsX: string[], // Obligatoire
   datasets: Dataset[], // Obligatoire
-  signY?: string, // Optionnel
+  beforeSignY?: string, // Optionnel
+  afterSignY?: string, // Optionnel
   isFill?: boolean, // Optionnel
   transparency?: number, // Optionnel
   borderWidth?: number, // Optionnel
@@ -89,15 +90,16 @@ function randomPercentage(): number {
 
 
 
-const MoreGraphicLinear = ({ datasets, labelsX, isFill, signY, borderWidth, pointRadius, transparency, minY, maxY, guideLines }: Props) => {
+const MoreGraphicLinear = ({ datasets, labelsX, isFill, afterSignY, beforeSignY, borderWidth, pointRadius, transparency, minY, maxY, guideLines }: Props) => {
 
-  if (signY === undefined) {
-    signY = "";
+  if (afterSignY === undefined) {
+    afterSignY = "";
   }
-  else {
-    signY = " " + signY;
+
+  if (beforeSignY === undefined) {
+    beforeSignY = "";
   }
-  
+
   // Utilisez useState pour conserver et mettre à jour les datasets localement après la première définition
 // Utilisation de l'interface Dataset pour typifier l'état
 const [chartDatasets, setChartDatasets] = useState<Dataset[]>([]);
@@ -187,13 +189,22 @@ const [chartAnnotations, setAnnotations] = useState<any[]>([]);
         beginAtZero: true,
         min: minY ?? undefined, // Valeur minimale de l'axe Y
         max: maxY ?? undefined, // Valeur maximale de l'axe Y
-        ticks: {
+        ticks: {   
+          stepSize: 1,  // Chaque unité sur l'axe aura un tick
           // Ajout de l'unité "€" après chaque valeur
           callback: function(value: any) {
-            return `${value}` + signY;
+            return  beforeSignY +  `${value}` + afterSignY;
           }
+        }                              
+      },
+      x: {
+        ticks: {
+            maxRotation: 0, // Empêche la rotation des étiquettes
+            minRotation: 0,  // Fixe les étiquettes à l'horizontal
+            autoSkip: true,
+            autoSkipPadding: 50 
         }
-      }
+      }      
     },
     plugins: {
       legend: {

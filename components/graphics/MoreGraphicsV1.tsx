@@ -5,7 +5,8 @@ import Icon from '../FontAwesomeIcon'
 interface Props {  
     labelsX: string[], // Obligatoire
     datasets: Dataset[], // Obligatoire
-    signY?: string, // Optionnel
+    afterSignY?: string, // Optionnel
+    beforeSignY?: string, // Optionnel
     isFill?: boolean, // Optionnel
     transparency?: number, // Optionnel
     borderWidth?: number, // Optionnel
@@ -17,7 +18,7 @@ interface Props {
     total?: string, // Optionnel
   }
 
-const MoreGraphicsV1: React.FC<Props> =  ({ datasets, labelsX, comment, isFill, signY, borderWidth, pointRadius, transparency, minY, maxY, guideLines, total }: Props) => {    
+const MoreGraphicsV1: React.FC<Props> =  ({ datasets, labelsX, comment, isFill, afterSignY, beforeSignY, borderWidth, pointRadius, transparency, minY, maxY, guideLines, total }: Props) => {    
   const [visibility, setVisibility] = useState<{[key: string]: boolean}>({});
 
   useEffect(() => {
@@ -84,7 +85,7 @@ const MoreGraphicsV1: React.FC<Props> =  ({ datasets, labelsX, comment, isFill, 
               </div>                       
             </div> 
       </div>            
-      <div><MoreGraphicLinear key={JSON.stringify(filteredDatasets)} datasets={filteredDatasets} labelsX={labelsX} isFill={isFill} transparency={transparency} signY={signY} borderWidth={borderWidth} pointRadius={pointRadius} minY={minY} maxY={maxY} guideLines={guideLines} /></div>      
+      <div><MoreGraphicLinear key={JSON.stringify(filteredDatasets)} datasets={filteredDatasets} labelsX={labelsX} isFill={isFill} transparency={transparency} afterSignY={afterSignY} borderWidth={borderWidth} pointRadius={pointRadius} minY={minY} maxY={maxY} guideLines={guideLines} /></div>      
     </>
   )
 }
