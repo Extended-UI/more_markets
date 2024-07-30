@@ -50,7 +50,7 @@ const MoreGraphicsV1: React.FC<Props> =  ({ datasets, labelsX, comment, isFill, 
 
   return (
     <>
-      <div className="p-2 flex justify-between items-center overflow-x-auto"  style={{
+      <div className="p-2 flex justify-between items-center overflow-x-auto overflow-y-hidden"  style={{
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none', // Works in Firefox
             msOverflowStyle: 'none', // Works in IE and Edge

@@ -1,6 +1,6 @@
 import ButtonDialog from "../buttonDialog/buttonDialog";
-import VaultDeposit from "../modal/deposit/VaultDepositConfirm";
 import VaultDetail from "../modal/VaultDetail";
+import VaultDeposit from "../modal/deposit/VaultDeposit";
 import IconToken from "../token/IconToken";
 
 const HeaderEarnDetail: React.FC = () => {
@@ -22,17 +22,13 @@ const HeaderEarnDetail: React.FC = () => {
         </div>
         <div className="flex gap-2">
             <ButtonDialog color='primary' buttonText='Deposit' > 
-                        {(closeModal) => (
-                            <>
-                            <div className="h-full w-full">
-                            <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' amount={0} validDeposit={function (): void {
-                                    throw new Error("Function not implemented.");
-                                } } closeModal={function (): void {
-                                    throw new Error("Function not implemented.");
-                                } }></VaultDeposit>
-                            </div>
-                            </>
-                        )}          
+                {(closeModal) => (
+                <>
+                    <div className="h-full w-full">
+                    <VaultDeposit title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
+                    </div>
+                </>
+                )}          
             </ButtonDialog>
             <ButtonDialog color='grey' buttonText='Vault Details' > 
                         {(closeModal) => (
@@ -40,9 +36,7 @@ const HeaderEarnDetail: React.FC = () => {
                             <div className="h-full w-full">
                             <VaultDetail title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' amount={0} validDeposit={function (): void {
                                     throw new Error("Function not implemented.");
-                                } } closeModal={function (): void {
-                                    throw new Error("Function not implemented.");
-                                } }></VaultDetail>
+                                } } closeModal={closeModal}></VaultDetail>
                             </div>
                             </>
                         )}          

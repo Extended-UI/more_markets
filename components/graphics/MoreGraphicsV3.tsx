@@ -26,7 +26,7 @@ const MoreGraphicsV3 = ({ datasets, labelsX, comment, isFill, beforeSignY, after
               <div>Total Borrow</div>               
               <div className='text-secondary text-3xl'>{ total }</div>                         
             </div>
-             <div className=' flex flex-row  sm:overflow-x-hidden overflow-x-auto'  style={{
+             <div className=' flex flex-row  sm:overflow-x-hidden overflow-x-auto overflow-y-hidden'  style={{
                 WebkitOverflowScrolling: 'touch',
                 scrollbarWidth: 'none', // Works in Firefox
                 msOverflowStyle: 'none', // Works in IE and Edge

@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import TableHeaderCell from './MoreTableHeader';
 import ButtonDialog from '../buttonDialog/buttonDialog';
 import VaultDeposit from '../modal/deposit/VaultDeposit';
@@ -36,6 +36,11 @@ const DepositMoreTable: React.FC<{}> = () => {
         }
       ];
 
+      const [isStickyDisabled, setIsStickyDisabled] = useState(false);
+
+    const toggleSticky = () => {
+      setIsStickyDisabled(!isStickyDisabled);
+    };
 
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
@@ -48,7 +53,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                     <th style={{ width: '300px' }}><div className='flex justify-start '><TableHeaderCell title="My Deposit" /></div></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Curator" /></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Collateral" /></th>
-                    <th style={{ position: 'sticky', right: 0, backgroundColor: '#212121',  boxShadow: 'inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)' }}></th>
+                    <th style={{ position: isStickyDisabled ? 'static' : 'sticky', right: 0, backgroundColor: '#212121' }}></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">
@@ -76,8 +81,8 @@ const DepositMoreTable: React.FC<{}> = () => {
                          <div className='flex items-start' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.curator}</div> 
                         </td> 
                         <td className="py-4  items-start h-full"><ListIconToken className="w-6 h-6" iconNames={item.collaterals} ></ListIconToken></td>
-                        <td className="py-4 px-6 flex gap-2 items-center justify-end h-full"  style={{ paddingRight:10 ,position: 'sticky', right: 0,   backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
-                          <ButtonDialog color='primary' buttonText='Deposit More' > 
+                        <td className={`py-4 px-6 flex gap-2 items-center justify-end h-full ${isStickyDisabled ? '' : 'sticky'}`} style={{ right: 0, backgroundColor: index % 2 === 0 ? '#141414' : '#191919' }}>
+                        <ButtonDialog color='primary' buttonText='Deposit More' onButtonClick={toggleSticky} > 
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
@@ -87,7 +92,7 @@ const DepositMoreTable: React.FC<{}> = () => {
                                   )}                            
                           </ButtonDialog>
                           
-                          <ButtonDialog color='grey' buttonText='Withdraw' > 
+                          <ButtonDialog color='grey' buttonText='Withdraw' onButtonClick={toggleSticky}> 
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
