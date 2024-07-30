@@ -60,7 +60,7 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
   return (
     <div className='more-bg-secondary rounded-[20px] h-full w-full px-4'>
       <form onSubmit={handleSubmit}>
-        <div className="mb-10 px-4 pt-5  text-xl">Review Transaction</div>
+        <div className="mb-10 px-4 pt-10  text-3xl">Review Transaction</div>
         <div className="text-l mb-1 px-4 pt-5 ">{title}</div>
         <div className="flex flex-row justify-between mt-4 items-center">
           <div className="flex gap-2 text-l mb-5  px-4 items-center"> <span className="more-text-gray">Curator:</span><IconToken className='w-6 h-6' tokenName='abt' ></IconToken> <span >{curator}</span></div>

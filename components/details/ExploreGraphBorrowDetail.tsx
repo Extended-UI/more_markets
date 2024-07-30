@@ -111,7 +111,7 @@ const ExploreGraphBorrowDetail = () => {
 
   return (
     <>
-        <div className="text-2xl mb-5">Total Borrow </div>                       
+        <div className="text-2xl mb-5">Explore Market</div>                       
 
          <div className="mockup-window border-[#343434] border p-4" style={{backgroundColor:"#181818"}} ><MoreGraphicsV3  datasets={datasets} labelsX={labelsX} total={"$100M"} isFill={true} transparency={5} afterSignY='M' beforeSignY="$"></MoreGraphicsV3></div>
     </>

@@ -65,7 +65,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                         className={`last:border-b-0 text-[12px]  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                         <td className=" py-4 px-6 items-center h-full gap-2">
                           <div className='flex gap-2 items-center' >
-                            <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.token.toLocaleLowerCase()} ></IconToken></div>{item.token}</div>
+                            <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName={item.token.toLocaleLowerCase()} ></IconToken></div></div>
                             <span> &lt;  </span>
                             <FormatTokenMillion value={item.amount} token={item.token} totalValue={item.valueUSD} ></FormatTokenMillion>
                             <div className='ml-8' ></div>
@@ -73,7 +73,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                                 {(closeModal) => (
                                     <>
                                     <div className=" w-full h-full">
-                                    <VaultAdd title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalAdd={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultAdd>
+                                    <VaultAdd title='Add Collateral' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalAdd={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultAdd>
                                     </div>
                                     </>
                                     )}                            
@@ -83,7 +83,7 @@ const LoanMoreTable: React.FC<{}> = () => {
                                 {(closeModal) => (
                                     <>
                                     <div className=" w-full h-full">
-                                    <VaultWithdrawBorrow title='USDMax Vault' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalWithdraw={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultWithdrawBorrow>
+                                    <VaultWithdrawBorrow title='Withdraw Collateral' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalWithdraw={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultWithdrawBorrow>
                                     </div>
                                     </>
                                     )}                            
@@ -93,6 +93,7 @@ const LoanMoreTable: React.FC<{}> = () => {
 
                         <td className=" py-4 px-6 items-center h-full gap-2">
                           <div className='flex gap-2 items-center' >
+                          <IconToken className='w-6 h-6' tokenName={item.token.toLocaleLowerCase()} ></IconToken>
                           <FormatTokenMillion value={item.amount} token={item.token} totalValue={item.valueUSD} ></FormatTokenMillion>
                           <div className='ml-8' ></div>
                           <ButtonDialog  color='secondary' buttonText='Borrow' > 

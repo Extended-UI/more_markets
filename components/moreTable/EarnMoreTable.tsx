@@ -179,7 +179,7 @@ const EarnMoreTable: React.FC<Props> = ({inDetail = true}) => {
                 <tr className="rounded-t-lg">
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Vault Name" /></th>
                     <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Deposit Token" /></th>
-                    <th style={{ width: '120px' }}><TableHeaderCell title="Net APY" /></th>
+                    <th style={{ width: '150px' }}><TableHeaderCell title="Net APY" /></th>
                     <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Total Deposits" /></div></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Curator" /></th>
                     <th style={{ width: '200px' }}><TableHeaderCell title="Collateral" /></th>

@@ -40,7 +40,7 @@ const UnsecuredGraphBorrowDetail = () => {
 
   return (
     <>
-        <div className="text-2xl mb-5 ">Unsecured Borrower - Specific LTV</div>
+        <div className="text-2xl mb-5 ">Unsecured Borrower - Specific LLTV</div>
         <div className="mockup-window border-[#343434] border p-4" style={{backgroundColor:"#181818"}} ><MoreGraphicsV2  datasets={datasets} labelsX={labelsX} comment='Learn MORE about ratings and how to get rated here.'></MoreGraphicsV2></div>
     </>
   )

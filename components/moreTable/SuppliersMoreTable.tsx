@@ -72,7 +72,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
      
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16 w-full"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <h1 className="text-2xl mt-16 mb-8">Suppliers</h1>
+        <h1 className="text-2xl mt-10 mb-8">Suppliers</h1>
         <table className="w-full text-sm text-left   border border-gray-800 w-full " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">

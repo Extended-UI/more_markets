@@ -81,7 +81,7 @@ const VaultWithdrawSet: React.FC<Props> = ({ title, token, balance, apy, ltv, to
         </div>
         <div className="flex justify-end mt-7 mb-7 px-4">
           <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton className='text-2xl py-2' text="Withdraw" onClick={() => handleWithdraw()} color="primary" />
+          <MoreButton className='text-2xl py-2' text="Confirm" onClick={() => handleWithdraw()} color="primary" />
         </div>
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-primary w-full'></div>

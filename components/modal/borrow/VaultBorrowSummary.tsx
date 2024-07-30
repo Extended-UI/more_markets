@@ -39,14 +39,11 @@ const VaultBorrowSummary: React.FC<Props> = ({ title, token, balance, apy, ltv, 
         <div className="text-l flex mb-5 px-4"><span><CheckCircleIcon  className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" /></span>Approve the bundler to spend 12.35 {token} (via permit)</div>   
         <div className="text-l flex mb-5 px-4"><span><CheckCircleIcon  className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" /></span>Execute the following actions</div>                
         <div className='more-bg-primary px-4 mx-5'> 
-          <TokenAmount title="Borrow" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
+          <TokenAmount title="Deposit" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
         </div>   
         <div className='more-bg-primary px-4 mx-5'> 
           <BorrowTokenAmount token={title} amount={borrow} ltv={ltv} totalTokenAmount={totalTokenAmount} />
-        </div> 
-        <div className="flex justify-end mt-7 mb-7 px-4">
-          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>          
-        </div>                       
+        </div>                        
         <div className="text-l my-5 px-4"><span><Icon icon="circle" className="text-xl cursor-pointer mr-5" /></span>Transaction 0×47b3...bv87 has been successfully executed.</div>
         <div className='more-bg-primary px-4  py-2  rounded-b-[20px]' onClick={closeModal}>
           <div className='mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl'>Confirming transaction... Browse MORE vaults while you wait.</div>                  

@@ -6,6 +6,7 @@ import MoreButton from '../../moreButton/MoreButton';
 import FormatNumber from '../../tools/formatNumber';
 import ListIconToken from '@/components/token/ListIconToken';
 import IconToken from '@/components/token/IconToken';
+import FormatTokenMillion from '@/components/tools/formatTokenMillion';
 
 interface Props {
   title: string;
@@ -67,7 +68,7 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
   return (
     <div className='more-bg-secondary w-full rounded-[20px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-2xl mb-10 px-4 pt-10 ">{title}</div>
+        <div className="text-4xl mb-10 px-4 pt-10 ">{title}</div>
         <div className="text-l mb-5 px-4">Deposit {token}</div>
         <div className=' px-4'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Deposit ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>
@@ -87,7 +88,9 @@ const VaultDepositSet: React.FC<Props> = ({ title, token, balance, apy, ltv, tot
           </div>
           <div className="flex justify-between mt-10">        
             <div>Total Deposits</div>
-            <div ><FormatNumber value={totalDeposit} /><span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
+            <div >
+              <FormatTokenMillion value={totalDeposit} totalValue={totalTokenAmount} token={token} ></FormatTokenMillion>
+            </div>
           </div>
           <div className="flex justify-between mt-10 pb-4 ">        
             <div>Liquidation LTV</div>

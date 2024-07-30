@@ -67,7 +67,7 @@ const VaultWithdrawSet: React.FC<Props> = ({ title, token, balance, apy, ltv, to
   return (
     <div className='more-bg-secondary w-full pt-8 rounded-[20px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-2xl mb-10 px-4 pt-5 ">{title}</div>
+        <div className="text-3xl mb-10 px-4 pt-5 ">{title}</div>
         <div className="text-l mb-5 px-4">Withdraw {token}</div>
         <div className='w-full flex justify-center'>
           <div className='w-[95%] flex justify-center' >

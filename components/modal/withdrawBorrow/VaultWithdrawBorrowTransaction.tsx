@@ -71,7 +71,7 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
         </div>   
         <div className='more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 '>
           <div className='text-grey pb-4' > Position Change </div>
-          <PositionChangeToken title="Deposit" value={amount} token={token} value2={0} ></PositionChangeToken>
+          <PositionChangeToken title="Collateral" value={amount} token={token} value2={0} ></PositionChangeToken>
         </div>  
         
         <div className='flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4 ' >
@@ -82,7 +82,7 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
         <div className="py-5 px-2">By confirming this transaction, you agree to the <a className='underline' href="#goto">Terms of Use</a> and the services provisions relating to the MORE Protocol Vault.</div>
         <div className="flex justify-end py-5  rounded-b-[20px] px-4">
           <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton className='text-2xl py-2' text="Withdraw" onClick={() => handleWithdraw()} color="primary" />
+          <MoreButton className='text-2xl py-2' text="Confirm" onClick={() => handleWithdraw()} color="primary" />
         </div>              
       </form>
     </div>

@@ -5,6 +5,7 @@ import TotalVolumeToken from '../../token/TotalVolumeToken';
 import MoreButton from '../../moreButton/MoreButton';
 import TokenAmount from '@/components/token/TokenAmount';
 import IconToken from '@/components/token/IconToken';
+import FormatTwoPourcentage from '@/components/tools/formatTwoPourcentage';
 
 interface Props {
   title: string;
@@ -66,7 +67,7 @@ const VaultDepositConfirm: React.FC<Props> = ({ title, token, balance, apy, ltv,
             <IconToken  className='w-6 h-6' tokenName={token} ></IconToken>
             <span >{curator}</span>
           </div>
-          <div className="text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> {ltv}</div>
+          <div className="flex  gap-2 text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> <FormatTwoPourcentage value={apy} value2={apy} ></FormatTwoPourcentage> </div>
         </div>
         <div className='more-bg-primary rounded-[5px] mx-5 px-4 '>
           <TokenAmount title="Deposit" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />

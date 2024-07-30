@@ -4,6 +4,7 @@ import InputTokenMax from '../../input/InputTokenMax';
 import TotalVolumeToken from '../../token/TotalVolumeToken';
 import MoreButton from '../../moreButton/MoreButton';
 import ListIconToken from '@/components/token/ListIconToken';
+import FormatPourcentage from '@/components/tools/formatPourcentage';
 
 interface Props {
   title: string;
@@ -98,11 +99,11 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balanceToken, 
           </div>
           <div className="flex justify-between mt-10 pb-4 ">        
             <div>Your Premium Liquidation LTV</div>
-            <div className="">{ltv}</div>
+            <div className=""><FormatPourcentage value={apy}></FormatPourcentage> </div>
           </div>            
           <div className="flex justify-between mt-10">        
-            <div>Total Deposits</div>
-            <div className="">{totalDeposit} <span className="more-text-gray">{token}</span> <TotalVolumeToken>{totalTokenAmount}</TotalVolumeToken></div>
+            <div>Available Liquidity</div>
+            <div className="">{totalDeposit} <span className="more-text-gray">{token}</span> </div>
           </div>
           <div className="flex justify-between mt-10 pb-4 ">        
             <div>Your Credora Rating</div>

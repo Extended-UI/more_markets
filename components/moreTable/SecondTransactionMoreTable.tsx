@@ -113,7 +113,7 @@ const SecondTransactionsMoreTable: React.FC<Props> = () => {
 
                         <td className="py-4  items-center h-full ">
                           <div  className="ml-3 flex justify-start " >
-                            <FormatTokenMillion value={item.supplyAmount}  totalValue={item.supplyValue} ></FormatTokenMillion>
+                            <FormatTokenMillion value={item.supplyAmount}  totalValue={item.supplyValue} currency='$' ></FormatTokenMillion>
                           </div>
                         </td> 
                           

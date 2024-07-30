@@ -22,7 +22,8 @@ const MoreGraphicsV3 = ({ datasets, labelsX, comment, isFill, beforeSignY, after
   return (
     <>
         <div className="p-2 flex justify-between items-center">                    
-            <div className="p-2">                    
+            <div className=" flex flex-col gap-2 p-2">     
+              <div>Total Borrow</div>               
               <div className='text-secondary text-3xl'>{ total }</div>                         
             </div>
              <div className=' flex flex-row  sm:overflow-x-hidden overflow-x-auto'  style={{

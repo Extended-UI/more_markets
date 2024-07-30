@@ -84,7 +84,7 @@ const VaultRepayTransaction: React.FC<Props> = ({ title, token, balance, apy, lt
         <div className='more-bg-primary rounded-b-[5px] mt-[1px] px-8 flex flex-col gap-4 py-8'>          
           <div className='text-grey ' > Position Change </div>
           <div className="flex flex-row justify-between items-center ">
-            <div className='text-xl'>Projeted rate</div>        
+            <div className='text-xl'>Collateral</div>        
             <div className='flex  items-center gap-2'>
                <FormatPrice value={balance} token={token}  ></FormatPrice>      
             </div>
