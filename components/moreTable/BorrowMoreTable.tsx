@@ -1,7 +1,7 @@
 "use client"
 
 import { InvestmentData } from '@/types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from '../FontAwesomeIcon';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import TableHeaderCell from './MoreTableHeader';
@@ -36,10 +36,21 @@ const EarnMoreTable: React.FC<{}> = () => {
   ];
 
   const router = useRouter();
+  const [isStickyDisabled, setIsStickyDisabled] = useState(false); 
+  const toggleSticky = () => {
+    console.log(isStickyDisabled);
+    
+    setIsStickyDisabled(!isStickyDisabled);
+    console.log(isStickyDisabled);
+    
+  };
+  useEffect(() => {
+    console.log(isStickyDisabled);  // This will log the updated state
+}, [isStickyDisabled]); 
 
-      const goToDetail = (item :BorrowData ) => {
-        router.push('/borrow/'+item.collateralToken);
-      };
+  const goToDetail = (item :BorrowData ) => {
+      router.push('/borrow/'+item.collateralToken);
+  };
       return (
 <div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <table className="w-full text-sm text-left   border border-gray-800 " >
@@ -83,10 +94,10 @@ const EarnMoreTable: React.FC<{}> = () => {
                             <FormatTokenMillion value={item.totalDeposits} token={item.loanToken} totalValue={item.totalDeposits} ></FormatTokenMillion>
                           </div>
                         </td>
-                        <td className="py-4 px-6  items-center justify-start h-full" 
-                        style={{ paddingRight:10 ,position: 'sticky', right: 0,   backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
+                        <td className={`py-4 px-6 items-center justify-end h-full ${isStickyDisabled ? '' : 'sticky'}`}
+                        style={{ paddingRight:10 , right: 0,   backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                         <div onClick={(event) => event.stopPropagation()}>
-                          <ButtonDialog color='secondary' buttonText='Borrow' > 
+                          <ButtonDialog color='secondary' buttonText='Borrow' onButtonClick={toggleSticky} > 
                                 {(closeModal) => (
                                     <>
                                     <div className=" w-full h-full">

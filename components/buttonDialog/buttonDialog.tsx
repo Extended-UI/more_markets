@@ -14,7 +14,7 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
+    setIsModalVisible(!isModalVisible);    
     if (onButtonClick) {
       onButtonClick();
     }
@@ -22,6 +22,9 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children
 
   const closeModal = () => {
     setIsModalVisible(false);
+    if (onButtonClick) {
+      onButtonClick();
+    }
   };
 
   return (
