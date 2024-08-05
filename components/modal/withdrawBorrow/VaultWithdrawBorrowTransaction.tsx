@@ -71,7 +71,7 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
         </div>   
         <div className='more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 '>
           <div className='text-grey pb-4' > Position Change </div>
-          <PositionChangeToken title="Collateral" value={amount} token={token} value2={0} ></PositionChangeToken>
+          <PositionChangeToken title="Collateral"  value={amount} token={token} value2={0} ></PositionChangeToken>
         </div>  
         
         <div className='flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4 ' >

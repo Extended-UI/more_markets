@@ -71,14 +71,14 @@ const SuppliersMoreTable: React.FC<Props> = () => {
 
      
       return (
-<div className="overflow-x-auto relative rounded-[15px] mb-16 w-full"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+<div className="overflow-x-auto relative rounded-[15px] mb-16 w-full"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative', overflow: 'visible' }}>
         <h1 className="text-2xl mt-10 mb-8">Suppliers</h1>
         <table className="w-full text-sm text-left   border border-gray-800 w-full " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
-                    <th style={{ width: '300px' }} className="rounded-tl-lg"><TableHeaderCell title="Wallet" /></th>
-                    <th style={{ width: '300px' }}><div className='flex justify-start '><TableHeaderCell title="Supply" /></div></th>
-                    <th style={{ width: '100px' }}> <div className='flex justify-center'><TableHeaderCell title="Share" /> </div></th>
+                    <th style={{ width: '300px' }} className="rounded-tl-lg"><TableHeaderCell title="Wallet" infoText="" /></th>
+                    <th style={{ width: '300px' }}><div className='flex justify-start '><TableHeaderCell title="Supply"  infoText="The total amount of tokens currently lent in the given market."/></div></th>
+                    <th style={{ width: '100px' }}> <div className='flex justify-center'><TableHeaderCell title="Share" infoText="" /> </div></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent ">

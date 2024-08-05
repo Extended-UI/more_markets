@@ -123,17 +123,17 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
         router.push('/earn/'+item.tokenSymbol);
       };
       return (
-<div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+<div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative', overflow: 'visible' }}>
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
-                    <th style={{ width: '140px' }} className="rounded-tl-lg  "><div className='flex justify-start'><TableHeaderCell title="Allocation" /></div></th>
-                    <th style={{ width: '200px' }}  > <div className='flex justify-start'><TableHeaderCell title="Supply" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Collateral" /></div></th>
-                    <th style={{ width: '200px' }}> <div className='flex justify-start'><TableHeaderCell title="Liquidation LTV" /> </div></th>
-                    <th style={{ width: '200px' }}> <div className='flex justify-start'><TableHeaderCell title="Credora Rating" /> </div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured Borrow" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured APY" /></div></th>
+                    <th style={{ width: '140px' }} className="rounded-tl-lg  "><div className='flex justify-start'><TableHeaderCell title="Allocation" infoText="The percentage of total deposits allocated to the given market." /></div></th>
+                    <th style={{ width: '200px' }}  > <div className='flex justify-start'><TableHeaderCell title="Supply"  infoText="The total amount of tokens currently lent in the given market."/></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Collateral" infoText="The token(s) that borrowers must lock in order to borrow funds." /></div></th>
+                    <th style={{ width: '200px' }}> <div className='flex justify-start'><TableHeaderCell title="Liquidation LTV" infoText="The standard maximum proportion of loan value to collateral value that borrowers must maintain in order to avoid liquidation." /> </div></th>
+                    <th style={{ width: '200px' }}> <div className='flex justify-start'><TableHeaderCell title="Credora Rating" infoText="The weighted average and minimum S&P equivalent rating, issued by Credora for all premium borrowers across all markets in a vault. The rating represents the aggregate solvency of premium borrowers based on their holdings outside of MORE Markets." /> </div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured Borrow" infoText="The total amount of credit (above the standard LTV)  issued by the given market to premium, rated borrowers." /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Unsecured APY" infoText="The annualized rate you earn specifically from premium borrowers that have borrowed above the standard LTV." /></div></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">

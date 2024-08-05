@@ -14,7 +14,7 @@ const EarnDetailPage: React.FC = () => {
 
   return (
     <div>
-      <div className="mb-8">
+      <div className="mb-8 overflow-visible">
         <HeaderEarnDetail></HeaderEarnDetail>
         <InfosEarnDetails></InfosEarnDetails>
       </div>

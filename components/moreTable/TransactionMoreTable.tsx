@@ -119,16 +119,16 @@ const TransactionsMoreTable: React.FC<Props> = () => {
       
      
       return (
-<div className="overflow-x-auto relative rounded-[15px] mb-16 w-full"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+<div className="overflow-x-auto relative rounded-[15px] mb-16 w-full"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative', overflow: 'visible' }}>
         <h1 className="text-2xl mt-16 mb-8">Transactions</h1>
         <table className="w-full text-sm text-left   border border-gray-800 w-full " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
-                    <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Date & Time" /></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Wallet" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Hash" /></div></th>
-                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Transaction Type" /></div></th>
-                    <th style={{ width: '200px' }}> <div className='flex justify-start'><TableHeaderCell title="Amount" /> </div></th>
+                    <th style={{ width: '200px' }} className="rounded-tl-lg"><TableHeaderCell title="Date & Time" infoText="" /></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Wallet" infoText="" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Hash" infoText="" /></div></th>
+                    <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Transaction Type" infoText="" /></div></th>
+                    <th style={{ width: '200px' }}> <div className='flex justify-start'><TableHeaderCell title="Amount" infoText="" /> </div></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent ">

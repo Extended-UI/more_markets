@@ -18,6 +18,7 @@ import VaultWithdraw from '../modal/withdraw/VaultWithdraw';
 import VaultRepay from '../modal/repay/VaultRepay';
 import VaultWithdrawBorrow from '../modal/withdrawBorrow/VaultWithdrawBorrow';
 import VaultAdd from '../modal/add/VaultAdd';
+import VaultBorrow from '../modal/borrow/VaultBorrow';
 
 
 
@@ -48,14 +49,14 @@ const LoanMoreTable: React.FC<{}> = () => {
 
 
       return (
-<div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+<div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative', overflow: 'visible' }}>
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
-                    <th style={{ width: '500px'}} className="rounded-tl-lg"><TableHeaderCell title="Collateral" /></th>
-                    <th style={{ width: '400px'}} ><div className=' justify-start pr-8 '><TableHeaderCell title="Loan" /></div></th>
-                    <th ><div className='flex justify-start '><TableHeaderCell title="Liquidation LTV" /></div></th>
-                    <th ><div className='flex justify-start '><TableHeaderCell title="1D Borrow APY" /></div></th>
+                    <th style={{ width: '500px'}} className="rounded-tl-lg"><TableHeaderCell title="Collateral" infoText="The token(s) that borrowers must lock in order to borrow funds." /></th>
+                    <th style={{ width: '400px'}} ><div className=' justify-start pr-8 '><TableHeaderCell title="Loan" infoText="" /></div></th>
+                    <th ><div className='flex justify-start '><TableHeaderCell title="Liquidation LTV" infoText="The standard maximum proportion of loan value to collateral value that borrowers must maintain in order to avoid liquidation." /></div></th>
+                    <th ><div className='flex justify-start '><TableHeaderCell title="1D Borrow APY" infoText="The average annualized rate that borrowers paid over the trailing 24-hour period." /></div></th>
                 </tr>
                 </thead>
                 <tbody className="bg-transparent">
@@ -96,12 +97,11 @@ const LoanMoreTable: React.FC<{}> = () => {
                           <IconToken className='w-6 h-6' tokenName={item.token.toLocaleLowerCase()} ></IconToken>
                           <FormatTokenMillion value={item.amount} token={item.token} totalValue={item.valueUSD} ></FormatTokenMillion>
                           <div className='ml-8' ></div>
-                          <ButtonDialog  color='secondary' buttonText='Borrow' > 
+                          <ButtonDialog  color='secondary' buttonText='Borrow More' > 
                               {(closeModal) => (
                                   <>
                                   <div className=" w-full h-full">
-                                  <VaultDeposit title='Withdraw' token='USDC' apy={14.1} balance={473.18} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' closeModal={closeModal}></VaultDeposit>
-                                  </div>
+                                  <VaultBorrow title='USDMax' token={item.token} apy={14.1} balanceToken={473.18} balanceFlow={785.45} ltv="90% / 125%" totalDeposit={3289.62} totalTokenAmount={1.96} curator='Flowverse' credora='AAA' closeModal={closeModal} ></VaultBorrow>                                  </div>
                                   </>
                                   )}                            
                           </ButtonDialog>
