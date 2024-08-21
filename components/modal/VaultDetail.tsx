@@ -55,25 +55,25 @@ const VaultDetail: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDe
   const balanceString = balance.toString();
 
   return (
-    <div className='more-bg-secondary rounded-[20px] h-full w-full'>
+    <div className='more-bg-secondary rounded-[12px] h-full w-full'>
       <form onSubmit={handleSubmit}>
-        <div className="mb-7 px-4 pt-5  text-xl">{title}</div>
-        <div className="text-xl mb-1 px-4 pt-5 pb-5 ">Vault Strategy</div>
-        <div className="flex flex-row justify-between items-center">
-          <div className="text-l flex items-center gap-2 flex mb-5 px-4"><span className="more-text-gray">Curator:</span>
+        <div className="mb-7 px-8 pt-14  text-2xl ">{title}</div>
+        <div className="text-xl mb-1 px-8 pt-5 pb-5 ">Vault Strategy</div>
+        <div className="flex text-l  flex-row justify-between px-8 items-center">
+          <div className=" flex items-center gap-2 flex mb-5 "><span className="more-text-gray">Curator:</span>
               <IconToken  className='w-6 h-6' tokenName={token} ></IconToken>
               <span >{curator}</span>
           </div>
-          <div className="text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> {ltv}</div>
+          <div className=" mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> {ltv}</div>
         </div>
-        <div className='px-4 my-4 text-gray'>
+        <div className='px-8 my-4 text-gray'>
         This is a blurb that describes the strategy of the vault and any specific information that the curator might want to communicate to depositors.
         It can include things like the rationale, the risk tolerance, any calculations or other information that is helpful to the user. This text should be limited to 4 lines (however many characters that makes since this is about that.
         </div>        
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-primary w-full'></div>
         </div>         
-        <div className='more-bg-primary px-4 rounded-b-[10px] py-2'>
+        <div className='more-bg-primary px-8 rounded-b-[10px] py-2'>
           <div className="flex justify-between mt-5">        
             <div>Vault Address:</div>
             <div>0x000000000000000000</div>

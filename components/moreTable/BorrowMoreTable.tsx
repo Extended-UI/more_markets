@@ -52,7 +52,7 @@ const EarnMoreTable: React.FC<{}> = () => {
       router.push('/borrow/'+item.collateralToken);
   };
       return (
-<div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative', overflow: 'visible' }}>
+<div className="overflow-x-auto relative table-wrapper  mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative' }}>
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
@@ -69,11 +69,11 @@ const EarnMoreTable: React.FC<{}> = () => {
                 {sampleLoans.map((item, index, arr) => (
                     <tr key={index} onClick={()=> goToDetail(item)}
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
-                        className={`last:border-b-0 text-[12px] cursor-pointer  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
-                        <td className="py-4 px-6 items-center h-full">
+                        className={`last:border-b-0  cursor-pointer  ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
+                        <td className="py-4 px-4 items-center h-full">
                           <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='abt' ></IconToken></div>{item.collateralToken}</div>
                         </td>
-                        <td className="py-4 px-6 items-center h-full  ">
+                        <td className="py-4 px-4 items-center h-full  ">
                          <div className='flex items-center' ><div className='mr-2 w-6 h-6'><IconToken tokenName='adx' ></IconToken></div>{item.loanToken}</div> 
                         </td> 
                         <td className="py-4  items-center h-full ">
@@ -81,20 +81,20 @@ const EarnMoreTable: React.FC<{}> = () => {
                             <FormatTwoPourcentage value={item.liquidationLTV} value2={item.liquidationLTV2}></FormatTwoPourcentage>
                           </div>                           
                         </td>
-                        <td className="py-4 px-6 items-center h-full">
+                        <td className="py-4 px-4 items-center h-full">
                           <div className='flex justify-start' >
                             <FormatPourcentage value={item.borrowAPY} ></FormatPourcentage>
                           </div>
                         </td>
-                        <td className="py-4 px-6 items-center h-full">
+                        <td className="py-4 px-4 items-center h-full">
                           <div className='flex' ><FormatPourcentage value={item.utilization} ></FormatPourcentage></div>
                         </td>
-                        <td className="py-4 px-6 items-center   h-full ">
+                        <td className="py-4 px-4 items-center   h-full ">
                           <div className='flex justify-start' >
                             <FormatTokenMillion value={item.totalDeposits} token={item.loanToken} totalValue={item.totalDeposits} ></FormatTokenMillion>
                           </div>
                         </td>
-                        <td className={`py-4 px-6 items-center justify-end h-full ${isStickyDisabled ? '' : 'sticky'}`}
+                        <td className={`py-4 px-4 items-center justify-end h-full ${isStickyDisabled ? '' : 'sticky'}`}
                         style={{ paddingRight:10 , right: 0,   backgroundColor: `${index % 2 === 0 ? '#141414' : '#191919'}` }}>
                         <div onClick={(event) => event.stopPropagation()}>
                           <ButtonDialog color='secondary' buttonText='Borrow' onButtonClick={toggleSticky} > 

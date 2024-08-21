@@ -26,7 +26,7 @@ const InputTokenMax: React.FC<Props> = ({ type, value, onChange, placeholder, mi
         type="number"
         value={value}
         onChange={onChange}
-        className="noBorder noArrows input mt-1  text-left text-2xl w-full more-input-text-color more-input-bg-color"
+        className="noBorder noArrows input mt-1  text-left text-xl  w-full more-input-text-color more-input-bg-color"
         placeholder={placeholder}
       />
       <div className='flex -mt-5 pl-3 pb-4 justify-start w-full items-center '>
@@ -34,9 +34,9 @@ const InputTokenMax: React.FC<Props> = ({ type, value, onChange, placeholder, mi
       </div>
     </div>
     <div className='flex gap-2 items-center' >
-      <IconToken className='h-8 w-8' tokenName={logo}></IconToken>
-      <div className="text-xl">{token}</div>
-      <MoreButton  text="Max" onClick={() => setMax(balance)} color="gray" className=' py-2 w-20 text-xl' />
+      <IconToken className='h-6 w-6' tokenName={logo}></IconToken>
+      <div className="text-l">{token}</div>
+      <MoreButton  text="Max" onClick={() => setMax(balance)} color="gray" className=' py-2 w-20 text-l' />
     </div>
     
     <style jsx>{`

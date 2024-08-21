@@ -66,22 +66,22 @@ const VaultWithdrawSet: React.FC<Props> = ({ title, token, balance, apy, ltv, to
   const balanceString = balance.toString();
 
   return (
-    <div className='more-bg-secondary w-full pt-8 rounded-[20px]'>
+    <div className='more-bg-secondary w-full pt-14 rounded-[12px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-2xl mb-10 px-4 pt-5 ">{title}</div>
+        <div className="text-2xl  mb-10 px-8  ">{title}</div>
         <div className='flex items-center mb-10 px-8 gap-2' >
           <ListIconToken iconNames={["usdc", "abt"]} className='w-7 h-7' ></ListIconToken>
           <div className="text-l   flex items-center'"> {token} / USDA</div>
         </div>
-        <div className="text-l mb-5 px-4">Withdraw {token}</div>
+        <div className="text-l mb-5 px-8">Withdraw {token}</div>
         <div className='w-full flex justify-center'>
-          <div className='w-[95%] flex justify-center' >
+          <div className='w-full mx-8 flex justify-center' >
             <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceString}  placeholder={`Withdraw ${token}`}  token={token} balance={balance}  setMax={handleSetMax}/>
           </div>
         </div>
-        <div className="flex justify-end mt-7 mb-7 px-4">
-          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton className='text-2xl py-2' text="Confirm" onClick={() => handleWithdraw()} color="primary" />
+        <div className="flex justify-end mt-7 mb-7 px-8">
+          <div className='mr-5'><MoreButton className='text-2xl  py-4' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-2xl  py-4' text="Confirm" onClick={() => handleWithdraw()} color="primary" />
         </div>
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-primary w-full'></div>

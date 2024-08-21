@@ -66,12 +66,12 @@ const VaultRepaySet: React.FC<Props> = ({ title, token, balance, apy, ltv, total
   const balanceString = balance.toString();
 
   return (
-    <div className='more-bg-secondary w-full  pt-8 rounded-[20px]'>
+    <div className='more-bg-secondary w-full  pt-14 rounded-[12px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-3xl mb-10 px-8  pt-10 ">{title}</div>
+        <div className="text-2xl mb-10 px-8  ">{title}</div>
         <div className='flex items-center mb-10 px-8 gap-2' >
           <ListIconToken iconNames={["usdc", "abt"]} className='w-7 h-7' ></ListIconToken>
-          <div className="text-l   flex items-center'"> {token} / USDA</div>
+          <div className="text-xl   flex items-center'"> {token} / USDA</div>
         </div>
         <div className='w-full flex flex-col justify-center px-8 gap-4'>
           <div className="text-l pl-2  flex items-center'"> Repay {token}</div>
@@ -81,13 +81,13 @@ const VaultRepaySet: React.FC<Props> = ({ title, token, balance, apy, ltv, total
           <div className="text-m text-grey pl-2  flex justify-end items-center'">Balance {balance} {token}</div>
         </div>
         <div className="flex justify-end mt-7 mb-7 px-8">
-          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton className='text-2xl py-2' text="Confirm" onClick={() => handleRepay()} color="primary" />
+          <div className='mr-5'><MoreButton className='text-l  py-4' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-l  py-4' text="Confirm" onClick={() => handleRepay()} color="primary" />
         </div>
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-primary w-full'></div>
         </div>
-        <div className='flex text-xl  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4 '>
+        <div className='flex text-l  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4 '>
           <div className="flex w-full justify-between ">        
             <div>Borrow APY / Projected Borrow APY</div>
             <div><span className="more-text-gray">n/a</span></div>

@@ -72,40 +72,40 @@ const VaultBorrowSet: React.FC<Props> = ({ credora, title, token, balanceToken, 
   const balanceFlowString = balanceFlow.toString();
 
   return (
-    <div className='more-bg-secondary w-full rounded-[20px]'>
+    <div className='more-bg-secondary w-full rounded-[12px]'>
       <form onSubmit={handleSubmit}>
-        <div className="text-2xl mb-10 px-4 pt-5 ">Borrow</div>
-        <div className="text-l mb-1 px-4">Deposit {token} Collateral</div>
-        <div className=' py-2 px-4'>
+        <div className="text-2xl  mb-10 px-8 pt-14 ">Borrow</div>
+        <div className="text-l mb-1 px-8">Deposit {token} Collateral</div>
+        <div className=' py-2 px-8'>
           <InputTokenMax type="number" value={deposit} onChange={handleInputChange} min="0" max={balanceTokenString}  placeholder={`Deposit ${token}`}  token={token} balance={balanceToken}  setMax={handleSetMaxToken}/>
         </div>
-        <div className="text-right more-text-gray py-2 px-4">Balance: {balanceToken} {token}</div> 
-        <div className="text-l mb-1 px-4 py-2 mt-3">Borrow FLOW</div>
-        <div className=' px-4'>
+        <div className="text-right more-text-gray py-2 px-8">Balance: {balanceToken} {token}</div> 
+        <div className="text-l mb-1 px-8 py-2 mt-3">Borrow FLOW</div>
+        <div className=' px-8'>
           <InputTokenMax type="number" value={borrow} onChange={handleInputChange} min="0" max={balanceFlowString}  placeholder={`Deposit ${balanceFlow}`}  token="Flow" balance={balanceFlow}  setMax={handleSetMaxFlow}/>
         </div>
-        <div className="text-right more-text-gray py-2 px-4">Balance: {balanceFlow} FLOW</div>                
-        <div className="flex justify-end mt-7 mb-7 px-4">
-          <div className='mr-5' ><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton className='text-2xl py-2' text="Borrow" onClick={() => handleBorrow()} color="secondary" />
+        <div className="text-right more-text-gray py-2 px-8">Balance: {balanceFlow} FLOW</div>                
+        <div className="flex justify-end mt-7 mb-7 px-8">
+          <div className='mr-5' ><MoreButton className='text-l  py-4' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-l  py-4' text="Borrow" onClick={() => handleBorrow()} color="secondary" />
         </div>
         <div className='w-[50%] mx-15 flex justify-center mx-auto'>
           <div className='glowing-text-secondary w-full'></div>
         </div>        
-        <div className='more-bg-primary px-4 rounded-b-[10px] py-2'>
-          <div className="flex justify-between mt-10">        
+        <div className='more-bg-primary px-8 rounded-b-[10px] py-2'>
+          <div className="flex justify-between mt-5">        
             <div>1D Borrow APY:</div>
             <div className="">{apy}<span className="more-text-gray">%</span></div>
           </div>
-          <div className="flex justify-between mt-10 pb-4 ">        
+          <div className="flex justify-between mt-5  ">        
             <div>Your Premium Liquidation LTV</div>
             <div className=""><FormatPourcentage value={apy}></FormatPourcentage> </div>
           </div>            
-          <div className="flex justify-between mt-10">        
+          <div className="flex justify-between mt-5">        
             <div>Available Liquidity</div>
             <div className="">{totalDeposit} <span className="more-text-gray">{token}</span> </div>
           </div>
-          <div className="flex justify-between mt-10 pb-4 ">        
+          <div className="flex justify-between mt-5 pb-4 ">        
             <div>Your Credora Rating</div>
             <div className="">{credora}</div>
           </div>             

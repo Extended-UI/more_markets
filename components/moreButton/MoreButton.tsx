@@ -42,7 +42,7 @@ interface ButtonProps {
       whiteSpace: 'nowrap'
     };
   // Combining default class with any additional classes provided
-  const classes = `  min-h-10 border   px-4 rounded-[5px] ${className || ''}`;
+  const classes = `  min-h-10 border text-xl  px-4 rounded-[5px] ${className || ''}`;
 
   return (
     <button
