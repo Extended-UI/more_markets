@@ -20,7 +20,7 @@ const ToggleMore: React.FC<ToggleMoreProps> = ({ defaultChecked = false }) => {
         type="checkbox"
         name="toggle"
         id="toggle"
-        className="toggle-checkbox absolute block w-8 h-8 rounded-full bg-white border-4 appearance-none cursor-pointer"
+        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
         checked={isChecked}
         onChange={handleToggle}
       />

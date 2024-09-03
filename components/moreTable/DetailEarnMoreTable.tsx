@@ -123,7 +123,7 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
         router.push('/earn/'+item.tokenSymbol);
       };
       return (
-<div className="overflow-x-auto relative table-wrapper  mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative' }}>
+<div className="overflow-x-auto relative rounded-[15px] mb-16"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative', overflow: 'visible' }}>
         <table className="w-full text-sm text-left   border border-gray-800 " >
                 <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
                 <tr className="rounded-t-lg">
@@ -140,9 +140,9 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
                 {tableData.map((item, index, arr) => (
                     <tr key={index} 
                         style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
-                        className={`last:border-b-0   cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
+                        className={`last:border-b-0 text-[12px]  cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
                        
-                        <td className="py-4 px-4 items-center h-full  ">
+                        <td className="py-4 px-6 items-center h-full  ">
                           <div className='flex justify-start ' >
                             <FormatPourcentage value={item.allocation || 1.6} ></FormatPourcentage>
                           </div>
@@ -152,20 +152,20 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
                             <FormatTokenMillion value={item.supplyAmount} token={item.supplyCurrency} totalValue={item.supplyValue} ></FormatTokenMillion> 
                           </div>
                         </td>                        
-                        <td className="py-4  items-center h-full"><div className='flex justify-start pl-4'><ListIconToken className="w-6 h-6 " iconNames={item.collateral} ></ListIconToken></div></td>
+                        <td className="py-4  items-center h-full"><div className='flex justify-start'><ListIconToken className="w-6 h-6 " iconNames={item.collateral} ></ListIconToken></div></td>
                         
-                        <td className="py-4 px-4 items-center  "><div className=' flex justify-start py-4 ' > <FormatTwoPourcentage value={item.liquidationLTV2} value2={item.liquidationLTV}></FormatTwoPourcentage> </div></td>
+                        <td className="py-4 px-6 items-center  "><div className=' flex justify-start py-4 ' > <FormatTwoPourcentage value={item.liquidationLTV2} value2={item.liquidationLTV}></FormatTwoPourcentage> </div></td>
                         
 
                         <td className="py-4  items-center h-full ">
-                            <div className='py-4 flex justify-start pl-4' >{item.credoraRating}</div>
+                            <div className='py-4 flex justify-start' >{item.credoraRating}</div>
                         </td>
 
                         <td className="py-4  items-center h-full ">
                           <FormatTokenMillion value={item.unsecuredBorrowAmount} token={item.supplyCurrency} totalValue={item.unsecuredBorrowValue} ></FormatTokenMillion> 
                         </td>
                         
-                        <td className="py-4 px-4 items-center  h-full   ">
+                        <td className="py-4 px-6 items-center  h-full   ">
                           <div className='flex justify-start' >
                             <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage>
                           </div>

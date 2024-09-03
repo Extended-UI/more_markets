@@ -58,11 +58,11 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
   const balanceString = balance.toString();
 
   return (
-    <div className='more-bg-secondary rounded-[12px] h-full w-full pt-14 px-4'>
+    <div className='more-bg-secondary rounded-[20px] h-full w-full px-4'>
       <form onSubmit={handleSubmit}>
-        <div className="mb-10 px-4   text-2xl">Review Transaction</div>
-        <div className="text-xl mb-1 px-4 pt-5 ">{title}</div>
-        <div className="flex flex-row justify-between mt-4 mb-4 items-center">
+        <div className="mb-10 px-4 pt-10  text-3xl">Review Transaction</div>
+        <div className="text-l mb-1 px-4 pt-5 ">{title}</div>
+        <div className="flex flex-row justify-between mt-4 items-center">
           <div className="flex gap-2 text-l mb-5  px-4 items-center"> <span className="more-text-gray">Curator:</span><IconToken className='w-6 h-6' tokenName='abt' ></IconToken> <span >{curator}</span></div>
           <div className="flex gap-2 text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> <FormatTwoPourcentage value={90} value2={125} ></FormatTwoPourcentage> </div>
         </div>
@@ -79,10 +79,10 @@ const VaultWithdrawTransaction: React.FC<Props> = ({ title, token, balance, apy,
           <MoreToggle  ></MoreToggle>
         </div>
 
-        <div className="py-5 px-2 leading-normal">By confirming this transaction, you agree to the <a className='underline' href="#goto">Terms of Use</a> and the services provisions relating to the MORE Protocol Vault.</div>
+        <div className="py-5 px-2">By confirming this transaction, you agree to the <a className='underline' href="#goto">Terms of Use</a> and the services provisions relating to the MORE Protocol Vault.</div>
         <div className="flex justify-end py-5  rounded-b-[20px] px-4">
-          <div className='mr-5'><MoreButton className='text-xl  py-4' text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton className='text-xl  py-4' text="Withdraw" onClick={() => handleWithdraw()} color="primary" />
+          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-2xl py-2' text="Withdraw" onClick={() => handleWithdraw()} color="primary" />
         </div>              
       </form>
     </div>

@@ -16,7 +16,7 @@ const InfosBorrowDetails = () => {
             <InfoDetailGrey title='Available Liquidity' infoText="The total value available for withdrawal during the current epoch." className="flex-1 m-2 min-w-[180px]"><span className='text-[#888888] font-[600] ' >$</span><span className=''>194.7k</span> </InfoDetailGrey>
             <InfoDetailGrey title='1D Borrow APY' infoText="The average annualized rate that borrowers paid over the trailing 24-hour period." className="flex-1 m-2 min-w-[180px]"><span className='' >17.1</span><span className='text-[#888888] font-[600] '>%</span></InfoDetailGrey>
         </div>
-        <h1 className="text-2xl  mt-16 mb-8">Open a position</h1>
+        <h1 className="text-2xl mt-16 mb-8">Open a position</h1>
         <div className="flex  w-full overflow-x-auto" style={{
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none', // Works in Firefox

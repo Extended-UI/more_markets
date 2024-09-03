@@ -59,15 +59,15 @@ const VaultAddTransaction: React.FC<Props> = ({ title, token, balance, apy, ltv,
   const balanceString = balance.toString();
 
   return (
-    <div className='more-bg-secondary rounded-[12px] h-full w-full px-8'>
+    <div className='more-bg-secondary rounded-[20px] h-full w-full px-4'>
       <form onSubmit={handleSubmit}>
-        <div className="mb-10 pt-14 text-2xl">Review Transaction</div>
-        <div className="flex flex-row justify-between mt-4  mb-10 items-center">
-        <div className='flex items-center   gap-2' >
-          <ListIconToken iconNames={["usdc", "abt"]} className='w-7 h-7' ></ListIconToken>
-          <div className="text-xl    flex items-center'"> {token} / USDA</div>
+        <div className="mb-10 pt-10 text-4xl">Review Transaction</div>
+        <div className="flex flex-row justify-between mt-4 items-center">
+        <div className='flex items-center mb-10  gap-2' >
+          <ListIconToken iconNames={["usdc", "abt"]} className='w-8 h-8' ></ListIconToken>
+          <div className="text-2xl   flex items-center'"> {token} / USDA</div>
         </div>          
-        <div className="flex gap-2 text-l  px-8"><span className="more-text-gray">Liquidation LTV:</span> <FormatTwoPourcentage value={90} value2={125} ></FormatTwoPourcentage> </div>
+        <div className="flex gap-2 text-l mb-5 px-4"><span className="more-text-gray">Liquidation LTV:</span> <FormatTwoPourcentage value={90} value2={125} ></FormatTwoPourcentage> </div>
         </div>
         <div className='more-bg-primary px-8 rounded-t-[5px] '>
           <TokenAmount title="Add" token={token} amount={amount} ltv={ltv} totalTokenAmount={totalTokenAmount} />
@@ -82,10 +82,10 @@ const VaultAddTransaction: React.FC<Props> = ({ title, token, balance, apy, ltv,
           <MoreToggle  ></MoreToggle>
         </div>
 
-        <div className="py-5 px-2 leading-normal">By confirming this transaction, you agree to the <a className='underline' href="#goto">Terms of Use</a> and the services provisions relating to the MORE Protocol Vault.</div>
-        <div className="flex justify-end py-5  rounded-b-[20px] px-8">
-          <div className='mr-5'><MoreButton className='text-xl  py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
-          <MoreButton className='text-xl  py-2' text="Confirm" onClick={() => handleAdd()} color="primary" />
+        <div className="py-5 px-2">By confirming this transaction, you agree to the <a className='underline' href="#goto">Terms of Use</a> and the services provisions relating to the MORE Protocol Vault.</div>
+        <div className="flex justify-end py-5  rounded-b-[20px] px-4">
+          <div className='mr-5'><MoreButton className='text-2xl py-2' text="Cancel" onClick={closeModal} color="gray" /></div>
+          <MoreButton className='text-2xl py-2' text="Confirm" onClick={() => handleAdd()} color="primary" />
         </div>              
       </form>
     </div>

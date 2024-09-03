@@ -1,13 +1,12 @@
-import { FC } from 'react';
-import Image from 'next/image';
-import FlowButton from './FlowButton';
-import AddressBadge from './AddressBadge';
-import logo from '@/public/assets/icons/logo.png'
-import Menu from './Menu';
-
+import { FC } from "react";
+import Image from "next/image";
+import FlowButton from "./FlowButton";
+import AddressBadge from "./AddressBadge";
+import logo from "@/public/assets/icons/logo.png";
+import Menu from "./Menu";
+import { WalletConnect } from "../walletConnect/WalletConnect"
 
 const Header: FC = () => {
-
     return (
         <header className=" pt-2">
             <nav className="  flex sm:flex-row flex-col justify-between items-center">
@@ -17,10 +16,9 @@ const Header: FC = () => {
                     </div>
                     <Menu></Menu>
                 </div>
-                
+
                 <div className="w-full flex justify-end space-x-4 mt-10 sm:mt-0">
-                    <FlowButton></FlowButton>
-                    <AddressBadge></AddressBadge>
+                    <WalletConnect />
                 </div>
             </nav>
         </header>

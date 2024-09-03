@@ -1,8 +1,9 @@
 export interface LoanData {
     token: string;
-    amount: number;
+    amountCollateral: number;
+    amountLoan: number;
     valueUSD: number;
     liquidationLTV: number;
     liquidationLTV2: number;
     borrowAPY: number;
-  }
+}

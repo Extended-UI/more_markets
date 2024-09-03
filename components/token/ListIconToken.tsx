@@ -15,7 +15,7 @@ const ListIconToken: React.FC<ListIconTokenProps> = ({ iconNames, className }) =
              onMouseLeave={() => setIsHovered(false)}>
             {iconNames.map((name, index) => (
                 <div 
-                    key={name}
+                    key={name + index}
                     style={{
                         marginLeft: index === 0 ? '0' : (isHovered ? '2px' : '-3%'), // Adjust all icons on hover
                         transition: 'margin-left 0.2s ease-in-out' // Smooth transition for margin-left

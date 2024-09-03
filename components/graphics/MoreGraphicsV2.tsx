@@ -24,9 +24,9 @@ const MoreGraphicsV2 = ({ datasets, labelsX, comment, isFill, signY, borderWidth
             {datasets.map((dataset) => (
                 <div key={dataset.label} className="p-2 flex justify-start items-center">
                     <div>
-                    <Icon icon="circle"  className="text-[{borderColor}] text-2xl cursor-pointer mr-0" style={{ color: dataset.borderColor }} />
+                    <Icon icon="circle"  className="text-[{borderColor}] text-l cursor-pointer mr-0" style={{ color: dataset.borderColor }} />
                     </div>
-                    <div className="text-2xl mb-0 pl-2">{dataset.label}</div>
+                    <div className="text-l mb-0 pl-2">{dataset.label}</div>
                 </div>
             ))}
         </div>

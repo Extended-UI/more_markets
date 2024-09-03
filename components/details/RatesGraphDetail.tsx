@@ -139,7 +139,7 @@ const RatesGraphDetail = () => {
 
   return (
     <>
-      <div className="text-2xl  mb-5 ">Rates</div>
+      <div className="text-2xl mb-5 ">Rates</div>
       <div className="mockup-window border-base-300 border"><MoreGraphicsV1  datasets={datasets} labelsX={labelsX} isFill={true} transparency={5} afterSignY='%'></MoreGraphicsV1></div>
     </>
   )

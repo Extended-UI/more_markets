@@ -6,7 +6,7 @@ import TotalVolumeToken from '../token/TotalVolumeToken';
 const LiquidationInfo = () => {
   return (
     <div className='flex w-full flex-col overflow-visible'>
-        <h1 className="text-2xl  mt-16 mb-8 ">Liquidations</h1>
+        <h1 className="text-2xl mt-16 mb-8 ">Liquidations</h1>
         <div className="flex  w-full overflow-x-auto" style={{
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none', // Works in Firefox

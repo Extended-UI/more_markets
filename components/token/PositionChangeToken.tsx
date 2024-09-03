@@ -16,7 +16,7 @@ interface Props {
   return (  
     <div className='flex flex-col ' >
       <div className="flex flex-row justify-between items-center ">
-          <div className='text-l'>{title}</div>        
+          <div className='text-xl'>{title}</div>        
           <div className='flex  items-center gap-2'>
                 {value} <span className='text-grey'> {token} </span> <ArrowLongRightIcon className='w-4 h-4 text-grey' ></ArrowLongRightIcon> {value2} <span className='text-grey'> {token} </span>        
           </div>

@@ -28,7 +28,7 @@ html {
   margin: 0;
   font-family: Inter, sans-serif;  
   color: #E0DFE3;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 100;
 }
 
@@ -55,22 +55,8 @@ body{
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.table-wrapper {
-  border: 1px solid #343434; /* Border on the wrapper */
-  border-radius: 12px;
-  overflow: visible; 
-  width: 100%; /* Ensures the wrapper takes full width */
-  overflow-x: auto;
-}
-
-table {
-  border: 1px solid #343434;
-  border-radius: 12px;
-  table-layout: auto;
-}
-
 tr {
-  font-size: 14px;
+  font-size: 12px;
   border: 1px solid #202020;
   cursor: pointer;
 }
@@ -81,14 +67,14 @@ tbody tr:last-child {
 }
 
 .glowing-text-primary{
-  color: #F58420; 
+  color: #F5841F; 
   padding-bottom: 10px;
   position: relative; /* Position relative to use pseudo-element */
   display: inline-block; /* Ensures the div does not stretch full width */
 }
 
 .glowing-text-secondary{
-  color: #F58420; 
+  color: #F5841F; 
   padding-bottom: 10px;
   position: relative; /* Position relative to use pseudo-element */
   display: inline-block; /* Ensures the div does not stretch full width */
@@ -169,4 +155,21 @@ h1 {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.wallet-networks {
+  border-radius: 7px;
+  border: 1px solid;
+  border-color: #514d4d;
+}
+
+.wallet-menu {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.wallet-chevron {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: none;
 }

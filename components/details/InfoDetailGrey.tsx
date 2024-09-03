@@ -11,7 +11,7 @@ const InfoDetailGrey: React.FC<InfoDetailGreyProps> = ({ title, children, classN
   const [isTooltipVisible, setTooltipVisible] = useState(false);
 
   return (
-    <div className={` t-8 bg-[#212121] border border-[#343434] rounded-xl opacity-100 py-5 px-10 relative  overflow-visible ${className}`}>
+    <div className={` t-8 bg-[#212121] border border-[#343434] rounded-xl opacity-100 p-5 relative  overflow-visible ${className}`}>
       <div className='flex text-[#888888] text-[14px] items-center gap-2 relative  overflow-visible'>
         {title}
         <div

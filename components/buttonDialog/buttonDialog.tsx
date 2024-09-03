@@ -29,14 +29,14 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children
 
   return (
     <div>
-      <MoreButton className='text-xl' text={buttonText} color={color} onClick={toggleModal} />
+      <MoreButton text={buttonText} color={color} onClick={toggleModal} />
       {isModalVisible && (
         <div 
           className="fixed inset-0 z-50 lg:px-[20%] flex items-center justify-center bg-black bg-opacity-75"
           onClick={closeModal} // Close modal when background is clicked
         >
           <div 
-            className="modal-box max-w-full md:w-[600px] px-4 py-4 rounded-[12px] bg-[#343434]" 
+            className="modal-box max-w-full px-4 py-4 rounded-lg bg-[#343434]" 
             onClick={(e) => e.stopPropagation()} // Prevent click inside the modal from closing it
           >
             {children(closeModal)}
