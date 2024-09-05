@@ -1,8 +1,12 @@
 "use client";
 
-import { ZeroAddress } from "ethers";
+import { ZeroAddress, toBigInt } from "ethers";
 import React, { useEffect, useState } from "react";
-import { readContracts, getBalance } from "@wagmi/core";
+import {
+  readContracts,
+  getBalance,
+  type GetBalanceReturnType,
+} from "@wagmi/core";
 import { useReadContract, useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
@@ -42,67 +46,74 @@ const EarnMoreTable: React.FC = () => {
     refetchProject?.();
   }, [isSuccess]);
 
+  console.log(arrayOfVaults);
+
   useEffect(() => {
     const initVaults = async () => {
-      if (userAddress) {
-        const promises = arrayOfVaults
-          ? (arrayOfVaults as `0x${string}`[]).map(
-              async (vaultAddress: `0x${string}`) => {
-                const vaultContract = {
-                  address: vaultAddress,
-                  abi: VaultsAbi,
-                };
-                const [name, curator, asset, lastTotalAssets] =
-                  await readContracts(config, {
-                    contracts: [
-                      {
-                        ...vaultContract,
-                        functionName: "name",
-                      },
-                      {
-                        ...vaultContract,
-                        functionName: "curator",
-                      },
-                      {
-                        ...vaultContract,
-                        functionName: "asset",
-                      },
-                      {
-                        ...vaultContract,
-                        functionName: "lastTotalAssets",
-                      },
-                    ],
-                  });
-
-                const assetAddress = getVaule(asset);
-                const curatorAddress = getVaule(curator);
-                const tokenBalance = await getBalance(config, {
-                  token: assetAddress as `0x${string}`,
-                  address: userAddress,
+      const promises = arrayOfVaults
+        ? (arrayOfVaults as `0x${string}`[]).map(
+            async (vaultAddress: `0x${string}`) => {
+              const vaultContract = {
+                address: vaultAddress,
+                abi: VaultsAbi,
+              };
+              const [name, curator, asset, lastTotalAssets] =
+                await readContracts(config, {
+                  contracts: [
+                    {
+                      ...vaultContract,
+                      functionName: "name",
+                    },
+                    {
+                      ...vaultContract,
+                      functionName: "curator",
+                    },
+                    {
+                      ...vaultContract,
+                      functionName: "asset",
+                    },
+                    {
+                      ...vaultContract,
+                      functionName: "lastTotalAssets",
+                    },
+                  ],
                 });
 
-                console.log(tokenBalance);
+              const assetAddress = getVaule(asset);
+              const curatorAddress = getVaule(curator);
+              const tokenBalance = userAddress
+                ? await getBalance(config, {
+                    token: assetAddress as `0x${string}`,
+                    address: userAddress,
+                  })
+                : ({
+                    decimals: 18,
+                    formatted: "0",
+                    symbol: "",
+                    value: toBigInt(0),
+                  } as GetBalanceReturnType);
 
-                return {
-                  vaultName: getVaule(name),
-                  tokenSymbol: tokenBalance.symbol.toLowerCase(),
-                  netAPY: 0,
-                  totalDeposits: 0,
-                  totalValueUSD: 0,
-                  curator:
-                    curatorAddress == ZeroAddress
-                      ? "-"
-                      : curators[curatorAddress],
-                  collateral: [],
-                  unsecured: 0,
-                  tokenBalance,
-                };
-              }
-            )
-          : [];
+              console.log(tokenBalance);
 
-        setInvestments(promises.length == 0 ? [] : await Promise.all(promises));
-      }
+              return {
+                vaultName: getVaule(name),
+                tokenSymbol: tokenBalance.symbol.toLowerCase(),
+                netAPY: 0,
+                totalDeposits: 0,
+                totalValueUSD: 0,
+                curator:
+                  curatorAddress == ZeroAddress
+                    ? "-"
+                    : curators[curatorAddress],
+                collateral: [],
+                unsecured: 0,
+                tokenBalance,
+              };
+            }
+          )
+        : [];
+
+      setInvestments(promises.length == 0 ? [] : await Promise.all(promises));
     };
 
     initVaults();
@@ -182,14 +193,16 @@ const EarnMoreTable: React.FC = () => {
                     />
                   </div>
                 </th>
-                <th
-                  style={{
-                    right: 0,
-                    backgroundColor: "#212121",
-                    position: isStickyDisabled ? "static" : "sticky",
-                    boxShadow: "inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)",
-                  }}
-                ></th>
+                {userAddress && (
+                  <th
+                    style={{
+                      right: 0,
+                      backgroundColor: "#212121",
+                      position: isStickyDisabled ? "static" : "sticky",
+                      boxShadow: "inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)",
+                    }}
+                  ></th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-transparent">
@@ -260,37 +273,35 @@ const EarnMoreTable: React.FC = () => {
                       totalValue={item.unsecured}
                     ></FormatTokenMillion>
                   </td>
-                  <td
-                    className={`py-4 px-6 items-center justify-end h-full ${
-                      isStickyDisabled ? "" : "sticky"
-                    }`}
-                    style={{
-                      right: 0,
-                      backgroundColor: index % 2 === 0 ? "#141414" : "#191919",
-                    }}
-                  >
-                    <div
-                      className=""
-                      onClick={(event) => event.stopPropagation()}
+                  {userAddress && (
+                    <td
+                      className={`py-4 px-6 items-center justify-end h-full ${
+                        isStickyDisabled ? "" : "sticky"
+                      }`}
+                      style={{
+                        right: 0,
+                        backgroundColor:
+                          index % 2 === 0 ? "#141414" : "#191919",
+                      }}
                     >
-                      <ButtonDialog
-                        color="primary"
-                        buttonText="Deposit"
-                        onButtonClick={toggleSticky}
-                      >
-                        {(closeModal) => (
-                          <>
+                      <div onClick={(event) => event.stopPropagation()}>
+                        <ButtonDialog
+                          color="primary"
+                          buttonText="Deposit"
+                          onButtonClick={toggleSticky}
+                        >
+                          {(closeModal) => (
                             <div className="h-full w-full">
                               <VaultDeposit
                                 item={item}
                                 closeModal={closeModal}
                               ></VaultDeposit>
                             </div>
-                          </>
-                        )}
-                      </ButtonDialog>
-                    </div>
-                  </td>
+                          )}
+                        </ButtonDialog>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

@@ -30,9 +30,9 @@ const InputTokenMax: React.FC<Props> = ({
 
   return (
     <div className="w-full flex  rounded-[8px] more-input-bg-color flex justify-between items-center px-4 py-2 gap-4">
-      <div className="flex  flex-col items-center gap-2">
+      <div className="flex w-full flex-col items-center gap-2">
         <input
-          type="number"
+          type={type}
           value={value}
           onChange={onChange}
           className="noBorder noArrows input mt-1  text-left text-2xl w-full more-input-text-color more-input-bg-color"

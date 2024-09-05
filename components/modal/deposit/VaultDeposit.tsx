@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import VaultDepositSet from "./VaultDepositSet";
 import VaultDepositConfirm from "./VaultDepositConfirm";
@@ -29,8 +30,6 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal }) => {
     console.log("DEPOSIT DONE");
   };
 
-  console.log("test", item.netAPY);
-
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -44,30 +43,17 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal }) => {
       case 2:
         return (
           <VaultDepositConfirm
-            title={item.vaultName}
-            token={item.tokenSymbol}
-            balance={item.totalDeposits}
-            apy={item.netAPY}
-            ltv={"ltv"}
-            totalDeposit={item.totalValueUSD}
-            totalTokenAmount={item.totalDeposits}
-            curator={item.curator}
+            item={item}
             amount={amount}
-            validDeposit={() => handleValidDeposit()}
             closeModal={closeModal}
+            validDeposit={() => handleValidDeposit()}
           />
         );
       case 3:
         return (
           <VaultDepositSummary
             amount={amount}
-            title={item.vaultName}
-            token={item.tokenSymbol}
-            balance={item.totalDeposits}
-            apy={item.netAPY}
-            ltv={"ltv"}
-            totalDeposit={item.totalValueUSD}
-            totalTokenAmount={item.totalDeposits}
+            item={item}
             processDone={() => handleProcessDone()}
             closeModal={closeModal}
           />

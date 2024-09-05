@@ -1,7 +1,7 @@
 "use client";
 
-import React, { ReactNode, useState } from 'react';
-import MoreButton from '../moreButton/MoreButton';
+import React, { ReactNode, useState } from "react";
+import MoreButton from "../moreButton/MoreButton";
 
 interface ButtonDialogProps {
   buttonText: string;
@@ -10,11 +10,16 @@ interface ButtonDialogProps {
   onButtonClick?: () => void;
 }
 
-const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children, onButtonClick }) => {
+const ButtonDialog: React.FC<ButtonDialogProps> = ({
+  buttonText,
+  color,
+  children,
+  onButtonClick,
+}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);    
+    setIsModalVisible(!isModalVisible);
     if (onButtonClick) {
       onButtonClick();
     }
@@ -31,12 +36,12 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({ buttonText, color, children
     <div>
       <MoreButton text={buttonText} color={color} onClick={toggleModal} />
       {isModalVisible && (
-        <div 
+        <div
           className="fixed inset-0 z-50 lg:px-[20%] flex items-center justify-center bg-black bg-opacity-75"
           onClick={closeModal} // Close modal when background is clicked
         >
-          <div 
-            className="modal-box max-w-full px-4 py-4 rounded-lg bg-[#343434]" 
+          <div
+            className="modal-box max-w-full px-4 py-4 rounded-lg bg-[#343434]"
             onClick={(e) => e.stopPropagation()} // Prevent click inside the modal from closing it
           >
             {children(closeModal)}
