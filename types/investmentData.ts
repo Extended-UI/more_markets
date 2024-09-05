@@ -1,4 +1,7 @@
+import { type GetBalanceReturnType } from "@wagmi/core";
+
 export interface InvestmentData {
+  vaultName: string;
   tokenSymbol: string;
   netAPY: number;
   totalDeposits: number;
@@ -6,6 +9,5 @@ export interface InvestmentData {
   curator: string;
   collateral: string[];
   unsecured: number;
-  unsecuredAPY: number;
-  credoraRating: string;
+  tokenBalance: GetBalanceReturnType;
 }

@@ -3,15 +3,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-
-const networks = [
-  {
-    id: 545,
-    name: "FlowTestnet",
-    iconUrl:
-      "https://cdn.prod.website-files.com/5f734f4dbd95382f4fdfa0ea/616b1520779838b5f9174363_favicon.png",
-  },
-];
+import { config } from "@/utils/wagmi";
 
 export const WalletConnect = () => {
   return (
@@ -101,7 +93,7 @@ export const WalletConnect = () => {
                       transition
                       className="absolute mt-1 right-0 z-10 w-56 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                     >
-                      {networks.map((network) => (
+                      {config.chains.map((network) => (
                         <div className="py-1" key={network.id}>
                           <MenuItem>
                             <div
