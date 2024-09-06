@@ -111,6 +111,10 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
           oracle: marketParam !== undefined ? marketParam[2] : `0x0`,
           irm: marketParam !== undefined ? marketParam[3] : `0x0`,
           lltv: marketParam !== undefined ? marketParam[4] : BigInt(0),
+          isPremiumMarket: false,
+          creditAttestationService: `0x123456`,
+          irxMaxLltv: BigInt(123),
+          categoryLltv: [BigInt(123)],
         };
       } else
         return {
@@ -119,6 +123,10 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
           oracle: `0x123456`,
           irm: `0x123456`,
           lltv: BigInt(123),
+          isPremiumMarket: false,
+          creditAttestationService: `0x123456`,
+          irxMaxLltv: BigInt(123),
+          categoryLltv: [BigInt(123)],
         };
     }
   );
@@ -129,6 +137,10 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
     oracle: `0x123456`,
     irm: `0x123456`,
     lltv: BigInt(123),
+    isPremiumMarket: false,
+    creditAttestationService: `0x123456`,
+    irxMaxLltv: BigInt(123),
+    categoryLltv: [BigInt(123)],
   };
 
   return (

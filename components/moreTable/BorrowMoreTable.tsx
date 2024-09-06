@@ -1,26 +1,9 @@
 "use client";
 
-import { InvestmentData } from "@/types";
 import React, { useEffect, useState } from "react";
-import Icon from "../FontAwesomeIcon";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import TableHeaderCell from "./MoreTableHeader";
-import ButtonDialog from "../buttonDialog/buttonDialog";
-import VaultDeposit from "../modal/deposit/VaultDeposit";
-import TotalVolumeToken from "../token/TotalVolumeToken";
 import { BorrowData } from "@/types/borrowData";
-import IconToken from "../token/IconToken";
-import TokenName from "../token/TokenName";
-import VaultBorrow from "../modal/borrow/VaultBorrow";
 import { useRouter } from "next/navigation";
-import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import FormatPourcentage from "../tools/formatPourcentage";
-import FormatTokenMillion from "../tools/formatTokenMillion";
-import { type BaseError, useReadContract, useBlockNumber } from "wagmi";
-import { useQueryClient } from "@tanstack/react-query";
-import { MarketsAbi } from "@/app/abi/MarketsAbi";
-import { MarketParams } from "@/types/marketParams";
-import { Markets } from "@/types/markets";
 import BorrowMoreTableRow from "./BorrowMoreTableRow";
 interface IBorrowMoreTable {
     availableMarkets: readonly `0x${string}`[];

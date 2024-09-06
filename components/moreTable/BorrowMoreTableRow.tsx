@@ -38,6 +38,10 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
     oracle: marketParams !== undefined ? marketParams[2] : `0x0`,
     irm: marketParams !== undefined ? marketParams[3] : `0x0`,
     lltv: marketParams !== undefined ? marketParams[4] : BigInt(0),
+    isPremiumMarket: false,
+    creditAttestationService: `0x123456`,
+    irxMaxLltv: BigInt(123),
+    categoryLltv: [BigInt(123)],
   };
 
   const item: BorrowData = {

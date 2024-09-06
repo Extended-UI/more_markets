@@ -17,11 +17,23 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { config } from "@/utils/wagmi";
-import { InvestmentData } from "@/types";
+import {
+  InvestmentData,
+  MarketConfig,
+  MarketParams,
+  Markets,
+  Market,
+} from "@/types";
 import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
+import { MorphoAbi } from "@/app/abi/MorphoAbi";
 import { contracts, curators } from "@/utils/const";
 import { getVaule } from "@/utils/utils";
+
+const morphoContract = {
+  address: contracts.MORE_MARKETS as `0x${string}`,
+  abi: MorphoAbi,
+};
 
 const EarnMoreTable: React.FC = () => {
   const router = useRouter();
@@ -46,8 +58,6 @@ const EarnMoreTable: React.FC = () => {
     refetchProject?.();
   }, [isSuccess]);
 
-  console.log(arrayOfVaults);
-
   useEffect(() => {
     const initVaults = async () => {
       const promises = arrayOfVaults
@@ -57,8 +67,9 @@ const EarnMoreTable: React.FC = () => {
                 address: vaultAddress,
                 abi: VaultsAbi,
               };
-              const [name, curator, asset, lastTotalAssets] =
-                await readContracts(config, {
+              const [name, curator, asset, supplyQueues] = await readContracts(
+                config,
+                {
                   contracts: [
                     {
                       ...vaultContract,
@@ -74,10 +85,47 @@ const EarnMoreTable: React.FC = () => {
                     },
                     {
                       ...vaultContract,
-                      functionName: "lastTotalAssets",
+                      functionName: "supplyQueue",
                     },
                   ],
-                });
+                }
+              );
+
+              const supplyQueueIds = supplyQueues.result
+                ? (supplyQueues.result as string[])
+                : [];
+
+              const marketArr = await Promise.all([
+                supplyQueueIds.map(async (marketId: string) => {
+                  const [configs, params, infos] = await readContracts(config, {
+                    contracts: [
+                      {
+                        ...vaultContract,
+                        functionName: "config",
+                        args: [marketId],
+                      },
+                      {
+                        ...morphoContract,
+                        functionName: "idToMarketParams",
+                        args: [marketId],
+                      },
+                      {
+                        ...morphoContract,
+                        functionName: "market",
+                        args: [marketId],
+                      },
+                    ],
+                  });
+
+                  return {
+                    config: configs.result,
+                    params: params.result,
+                    info: infos.result,
+                  } as Market;
+                }),
+              ]);
+
+              console.log("market arrary: ", marketArr, supplyQueues);
 
               const assetAddress = getVaule(asset);
               const curatorAddress = getVaule(curator);
@@ -93,8 +141,6 @@ const EarnMoreTable: React.FC = () => {
                     value: toBigInt(0),
                   } as GetBalanceReturnType);
 
-              console.log(tokenBalance);
-
               return {
                 vaultName: getVaule(name),
                 tokenSymbol: tokenBalance.symbol.toLowerCase(),
@@ -108,6 +154,8 @@ const EarnMoreTable: React.FC = () => {
                 collateral: [],
                 unsecured: 0,
                 tokenBalance,
+                supplyQueues: supplyQueueIds,
+                markets: [],
               };
             }
           )
