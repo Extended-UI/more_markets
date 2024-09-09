@@ -14,7 +14,7 @@ interface Props {
     totalAdd: number;
     totalTokenAmount: number;
     curator: string;
-    marketParams: MarketParams;
+    marketParams: MarketParams | undefined;
     closeModal: () => void;
 }
 

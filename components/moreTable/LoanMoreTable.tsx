@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useReadContract, useAccount } from "wagmi";
+import { readContracts, readContract } from "@wagmi/core";
 import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import IconToken from "../token/IconToken";
@@ -15,133 +16,53 @@ import VaultAdd from "../modal/add/VaultAdd";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
 import { MarketParams } from "@/types/marketParams";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
+import { config } from "@/utils/wagmi";
 import { contracts } from "@/utils/const";
+import { MorphoAbi } from "@/app/abi/MorphoAbi";
+import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
 
-interface ILoanMoreTable {
-  availableMarkets: readonly `0x${string}`[];
-}
-const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
-  const { address } = useAccount();
+const morphoContract = {
+  address: contracts.MORE_MARKETS as `0x${string}`,
+  abi: MorphoAbi,
+};
 
-  const addressStable: `0x${string}` = address !== undefined ? address : `0x0`;
+const LoanMoreTable: React.FC = () => {
+  const account = useAccount();
+  const [positions, setPositions] = useState<LoanData[]>([]);
 
-  const positions = availableMarkets.map((market, index) => {
-    const {
-      data: positions,
-      isError: issuesIsError,
-      isSuccess,
-      isPending,
-      queryKey: issuesQueryKey,
-      refetch: refetchProject,
-    } = useReadContract({
-      address: contracts.MORE_MARKETS as `0x${string}`,
-      abi: MarketsAbi,
-      functionName: "position",
-      args: [market, addressStable],
-    });
+  const { address: userAddress } = account;
 
-    if (positions !== undefined) {
-      return positions;
-    } else return undefined;
+  const { data: arrayOfVaults } = useReadContract({
+    address: contracts.MORE_VAULTS_FACTORY as `0x${string}`,
+    abi: VaultsFactoryAbi,
+    functionName: "arrayOfMorphos",
   });
 
-  const loanDataFromPositions: LoanData[] = positions.map((position, index) => {
-    if (position === undefined)
-      return {
-        token: "USDC",
-        amountCollateral: 3289.62,
-        amountLoan: 1234,
-        valueUSD: 1.96,
-        liquidationLTV: 90,
-        liquidationLTV2: 125,
-        borrowAPY: 14.1,
-      };
-    else {
-      return {
-        token: "USDC",
-        amountCollateral: position[2] as unknown as number,
-        amountLoan: position[1] as unknown as number,
-        valueUSD: 1.96,
-        liquidationLTV: 90,
-        liquidationLTV2: 125,
-        borrowAPY: 14.1,
-      };
-    }
+  const { data: arrayOfMarkets, isPending } = useReadContract({
+    address: contracts.MORE_MARKETS as `0x${string}`,
+    abi: MorphoAbi,
+    functionName: "arrayOfMarkets",
   });
 
-  const loansData: LoanData[] = [
-    {
-      token: "USDC",
-      amountCollateral: 3289.62,
-      amountLoan: 1234,
-      valueUSD: 1.96,
-      liquidationLTV: 90,
-      liquidationLTV2: 125,
-      borrowAPY: 14.1,
-    },
-    {
-      token: "USDT",
-      amountCollateral: 3289.62,
-      amountLoan: 1234,
-      valueUSD: 3.25,
-      liquidationLTV: 85,
-      liquidationLTV2: 125,
-      borrowAPY: 12.3,
-    },
-  ];
-
-  const marketParamsReal: MarketParams[] = availableMarkets.map(
-    (market, index) => {
-      const {
-        data: marketParam,
-        isPending,
-        refetch: refetchProject,
-        isSuccess,
-      } = useReadContract({
-        address: contracts.MORE_MARKETS as `0x${string}`,
-        abi: MarketsAbi,
-        functionName: "idToMarketParams",
-        args: [market],
+  useEffect(() => {
+    const initVaults = async () => {
+      const marketArr = arrayOfMarkets as `0x${string}`[];
+      const positionQuest = marketArr.map((marketId) => {
+        return {
+          ...morphoContract,
+          functionName: "position",
+          args: [marketId, userAddress],
+        };
+      });
+      const positions = await readContracts(config, {
+        contracts: positionQuest,
       });
 
-      if (marketParam !== undefined) {
-        return {
-          loanToken: marketParam !== undefined ? marketParam[0] : `0x0`,
-          collateralToken: marketParam !== undefined ? marketParam[1] : `0x0`,
-          oracle: marketParam !== undefined ? marketParam[2] : `0x0`,
-          irm: marketParam !== undefined ? marketParam[3] : `0x0`,
-          lltv: marketParam !== undefined ? marketParam[4] : BigInt(0),
-          isPremiumMarket: false,
-          creditAttestationService: `0x123456`,
-          irxMaxLltv: BigInt(123),
-          categoryLltv: [BigInt(123)],
-        };
-      } else
-        return {
-          loanToken: `0x123456`,
-          collateralToken: `0x123456`,
-          oracle: `0x123456`,
-          irm: `0x123456`,
-          lltv: BigInt(123),
-          isPremiumMarket: false,
-          creditAttestationService: `0x123456`,
-          irxMaxLltv: BigInt(123),
-          categoryLltv: [BigInt(123)],
-        };
-    }
-  );
+      // setBorrows(promises.length == 0 ? [] : await Promise.all(promises));
+    };
 
-  const marketParams: MarketParams = {
-    loanToken: `0x123456`,
-    collateralToken: `0x123456`,
-    oracle: `0x123456`,
-    irm: `0x123456`,
-    lltv: BigInt(123),
-    isPremiumMarket: false,
-    creditAttestationService: `0x123456`,
-    irxMaxLltv: BigInt(123),
-    categoryLltv: [BigInt(123)],
-  };
+    initVaults();
+  }, [arrayOfMarkets]);
 
   return (
     <div
@@ -192,7 +113,7 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
           </tr>
         </thead>
         <tbody className="bg-transparent">
-          {loanDataFromPositions.map((item, index, arr) => (
+          {positions.map((item, index, arr) => (
             <tr
               key={index}
               style={
@@ -223,7 +144,11 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
                     totalValue={item.valueUSD}
                   ></FormatTokenMillion>
                   <div className="ml-8"></div>
-                  <ButtonDialog color="secondary" buttonText="Add">
+                  <ButtonDialog
+                    color="secondary"
+                    buttonText="Add"
+                    item={item.market}
+                  >
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">
@@ -236,15 +161,19 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
                             totalAdd={3289.62}
                             totalTokenAmount={1.96}
                             curator="Flowverse"
-                            marketParams={marketParamsReal[index]}
                             closeModal={closeModal}
+                            marketParams={item.market?.params}
                           ></VaultAdd>
                         </div>
                       </>
                     )}
                   </ButtonDialog>
 
-                  <ButtonDialog color="grey" buttonText="Withdraw">
+                  <ButtonDialog
+                    color="grey"
+                    buttonText="Withdraw"
+                    item={item.market}
+                  >
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">
@@ -278,7 +207,11 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
                     totalValue={item.valueUSD}
                   ></FormatTokenMillion>
                   <div className="ml-8"></div>
-                  <ButtonDialog color="secondary" buttonText="Borrow More">
+                  <ButtonDialog
+                    color="secondary"
+                    buttonText="Borrow More"
+                    item={item.market}
+                  >
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">
@@ -293,7 +226,7 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
                             totalTokenAmount={1.96}
                             curator="Flowverse"
                             credora="AAA"
-                            marketParams={marketParamsReal[index]}
+                            marketParams={item.market?.params}
                             closeModal={closeModal}
                           ></VaultBorrow>{" "}
                         </div>
@@ -301,7 +234,11 @@ const LoanMoreTable: React.FC<ILoanMoreTable> = ({ availableMarkets }) => {
                     )}
                   </ButtonDialog>
 
-                  <ButtonDialog color="grey" buttonText="Repay">
+                  <ButtonDialog
+                    color="grey"
+                    buttonText="Repay"
+                    item={item.market}
+                  >
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">

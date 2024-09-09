@@ -1,3 +1,5 @@
+import { Market } from "./market";
+
 export interface BorrowData {
   collateralToken: string;
   loanToken: string;
@@ -7,4 +9,5 @@ export interface BorrowData {
   utilization: number;
   totalDeposits: number;
   totalValueUSD: number;
+  market: Market | null;
 }

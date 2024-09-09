@@ -2,12 +2,12 @@
 
 import React, { ReactNode, useState } from "react";
 import MoreButton from "../moreButton/MoreButton";
-import { InvestmentData } from "@/types";
+import { Market } from "@/types";
 
 interface ButtonDialogProps {
   buttonText: string;
   color: string;
-  item: InvestmentData;
+  item: Market | null;
   children: (toggleModal: () => void) => ReactNode;
   onButtonClick?: () => void;
 }
@@ -22,7 +22,7 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModal = () => {
-    if (item.market) {
+    if (item) {
       setIsModalVisible(!isModalVisible);
       if (onButtonClick) {
         onButtonClick();

@@ -1,8 +1,6 @@
 "use client";
 
-import { useReadContract } from "wagmi";
-import React, { useEffect } from "react";
-import { VaultsAbi } from "@/app/abi/VaultsAbi";
+import React from "react";
 import EarnMoreTable from "@/components/moreTable/EarnMoreTable";
 import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
 
