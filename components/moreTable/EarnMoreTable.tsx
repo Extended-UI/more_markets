@@ -335,7 +335,7 @@ const EarnMoreTable: React.FC = () => {
                     >
                       <div onClick={(event) => event.stopPropagation()}>
                         <ButtonDialog
-                          item={item}
+                          item={item.market}
                           color="primary"
                           buttonText="Deposit"
                           onButtonClick={toggleSticky}

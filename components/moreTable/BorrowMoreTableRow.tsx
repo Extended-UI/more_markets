@@ -45,6 +45,7 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
   };
 
   const item: BorrowData = {
+    marketId: "0x",
     collateralToken: marketParams !== undefined ? marketParams[1] : "",
     loanToken: marketParams !== undefined ? marketParams[0] : "",
     liquidationLTV: 80,
@@ -53,6 +54,7 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
     utilization: 42,
     totalDeposits: 1245,
     totalValueUSD: 1245,
+    market: null,
   };
 
   // TODO MOCK data
@@ -129,6 +131,7 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
         >
           <div onClick={(event) => event.stopPropagation()}>
             <ButtonDialog
+              item={item.market}
               color="secondary"
               buttonText="Borrow"
               onButtonClick={toggleSticky}

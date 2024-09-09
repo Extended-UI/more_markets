@@ -1,6 +1,7 @@
 import { Market } from "./market";
 
 export interface BorrowData {
+  marketId: `0x${string}`;
   collateralToken: string;
   loanToken: string;
   liquidationLTV: number;

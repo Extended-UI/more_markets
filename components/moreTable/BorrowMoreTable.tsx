@@ -142,7 +142,7 @@ const BorrowMoreTable: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-transparent">
-              {available?.map((item, index, arr) => (
+              {borrows?.map((item, index, arr) => (
                 <tr
                   key={index}
                   // onClick={() => goToDetail(item)}
@@ -158,10 +158,7 @@ const BorrowMoreTable: React.FC = () => {
                     index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
                   }`}
                 >
-                  <BorrowMoreTableRow
-                    market={item}
-                    index={index}
-                  ></BorrowMoreTableRow>
+                  <BorrowMoreTableRow market={item.marketId} index={index} />
                 </tr>
               ))}
             </tbody>

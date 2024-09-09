@@ -75,6 +75,8 @@ const VaultAddSet: React.FC<Props> = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    if (!marketParams) return;
+
     const loanToken = marketParams.loanToken;
     const collateralToken = marketParams.collateralToken;
     const oracle = marketParams.oracle;
@@ -134,14 +136,14 @@ const VaultAddSet: React.FC<Props> = ({
               Allow stEth wrapping{" "}
               <InformationCircleIcon className="text-[#545454] cursor-pointer w-6 h-6" />{" "}
             </div>
-            <MoreToggle></MoreToggle>
+            <MoreToggle />
           </div>
           <div className="flex flex-col justify-start ml-[20%] gap-2 h-20  pr-8 pt-4 ">
             <div className="flex gap-4">
               Allow ETH Stacking{" "}
               <InformationCircleIcon className="text-[#545454] cursor-pointer w-6 h-6" />{" "}
             </div>
-            <MoreToggle></MoreToggle>
+            <MoreToggle />
           </div>
         </div>
 
