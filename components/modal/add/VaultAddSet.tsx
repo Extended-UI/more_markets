@@ -26,7 +26,7 @@ interface Props {
   ltv: string;
   totalAdd: number;
   totalTokenAmount: number;
-  marketParams: MarketParams;
+  marketParams: MarketParams | undefined;
   setAmount: (amount: number) => void;
   closeModal: () => void;
 }
