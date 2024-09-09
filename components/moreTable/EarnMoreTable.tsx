@@ -4,6 +4,7 @@ import { ZeroAddress, toBigInt } from "ethers";
 import React, { useEffect, useState } from "react";
 import {
   readContracts,
+  readContract,
   getBalance,
   type GetBalanceReturnType,
 } from "@wagmi/core";
@@ -17,18 +18,12 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { config } from "@/utils/wagmi";
-import {
-  InvestmentData,
-  MarketConfig,
-  MarketParams,
-  Markets,
-  Market,
-} from "@/types";
+import { InvestmentData, Market } from "@/types";
 import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { MorphoAbi } from "@/app/abi/MorphoAbi";
-import { contracts, curators } from "@/utils/const";
-import { getVaule } from "@/utils/utils";
+import { contracts, curators, tokens } from "@/utils/const";
+import { getVaule, getVauleNum } from "@/utils/utils";
 
 const morphoContract = {
   address: contracts.MORE_MARKETS as `0x${string}`,
@@ -67,9 +62,8 @@ const EarnMoreTable: React.FC = () => {
                 address: vaultAddress,
                 abi: VaultsAbi,
               };
-              const [name, curator, asset, supplyQueues] = await readContracts(
-                config,
-                {
+              const [name, curator, asset, supplyQueueLength] =
+                await readContracts(config, {
                   contracts: [
                     {
                       ...vaultContract,
@@ -85,47 +79,54 @@ const EarnMoreTable: React.FC = () => {
                     },
                     {
                       ...vaultContract,
-                      functionName: "supplyQueue",
+                      functionName: "supplyQueueLength",
                     },
                   ],
-                }
-              );
+                });
 
-              const supplyQueueIds = supplyQueues.result
-                ? (supplyQueues.result as string[])
-                : [];
+              const supplyQueueLen = getVauleNum(supplyQueueLength);
 
-              const marketArr = await Promise.all([
-                supplyQueueIds.map(async (marketId: string) => {
-                  const [configs, params, infos] = await readContracts(config, {
-                    contracts: [
-                      {
-                        ...vaultContract,
-                        functionName: "config",
-                        args: [marketId],
-                      },
-                      {
-                        ...morphoContract,
-                        functionName: "idToMarketParams",
-                        args: [marketId],
-                      },
-                      {
-                        ...morphoContract,
-                        functionName: "market",
-                        args: [marketId],
-                      },
-                    ],
-                  });
+              // fetch supplyIds
+              const supplyQueueIdReq =
+                supplyQueueLen > 0
+                  ? await readContract(config, {
+                      ...vaultContract,
+                      functionName: "supplyQueue",
+                      args: [0],
+                    })
+                  : null;
+              const marketId = supplyQueueIdReq
+                ? getVaule(supplyQueueIdReq)
+                : "";
 
-                  return {
-                    config: configs.result,
-                    params: params.result,
-                    info: infos.result,
-                  } as Market;
-                }),
-              ]);
+              let marketInfo = null;
+              if (supplyQueueLen > 0) {
+                const [configs, params, infos] = await readContracts(config, {
+                  contracts: [
+                    {
+                      ...vaultContract,
+                      functionName: "config",
+                      args: [marketId],
+                    },
+                    {
+                      ...morphoContract,
+                      functionName: "idToMarketParams",
+                      args: [marketId],
+                    },
+                    {
+                      ...morphoContract,
+                      functionName: "market",
+                      args: [marketId],
+                    },
+                  ],
+                });
 
-              console.log("market arrary: ", marketArr, supplyQueues);
+                marketInfo = {
+                  config: configs.result,
+                  params: params.result,
+                  info: infos.result,
+                } as Market;
+              }
 
               const assetAddress = getVaule(asset);
               const curatorAddress = getVaule(curator);
@@ -143,7 +144,7 @@ const EarnMoreTable: React.FC = () => {
 
               return {
                 vaultName: getVaule(name),
-                tokenSymbol: tokenBalance.symbol.toLowerCase(),
+                tokenSymbol: tokens[assetAddress],
                 netAPY: 0,
                 totalDeposits: 0,
                 totalValueUSD: 0,
@@ -154,8 +155,8 @@ const EarnMoreTable: React.FC = () => {
                 collateral: [],
                 unsecured: 0,
                 tokenBalance,
-                supplyQueues: supplyQueueIds,
-                markets: [],
+                supplyQueue: marketId,
+                market: marketInfo,
               };
             }
           )
@@ -334,6 +335,7 @@ const EarnMoreTable: React.FC = () => {
                     >
                       <div onClick={(event) => event.stopPropagation()}>
                         <ButtonDialog
+                          item={item}
                           color="primary"
                           buttonText="Deposit"
                           onButtonClick={toggleSticky}

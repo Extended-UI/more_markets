@@ -19,6 +19,6 @@ export interface InvestmentData {
   collateral: string[];
   unsecured: number;
   tokenBalance: GetBalanceReturnType;
-  supplyQueues: string[];
-  markets: Market[];
+  supplyQueue: string;
+  market: Market | null;
 }

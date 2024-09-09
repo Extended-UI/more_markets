@@ -2,10 +2,12 @@
 
 import React, { ReactNode, useState } from "react";
 import MoreButton from "../moreButton/MoreButton";
+import { InvestmentData } from "@/types";
 
 interface ButtonDialogProps {
   buttonText: string;
   color: string;
+  item: InvestmentData;
   children: (toggleModal: () => void) => ReactNode;
   onButtonClick?: () => void;
 }
@@ -13,15 +15,20 @@ interface ButtonDialogProps {
 const ButtonDialog: React.FC<ButtonDialogProps> = ({
   buttonText,
   color,
+  item,
   children,
   onButtonClick,
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-    if (onButtonClick) {
-      onButtonClick();
+    if (item.market) {
+      setIsModalVisible(!isModalVisible);
+      if (onButtonClick) {
+        onButtonClick();
+      }
+    } else {
+      alert("No supply queue");
     }
   };
 

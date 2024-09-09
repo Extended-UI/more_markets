@@ -1,13 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { waitForTransaction } from "@wagmi/core";
 import Icon from "../../FontAwesomeIcon";
 import TokenAmount from "@/components/token/TokenAmount";
 import { InvestmentData } from "@/types";
+import { config } from "@/utils/wagmi";
 
 interface Props {
   item: InvestmentData;
   amount: number;
+  hash: string;
   processDone: () => void;
   closeModal: () => void;
 }
@@ -15,9 +18,25 @@ interface Props {
 const VaultDepositSummary: React.FC<Props> = ({
   item,
   amount,
+  hash,
   processDone,
   closeModal,
 }) => {
+  if (hash.length == 0) return null;
+
+  const hashStr =
+    hash.substring(0, 5) + "..." + hash.substring(hash.length - 4);
+
+  useEffect(() => {
+    const waitTx = async () => {
+      if (hash.length > 0) {
+        await waitForTransaction(config, { hash: hash as `0x${string}` });
+        processDone();
+      }
+    };
+    waitTx();
+  }, [hash]);
+
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
       <div className="text-xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
@@ -43,7 +62,7 @@ const VaultDepositSummary: React.FC<Props> = ({
         <span>
           <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
         </span>
-        Transaction 0×47b3...bv87 has been successfully executed.
+        Transaction {hashStr} has been successfully executed.
       </div>
       <div
         className="more-bg-primary px-4  py-2  rounded-b-[20px]"

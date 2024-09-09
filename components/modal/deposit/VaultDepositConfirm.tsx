@@ -1,29 +1,55 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { useAccount } from "wagmi";
+import { parseEther } from "ethers";
+import { writeContract, waitForTransaction } from "@wagmi/core";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import IconToken from "@/components/token/IconToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
+import { config } from "@/utils/wagmi";
+import { MorphoAbi } from "@/app/abi/MorphoAbi";
+import { contracts } from "@/utils/const";
 
 interface Props {
   item: InvestmentData;
   amount: number;
   closeModal: () => void;
   validDeposit: () => void;
+  setTxhash: (hash: string) => void;
 }
 
 const VaultDepositConfirm: React.FC<Props> = ({
   item,
   amount,
+  setTxhash,
   validDeposit,
   closeModal,
 }) => {
-  const handleDeposit = () => {
+  const { address: userAddress } = useAccount();
+  const handleDeposit = async () => {
     // generate deposit tx
+    if (item.market) {
+      const hash = await writeContract(config, {
+        address: contracts.MORE_MARKETS as `0x${string}`,
+        abi: MorphoAbi,
+        functionName: "supply",
+        args: [
+          item.market.params,
+          parseEther(amount.toString()),
+          0,
+          userAddress,
+          "",
+        ],
+      });
 
-    validDeposit();
+      setTxhash(hash);
+      validDeposit();
+    } else {
+      alert("No supply queue");
+    }
   };
 
   return (
