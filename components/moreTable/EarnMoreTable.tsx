@@ -1,13 +1,8 @@
 "use client";
 
-import { ZeroAddress, toBigInt } from "ethers";
+import { ZeroAddress } from "ethers";
 import React, { useEffect, useState } from "react";
-import {
-  readContracts,
-  readContract,
-  getBalance,
-  type GetBalanceReturnType,
-} from "@wagmi/core";
+import { readContracts, readContract, getBalance } from "@wagmi/core";
 import { useReadContract, useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
@@ -18,23 +13,24 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { config } from "@/utils/wagmi";
-import { InvestmentData, Market } from "@/types";
+import { InvestmentData, Market, MarketParams, MarketInfo } from "@/types";
 import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
-import { MorphoAbi } from "@/app/abi/MorphoAbi";
-import { contracts, curators, tokens } from "@/utils/const";
 import { getVaule, getVauleNum } from "@/utils/utils";
-
-const morphoContract = {
-  address: contracts.MORE_MARKETS as `0x${string}`,
-  abi: MorphoAbi,
-};
+import { MarketConfig } from "@/types/marketConfig";
+import {
+  contracts,
+  curators,
+  tokens,
+  marketsInstance,
+  initBalance,
+} from "@/utils/const";
 
 const EarnMoreTable: React.FC = () => {
   const router = useRouter();
   const account = useAccount();
   const [isStickyDisabled, setIsStickyDisabled] = useState(false);
-  const [investments, setInvestments] = useState<InvestmentData[]>([]);
+  const [vaults, setVaults] = useState<InvestmentData[]>([]);
 
   const { address: userAddress } = account;
 
@@ -46,7 +42,7 @@ const EarnMoreTable: React.FC = () => {
   } = useReadContract({
     address: contracts.MORE_VAULTS_FACTORY as `0x${string}`,
     abi: VaultsFactoryAbi,
-    functionName: "arrayOfMorphos",
+    functionName: "arrayOfVaults",
   });
 
   useEffect(() => {
@@ -87,20 +83,17 @@ const EarnMoreTable: React.FC = () => {
               const supplyQueueLen = getVauleNum(supplyQueueLength);
 
               // fetch supplyIds
-              const supplyQueueIdReq =
+              const marketId =
                 supplyQueueLen > 0
                   ? await readContract(config, {
                       ...vaultContract,
                       functionName: "supplyQueue",
                       args: [0],
                     })
-                  : null;
-              const marketId = supplyQueueIdReq
-                ? getVaule(supplyQueueIdReq)
-                : "";
+                  : "";
 
               let marketInfo = null;
-              if (supplyQueueLen > 0) {
+              if (supplyQueueLen > 0 && (marketId as string).length > 0) {
                 const [configs, params, infos] = await readContracts(config, {
                   contracts: [
                     {
@@ -109,64 +102,62 @@ const EarnMoreTable: React.FC = () => {
                       args: [marketId],
                     },
                     {
-                      ...morphoContract,
+                      ...marketsInstance,
                       functionName: "idToMarketParams",
-                      args: [marketId],
+                      args: [marketId as `0x${string}`],
                     },
                     {
-                      ...morphoContract,
+                      ...marketsInstance,
                       functionName: "market",
-                      args: [marketId],
+                      args: [marketId as `0x${string}`],
                     },
                   ],
                 });
 
                 marketInfo = {
-                  config: configs.result,
-                  params: params.result,
-                  info: infos.result,
+                  config: configs.result as MarketConfig,
+                  params: params.result as unknown as MarketParams,
+                  info: infos.result as unknown as MarketInfo,
                 } as Market;
+
+                const assetAddress = getVaule(asset);
+                const curatorAddress = getVaule(curator);
+                const tokenBalance = userAddress
+                  ? await getBalance(config, {
+                      token: assetAddress as `0x${string}`,
+                      address: userAddress,
+                    })
+                  : initBalance;
+
+                return {
+                  vaultName: getVaule(name),
+                  tokenSymbol: tokens[assetAddress],
+                  netAPY: 0,
+                  totalDeposits: 0,
+                  totalValueUSD: 0,
+                  curator:
+                    curatorAddress == ZeroAddress
+                      ? "-"
+                      : curators[curatorAddress],
+                  collateral: [],
+                  unsecured: 0,
+                  tokenBalance,
+                  supplyQueue: marketId as string,
+                  market: marketInfo,
+                };
               }
-
-              const assetAddress = getVaule(asset);
-              const curatorAddress = getVaule(curator);
-              const tokenBalance = userAddress
-                ? await getBalance(config, {
-                    token: assetAddress as `0x${string}`,
-                    address: userAddress,
-                  })
-                : ({
-                    decimals: 18,
-                    formatted: "0",
-                    symbol: "",
-                    value: toBigInt(0),
-                  } as GetBalanceReturnType);
-
-              return {
-                vaultName: getVaule(name),
-                tokenSymbol: tokens[assetAddress],
-                netAPY: 0,
-                totalDeposits: 0,
-                totalValueUSD: 0,
-                curator:
-                  curatorAddress == ZeroAddress
-                    ? "-"
-                    : curators[curatorAddress],
-                collateral: [],
-                unsecured: 0,
-                tokenBalance,
-                supplyQueue: marketId,
-                market: marketInfo,
-              };
             }
           )
         : [];
 
-      setInvestments(promises.length == 0 ? [] : await Promise.all(promises));
+      const vaultsArr = (await Promise.all(promises)).filter(
+        (item) => item !== undefined
+      );
+      setVaults(vaultsArr);
     };
 
     initVaults();
-  }, [arrayOfVaults]);
+  }, [arrayOfVaults, userAddress]);
 
   const goToDetail = (item: InvestmentData) => {
     router.push("/earn/" + item.tokenSymbol);
@@ -255,7 +246,7 @@ const EarnMoreTable: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-transparent">
-              {investments?.map((item, index, arr) => (
+              {vaults?.map((item, index, arr) => (
                 <tr
                   key={index}
                   onClick={() => goToDetail(item)}
@@ -274,7 +265,7 @@ const EarnMoreTable: React.FC = () => {
                   <td className="py-4 px-6 items-center h-full">
                     <div className="flex items-center ">
                       <div className="mr-2 w-6 h-6">
-                        <IconToken tokenName={item.tokenSymbol}></IconToken>
+                        <IconToken tokenName={item.tokenSymbol} />
                       </div>
                       {item.vaultName}
                     </div>
@@ -282,16 +273,14 @@ const EarnMoreTable: React.FC = () => {
                   <td className="py-4 px-6 items-center h-full">
                     <div className="flex items-center ">
                       <div className="mr-2 w-6 h-6">
-                        <IconToken tokenName={item.tokenSymbol}></IconToken>
+                        <IconToken tokenName={item.tokenSymbol} />
                       </div>
                       {item.tokenSymbol}
                     </div>
                   </td>
                   <td className="py-4 px-6 items-center h-full  ">
                     <div className="flex gap-1 justify-start">
-                      <FormatPourcentage
-                        value={item.netAPY}
-                      ></FormatPourcentage>
+                      <FormatPourcentage value={item.netAPY} />
                     </div>
                   </td>
                   <td className="py-4  items-center h-full ">
@@ -299,12 +288,12 @@ const EarnMoreTable: React.FC = () => {
                       value={item.totalDeposits}
                       token={item.tokenSymbol}
                       totalValue={item.totalValueUSD}
-                    ></FormatTokenMillion>
+                    />
                   </td>
                   <td className="py-4 px-6 items-center h-full">
                     <div className="flex">
                       <div className="mr-2 w-5 h-5">
-                        <IconToken tokenName="abt"></IconToken>
+                        <IconToken tokenName="abt" />
                       </div>
                       {item.curator}
                     </div>
@@ -313,14 +302,14 @@ const EarnMoreTable: React.FC = () => {
                     <ListIconToken
                       className="w-6 h-6"
                       iconNames={item.collateral}
-                    ></ListIconToken>
+                    />
                   </td>
                   <td className="py-4 px-6 items-center   h-full ">
                     <FormatTokenMillion
                       value={item.totalDeposits}
                       token={item.tokenSymbol}
                       totalValue={item.unsecured}
-                    ></FormatTokenMillion>
+                    />
                   </td>
                   {userAddress && (
                     <td

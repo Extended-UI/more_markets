@@ -5,7 +5,7 @@ export interface MarketParams {
   oracle: `0x${string}`;
   irm: `0x${string}`;
   lltv: bigint;
-  creditAttestationService: `0x${string}`;
+  _creditAttestationService: `0x${string}`;
   irxMaxLltv: bigint;
   categoryLltv: bigint[];
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import Icon from "../../FontAwesomeIcon";
 import TokenAmount from "@/components/token/TokenAmount";
@@ -22,6 +22,7 @@ const VaultDepositSummary: React.FC<Props> = ({
   processDone,
   closeModal,
 }) => {
+  const [executed, setExecuted] = useState(false);
   if (hash.length == 0) return null;
 
   const hashStr =
@@ -29,8 +30,12 @@ const VaultDepositSummary: React.FC<Props> = ({
 
   useEffect(() => {
     const waitTx = async () => {
+      setExecuted(false);
+
       if (hash.length > 0) {
         await waitForTransaction(config, { hash: hash as `0x${string}` });
+
+        setExecuted(true);
         processDone();
       }
     };
@@ -60,9 +65,20 @@ const VaultDepositSummary: React.FC<Props> = ({
       </div>
       <div className="text-l my-5 px-4">
         <span>
-          <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
+          {executed ? (
+            <Icon
+              icon="circle-check"
+              className="text-secondary text-xl cursor-pointer mr-5"
+            />
+          ) : (
+            <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
+          )}
         </span>
-        Transaction {hashStr} has been successfully executed.
+        {executed ? (
+          <>Transaction {hashStr} has been successfully executed.</>
+        ) : (
+          <>Transaction {hashStr} has been sent.</>
+        )}
       </div>
       <div
         className="more-bg-primary px-4  py-2  rounded-b-[20px]"

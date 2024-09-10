@@ -1,28 +1,20 @@
 "use client";
 
 import { useReadContract, useAccount } from "wagmi";
-import {
-  readContracts,
-  readContract,
-  getBalance,
-  type GetBalanceReturnType,
-} from "@wagmi/core";
+import { readContracts } from "@wagmi/core";
 import React, { useEffect, useState } from "react";
 import TableHeaderCell from "./MoreTableHeader";
 import { useRouter } from "next/navigation";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
-import { VaultsAbi } from "@/app/abi/VaultsAbi";
-import { MorphoAbi } from "@/app/abi/MorphoAbi";
 import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
-import { contracts, curators, tokens } from "@/utils/const";
+import { contracts } from "@/utils/const";
 import { config } from "@/utils/wagmi";
-import { InvestmentData, Market, BorrowData } from "@/types";
-import { getVaule, getVauleNum } from "@/utils/utils";
+import { BorrowData } from "@/types";
 import BorrowMoreTableRow from "./BorrowMoreTableRow";
 
 const morphoContract = {
   address: contracts.MORE_MARKETS as `0x${string}`,
-  abi: MorphoAbi,
+  abi: MarketsAbi,
 };
 
 const BorrowMoreTable: React.FC = () => {
@@ -35,12 +27,11 @@ const BorrowMoreTable: React.FC = () => {
   const { data: arrayOfVaults } = useReadContract({
     address: contracts.MORE_VAULTS_FACTORY as `0x${string}`,
     abi: VaultsFactoryAbi,
-    functionName: "arrayOfMorphos",
+    functionName: "arrayOfVaults",
   });
 
   const { data: arrayOfMarkets, isPending } = useReadContract({
-    address: contracts.MORE_MARKETS as `0x${string}`,
-    abi: MorphoAbi,
+    ...morphoContract,
     functionName: "arrayOfMarkets",
   });
 

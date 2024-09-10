@@ -18,12 +18,11 @@ import { MarketParams } from "@/types/marketParams";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { config } from "@/utils/wagmi";
 import { contracts } from "@/utils/const";
-import { MorphoAbi } from "@/app/abi/MorphoAbi";
 import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
 
 const morphoContract = {
   address: contracts.MORE_MARKETS as `0x${string}`,
-  abi: MorphoAbi,
+  abi: MarketsAbi,
 };
 
 const LoanMoreTable: React.FC = () => {
@@ -35,12 +34,11 @@ const LoanMoreTable: React.FC = () => {
   const { data: arrayOfVaults } = useReadContract({
     address: contracts.MORE_VAULTS_FACTORY as `0x${string}`,
     abi: VaultsFactoryAbi,
-    functionName: "arrayOfMorphos",
+    functionName: "arrayOfVaults",
   });
 
   const { data: arrayOfMarkets, isPending } = useReadContract({
-    address: contracts.MORE_MARKETS as `0x${string}`,
-    abi: MorphoAbi,
+    ...morphoContract,
     functionName: "arrayOfMarkets",
   });
 

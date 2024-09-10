@@ -2,22 +2,6 @@ import { Abi } from "viem";
 
 export const VaultsAbi: Abi = [
   {
-    type: "constructor",
-    inputs: [
-      { name: "owner", type: "address", internalType: "address" },
-      { name: "morpho", type: "address", internalType: "address" },
-      {
-        name: "initialTimelock",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      { name: "_asset", type: "address", internalType: "address" },
-      { name: "_name", type: "string", internalType: "string" },
-      { name: "_symbol", type: "string", internalType: "string" },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
     type: "function",
     name: "DECIMALS_OFFSET",
     inputs: [],
@@ -33,9 +17,28 @@ export const VaultsAbi: Abi = [
   },
   {
     type: "function",
-    name: "MORPHO",
+    name: "MORE_MARKETS",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "contract IMorpho" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IMoreMarkets",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "VAULTS_FACTORY",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IMetaMorphoFactory",
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -47,6 +50,11 @@ export const VaultsAbi: Abi = [
         type: "tuple",
         internalType: "struct MarketParams",
         components: [
+          {
+            name: "isPremiumMarket",
+            type: "bool",
+            internalType: "bool",
+          },
           {
             name: "loanToken",
             type: "address",
@@ -60,6 +68,21 @@ export const VaultsAbi: Abi = [
           { name: "oracle", type: "address", internalType: "address" },
           { name: "irm", type: "address", internalType: "address" },
           { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "creditAttestationService",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irxMaxLltv",
+            type: "uint96",
+            internalType: "uint96",
+          },
+          {
+            name: "categoryLltv",
+            type: "uint256[]",
+            internalType: "uint256[]",
+          },
         ],
       },
     ],
@@ -102,7 +125,7 @@ export const VaultsAbi: Abi = [
     name: "approve",
     inputs: [
       { name: "spender", type: "address", internalType: "address" },
-      { name: "value", type: "uint256", internalType: "uint256" },
+      { name: "amount", type: "uint256", internalType: "uint256" },
     ],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "nonpayable",
@@ -162,6 +185,20 @@ export const VaultsAbi: Abi = [
   },
   {
     type: "function",
+    name: "decreaseAllowance",
+    inputs: [
+      { name: "spender", type: "address", internalType: "address" },
+      {
+        name: "subtractedValue",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "deposit",
     inputs: [
       { name: "assets", type: "uint256", internalType: "uint256" },
@@ -213,6 +250,39 @@ export const VaultsAbi: Abi = [
     inputs: [],
     outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "increaseAllowance",
+    inputs: [
+      { name: "spender", type: "address", internalType: "address" },
+      { name: "addedValue", type: "uint256", internalType: "uint256" },
+    ],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "initialize",
+    inputs: [
+      { name: "owner", type: "address", internalType: "address" },
+      { name: "moreMarkets", type: "address", internalType: "address" },
+      {
+        name: "vaultsFactory",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "initialTimelock",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      { name: "_asset", type: "address", internalType: "address" },
+      { name: "_name", type: "string", internalType: "string" },
+      { name: "_symbol", type: "string", internalType: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -389,6 +459,11 @@ export const VaultsAbi: Abi = [
             internalType: "struct MarketParams",
             components: [
               {
+                name: "isPremiumMarket",
+                type: "bool",
+                internalType: "bool",
+              },
+              {
                 name: "loanToken",
                 type: "address",
                 internalType: "address",
@@ -404,7 +479,26 @@ export const VaultsAbi: Abi = [
                 internalType: "address",
               },
               { name: "irm", type: "address", internalType: "address" },
-              { name: "lltv", type: "uint256", internalType: "uint256" },
+              {
+                name: "lltv",
+                type: "uint256",
+                internalType: "uint256",
+              },
+              {
+                name: "creditAttestationService",
+                type: "address",
+                internalType: "address",
+              },
+              {
+                name: "irxMaxLltv",
+                type: "uint96",
+                internalType: "uint96",
+              },
+              {
+                name: "categoryLltv",
+                type: "uint256[]",
+                internalType: "uint256[]",
+              },
             ],
           },
           { name: "assets", type: "uint256", internalType: "uint256" },
@@ -551,6 +645,11 @@ export const VaultsAbi: Abi = [
         internalType: "struct MarketParams",
         components: [
           {
+            name: "isPremiumMarket",
+            type: "bool",
+            internalType: "bool",
+          },
+          {
             name: "loanToken",
             type: "address",
             internalType: "address",
@@ -563,6 +662,21 @@ export const VaultsAbi: Abi = [
           { name: "oracle", type: "address", internalType: "address" },
           { name: "irm", type: "address", internalType: "address" },
           { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "creditAttestationService",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irxMaxLltv",
+            type: "uint96",
+            internalType: "uint96",
+          },
+          {
+            name: "categoryLltv",
+            type: "uint256[]",
+            internalType: "uint256[]",
+          },
         ],
       },
       { name: "newSupplyCap", type: "uint256", internalType: "uint256" },
@@ -587,6 +701,11 @@ export const VaultsAbi: Abi = [
         internalType: "struct MarketParams",
         components: [
           {
+            name: "isPremiumMarket",
+            type: "bool",
+            internalType: "bool",
+          },
+          {
             name: "loanToken",
             type: "address",
             internalType: "address",
@@ -599,6 +718,21 @@ export const VaultsAbi: Abi = [
           { name: "oracle", type: "address", internalType: "address" },
           { name: "irm", type: "address", internalType: "address" },
           { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "creditAttestationService",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irxMaxLltv",
+            type: "uint96",
+            internalType: "uint96",
+          },
+          {
+            name: "categoryLltv",
+            type: "uint256[]",
+            internalType: "uint256[]",
+          },
         ],
       },
     ],
@@ -659,7 +793,7 @@ export const VaultsAbi: Abi = [
     name: "transfer",
     inputs: [
       { name: "to", type: "address", internalType: "address" },
-      { name: "value", type: "uint256", internalType: "uint256" },
+      { name: "amount", type: "uint256", internalType: "uint256" },
     ],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "nonpayable",
@@ -670,7 +804,7 @@ export const VaultsAbi: Abi = [
     inputs: [
       { name: "from", type: "address", internalType: "address" },
       { name: "to", type: "address", internalType: "address" },
-      { name: "value", type: "uint256", internalType: "uint256" },
+      { name: "amount", type: "uint256", internalType: "uint256" },
     ],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "nonpayable",
@@ -793,6 +927,19 @@ export const VaultsAbi: Abi = [
     type: "event",
     name: "EIP712DomainChanged",
     inputs: [],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "Initialized",
+    inputs: [
+      {
+        name: "version",
+        type: "uint8",
+        indexed: false,
+        internalType: "uint8",
+      },
+    ],
     anonymous: false,
   },
   {
@@ -1308,16 +1455,6 @@ export const VaultsAbi: Abi = [
     anonymous: false,
   },
   { type: "error", name: "AboveMaxTimelock", inputs: [] },
-  {
-    type: "error",
-    name: "AddressEmptyCode",
-    inputs: [{ name: "target", type: "address", internalType: "address" }],
-  },
-  {
-    type: "error",
-    name: "AddressInsufficientBalance",
-    inputs: [{ name: "account", type: "address", internalType: "address" }],
-  },
   { type: "error", name: "AllCapsReached", inputs: [] },
   { type: "error", name: "AlreadyPending", inputs: [] },
   { type: "error", name: "AlreadySet", inputs: [] },
@@ -1327,119 +1464,12 @@ export const VaultsAbi: Abi = [
     name: "DuplicateMarket",
     inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
   },
-  { type: "error", name: "ECDSAInvalidSignature", inputs: [] },
-  {
-    type: "error",
-    name: "ECDSAInvalidSignatureLength",
-    inputs: [{ name: "length", type: "uint256", internalType: "uint256" }],
-  },
-  {
-    type: "error",
-    name: "ECDSAInvalidSignatureS",
-    inputs: [{ name: "s", type: "bytes32", internalType: "bytes32" }],
-  },
-  {
-    type: "error",
-    name: "ERC20InsufficientAllowance",
-    inputs: [
-      { name: "spender", type: "address", internalType: "address" },
-      { name: "allowance", type: "uint256", internalType: "uint256" },
-      { name: "needed", type: "uint256", internalType: "uint256" },
-    ],
-  },
-  {
-    type: "error",
-    name: "ERC20InsufficientBalance",
-    inputs: [
-      { name: "sender", type: "address", internalType: "address" },
-      { name: "balance", type: "uint256", internalType: "uint256" },
-      { name: "needed", type: "uint256", internalType: "uint256" },
-    ],
-  },
-  {
-    type: "error",
-    name: "ERC20InvalidApprover",
-    inputs: [{ name: "approver", type: "address", internalType: "address" }],
-  },
-  {
-    type: "error",
-    name: "ERC20InvalidReceiver",
-    inputs: [{ name: "receiver", type: "address", internalType: "address" }],
-  },
-  {
-    type: "error",
-    name: "ERC20InvalidSender",
-    inputs: [{ name: "sender", type: "address", internalType: "address" }],
-  },
-  {
-    type: "error",
-    name: "ERC20InvalidSpender",
-    inputs: [{ name: "spender", type: "address", internalType: "address" }],
-  },
-  {
-    type: "error",
-    name: "ERC2612ExpiredSignature",
-    inputs: [{ name: "deadline", type: "uint256", internalType: "uint256" }],
-  },
-  {
-    type: "error",
-    name: "ERC2612InvalidSigner",
-    inputs: [
-      { name: "signer", type: "address", internalType: "address" },
-      { name: "owner", type: "address", internalType: "address" },
-    ],
-  },
-  {
-    type: "error",
-    name: "ERC4626ExceededMaxDeposit",
-    inputs: [
-      { name: "receiver", type: "address", internalType: "address" },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "max", type: "uint256", internalType: "uint256" },
-    ],
-  },
-  {
-    type: "error",
-    name: "ERC4626ExceededMaxMint",
-    inputs: [
-      { name: "receiver", type: "address", internalType: "address" },
-      { name: "shares", type: "uint256", internalType: "uint256" },
-      { name: "max", type: "uint256", internalType: "uint256" },
-    ],
-  },
-  {
-    type: "error",
-    name: "ERC4626ExceededMaxRedeem",
-    inputs: [
-      { name: "owner", type: "address", internalType: "address" },
-      { name: "shares", type: "uint256", internalType: "uint256" },
-      { name: "max", type: "uint256", internalType: "uint256" },
-    ],
-  },
-  {
-    type: "error",
-    name: "ERC4626ExceededMaxWithdraw",
-    inputs: [
-      { name: "owner", type: "address", internalType: "address" },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "max", type: "uint256", internalType: "uint256" },
-    ],
-  },
-  { type: "error", name: "FailedInnerCall", inputs: [] },
   {
     type: "error",
     name: "InconsistentAsset",
     inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
   },
   { type: "error", name: "InconsistentReallocation", inputs: [] },
-  {
-    type: "error",
-    name: "InvalidAccountNonce",
-    inputs: [
-      { name: "account", type: "address", internalType: "address" },
-      { name: "currentNonce", type: "uint256", internalType: "uint256" },
-    ],
-  },
   {
     type: "error",
     name: "InvalidMarketRemovalNonZeroCap",
@@ -1455,14 +1485,12 @@ export const VaultsAbi: Abi = [
     name: "InvalidMarketRemovalTimelockNotElapsed",
     inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
   },
-  { type: "error", name: "InvalidShortString", inputs: [] },
   { type: "error", name: "MarketNotCreated", inputs: [] },
   {
     type: "error",
     name: "MarketNotEnabled",
     inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
   },
-  { type: "error", name: "MathOverflowedMulDiv", inputs: [] },
   { type: "error", name: "MaxFeeExceeded", inputs: [] },
   { type: "error", name: "MaxQueueLengthExceeded", inputs: [] },
   { type: "error", name: "NoPendingValue", inputs: [] },
@@ -1472,16 +1500,6 @@ export const VaultsAbi: Abi = [
   { type: "error", name: "NotCuratorRole", inputs: [] },
   { type: "error", name: "NotEnoughLiquidity", inputs: [] },
   { type: "error", name: "NotGuardianRole", inputs: [] },
-  {
-    type: "error",
-    name: "OwnableInvalidOwner",
-    inputs: [{ name: "owner", type: "address", internalType: "address" }],
-  },
-  {
-    type: "error",
-    name: "OwnableUnauthorizedAccount",
-    inputs: [{ name: "account", type: "address", internalType: "address" }],
-  },
   {
     type: "error",
     name: "PendingCap",
@@ -1495,16 +1513,6 @@ export const VaultsAbi: Abi = [
       { name: "bits", type: "uint8", internalType: "uint8" },
       { name: "value", type: "uint256", internalType: "uint256" },
     ],
-  },
-  {
-    type: "error",
-    name: "SafeERC20FailedOperation",
-    inputs: [{ name: "token", type: "address", internalType: "address" }],
-  },
-  {
-    type: "error",
-    name: "StringTooLong",
-    inputs: [{ name: "str", type: "string", internalType: "string" }],
   },
   {
     type: "error",

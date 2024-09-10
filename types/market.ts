@@ -1,9 +1,9 @@
 import { MarketConfig } from "./marketConfig";
 import { MarketParams } from "./marketParams";
-import { Markets } from "./markets";
+import { MarketInfo } from "./marketInfo";
 
 export interface Market {
   config: MarketConfig;
   params: MarketParams;
-  info: Markets;
+  info: MarketInfo;
 }

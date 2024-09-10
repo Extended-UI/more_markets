@@ -1,18 +1,37 @@
+import { toBigInt } from "ethers";
+import { type GetBalanceReturnType } from "@wagmi/core";
+import { MarketsAbi } from "@/app/abi/MarketsAbi";
+
 export const contracts = {
-  // MORE_MARKETS: "0x5d7de68283a0afcd5a1411596577cc389cdf4bae",
-  MORE_MARKETS: "0x665EB1F72f2c0771A9C7305b8d735d5410FF3246",
-  DEBT_TOKEN_FACTORY: "0xfdcad24b16c8acd8731f48e8a0399112d7888107",
-  DEBT_TOKEN: "0x8852ce02f983570496c433630c6eee98b3c96c83",
-  MORE_IRM: "0xcfc5f61bff3fec063a73038e97bbe883360547e7",
-  MORE_VAULTS_FACTORY: "0xb21fa39418F3AbBAE407124896B84980E7149b3e",
+  MORE_MARKETS: "0xBdd6B25631Ded904eFcbf1A34c8809bD153f4999",
+  MORE_IRM: "0x5F771B0A6D1F19F34a01b4D22AeE28a88D95f5Fc",
+  MORE_VAULTS_FACTORY: "0xD614540C05F761686bd4F78DEcF7fdfB3F4DB6C3",
   MULTICALL3: "0xF7d11c74B5706155d7C6DBe931d590611a371a8a",
 };
 
 export const tokens: { [key: string]: string } = {
-  "0xC4F1dFC005Cb2285b8A9Ede7c525b0eEdF24F5db": "doge",
+  "0x58f3875DBeFcf784Ea40A886eC24e3C3FaB2dB19": "doge",
+  "0xc4dD98f4ECEbFB0F86fF6f8a60668Cf60c45E830": "usdc",
+};
+
+export const tokenAddress: { [key: string]: `0x${string}` } = {
+  doge: "0x58f3875DBeFcf784Ea40A886eC24e3C3FaB2dB19",
+  usdc: "0xc4dD98f4ECEbFB0F86fF6f8a60668Cf60c45E830",
 };
 
 export const curators: { [key: string]: string } = {};
 
+export const marketsInstance = {
+  address: contracts.MORE_MARKETS as `0x${string}`,
+  abi: MarketsAbi,
+};
+
 export const MORE_SUBGRAPH =
   "http://18.233.102.130:8000/subgraphs/name/more-markets/more-subgraph/graphql";
+
+export const initBalance: GetBalanceReturnType = {
+  decimals: 18,
+  formatted: "0",
+  symbol: "",
+  value: toBigInt(0),
+};
