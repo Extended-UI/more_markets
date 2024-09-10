@@ -19,3 +19,7 @@ export const getVauleBoolean = (param: any, ind: number): boolean => {
 export const getVauleString = (param: any, ind: number): string => {
   return param.result ? param.result[ind].toString() : "";
 };
+
+export const getVauleBigintList = (param: any, ind: number): bigint[] => {
+  return param.result ? (param.result[ind] as bigint[]) : [];
+};

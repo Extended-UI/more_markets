@@ -22,6 +22,7 @@ import {
   getVauleBigint,
   getVauleBoolean,
   getVauleString,
+  getVauleBigintList,
 } from "@/utils/utils";
 import {
   contracts,
@@ -57,7 +58,6 @@ const EarnMoreTable: React.FC = () => {
   useEffect(() => {
     const initVaults = async () => {
       if (arrayOfVaults) {
-        
       }
       const promises = arrayOfVaults
         ? (arrayOfVaults as `0x${string}`[]).map(
@@ -137,7 +137,7 @@ const EarnMoreTable: React.FC = () => {
                     lltv: getVauleBigint(params, 5),
                     creditAttestationService: getVauleString(params, 6),
                     irxMaxLltv: getVauleBigint(params, 7),
-                    categoryLltv: [],
+                    categoryLltv: getVauleBigintList(params, 8),
                   },
                   info: {
                     totalSupplyAssets: getVauleBigint(infos, 0),

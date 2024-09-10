@@ -119,33 +119,33 @@ const VaultBorrowSet: React.FC<Props> = ({
       }
       case 2: {
         console.log("entered supply function");
-        writeContract({
-          address: contracts.MORE_MARKETS as `0x${string}`,
-          abi: MarketsAbi,
-          functionName: "supplyCollateral",
-          args: [
-            { loanToken, collateralToken, oracle, irm, lltv },
-            depositAmount,
-            onBehalf,
-            "0x",
-          ],
-        });
+        // writeContract({
+        //   address: contracts.MORE_MARKETS as `0x${string}`,
+        //   abi: MarketsAbi,
+        //   functionName: "supplyCollateral",
+        //   args: [
+        //     { loanToken, collateralToken, oracle, irm, lltv },
+        //     depositAmount,
+        //     onBehalf,
+        //     "0x",
+        //   ],
+        // });
         setTxStep(3);
         break;
       }
       case 3: {
-        writeContract({
-          address: contracts.MORE_MARKETS as `0x${string}`,
-          abi: MarketsAbi,
-          functionName: "borrow",
-          args: [
-            { loanToken, collateralToken, oracle, irm, lltv },
-            BigInt(0),
-            borrowAmount,
-            onBehalf,
-            receiver,
-          ],
-        });
+        // writeContract({
+        //   address: contracts.MORE_MARKETS as `0x${string}`,
+        //   abi: MarketsAbi,
+        //   functionName: "borrow",
+        //   args: [
+        //     { loanToken, collateralToken, oracle, irm, lltv },
+        //     BigInt(0),
+        //     borrowAmount,
+        //     onBehalf,
+        //     receiver,
+        //   ],
+        // });
         break;
       }
       default: {
@@ -174,18 +174,18 @@ const VaultBorrowSet: React.FC<Props> = ({
     const irm = marketParams.irm;
     const lltv = marketParams.lltv;
 
-    writeContract({
-      address: contracts.MORE_MARKETS as `0x${string}`,
-      abi: MarketsAbi,
-      functionName: "borrow",
-      args: [
-        { loanToken, collateralToken, oracle, irm, lltv },
-        BigInt(0),
-        BigInt(1234),
-        onBehalf,
-        receiver,
-      ],
-    });
+    // writeContract({
+    //   address: contracts.MORE_MARKETS as `0x${string}`,
+    //   abi: MarketsAbi,
+    //   functionName: "borrow",
+    //   args: [
+    //     { loanToken, collateralToken, oracle, irm, lltv },
+    //     BigInt(0),
+    //     BigInt(1234),
+    //     onBehalf,
+    //     receiver,
+    //   ],
+    // });
   };
 
   const balanceTokenString = balanceToken.toString();

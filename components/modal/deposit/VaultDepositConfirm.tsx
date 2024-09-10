@@ -58,22 +58,27 @@ const VaultDepositConfirm: React.FC<Props> = ({
     // generate deposit tx
     if (item.market && userAddress) {
       setIsLoading(true);
-      const hash = await writeContract(config, {
-        address: contracts.MORE_MARKETS as `0x${string}`,
-        abi: MarketsAbi,
-        functionName: "supply",
-        args: [
-          item.market.params,
-          parseEther(amount.toString()),
-          toBigInt(0),
-          userAddress,
-          "0x",
-        ],
-      });
+      try {
+        const hash = await writeContract(config, {
+          address: contracts.MORE_MARKETS as `0x${string}`,
+          abi: MarketsAbi,
+          functionName: "supply",
+          args: [
+            item.market.params,
+            parseEther(amount.toString()),
+            toBigInt(0),
+            userAddress,
+            "0x",
+          ],
+        });
 
-      setTxhash(hash);
-      setIsLoading(false);
-      validDeposit();
+        setTxhash(hash);
+        setIsLoading(false);
+        validDeposit();
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+      }
     } else {
       alert("No supply queue");
     }

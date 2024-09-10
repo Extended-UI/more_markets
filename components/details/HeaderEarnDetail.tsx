@@ -25,7 +25,7 @@ const HeaderEarnDetail: React.FC = () => {
           {(closeModal) => (
             <>
               <div className="h-full w-full">
-                <VaultDeposit
+                {/* <VaultDeposit
                   title="USDMax Vault"
                   token="USDC"
                   apy={14.1}
@@ -35,7 +35,7 @@ const HeaderEarnDetail: React.FC = () => {
                   totalTokenAmount={1.96}
                   curator="Flowverse"
                   closeModal={closeModal}
-                ></VaultDeposit>
+                /> */}
               </div>
             </>
           )}

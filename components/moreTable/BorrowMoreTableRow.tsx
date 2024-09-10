@@ -33,12 +33,12 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
   });
 
   const marketParameters: MarketParams = {
-    loanToken: marketParams !== undefined ? marketParams[0] : `0x0`,
+    isPremiumMarket: false,
+    loanToken: `0x0`,
     collateralToken: marketParams !== undefined ? marketParams[1] : `0x0`,
     oracle: marketParams !== undefined ? marketParams[2] : `0x0`,
     irm: marketParams !== undefined ? marketParams[3] : `0x0`,
-    lltv: marketParams !== undefined ? marketParams[4] : BigInt(0),
-    isPremiumMarket: false,
+    lltv: BigInt(0),
     creditAttestationService: `0x123456`,
     irxMaxLltv: BigInt(123),
     categoryLltv: [BigInt(123)],
@@ -47,7 +47,7 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
   const item: BorrowData = {
     marketId: "0x",
     collateralToken: marketParams !== undefined ? marketParams[1] : "",
-    loanToken: marketParams !== undefined ? marketParams[0] : "",
+    loanToken: "",
     liquidationLTV: 80,
     liquidationLTV2: 120,
     borrowAPY: 42,

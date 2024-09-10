@@ -22,8 +22,6 @@ export const getTokenAllowance = async (
   wallet: string,
   spender: string
 ): Promise<bigint> => {
-  console.log(token, wallet, spender);
-
   return await readContract(config, {
     abi: ERC20Abi,
     address: token as `0x${string}`,

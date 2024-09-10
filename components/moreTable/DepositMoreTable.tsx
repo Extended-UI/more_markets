@@ -70,18 +70,8 @@ const DepositMoreTable: React.FC = () => {
           });
 
           const depositAmount = getVauleBigint(positions, 0);
-          console.log(positions, params, depositAmount);
           if (depositAmount > 0) {
             const collateralToken = getVauleString(params, 2);
-
-            console.log({
-              tokenName: tokens[collateralToken],
-              apy: 0,
-              depositAmount: Number(formatUnits(depositAmount)),
-              curator: "-",
-              depositValueUSD: 0,
-              collaterals: [],
-            });
 
             return {
               tokenName: tokens[collateralToken],
@@ -248,7 +238,7 @@ const DepositMoreTable: React.FC = () => {
                 >
                   {(closeModal) => (
                     <div className=" w-full h-full">
-                      <VaultDeposit closeModal={closeModal} />
+                      {/* <VaultDeposit closeModal={closeModal} /> */}
                     </div>
                   )}
                 </ButtonDialog>

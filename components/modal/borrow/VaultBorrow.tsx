@@ -15,7 +15,7 @@ interface Props {
   totalTokenAmount: number;
   curator: string;
   credora: string;
-  marketParams: MarketParams | undefined;
+  marketParams: MarketParams;
   closeModal: () => void;
 }
 

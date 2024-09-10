@@ -98,17 +98,17 @@ const VaultAddSet: React.FC<Props> = ({
       }
 
       case 2: {
-        writeContract({
-          address: contracts.MORE_MARKETS as `0x${string}`,
-          abi: MarketsAbi,
-          functionName: "supplyCollateral",
-          args: [
-            { loanToken, collateralToken, oracle, irm, lltv },
-            depositAmount,
-            onBehalf,
-            "0x",
-          ],
-        });
+        // writeContract({
+        //   address: contracts.MORE_MARKETS as `0x${string}`,
+        //   abi: MarketsAbi,
+        //   functionName: "supplyCollateral",
+        //   args: [
+        //     { loanToken, collateralToken, oracle, irm, lltv },
+        //     depositAmount,
+        //     onBehalf,
+        //     "0x",
+        //   ],
+        // });
         break;
       }
       default: {

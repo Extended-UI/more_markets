@@ -213,7 +213,7 @@ const LoanMoreTable: React.FC = () => {
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">
-                          <VaultBorrow
+                          {/* <VaultBorrow
                             title="USDMax"
                             token={item.token}
                             apy={14.1}
@@ -226,7 +226,7 @@ const LoanMoreTable: React.FC = () => {
                             credora="AAA"
                             marketParams={item.market?.params}
                             closeModal={closeModal}
-                          ></VaultBorrow>{" "}
+                          />{" "} */}
                         </div>
                       </>
                     )}
