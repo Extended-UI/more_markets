@@ -7,7 +7,7 @@ import VaultDepositSummary from "./VaultDepositSummary";
 import { InvestmentData } from "@/types";
 
 interface Props {
-  item: InvestmentData;
+  item?: InvestmentData;
   closeModal: () => void;
 }
 

@@ -7,7 +7,7 @@ import { Market } from "@/types";
 interface ButtonDialogProps {
   buttonText: string;
   color: string;
-  item: Market | null;
+  item?: Market | null;
   children: (toggleModal: () => void) => ReactNode;
   onButtonClick?: () => void;
 }

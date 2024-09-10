@@ -1,6 +1,6 @@
 "use client";
 
-import { ZeroAddress } from "ethers";
+import { ZeroAddress, formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 import { readContracts, readContract, getBalance } from "@wagmi/core";
 import { useReadContract, useAccount } from "wagmi";
@@ -13,11 +13,16 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { config } from "@/utils/wagmi";
-import { InvestmentData, Market, MarketParams, MarketInfo } from "@/types";
+import { InvestmentData, Market } from "@/types";
 import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
-import { getVaule, getVauleNum } from "@/utils/utils";
-import { MarketConfig } from "@/types/marketConfig";
+import {
+  getVaule,
+  getVauleNum,
+  getVauleBigint,
+  getVauleBoolean,
+  getVauleString,
+} from "@/utils/utils";
 import {
   contracts,
   curators,
@@ -51,6 +56,9 @@ const EarnMoreTable: React.FC = () => {
 
   useEffect(() => {
     const initVaults = async () => {
+      if (arrayOfVaults) {
+        
+      }
       const promises = arrayOfVaults
         ? (arrayOfVaults as `0x${string}`[]).map(
             async (vaultAddress: `0x${string}`) => {
@@ -115,9 +123,32 @@ const EarnMoreTable: React.FC = () => {
                 });
 
                 marketInfo = {
-                  config: configs.result as MarketConfig,
-                  params: params.result as unknown as MarketParams,
-                  info: infos.result as unknown as MarketInfo,
+                  config: {
+                    cap: getVauleBigint(configs, 0),
+                    enabled: getVauleBoolean(configs, 1),
+                    removableAt: getVauleBigint(configs, 2),
+                  },
+                  params: {
+                    isPremiumMarket: getVauleBoolean(params, 0),
+                    loanToken: getVauleString(params, 1),
+                    collateralToken: getVauleString(params, 2),
+                    oracle: getVauleString(params, 3),
+                    irm: getVauleString(params, 4),
+                    lltv: getVauleBigint(params, 5),
+                    creditAttestationService: getVauleString(params, 6),
+                    irxMaxLltv: getVauleBigint(params, 7),
+                    categoryLltv: [],
+                  },
+                  info: {
+                    totalSupplyAssets: getVauleBigint(infos, 0),
+                    totalSupplyShares: getVauleBigint(infos, 1),
+                    totalBorrowAssets: getVauleBigint(infos, 2),
+                    totalBorrowShares: getVauleBigint(infos, 3),
+                    lastUpdate: getVauleBigint(infos, 4),
+                    fee: getVauleBigint(infos, 5),
+                    isPremiumFeeEnabled: getVauleBoolean(infos, 6),
+                    premiumFee: getVauleBigint(infos, 7),
+                  },
                 } as Market;
 
                 const assetAddress = getVaule(asset);
@@ -133,7 +164,12 @@ const EarnMoreTable: React.FC = () => {
                   vaultName: getVaule(name),
                   tokenSymbol: tokens[assetAddress],
                   netAPY: 0,
-                  totalDeposits: 0,
+                  totalDeposits: Number(
+                    formatUnits(
+                      marketInfo.info.totalSupplyAssets,
+                      tokenBalance.decimals
+                    )
+                  ),
                   totalValueUSD: 0,
                   curator:
                     curatorAddress == ZeroAddress
@@ -157,7 +193,7 @@ const EarnMoreTable: React.FC = () => {
     };
 
     initVaults();
-  }, [arrayOfVaults, userAddress]);
+  }, [arrayOfVaults, userAddress, isStickyDisabled]);
 
   const goToDetail = (item: InvestmentData) => {
     router.push("/earn/" + item.tokenSymbol);
