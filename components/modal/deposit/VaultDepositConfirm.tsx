@@ -52,7 +52,7 @@ const VaultDepositConfirm: React.FC<Props> = ({
     };
 
     initApprove();
-  }, [userAddress, item, amount]);
+  }, [userAddress, assetAddress, amount]);
 
   const handleDeposit = async () => {
     // generate deposit tx

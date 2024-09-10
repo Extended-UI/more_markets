@@ -23,8 +23,7 @@ const VaultDepositSummary: React.FC<Props> = ({
   closeModal,
 }) => {
   const [executed, setExecuted] = useState(false);
-  if (hash.length == 0) return null;
-
+  
   const hashStr =
     hash.substring(0, 5) + "..." + hash.substring(hash.length - 4);
 
