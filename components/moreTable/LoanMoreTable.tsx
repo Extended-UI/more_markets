@@ -226,7 +226,7 @@ const LoanMoreTable: React.FC = () => {
                             credora="AAA"
                             marketParams={item.market?.params}
                             closeModal={closeModal}
-                          />{" "} */}
+                          /> */}
                         </div>
                       </>
                     )}
