@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import VaultDepositSet from "./VaultDepositSet";
-import VaultDepositConfirm from "./VaultDepositConfirm";
-import VaultDepositSummary from "./VaultDepositSummary";
+import VaultDepositInput from "./VaultDepositInput";
+import VaultDepositPush from "./VaultDepositPush";
+import VaultDepositResult from "./VaultDepositResult";
 import { InvestmentData } from "@/types";
 
 interface Props {
@@ -17,56 +17,45 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal }) => {
   const [txhash, setTxhash] = useState("");
 
   const handleSetDeposit = (amount: number) => {
-    console.log("DEPOSIT SET", amount);
     setAmount(amount);
     setStep(2);
   };
 
   const handleValidDeposit = () => {
-    console.log("DEPOSIT VALID");
     setStep(3);
   };
 
   const handleProcessDone = () => {
-    console.log("DEPOSIT DONE");
+    closeModal();
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <VaultDepositSet
-            item={item}
-            closeModal={closeModal}
-            setAmount={(amount: number) => handleSetDeposit(amount)}
-          />
-        );
-      case 2:
-        return (
-          <VaultDepositConfirm
-            item={item}
-            amount={amount}
-            setTxhash={setTxhash}
-            closeModal={closeModal}
-            validDeposit={() => handleValidDeposit()}
-          />
-        );
-      case 3:
-        return (
-          <VaultDepositSummary
-            amount={amount}
-            item={item}
-            hash={txhash}
-            processDone={() => handleProcessDone()}
-            closeModal={closeModal}
-          />
-        );
-      default:
-        return null; // ou une vue par défaut
-    }
-  };
-
-  return <div>{renderStep()}</div>;
+  return (
+    <>
+      {step == 1 ? (
+        <VaultDepositInput
+          item={item}
+          closeModal={closeModal}
+          setAmount={(amount: number) => handleSetDeposit(amount)}
+        />
+      ) : step == 2 ? (
+        <VaultDepositPush
+          item={item}
+          amount={amount}
+          setTxhash={setTxhash}
+          closeModal={closeModal}
+          validDeposit={() => handleValidDeposit()}
+        />
+      ) : step == 3 ? (
+        <VaultDepositResult
+          amount={amount}
+          item={item}
+          hash={txhash}
+          processDone={() => handleProcessDone()}
+          closeModal={closeModal}
+        />
+      ) : null}
+    </>
+  );
 };
 
 export default VaultDeposit;

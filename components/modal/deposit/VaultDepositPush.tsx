@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { parseEther, toBigInt, MaxUint256 } from "ethers";
+import { parseEther, MaxUint256 } from "ethers";
 import { writeContract, waitForTransaction } from "@wagmi/core";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import MoreButton from "../../moreButton/MoreButton";
@@ -24,7 +24,7 @@ interface Props {
   setTxhash: (hash: string) => void;
 }
 
-const VaultDepositConfirm: React.FC<Props> = ({
+const VaultDepositPush: React.FC<Props> = ({
   item,
   amount,
   setTxhash,
@@ -45,7 +45,7 @@ const VaultDepositConfirm: React.FC<Props> = ({
             userAddress,
             contracts.MORE_MARKETS
           )
-        : toBigInt(0);
+        : BigInt(0);
 
       if (allowance >= item.tokenBalance.value) setHasApprove(true);
       else setHasApprove(false);
@@ -66,7 +66,7 @@ const VaultDepositConfirm: React.FC<Props> = ({
           args: [
             item.market.params,
             parseEther(amount.toString()),
-            toBigInt(0),
+            BigInt(0),
             userAddress,
             "0x",
           ],
@@ -186,4 +186,4 @@ const VaultDepositConfirm: React.FC<Props> = ({
   );
 };
 
-export default VaultDepositConfirm;
+export default VaultDepositPush;

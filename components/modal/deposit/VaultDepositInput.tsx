@@ -12,7 +12,11 @@ interface Props {
   setAmount: (amount: number) => void;
 }
 
-const VaultDepositSet: React.FC<Props> = ({ item, setAmount, closeModal }) => {
+const VaultDepositInput: React.FC<Props> = ({
+  item,
+  setAmount,
+  closeModal,
+}) => {
   const [deposit, setDeposit] = useState<number>(0);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +89,7 @@ const VaultDepositSet: React.FC<Props> = ({ item, setAmount, closeModal }) => {
               value={item.totalDeposits}
               totalValue={item.totalValueUSD}
               token={item.tokenSymbol}
-            ></FormatTokenMillion>
+            />
           </div>
         </div>
         <div className="flex justify-between mt-10 pb-4 ">
@@ -97,4 +101,4 @@ const VaultDepositSet: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   );
 };
 
-export default VaultDepositSet;
+export default VaultDepositInput;

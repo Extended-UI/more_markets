@@ -1,4 +1,3 @@
-import { toBigInt } from "ethers";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 
@@ -26,12 +25,14 @@ export const marketsInstance = {
   abi: MarketsAbi,
 };
 
+// export const MORE_SUBGRAPH = "http://18.233.102.130:8000/subgraphs/name/more-markets/more-subgraph/graphql";
+
 export const MORE_SUBGRAPH =
-  "http://18.233.102.130:8000/subgraphs/name/more-markets/more-subgraph/graphql";
+  "http://localhost:8000/subgraphs/name/more-markets/more-subgraph";
 
 export const initBalance: GetBalanceReturnType = {
   decimals: 18,
   formatted: "0",
   symbol: "",
-  value: toBigInt(0),
+  value: BigInt(0),
 };

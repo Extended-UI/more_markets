@@ -15,7 +15,7 @@ interface Props {
   closeModal: () => void;
 }
 
-const VaultDepositSummary: React.FC<Props> = ({
+const VaultDepositResult: React.FC<Props> = ({
   item,
   amount,
   hash,
@@ -91,4 +91,4 @@ const VaultDepositSummary: React.FC<Props> = ({
   );
 };
 
-export default VaultDepositSummary;
+export default VaultDepositResult;

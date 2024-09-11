@@ -1,7 +1,7 @@
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDetail from "../modal/VaultDetail";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
-import VaultDeposit from "../modal/deposit/VaultDepositConfirm";
+import VaultDeposit from "../modal/deposit/VaultDepositPush";
 import IconToken from "../token/IconToken";
 import { MarketParams } from "@/types/marketParams";
 

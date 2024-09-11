@@ -1,5 +1,3 @@
-import { toBigInt } from "ethers";
-
 export const getVaule = (param: any): string => {
   return param.result ? param.result.toString() : "";
 };
@@ -9,7 +7,7 @@ export const getVauleNum = (param: any): number => {
 };
 
 export const getVauleBigint = (param: any, ind: number): bigint => {
-  return param.result ? toBigInt(param.result[ind]) : toBigInt(0);
+  return param.result ? BigInt(param.result[ind]) : BigInt(0);
 };
 
 export const getVauleBoolean = (param: any, ind: number): boolean => {
