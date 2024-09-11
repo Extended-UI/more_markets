@@ -35,9 +35,9 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
   const marketParameters: MarketParams = {
     isPremiumMarket: false,
     loanToken: `0x0`,
-    collateralToken: marketParams !== undefined ? marketParams[1] : `0x0`,
-    oracle: marketParams !== undefined ? marketParams[2] : `0x0`,
-    irm: marketParams !== undefined ? marketParams[3] : `0x0`,
+    collateralToken: `0x0`,
+    oracle: `0x0`,
+    irm: `0x0`,
     lltv: BigInt(0),
     creditAttestationService: `0x123456`,
     irxMaxLltv: BigInt(123),
@@ -46,7 +46,7 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
 
   const item: BorrowData = {
     marketId: "0x",
-    collateralToken: marketParams !== undefined ? marketParams[1] : "",
+    collateralToken: "",
     loanToken: "",
     liquidationLTV: 80,
     liquidationLTV2: 120,
@@ -131,7 +131,6 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
         >
           <div onClick={(event) => event.stopPropagation()}>
             <ButtonDialog
-              item={item.market}
               color="secondary"
               buttonText="Borrow"
               onButtonClick={toggleSticky}
