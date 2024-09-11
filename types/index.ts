@@ -4,4 +4,5 @@ export * from "./market";
 export * from "./loandData";
 export * from "./marketInfo";
 export * from "./marketParams";
-export * from "./depositData";
+export * from "./depositMoreData";
+export * from "./vaultData";

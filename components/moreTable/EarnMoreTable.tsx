@@ -1,8 +1,8 @@
 "use client";
 
-import { ZeroAddress, formatUnits } from "ethers";
+import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
-import { readContracts, readContract, getBalance } from "@wagmi/core";
+import { getBalance } from "@wagmi/core";
 import { useReadContract, useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
@@ -13,24 +13,10 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { config } from "@/utils/wagmi";
-import { InvestmentData, Market } from "@/types";
+import { InvestmentData } from "@/types";
 import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
-import { VaultsAbi } from "@/app/abi/VaultsAbi";
-import {
-  getVaule,
-  getVauleNum,
-  getVauleBigint,
-  getVauleBoolean,
-  getVauleString,
-  getVauleBigintList,
-} from "@/utils/utils";
-import {
-  contracts,
-  curators,
-  tokens,
-  marketsInstance,
-  initBalance,
-} from "@/utils/const";
+import { contracts, tokens, initBalance } from "@/utils/const";
+import { getMarketData, getVaultData, getVaultDetail } from "@/utils/contract";
 
 const EarnMoreTable: React.FC = () => {
   const router = useRouter();
@@ -62,107 +48,31 @@ const EarnMoreTable: React.FC = () => {
       const promises = arrayOfVaults
         ? (arrayOfVaults as `0x${string}`[]).map(
             async (vaultAddress: `0x${string}`) => {
-              const vaultContract = {
-                address: vaultAddress,
-                abi: VaultsAbi,
-              };
-              const [name, curator, asset, supplyQueueLength] =
-                await readContracts(config, {
-                  contracts: [
-                    {
-                      ...vaultContract,
-                      functionName: "name",
-                    },
-                    {
-                      ...vaultContract,
-                      functionName: "curator",
-                    },
-                    {
-                      ...vaultContract,
-                      functionName: "asset",
-                    },
-                    {
-                      ...vaultContract,
-                      functionName: "supplyQueueLength",
-                    },
-                  ],
-                });
-
-              const supplyQueueLen = getVauleNum(supplyQueueLength);
+              const vaultData = await getVaultData(vaultAddress);
 
               // fetch supplyIds
               const marketId =
-                supplyQueueLen > 0
-                  ? await readContract(config, {
-                      ...vaultContract,
-                      functionName: "supplyQueue",
-                      args: [0],
-                    })
+                vaultData.supplyQueueLen > 0
+                  ? await getVaultDetail(vaultAddress, "supplyQueue", [0])
                   : "";
 
-              let marketInfo = null;
-              if (supplyQueueLen > 0 && (marketId as string).length > 0) {
-                const [configs, params, infos] = await readContracts(config, {
-                  contracts: [
-                    {
-                      ...vaultContract,
-                      functionName: "config",
-                      args: [marketId],
-                    },
-                    {
-                      ...marketsInstance,
-                      functionName: "idToMarketParams",
-                      args: [marketId as `0x${string}`],
-                    },
-                    {
-                      ...marketsInstance,
-                      functionName: "market",
-                      args: [marketId as `0x${string}`],
-                    },
-                  ],
-                });
+              if (
+                vaultData.supplyQueueLen > 0 &&
+                (marketId as string).length > 0
+              ) {
+                const marketInfo = await getMarketData(marketId as string);
 
-                marketInfo = {
-                  config: {
-                    cap: getVauleBigint(configs, 0),
-                    enabled: getVauleBoolean(configs, 1),
-                    removableAt: getVauleBigint(configs, 2),
-                  },
-                  params: {
-                    isPremiumMarket: getVauleBoolean(params, 0),
-                    loanToken: getVauleString(params, 1),
-                    collateralToken: getVauleString(params, 2),
-                    oracle: getVauleString(params, 3),
-                    irm: getVauleString(params, 4),
-                    lltv: getVauleBigint(params, 5),
-                    creditAttestationService: getVauleString(params, 6),
-                    irxMaxLltv: getVauleBigint(params, 7),
-                    categoryLltv: getVauleBigintList(params, 8),
-                  },
-                  info: {
-                    totalSupplyAssets: getVauleBigint(infos, 0),
-                    totalSupplyShares: getVauleBigint(infos, 1),
-                    totalBorrowAssets: getVauleBigint(infos, 2),
-                    totalBorrowShares: getVauleBigint(infos, 3),
-                    lastUpdate: getVauleBigint(infos, 4),
-                    fee: getVauleBigint(infos, 5),
-                    isPremiumFeeEnabled: getVauleBoolean(infos, 6),
-                    premiumFee: getVauleBigint(infos, 7),
-                  },
-                } as Market;
-
-                const assetAddress = getVaule(asset);
-                const curatorAddress = getVaule(curator);
                 const tokenBalance = userAddress
                   ? await getBalance(config, {
-                      token: assetAddress as `0x${string}`,
+                      token: vaultData.assetAddress as `0x${string}`,
                       address: userAddress,
                     })
                   : initBalance;
 
                 return {
-                  vaultName: getVaule(name),
-                  tokenSymbol: tokens[assetAddress],
+                  vaultName: vaultData.vaultName,
+                  assetAddress: vaultData.assetAddress,
+                  tokenSymbol: tokens[vaultData.assetAddress],
                   netAPY: 0,
                   totalDeposits: Number(
                     formatUnits(
@@ -171,10 +81,7 @@ const EarnMoreTable: React.FC = () => {
                     )
                   ),
                   totalValueUSD: 0,
-                  curator:
-                    curatorAddress == ZeroAddress
-                      ? "-"
-                      : curators[curatorAddress],
+                  curator: vaultData.curator,
                   collateral: [],
                   unsecured: 0,
                   tokenBalance,
@@ -360,7 +267,6 @@ const EarnMoreTable: React.FC = () => {
                     >
                       <div onClick={(event) => event.stopPropagation()}>
                         <ButtonDialog
-                          item={item.market}
                           color="primary"
                           buttonText="Deposit"
                           onButtonClick={toggleSticky}

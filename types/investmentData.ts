@@ -4,6 +4,7 @@ import { Market } from "./market";
 export interface InvestmentData {
   vaultName: string;
   tokenSymbol: string;
+  assetAddress: string;
   netAPY: number;
   totalDeposits: number;
   totalValueUSD: number;

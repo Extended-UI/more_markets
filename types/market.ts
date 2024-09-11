@@ -3,7 +3,7 @@ import { MarketParams } from "./marketParams";
 import { MarketInfo } from "./marketInfo";
 
 export interface Market {
-  config: MarketConfig;
+  // config: MarketConfig;
   params: MarketParams;
   info: MarketInfo;
 }

@@ -1,4 +1,6 @@
-export const MarketsAbi = [
+import { Abi } from "viem";
+
+export const MarketsAbi: Abi = [
   {
     type: "constructor",
     inputs: [

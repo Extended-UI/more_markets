@@ -142,11 +142,7 @@ const LoanMoreTable: React.FC = () => {
                     totalValue={item.valueUSD}
                   ></FormatTokenMillion>
                   <div className="ml-8"></div>
-                  <ButtonDialog
-                    color="secondary"
-                    buttonText="Add"
-                    item={item.market}
-                  >
+                  <ButtonDialog color="secondary" buttonText="Add">
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">
@@ -167,11 +163,7 @@ const LoanMoreTable: React.FC = () => {
                     )}
                   </ButtonDialog>
 
-                  <ButtonDialog
-                    color="grey"
-                    buttonText="Withdraw"
-                    item={item.market}
-                  >
+                  <ButtonDialog color="grey" buttonText="Withdraw">
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">
@@ -205,11 +197,7 @@ const LoanMoreTable: React.FC = () => {
                     totalValue={item.valueUSD}
                   ></FormatTokenMillion>
                   <div className="ml-8"></div>
-                  <ButtonDialog
-                    color="secondary"
-                    buttonText="Borrow More"
-                    item={item.market}
-                  >
+                  <ButtonDialog color="secondary" buttonText="Borrow More">
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">
@@ -232,11 +220,7 @@ const LoanMoreTable: React.FC = () => {
                     )}
                   </ButtonDialog>
 
-                  <ButtonDialog
-                    color="grey"
-                    buttonText="Repay"
-                    item={item.market}
-                  >
+                  <ButtonDialog color="grey" buttonText="Repay">
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">

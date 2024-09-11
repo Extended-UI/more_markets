@@ -13,11 +13,6 @@ export const tokens: { [key: string]: string } = {
   "0xc4dD98f4ECEbFB0F86fF6f8a60668Cf60c45E830": "usdc",
 };
 
-export const tokenAddress: { [key: string]: `0x${string}` } = {
-  doge: "0x58f3875DBeFcf784Ea40A886eC24e3C3FaB2dB19",
-  usdc: "0xc4dD98f4ECEbFB0F86fF6f8a60668Cf60c45E830",
-};
-
 export const curators: { [key: string]: string } = {};
 
 export const marketsInstance = {

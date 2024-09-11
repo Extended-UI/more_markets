@@ -3,40 +3,28 @@
 import { formatUnits } from "ethers";
 import React, { useState, useEffect } from "react";
 import { useReadContract, useAccount } from "wagmi";
-import { readContracts } from "@wagmi/core";
+import { readContract } from "@wagmi/core";
 import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDeposit from "../modal/deposit/VaultDeposit";
 import IconToken from "../token/IconToken";
-import { DepositData, Market } from "@/types";
+import { DepositMoreData, Market } from "@/types";
 import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
-import {
-  contracts,
-  curators,
-  tokens,
-  marketsInstance,
-  initBalance,
-} from "@/utils/const";
+import { contracts, marketsInstance } from "@/utils/const";
+import { getMarketData } from "@/utils/contract";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { config } from "@/utils/wagmi";
-import {
-  getVaule,
-  getVauleNum,
-  getVauleBigint,
-  getVauleBoolean,
-  getVauleString,
-} from "@/utils/utils";
+import { getVauleBigint } from "@/utils/utils";
 
 const DepositMoreTable: React.FC = () => {
-  const [positions, setPositions] = useState<DepositData[]>([]);
+  const [positions, setPositions] = useState<DepositMoreData[]>([]);
   const account = useAccount();
   const {
     data: arrayOfMarkets,
     isSuccess,
-    isPending,
     refetch: refetchProject,
   } = useReadContract({
     address: contracts.MORE_MARKETS as `0x${string}`,
@@ -53,36 +41,30 @@ const DepositMoreTable: React.FC = () => {
   useEffect(() => {
     const initPositions = async () => {
       if (userAddress && arrayOfMarkets) {
-        const promises = arrayOfMarkets.map(async (marketId) => {
-          const [positions, params] = await readContracts(config, {
-            contracts: [
-              {
-                ...marketsInstance,
-                functionName: "position",
-                args: [marketId, userAddress],
-              },
-              {
-                ...marketsInstance,
-                functionName: "idToMarketParams",
-                args: [marketId],
-              },
-            ],
-          });
+        const promises = (arrayOfMarkets as `0x${string}`[]).map(
+          async (marketId) => {
+            const positionInfo = await readContract(config, {
+              ...marketsInstance,
+              functionName: "position",
+              args: [marketId, userAddress],
+            });
 
-          const depositAmount = getVauleBigint(positions, 0);
-          if (depositAmount > 0) {
-            const collateralToken = getVauleString(params, 2);
+            const depositAmount = BigInt((positionInfo as any[])[0]);
+            if (depositAmount > 0) {
+              const marketData: Market = await getMarketData(marketId);
 
-            return {
-              tokenName: tokens[collateralToken],
-              apy: 0,
-              depositAmount: Number(formatUnits(depositAmount)),
-              curator: "-",
-              depositValueUSD: 0,
-              collaterals: [],
-            } as DepositData;
+              return {
+                tokenName: "doge",
+                apy: 0,
+                depositAmount: Number(formatUnits(depositAmount)),
+                curator: "-",
+                depositValueUSD: 0,
+                collaterals: [],
+                market: marketData,
+              } as DepositMoreData;
+            }
           }
-        });
+        );
 
         const positionQues = await Promise.all(promises);
         setPositions(positionQues.filter((item) => item !== undefined));
@@ -250,17 +232,7 @@ const DepositMoreTable: React.FC = () => {
                 >
                   {(closeModal) => (
                     <div className=" w-full h-full">
-                      <VaultWithdraw
-                        title="USDMax Vault"
-                        token="USDC"
-                        apy={14.1}
-                        balance={473.18}
-                        ltv="90% / 125%"
-                        totalWithdraw={3289.62}
-                        totalTokenAmount={1.96}
-                        curator="Flowverse"
-                        closeModal={closeModal}
-                      ></VaultWithdraw>
+                      <VaultWithdraw item={item} closeModal={closeModal} />
                     </div>
                   )}
                 </ButtonDialog>

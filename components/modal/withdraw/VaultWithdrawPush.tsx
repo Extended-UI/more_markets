@@ -1,64 +1,67 @@
 "use client";
 
 import React, { useState } from "react";
-import InputTokenMax from "../../input/InputTokenMax";
-import TotalVolumeToken from "../../token/TotalVolumeToken";
+import { useAccount } from "wagmi";
+import { parseEther } from "ethers";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "../../token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import MoreToggle from "@/components/moreToggle/MoreToggle";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import IconToken from "@/components/token/IconToken";
+import { DepositMoreData } from "@/types";
+import { sendToMarkets } from "@/utils/contract";
 
 interface Props {
-  title: string;
-  token: string;
-  curator: string;
-  balance: number;
-  apy: number;
-  ltv: string;
-  totalWithdraw: number;
-  totalTokenAmount: number;
+  item: DepositMoreData;
   amount: number;
-  validWithdraw: () => void;
   closeModal: () => void;
+  validWithdraw: () => void;
+  setTxhash: (hash: string) => void;
 }
 
 const VaultWithdrawPush: React.FC<Props> = ({
-  title,
-  token,
-  balance,
-  apy,
-  ltv,
-  totalWithdraw,
-  totalTokenAmount,
-  curator,
+  item,
   amount,
-  validWithdraw,
+  setTxhash,
   closeModal,
+  validWithdraw,
 }) => {
-  const [deposit, setWithdraw] = useState<number>(0);
+  const { address: userAddress } = useAccount();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleWithdraw = () => {
-    validWithdraw();
+  const handleWithdraw = async () => {
+    if (item.market && userAddress) {
+      setIsLoading(true);
+      try {
+        const hash = await sendToMarkets("withdraw", [
+          item.market.params,
+          0,
+          parseEther(item.depositAmount.toString()),
+          userAddress,
+          userAddress,
+        ]);
+
+        setTxhash(hash);
+        setIsLoading(false);
+        validWithdraw();
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+      }
+    }
   };
-
-  const handleCancel = () => {
-    console.log("CANCEL");
-  };
-
-  const balanceString = balance.toString();
 
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">
       <div className="mb-10 px-4 pt-10  text-3xl">Review Transaction</div>
-      <div className="text-l mb-1 px-4 pt-5 ">{title}</div>
+      <div className="text-l mb-1 px-4 pt-5 ">{item.tokenName}</div>
       <div className="flex flex-row justify-between mt-4 items-center">
         <div className="flex gap-2 text-l mb-5  px-4 items-center">
           {" "}
           <span className="more-text-gray">Curator:</span>
           <IconToken className="w-6 h-6" tokenName="abt" />{" "}
-          <span>{curator}</span>
+          <span>{"curator"}</span>
         </div>
         <div className="flex gap-2 text-l mb-5 px-4">
           <span className="more-text-gray">Liquidation LTV:</span>{" "}
@@ -68,10 +71,10 @@ const VaultWithdrawPush: React.FC<Props> = ({
       <div className="more-bg-primary px-8 rounded-t-[5px] ">
         <TokenAmount
           title="Withdraw"
-          token={token}
+          token={item.tokenName}
           amount={amount}
-          ltv={ltv}
-          totalTokenAmount={totalTokenAmount}
+          ltv={"ltv"}
+          totalTokenAmount={item.depositAmount}
         />
       </div>
       <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
@@ -79,15 +82,15 @@ const VaultWithdrawPush: React.FC<Props> = ({
         <PositionChangeToken
           title="Withdraw"
           value={amount}
-          token={token}
+          token={item.tokenName}
           value2={0}
         />
       </div>
 
-      <div className="flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4 ">
+      {/* <div className="flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4 ">
         Unwrap USDC
         <MoreToggle />
-      </div>
+      </div> */}
 
       <div className="py-5 px-2">
         By confirming this transaction, you agree to the{" "}
@@ -108,7 +111,8 @@ const VaultWithdrawPush: React.FC<Props> = ({
         <MoreButton
           className="text-2xl py-2"
           text="Withdraw"
-          onClick={() => handleWithdraw()}
+          disabled={isLoading}
+          onClick={handleWithdraw}
           color="primary"
         />
       </div>

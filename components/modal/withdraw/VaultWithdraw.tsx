@@ -2,32 +2,16 @@
 
 import React, { useState } from "react";
 import VaultWithdrawInput from "./VaultWithdrawInput";
-import VaultWithdrawResult from "./VaultWithdrawPush";
-import VaultWithdrawPush from "./VaultWithdrawResult";
+import VaultWithdrawPush from "./VaultWithdrawPush";
+import VaultWithdrawResult from "./VaultWithdrawResult";
+import { DepositMoreData } from "@/types";
 
 interface Props {
-  title: string;
-  token: string;
-  balance: number;
-  apy: number;
-  ltv: string;
-  totalWithdraw: number;
-  totalTokenAmount: number;
-  curator: string;
+  item: DepositMoreData;
   closeModal: () => void;
 }
 
-const VaultWithdraw: React.FC<Props> = ({
-  title,
-  token,
-  balance,
-  apy,
-  ltv,
-  totalWithdraw,
-  totalTokenAmount,
-  curator,
-  closeModal,
-}) => {
+const VaultWithdraw: React.FC<Props> = ({ item, closeModal }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [txhash, setTxhash] = useState("");
@@ -50,42 +34,25 @@ const VaultWithdraw: React.FC<Props> = ({
     <>
       {step == 1 ? (
         <VaultWithdrawInput
-          title={title}
-          token={token}
-          balance={balance}
-          apy={apy}
-          ltv={ltv}
-          totalWithdraw={totalWithdraw}
-          totalTokenAmount={totalTokenAmount}
+          item={item}
           setAmount={(amount: number) => handleSetWithdraw(amount)}
           closeModal={closeModal}
         />
       ) : step == 2 ? (
         <VaultWithdrawPush
+          item={item}
           amount={amount}
-          title={title}
-          token={token}
-          balance={balance}
-          apy={apy}
-          ltv={ltv}
-          totalWithdraw={totalWithdraw}
-          totalTokenAmount={totalTokenAmount}
-          processDone={() => handleProcessDone()}
+          setTxhash={setTxhash}
           closeModal={closeModal}
+          validWithdraw={handleValidWithdraw}
         />
       ) : step == 3 ? (
         <VaultWithdrawResult
-          title={title}
-          token={token}
-          balance={balance}
-          apy={apy}
-          ltv={ltv}
-          totalWithdraw={totalWithdraw}
-          totalTokenAmount={totalTokenAmount}
-          curator={curator}
+          item={item}
+          hash={txhash}
           amount={amount}
-          validWithdraw={() => handleValidWithdraw()}
           closeModal={closeModal}
+          processDone={handleProcessDone}
         />
       ) : null}
     </>

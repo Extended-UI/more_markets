@@ -11,10 +11,9 @@ import IconToken from "@/components/token/IconToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
 import { config } from "@/utils/wagmi";
-import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { ERC20Abi } from "@/app/abi/ERC20Abi";
-import { contracts, tokenAddress } from "@/utils/const";
-import { getTokenAllowance } from "@/utils/contract";
+import { contracts } from "@/utils/const";
+import { getTokenAllowance, sendToMarkets } from "@/utils/contract";
 
 interface Props {
   item: InvestmentData;
@@ -35,13 +34,11 @@ const VaultDepositPush: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
 
-  const assetAddress = tokenAddress[item.tokenBalance.symbol.toLowerCase()];
-
   useEffect(() => {
     const initApprove = async () => {
       const allowance = userAddress
         ? await getTokenAllowance(
-            assetAddress,
+            item.assetAddress,
             userAddress,
             contracts.MORE_MARKETS
           )
@@ -52,25 +49,20 @@ const VaultDepositPush: React.FC<Props> = ({
     };
 
     initApprove();
-  }, [userAddress, assetAddress, amount]);
+  }, [userAddress, item, amount]);
 
   const handleDeposit = async () => {
     // generate deposit tx
     if (item.market && userAddress) {
       setIsLoading(true);
       try {
-        const hash = await writeContract(config, {
-          address: contracts.MORE_MARKETS as `0x${string}`,
-          abi: MarketsAbi,
-          functionName: "supply",
-          args: [
-            item.market.params,
-            parseEther(amount.toString()),
-            BigInt(0),
-            userAddress,
-            "0x",
-          ],
-        });
+        const hash = await sendToMarkets("supply", [
+          item.market.params,
+          parseEther(amount.toString()),
+          BigInt(0),
+          userAddress,
+          "0x",
+        ]);
 
         setTxhash(hash);
         setIsLoading(false);
@@ -89,7 +81,7 @@ const VaultDepositPush: React.FC<Props> = ({
       setIsLoading(true);
       try {
         const hash = await writeContract(config, {
-          address: assetAddress,
+          address: item.assetAddress as `0x${string}`,
           abi: ERC20Abi,
           functionName: "approve",
           args: [contracts.MORE_MARKETS as `0x${string}`, MaxUint256],

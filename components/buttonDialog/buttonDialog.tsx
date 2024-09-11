@@ -7,7 +7,6 @@ import { Market } from "@/types";
 interface ButtonDialogProps {
   buttonText: string;
   color: string;
-  item?: Market | null;
   children: (toggleModal: () => void) => ReactNode;
   onButtonClick?: () => void;
 }
@@ -15,21 +14,17 @@ interface ButtonDialogProps {
 const ButtonDialog: React.FC<ButtonDialogProps> = ({
   buttonText,
   color,
-  item,
   children,
   onButtonClick,
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModal = () => {
-    if (item) {
-      setIsModalVisible(!isModalVisible);
-      if (onButtonClick) {
-        onButtonClick();
-      }
-    } else {
-      alert("No supply queue");
+    if (onButtonClick) {
+      onButtonClick();
     }
+
+    setIsModalVisible(!isModalVisible);
   };
 
   const closeModal = () => {
