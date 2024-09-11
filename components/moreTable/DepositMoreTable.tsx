@@ -17,7 +17,6 @@ import { contracts, marketsInstance } from "@/utils/const";
 import { getMarketData } from "@/utils/contract";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { config } from "@/utils/wagmi";
-import { getVauleBigint } from "@/utils/utils";
 
 const DepositMoreTable: React.FC = () => {
   const [positions, setPositions] = useState<DepositMoreData[]>([]);
