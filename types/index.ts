@@ -6,3 +6,5 @@ export * from "./marketInfo";
 export * from "./marketParams";
 export * from "./depositMoreData";
 export * from "./vaultData";
+export * from "./graphMarket";
+export * from "./graphVault";

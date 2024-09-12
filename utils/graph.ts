@@ -1,10 +1,10 @@
 import { ZeroAddress } from "ethers";
-import ApolloClient, { ApolloQueryResult } from "apollo-client";
+import ApolloClient from "apollo-client";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { DocumentNode } from "graphql";
 import { MORE_SUBGRAPH } from "./const";
-import { GraphMarket, GraphVault } from "@/types/graph";
+import { GraphMarket, GraphVault } from "@/types";
 import { positionQuery, marketsQuery, vaultsQuery } from "./query";
 
 const apolloFetcher = async (query: DocumentNode) => {
