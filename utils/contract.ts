@@ -1,14 +1,20 @@
-import { JsonRpcProvider, Contract, InterfaceAbi, ZeroAddress } from "ethers";
+import {
+  JsonRpcProvider,
+  Contract,
+  InterfaceAbi,
+  ZeroAddress,
+  MaxUint256,
+} from "ethers";
 import {
   readContract,
   readContracts,
   writeContract,
   getBalance,
   signTypedData,
-  waitForTransaction,
   type GetBalanceReturnType,
+  waitForTransactionReceipt,
 } from "@wagmi/core";
-import { encodeFunctionData, encodeAbiParameters, erc20Abi } from "viem";
+import { encodeFunctionData, erc20Abi } from "viem";
 import { config } from "./wagmi";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { ERC20Abi } from "@/app/abi/ERC20Abi";
@@ -71,7 +77,7 @@ export const setTokenAllowance = async (
     args: [spender as `0x${string}`, amount],
   });
 
-  await waitForTransaction(config, { hash: txHash });
+  await waitForTransactionReceipt(config, { hash: txHash });
 };
 
 export const getTokenPermit = async (args: any[]): Promise<bigint> => {
@@ -137,6 +143,43 @@ export const setTokenPermit = async (
       verifyingContract: contracts.PERMIT2 as `0x${string}`,
       chainId: 545,
       name: "Permit2",
+    },
+  });
+
+  return result;
+};
+
+export const setVaultPermit = async (
+  vaultName: string,
+  account: `0x${string}`,
+  vaultAddress: string,
+  amount: bigint,
+  nonce: bigint,
+  deadline: bigint
+): Promise<string> => {
+  const result = await signTypedData(config, {
+    types: {
+      Permit: [
+        { name: "owner", type: "address" },
+        { name: "spender", type: "address" },
+        { name: "value", type: "uint256" },
+        { name: "nonce", type: "uint256" },
+        { name: "deadline", type: "uint256" },
+      ],
+    },
+    primaryType: "Permit",
+    message: {
+      owner: account,
+      spender: contracts.MORE_BUNDLER as `0x${string}`,
+      value: amount,
+      nonce,
+      deadline,
+    },
+    domain: {
+      verifyingContract: vaultAddress as `0x${string}`,
+      chainId: 545,
+      name: vaultName,
+      version: "1",
     },
   });
 
@@ -294,6 +337,24 @@ export const getPermitNonce = async (args: any[]): Promise<number> => {
   return Number((nonceInfo as any[])[2]);
 };
 
+export const getVaultNonce = async (
+  vaultAddress: `0x${string}`,
+  account: string
+): Promise<bigint> => {
+  const vaultContract = {
+    address: vaultAddress,
+    abi: VaultsAbi,
+  };
+
+  const nonceInfo = await readContract(config, {
+    ...vaultContract,
+    functionName: "nonces",
+    args: [account],
+  });
+
+  return nonceInfo as bigint;
+};
+
 export const supplyToVaults = async (
   vault: string,
   asset: string,
@@ -328,17 +389,44 @@ export const supplyToVaults = async (
     args: [vault, amount, 0, account],
   });
 
-  // const encodedData = encodeAbiParameters(
-  //   [{ name: "data", type: "bytes[]" }],
-  //   [[approve2, transferFrom2, erc4626Deposit]]
-  // );
-
-  // console.log(encodedData);
-
   const txHash = await writeContract(config, {
     ...bundlerInstance,
     functionName: "multicall",
     args: [[approve2, transferFrom2, erc4626Deposit]],
+  });
+
+  return txHash;
+};
+
+export const withdrawFromVaults = async (
+  vaultAddress: string,
+  account: string,
+  amount: bigint,
+  deadline: bigint,
+  signhash: string
+): Promise<string> => {
+  const r = signhash.slice(0, 66);
+  const s = "0x" + signhash.slice(66, 130);
+  const v = "0x" + signhash.slice(130, 132);
+
+  // encode permit
+  const permit = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "permit",
+    args: [vaultAddress, amount, deadline, v, r, s, false],
+  });
+
+  // encode erc4626Withdraw
+  const erc4626Withdraw = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "erc4626Withdraw",
+    args: [vaultAddress, amount, MaxUint256, account, account],
+  });
+
+  const txHash = await writeContract(config, {
+    ...bundlerInstance,
+    functionName: "multicall",
+    args: [[permit, erc4626Withdraw]],
   });
 
   return txHash;

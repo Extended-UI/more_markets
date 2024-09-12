@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import VaultWithdrawInput from "./VaultWithdrawInput";
 import VaultWithdrawPush from "./VaultWithdrawPush";
 import VaultWithdrawResult from "./VaultWithdrawResult";
-import { DepositMoreData } from "@/types";
+import { InvestmentData } from "@/types";
 
 interface Props {
-  item: DepositMoreData;
+  item: InvestmentData;
   closeModal: () => void;
 }
 

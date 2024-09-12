@@ -1,19 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import { parseEther } from "ethers";
+import { parseUnits } from "ethers";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "../../token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import MoreToggle from "@/components/moreToggle/MoreToggle";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import IconToken from "@/components/token/IconToken";
-import { DepositMoreData } from "@/types";
-import { sendToMarkets } from "@/utils/contract";
+import { InvestmentData } from "@/types";
+import { getTimestamp } from "@/utils/utils";
+import {
+  withdrawFromVaults,
+  getVaultNonce,
+  setVaultPermit,
+} from "@/utils/contract";
 
 interface Props {
-  item: DepositMoreData;
+  item: InvestmentData;
   amount: number;
   closeModal: () => void;
   validWithdraw: () => void;
@@ -28,19 +34,56 @@ const VaultWithdrawPush: React.FC<Props> = ({
   validWithdraw,
 }) => {
   const { address: userAddress } = useAccount();
+  const [hasPermit, setHasPermit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [permitHash, setPermitHash] = useState("");
+  const [deadline, setDeadline] = useState(BigInt(0));
+  const [vaultNonce, setVaultNonce] = useState(BigInt(0));
+
+  const tokenAmount = parseUnits(amount.toString(), item.tokenBalance.decimals);
+
+  useEffect(() => {
+    const initApprove = async () => {
+      const nonce = userAddress
+        ? await getVaultNonce(item.vaultId as `0x${string}`, userAddress)
+        : BigInt(0);
+      setVaultNonce(nonce);
+    };
+
+    initApprove();
+  }, [userAddress, item, amount, isLoading]);
+
+  const handlePermit = async () => {
+    if (userAddress) {
+      try {
+        const deadline = getTimestamp();
+        const signHash = await setVaultPermit(
+          item.vaultName,
+          userAddress,
+          item.vaultId,
+          tokenAmount,
+          vaultNonce,
+          deadline
+        );
+
+        setPermitHash(signHash);
+        setHasPermit(true);
+        setDeadline(deadline);
+      } catch (err) {}
+    }
+  };
 
   const handleWithdraw = async () => {
-    if (item.market && userAddress) {
+    if (userAddress && hasPermit) {
       setIsLoading(true);
       try {
-        const hash = await sendToMarkets("withdraw", [
-          item.market.params,
-          0,
-          parseEther(item.depositAmount.toString()),
+        const hash = await withdrawFromVaults(
+          item.vaultId,
           userAddress,
-          userAddress,
-        ]);
+          tokenAmount,
+          deadline,
+          permitHash
+        );
 
         setTxhash(hash);
         setIsLoading(false);
@@ -55,7 +98,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">
       <div className="mb-10 px-4 pt-10  text-3xl">Review Transaction</div>
-      <div className="text-l mb-1 px-4 pt-5 ">{item.tokenName}</div>
+      <div className="text-l mb-1 px-4 pt-5 ">{item.tokenSymbol}</div>
       <div className="flex flex-row justify-between mt-4 items-center">
         <div className="flex gap-2 text-l mb-5  px-4 items-center">
           {" "}
@@ -68,13 +111,28 @@ const VaultWithdrawPush: React.FC<Props> = ({
           <FormatTwoPourcentage value={90} value2={125} />{" "}
         </div>
       </div>
+      <div className="relative more-bg-primary px-8 rounded-t-[5px] ">
+        <TokenAmount
+          title="Permit"
+          token={item.tokenSymbol}
+          amount={amount}
+          ltv={"ltv"}
+          totalTokenAmount={item.totalDeposits}
+        />
+        {hasPermit && (
+          <CheckCircleIcon
+            className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+            style={{ position: "absolute", top: "1.5rem", left: "6.5rem" }}
+          />
+        )}
+      </div>
       <div className="more-bg-primary px-8 rounded-t-[5px] ">
         <TokenAmount
           title="Withdraw"
-          token={item.tokenName}
+          token={item.tokenSymbol}
           amount={amount}
           ltv={"ltv"}
-          totalTokenAmount={item.depositAmount}
+          totalTokenAmount={item.totalDeposits}
         />
       </div>
       <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
@@ -82,7 +140,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
         <PositionChangeToken
           title="Withdraw"
           value={amount}
-          token={item.tokenName}
+          token={item.tokenSymbol}
           value2={0}
         />
       </div>
@@ -108,13 +166,23 @@ const VaultWithdrawPush: React.FC<Props> = ({
             color="gray"
           />
         </div>
-        <MoreButton
-          className="text-2xl py-2"
-          text="Withdraw"
-          disabled={isLoading}
-          onClick={handleWithdraw}
-          color="primary"
-        />
+        {hasPermit ? (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Withdraw"
+            disabled={isLoading}
+            onClick={handleWithdraw}
+            color="primary"
+          />
+        ) : (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Permit"
+            disabled={isLoading}
+            onClick={handlePermit}
+            color="primary"
+          />
+        )}
       </div>
     </div>
   );

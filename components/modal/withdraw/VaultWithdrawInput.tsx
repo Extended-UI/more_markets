@@ -5,10 +5,10 @@ import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
 import { ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
-import { DepositMoreData } from "@/types";
+import { InvestmentData } from "@/types";
 
 interface Props {
-  item: DepositMoreData;
+  item: InvestmentData;
   setAmount: (amount: number) => void;
   closeModal: () => void;
 }
@@ -29,19 +29,18 @@ const VaultWithdrawInput: React.FC<Props> = ({
   };
 
   const handleWithdraw = () => {
-    console.log("withdraw");
     if (withdraw > 0) {
       setAmount(withdraw);
     }
   };
 
-  const balanceString = item.depositAmount.toString();
+  const balanceString = item.totalDeposits.toString();
 
   return (
     <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
       <div className="px-6">
-        <div className="text-3xl mb-10 pt-5 ">{item.tokenName}</div>
-        <div className="text-l mb-5">Withdraw {item.tokenName}</div>
+        <div className="text-3xl mb-10 pt-5 ">{item.tokenSymbol}</div>
+        <div className="text-l mb-5">Withdraw {item.tokenSymbol}</div>
         <div className="w-full flex justify-center">
           <InputTokenMax
             type="number"
@@ -49,9 +48,9 @@ const VaultWithdrawInput: React.FC<Props> = ({
             onChange={handleInputChange}
             min="0"
             max={balanceString}
-            placeholder={`Withdraw ${item.tokenName}`}
-            token={item.tokenName}
-            balance={item.depositAmount}
+            placeholder={`Withdraw ${item.tokenSymbol}`}
+            token={item.tokenSymbol}
+            balance={item.totalDeposits}
             setMax={handleSetMax}
           />
         </div>
@@ -80,7 +79,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
           Withdraw <ArrowLongRightIcon className="w-4 h-4" /> Deposit APY /
           Projected Deposit APY
         </div>
-        <FormatTwoPourcentage value={item.apy} value2={item.apy} />
+        <FormatTwoPourcentage value={item.netAPY} value2={item.netAPY} />
       </div>
     </div>
   );

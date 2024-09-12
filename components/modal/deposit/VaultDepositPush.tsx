@@ -39,7 +39,6 @@ const VaultDepositPush: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
-
   const [signHash, setSignHash] = useState("");
   const [deadline, setDeadline] = useState(BigInt(0));
   const [permitNonce, setPermitNonce] = useState(0);

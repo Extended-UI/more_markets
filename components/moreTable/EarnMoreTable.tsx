@@ -3,7 +3,6 @@
 import _ from "lodash";
 import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
-import { getBalance } from "@wagmi/core";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
@@ -13,15 +12,18 @@ import IconToken from "../token/IconToken";
 import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
-import { InvestmentData } from "@/types";
+import { GraphMarket, GraphVault, InvestmentData } from "@/types";
 import { tokens } from "@/utils/const";
 import { getTokenBallance } from "@/utils/contract";
-import { fetchMarkets, fetchVaults } from "@/utils/graph";
 
-const EarnMoreTable: React.FC = () => {
+interface Props {
+  vaultsArr: GraphVault[];
+  marketsArr: GraphMarket[];
+}
+
+const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
   const [isPending, setIsPending] = useState(true);
   const [vaults, setVaults] = useState<InvestmentData[]>([]);
-  const [isStickyDisabled, setIsStickyDisabled] = useState(false);
 
   const router = useRouter();
   const { address: userAddress } = useAccount();
@@ -30,59 +32,56 @@ const EarnMoreTable: React.FC = () => {
     const initVaults = async () => {
       setIsPending(true);
 
-      const [vaultsArr, marketsArr] = await Promise.all([
-        fetchVaults(),
-        fetchMarkets(),
-      ]);
-
-      const promises = vaultsArr.map(async (vault) => {
-        // get collaterals
-        const collaterals: string[] = vault.supplyQueue.map((queue) => {
-          const marketItem = marketsArr.find(
-            (market) => market.id.toLowerCase() == queue.market.id.toLowerCase()
+      if (marketsArr && vaultsArr) {
+        const promises = vaultsArr.map(async (vault) => {
+          // get collaterals
+          const collaterals: string[] = vault.supplyQueue.map((queue) => {
+            const marketItem = marketsArr.find(
+              (market) =>
+                market.id.toLowerCase() == queue.market.id.toLowerCase()
+            );
+            return marketItem ? tokens[marketItem.inputToken.id] : "";
+          });
+          const activeCollaterals = collaterals.filter(
+            (item) => item.length > 0
           );
-          return marketItem ? tokens[marketItem.inputToken.id] : "";
+
+          // tokenBalance
+          const tokenBalance = await getTokenBallance(
+            vault.asset.id,
+            userAddress
+          );
+
+          return {
+            vaultId: vault.id,
+            vaultName: vault.name,
+            assetAddress: vault.asset.id,
+            tokenSymbol: tokens[vault.asset.id],
+            netAPY: 0,
+            totalDeposits: Number(
+              formatUnits(vault.lastTotalAssets, tokenBalance.decimals)
+            ),
+            totalValueUSD: 0,
+            curator: vault.curator,
+            collateral: _.uniq(activeCollaterals),
+            unsecured: 0,
+            tokenBalance,
+            // market: marketInfo,
+          } as InvestmentData;
         });
-        const activeCollaterals = collaterals.filter((item) => item.length > 0);
 
-        // tokenBalance
-        const tokenBalance = await getTokenBallance(
-          vault.asset.id,
-          userAddress
-        );
+        const fetchedVaults = await Promise.all(promises);
+        setVaults(fetchedVaults);
+      }
 
-        return {
-          vaultId: vault.id,
-          vaultName: vault.name,
-          assetAddress: vault.asset.id,
-          tokenSymbol: tokens[vault.asset.id],
-          netAPY: 0,
-          totalDeposits: Number(
-            formatUnits(vault.lastTotalAssets, tokenBalance.decimals)
-          ),
-          totalValueUSD: 0,
-          curator: vault.curator,
-          collateral: _.uniq(activeCollaterals),
-          unsecured: 0,
-          tokenBalance,
-          // market: marketInfo,
-        } as InvestmentData;
-      });
-
-      const fetchedVaults = await Promise.all(promises);
-      setVaults(fetchedVaults);
       setIsPending(false);
     };
 
     initVaults();
-  }, [userAddress]);
+  }, [userAddress, vaultsArr, marketsArr]);
 
   const goToDetail = (item: InvestmentData) => {
     router.push("/earn/" + item.tokenSymbol);
-  };
-
-  const toggleSticky = () => {
-    setIsStickyDisabled(!isStickyDisabled);
   };
 
   return (
@@ -156,10 +155,10 @@ const EarnMoreTable: React.FC = () => {
                     style={{
                       right: 0,
                       backgroundColor: "#212121",
-                      position: isStickyDisabled ? "static" : "sticky",
+                      position: "static",
                       boxShadow: "inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)",
                     }}
-                  ></th>
+                  />
                 )}
               </tr>
             </thead>
@@ -231,9 +230,7 @@ const EarnMoreTable: React.FC = () => {
                   </td>
                   {userAddress && (
                     <td
-                      className={`py-4 px-6 items-center justify-end h-full ${
-                        isStickyDisabled ? "" : "sticky"
-                      }`}
+                      className="py-4 px-6 items-center justify-end h-full"
                       style={{
                         right: 0,
                         backgroundColor:
@@ -241,11 +238,7 @@ const EarnMoreTable: React.FC = () => {
                       }}
                     >
                       <div onClick={(event) => event.stopPropagation()}>
-                        <ButtonDialog
-                          color="primary"
-                          buttonText="Deposit"
-                          onButtonClick={toggleSticky}
-                        >
+                        <ButtonDialog color="primary" buttonText="Deposit">
                           {(closeModal) => (
                             <div className="h-full w-full">
                               <VaultDeposit

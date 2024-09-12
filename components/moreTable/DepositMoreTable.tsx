@@ -1,246 +1,255 @@
 "use client";
 
+import _ from "lodash";
 import { formatUnits } from "ethers";
 import React, { useState, useEffect } from "react";
-import { useReadContract, useAccount } from "wagmi";
-import { readContract } from "@wagmi/core";
+import { useAccount } from "wagmi";
 import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDeposit from "../modal/deposit/VaultDeposit";
 import IconToken from "../token/IconToken";
-import { DepositMoreData, Market } from "@/types";
 import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
-import { contracts, marketsInstance } from "@/utils/const";
-import { getMarketData } from "@/utils/contract";
-import { MarketsAbi } from "@/app/abi/MarketsAbi";
-import { config } from "@/utils/wagmi";
+import { tokens } from "@/utils/const";
+import { getTokenBallance, getVaultDetail } from "@/utils/contract";
+import { GraphMarket, GraphVault, InvestmentData } from "@/types";
 
-const DepositMoreTable: React.FC = () => {
-  const [positions, setPositions] = useState<DepositMoreData[]>([]);
-  const account = useAccount();
-  const {
-    data: arrayOfMarkets,
-    isSuccess,
-    refetch: refetchProject,
-  } = useReadContract({
-    address: contracts.MORE_MARKETS as `0x${string}`,
-    abi: MarketsAbi,
-    functionName: "arrayOfMarkets",
-  });
+interface Props {
+  vaultsArr: GraphVault[];
+  marketsArr: GraphMarket[];
+}
 
-  const { address: userAddress } = account;
+const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
+  const { address: userAddress } = useAccount();
+
+  const [isPending, setIsPending] = useState(true);
+  const [vaults, setVaults] = useState<InvestmentData[]>([]);
 
   useEffect(() => {
-    refetchProject?.();
-  }, [isSuccess]);
+    const initVaults = async () => {
+      setIsPending(true);
 
-  useEffect(() => {
-    const initPositions = async () => {
-      if (userAddress && arrayOfMarkets) {
-        const promises = (arrayOfMarkets as `0x${string}`[]).map(
-          async (marketId) => {
-            const positionInfo = await readContract(config, {
-              ...marketsInstance,
-              functionName: "position",
-              args: [marketId, userAddress],
+      if (marketsArr && vaultsArr && userAddress) {
+        const promises = vaultsArr.map(async (vault) => {
+          // check vault balance
+          const vaultShares = await getTokenBallance(vault.id, userAddress);
+
+          if (vaultShares.value > 0) {
+            const userAssets = await getVaultDetail(
+              vault.id as `0x${string}`,
+              "convertToAssets",
+              [vaultShares.value]
+            );
+
+            // get collaterals
+            const collaterals: string[] = vault.supplyQueue.map((queue) => {
+              const marketItem = marketsArr.find(
+                (market) =>
+                  market.id.toLowerCase() == queue.market.id.toLowerCase()
+              );
+              return marketItem ? tokens[marketItem.inputToken.id] : "";
             });
+            const activeCollaterals = collaterals.filter(
+              (item) => item.length > 0
+            );
 
-            const depositAmount = BigInt((positionInfo as any[])[0]);
-            if (depositAmount > 0) {
-              const marketData: Market = await getMarketData(marketId);
+            // tokenBalance
+            const tokenBalance = await getTokenBallance(
+              vault.asset.id,
+              userAddress
+            );
 
-              return {
-                tokenName: "doge",
-                apy: 0,
-                depositAmount: Number(formatUnits(depositAmount)),
-                curator: "-",
-                depositValueUSD: 0,
-                collaterals: [],
-                market: marketData,
-              } as DepositMoreData;
-            }
+            return {
+              vaultId: vault.id,
+              vaultName: vault.name,
+              assetAddress: vault.asset.id,
+              tokenSymbol: tokens[vault.asset.id],
+              netAPY: 0,
+              totalDeposits: Number(
+                formatUnits(
+                  (userAssets as bigint).toString(),
+                  tokenBalance.decimals
+                )
+              ),
+              totalValueUSD: 0,
+              curator: vault.curator,
+              collateral: _.uniq(activeCollaterals),
+              unsecured: 0,
+              tokenBalance,
+              // market: marketInfo,
+            } as InvestmentData;
           }
-        );
+        });
 
-        const positionQues = await Promise.all(promises);
-        setPositions(positionQues.filter((item) => item !== undefined));
+        const fetchedVaults = (await Promise.all(promises)).filter(
+          (item) => item !== undefined
+        );
+        setVaults(fetchedVaults);
       }
+      setIsPending(false);
     };
 
-    initPositions();
-  }, [userAddress, arrayOfMarkets]);
-
-  const [isStickyDisabled, setIsStickyDisabled] = useState(false);
-
-  const toggleSticky = () => {
-    setIsStickyDisabled(!isStickyDisabled);
-  };
+    initVaults();
+  }, [userAddress, vaultsArr, marketsArr]);
 
   return (
-    <div
-      className="overflow-x-auto relative rounded-[15px] mb-16"
-      style={{
-        overflowX: "auto",
-        scrollbarWidth: "none",
-        msOverflowStyle: "none",
-        position: "relative",
-        overflow: "visible",
-      }}
-    >
-      <table className="w-full text-sm text-left   border border-gray-800 ">
-        <thead
-          className="bg-[#212121] h-20  text-xs "
+    <>
+      {isPending ? (
+        <div> ...isLoading</div>
+      ) : (
+        <div
+          className="overflow-x-auto relative rounded-[15px] mb-16"
           style={{
-            boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)",
+            overflowX: "auto",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            position: "relative",
+            overflow: "visible",
           }}
         >
-          <tr className="rounded-t-lg">
-            <th style={{ width: "200px" }} className="rounded-tl-lg">
-              <TableHeaderCell title="Vault Name" infoText="" />
-            </th>
-            <th style={{ width: "200px" }} className="rounded-tl-lg">
-              <TableHeaderCell
-                title="Deposit Token"
-                infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
-              />
-            </th>
-            <th style={{ width: "200px" }}>
-              <TableHeaderCell
-                title="Net APY"
-                infoText="The annualized return you earn on your deposited amount after all fees. This rate fluctuates in real-time based on supply and demand in the underlying markets."
-              />
-            </th>
-            <th style={{ width: "300px" }}>
-              <div className="flex justify-start ">
-                <TableHeaderCell title="My Deposit" infoText="" />
-              </div>
-            </th>
-            <th style={{ width: "200px" }}>
-              <TableHeaderCell
-                title="Curator"
-                infoText="The organization that manages the vault parameters such as included markets, allocations, caps and performance fees."
-              />
-            </th>
-            <th style={{ width: "200px" }}>
-              <TableHeaderCell
-                title="Collateral"
-                infoText="The token(s) that borrowers must lock in order to borrow funds."
-              />
-            </th>
-            <th
+          <table className="w-full text-sm text-left   border border-gray-800 ">
+            <thead
+              className="bg-[#212121] h-20  text-xs "
               style={{
-                position: isStickyDisabled ? "static" : "sticky",
-                right: 0,
-                backgroundColor: "#212121",
+                boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)",
               }}
-            ></th>
-          </tr>
-        </thead>
-        <tbody className="bg-transparent">
-          {positions.map((item, index, arr) => (
-            <tr
-              key={index}
-              style={
-                index === arr.length - 1
-                  ? {
-                      borderBottomLeftRadius: "8px",
-                      borderBottomRightRadius: "8px",
-                    }
-                  : undefined
-              }
-              className={`last:border-b-0 text-[12px]  cursor-pointer  ${
-                index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
-              }`}
             >
-              <td className="py-4 px-6 items-start h-full">
-                <div className="flex items-start">
-                  <div className="mr-2 w-6 h-6">
-                    <IconToken
-                      tokenName={item.tokenName.toLocaleLowerCase()}
-                    ></IconToken>
+              <tr className="rounded-t-lg">
+                <th style={{ width: "200px" }} className="rounded-tl-lg">
+                  <TableHeaderCell title="Vault Name" infoText="" />
+                </th>
+                <th style={{ width: "200px" }} className="rounded-tl-lg">
+                  <TableHeaderCell
+                    title="Deposit Token"
+                    infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
+                  />
+                </th>
+                <th style={{ width: "200px" }}>
+                  <TableHeaderCell
+                    title="Net APY"
+                    infoText="The annualized return you earn on your deposited amount after all fees. This rate fluctuates in real-time based on supply and demand in the underlying markets."
+                  />
+                </th>
+                <th style={{ width: "300px" }}>
+                  <div className="flex justify-start ">
+                    <TableHeaderCell title="My Deposit" infoText="" />
                   </div>
-                  {item.tokenName}
-                </div>
-              </td>
-              <td className="py-4 px-6 items-start h-full">
-                <div className="flex items-start">
-                  <div className="mr-2 w-6 h-6">
-                    <IconToken
-                      tokenName={item.tokenName.toLocaleLowerCase()}
-                    ></IconToken>
-                  </div>
-                  {item.tokenName}
-                </div>
-              </td>
-              <td className="py-4 px-6 items-start h-full   ">
-                <div className="flex justify-start">
-                  <FormatPourcentage value={item.apy}></FormatPourcentage>
-                </div>
-              </td>
-              <td className=" items-start   h-full ">
-                <div className="flex justify-start">
-                  <FormatTokenMillion
-                    value={item.depositAmount}
-                    token={item.tokenName}
-                    totalValue={item.depositValueUSD}
-                  ></FormatTokenMillion>
-                </div>
-              </td>
-              <td className="py-4 px-6 items-start h-full  ">
-                <div className="flex items-start">
-                  <div className="mr-2 w-6 h-6">
-                    <IconToken tokenName="abt"></IconToken>
-                  </div>
-                  {item.curator}
-                </div>
-              </td>
-              <td className="py-4  items-start h-full">
-                <ListIconToken
-                  className="w-6 h-6"
-                  iconNames={item.collaterals}
-                ></ListIconToken>
-              </td>
-              <td
-                className={`py-4 px-6 flex gap-2 items-center justify-end h-full ${
-                  isStickyDisabled ? "" : "sticky"
-                }`}
-                style={{
-                  right: 0,
-                  backgroundColor: index % 2 === 0 ? "#141414" : "#191919",
-                }}
-              >
-                <ButtonDialog
-                  color="primary"
-                  buttonText="Deposit More"
-                  onButtonClick={toggleSticky}
+                </th>
+                <th style={{ width: "200px" }}>
+                  <TableHeaderCell
+                    title="Curator"
+                    infoText="The organization that manages the vault parameters such as included markets, allocations, caps and performance fees."
+                  />
+                </th>
+                <th style={{ width: "200px" }}>
+                  <TableHeaderCell
+                    title="Collateral"
+                    infoText="The token(s) that borrowers must lock in order to borrow funds."
+                  />
+                </th>
+                <th
+                  style={{
+                    position: "static",
+                    right: 0,
+                    backgroundColor: "#212121",
+                  }}
+                />
+              </tr>
+            </thead>
+            <tbody className="bg-transparent">
+              {vaults.map((item, index, arr) => (
+                <tr
+                  key={index}
+                  style={
+                    index === arr.length - 1
+                      ? {
+                          borderBottomLeftRadius: "8px",
+                          borderBottomRightRadius: "8px",
+                        }
+                      : undefined
+                  }
+                  className={`last:border-b-0 text-[12px]  cursor-pointer  ${
+                    index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
+                  }`}
                 >
-                  {(closeModal) => (
-                    <div className=" w-full h-full">
-                      {/* <VaultDeposit closeModal={closeModal} /> */}
+                  <td className="py-4 px-6 items-start h-full">
+                    <div className="flex items-start">
+                      <div className="mr-2 w-6 h-6">
+                        <IconToken tokenName={item.tokenSymbol} />
+                      </div>
+                      {item.tokenSymbol}
                     </div>
-                  )}
-                </ButtonDialog>
+                  </td>
+                  <td className="py-4 px-6 items-start h-full">
+                    <div className="flex items-start">
+                      <div className="mr-2 w-6 h-6">
+                        <IconToken tokenName={item.tokenSymbol} />
+                      </div>
+                      {item.tokenSymbol}
+                    </div>
+                  </td>
+                  <td className="py-4 px-6 items-start h-full   ">
+                    <div className="flex justify-start">
+                      <FormatPourcentage
+                        value={item.netAPY}
+                      ></FormatPourcentage>
+                    </div>
+                  </td>
+                  <td className=" items-start   h-full ">
+                    <div className="flex justify-start">
+                      <FormatTokenMillion
+                        value={item.totalDeposits}
+                        token={item.tokenSymbol}
+                        totalValue={item.totalValueUSD}
+                      />
+                    </div>
+                  </td>
+                  <td className="py-4 px-6 items-start h-full  ">
+                    <div className="flex items-start">
+                      <div className="mr-2 w-6 h-6">
+                        <IconToken tokenName={item.tokenSymbol} />
+                      </div>
+                      {item.curator}
+                    </div>
+                  </td>
+                  <td className="py-4  items-start h-full">
+                    <ListIconToken
+                      className="w-6 h-6"
+                      iconNames={item.collateral}
+                    />
+                  </td>
+                  <td
+                    className="py-4 px-6 flex gap-2 items-center justify-end h-full"
+                    style={{
+                      right: 0,
+                      backgroundColor: index % 2 === 0 ? "#141414" : "#191919",
+                    }}
+                  >
+                    <ButtonDialog color="primary" buttonText="Deposit More">
+                      {(closeModal) => (
+                        <div className=" w-full h-full">
+                          <VaultDeposit item={item} closeModal={closeModal} />
+                        </div>
+                      )}
+                    </ButtonDialog>
 
-                <ButtonDialog
-                  color="grey"
-                  buttonText="Withdraw"
-                  onButtonClick={toggleSticky}
-                >
-                  {(closeModal) => (
-                    <div className=" w-full h-full">
-                      <VaultWithdraw item={item} closeModal={closeModal} />
-                    </div>
-                  )}
-                </ButtonDialog>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                    <ButtonDialog color="grey" buttonText="Withdraw">
+                      {(closeModal) => (
+                        <div className=" w-full h-full">
+                          <VaultWithdraw item={item} closeModal={closeModal} />
+                        </div>
+                      )}
+                    </ButtonDialog>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
   );
 };
 export default DepositMoreTable;
