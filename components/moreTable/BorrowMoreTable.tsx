@@ -1,62 +1,33 @@
 "use client";
 
-import { useReadContract, useAccount } from "wagmi";
-import { readContracts } from "@wagmi/core";
+import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import TableHeaderCell from "./MoreTableHeader";
 import { useRouter } from "next/navigation";
-import { MarketsAbi } from "@/app/abi/MarketsAbi";
-import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
-import { contracts } from "@/utils/const";
-import { config } from "@/utils/wagmi";
-import { BorrowData } from "@/types";
+import { GraphMarket } from "@/types";
 import BorrowMoreTableRow from "./BorrowMoreTableRow";
 
-const morphoContract = {
-  address: contracts.MORE_MARKETS as `0x${string}`,
-  abi: MarketsAbi,
-};
+interface Props {
+  marketsArr: GraphMarket[];
+}
 
-const BorrowMoreTable: React.FC = () => {
+const BorrowMoreTable: React.FC<Props> = ({ marketsArr }) => {
   const router = useRouter();
-  const account = useAccount();
-  const [borrows, setBorrows] = useState<BorrowData[]>([]);
-
-  const { address: userAddress } = account;
-
-  const { data: arrayOfVaults } = useReadContract({
-    address: contracts.MORE_VAULTS_FACTORY as `0x${string}`,
-    abi: VaultsFactoryAbi,
-    functionName: "arrayOfVaults",
-  });
-
-  const { data: arrayOfMarkets, isPending } = useReadContract({
-    ...morphoContract,
-    functionName: "arrayOfMarkets",
-  });
+  const { address: userAddress } = useAccount();
+  const [isPending, setIsPending] = useState(true);
 
   useEffect(() => {
-    const initVaults = async () => {
-      const marketArr = arrayOfMarkets as `0x${string}`[];
-      const positionQuest = marketArr.map((marketId) => {
-        return {
-          ...morphoContract,
-          functionName: "position",
-          args: [marketId, userAddress],
-        };
-      });
-      const positions = await readContracts(config, {
-        contracts: positionQuest,
-      });
+    const initMarkets = async () => {
+      setIsPending(true);
 
-      // setBorrows(promises.length == 0 ? [] : await Promise.all(promises));
+      setIsPending(false);
     };
 
-    initVaults();
-  }, [arrayOfMarkets]);
+    initMarkets();
+  }, [userAddress, marketsArr]);
 
-  const goToDetail = (item: BorrowData) => {
-    router.push("/borrow/" + item.collateralToken);
+  const goToDetail = (item: GraphMarket) => {
+    router.push("/borrow/" + item.inputToken.id);
   };
 
   return (
@@ -133,10 +104,10 @@ const BorrowMoreTable: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-transparent">
-              {borrows?.map((item, index, arr) => (
+              {marketsArr?.map((item, index, arr) => (
                 <tr
                   key={index}
-                  // onClick={() => goToDetail(item)}
+                  onClick={() => goToDetail(item)}
                   style={
                     index === arr.length - 1
                       ? {
@@ -149,7 +120,7 @@ const BorrowMoreTable: React.FC = () => {
                     index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
                   }`}
                 >
-                  <BorrowMoreTableRow market={item.marketId} index={index} />
+                  <BorrowMoreTableRow key={index} item={item} index={index} />
                 </tr>
               ))}
             </tbody>

@@ -31,37 +31,6 @@ const LoanMoreTable: React.FC = () => {
 
   const { address: userAddress } = account;
 
-  const { data: arrayOfVaults } = useReadContract({
-    address: contracts.MORE_VAULTS_FACTORY as `0x${string}`,
-    abi: VaultsFactoryAbi,
-    functionName: "arrayOfVaults",
-  });
-
-  const { data: arrayOfMarkets, isPending } = useReadContract({
-    ...morphoContract,
-    functionName: "arrayOfMarkets",
-  });
-
-  useEffect(() => {
-    const initVaults = async () => {
-      const marketArr = arrayOfMarkets as `0x${string}`[];
-      const positionQuest = marketArr.map((marketId) => {
-        return {
-          ...morphoContract,
-          functionName: "position",
-          args: [marketId, userAddress],
-        };
-      });
-      const positions = await readContracts(config, {
-        contracts: positionQuest,
-      });
-
-      // setBorrows(promises.length == 0 ? [] : await Promise.all(promises));
-    };
-
-    initVaults();
-  }, [arrayOfMarkets]);
-
   return (
     <div
       className="overflow-x-auto relative rounded-[15px] mb-16"
@@ -244,10 +213,7 @@ const LoanMoreTable: React.FC = () => {
 
               <td className="py-4 pl-4 items-center h-full ">
                 <div className="flex gap-1 justify-start">
-                  <FormatTwoPourcentage
-                    value={item.liquidationLTV}
-                    value2={item.liquidationLTV2}
-                  ></FormatTwoPourcentage>
+                  <FormatTwoPourcentage value={item.liquidationLTV} />
                 </div>
               </td>
               <td className="py-4 items-center h-full   ">

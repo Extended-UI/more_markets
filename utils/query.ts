@@ -31,6 +31,9 @@ export const marketsQuery = gql`
       borrowedToken {
         id
       }
+      lltv
+      totalSupply
+      totalBorrow
     }
   }
 `;

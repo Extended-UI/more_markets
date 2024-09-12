@@ -22,9 +22,9 @@ const FormatTokenMillion: React.FC<Props> = ({
     <div className="flex gap-1 justify-center items-center gap-2  ">
       <div className=" ">
         <span className="text-grey">{currency}</span>
-        <FormatNumber value={value}></FormatNumber>
+        <FormatNumber value={value} />
       </div>
-      <div className="text-grey ">{token}</div>
+      <div className="text-grey ">{token ? token.toUpperCase() : ""}</div>
       <TotalVolumeToken totalDanger={totalDanger}>
         {totalValue}
       </TotalVolumeToken>

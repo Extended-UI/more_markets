@@ -6,4 +6,7 @@ export interface GraphMarket {
   borrowedToken: {
     id: string;
   };
+  lltv: string;
+  totalSupply: string;
+  totalBorrow: string;
 }
