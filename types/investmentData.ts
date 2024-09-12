@@ -2,6 +2,7 @@ import { type GetBalanceReturnType } from "@wagmi/core";
 import { Market } from "./market";
 
 export interface InvestmentData {
+  vaultId: string;
   vaultName: string;
   tokenSymbol: string;
   assetAddress: string;
@@ -12,6 +13,5 @@ export interface InvestmentData {
   collateral: string[];
   unsecured: number;
   tokenBalance: GetBalanceReturnType;
-  supplyQueue: string;
-  market: Market | null;
+  // market: Market | null;
 }

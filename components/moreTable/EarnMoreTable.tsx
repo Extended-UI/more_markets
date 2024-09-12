@@ -1,9 +1,10 @@
 "use client";
 
+import _ from "lodash";
 import { formatUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 import { getBalance } from "@wagmi/core";
-import { useReadContract, useAccount } from "wagmi";
+import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
@@ -12,95 +13,69 @@ import IconToken from "../token/IconToken";
 import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
-import { config } from "@/utils/wagmi";
 import { InvestmentData } from "@/types";
-import { VaultsFactoryAbi } from "@/app/abi/VaultsFactoryAbi";
-import { contracts, tokens, initBalance } from "@/utils/const";
-import { getMarketData, getVaultData, getVaultDetail } from "@/utils/contract";
+import { tokens } from "@/utils/const";
+import { getTokenBallance } from "@/utils/contract";
+import { fetchMarkets, fetchVaults } from "@/utils/graph";
 
 const EarnMoreTable: React.FC = () => {
-  const router = useRouter();
-  const account = useAccount();
-  const [isStickyDisabled, setIsStickyDisabled] = useState(false);
+  const [isPending, setIsPending] = useState(true);
   const [vaults, setVaults] = useState<InvestmentData[]>([]);
+  const [isStickyDisabled, setIsStickyDisabled] = useState(false);
 
-  const { address: userAddress } = account;
-
-  const {
-    data: arrayOfVaults,
-    isSuccess,
-    isPending,
-    refetch: refetchProject,
-  } = useReadContract({
-    address: contracts.MORE_VAULTS_FACTORY as `0x${string}`,
-    abi: VaultsFactoryAbi,
-    functionName: "arrayOfVaults",
-  });
-
-  useEffect(() => {
-    refetchProject?.();
-  }, [isSuccess]);
+  const router = useRouter();
+  const { address: userAddress } = useAccount();
 
   useEffect(() => {
     const initVaults = async () => {
-      if (arrayOfVaults) {
-      }
-      const promises = arrayOfVaults
-        ? (arrayOfVaults as `0x${string}`[]).map(
-            async (vaultAddress: `0x${string}`) => {
-              const vaultData = await getVaultData(vaultAddress);
+      setIsPending(true);
 
-              // fetch supplyIds
-              const marketId =
-                vaultData.supplyQueueLen > 0
-                  ? await getVaultDetail(vaultAddress, "supplyQueue", [0])
-                  : "";
+      const [vaultsArr, marketsArr] = await Promise.all([
+        fetchVaults(),
+        fetchMarkets(),
+      ]);
 
-              if (
-                vaultData.supplyQueueLen > 0 &&
-                (marketId as string).length > 0
-              ) {
-                const marketInfo = await getMarketData(marketId as string);
+      const promises = vaultsArr.map(async (vault) => {
+        // get collaterals
+        const collaterals: string[] = vault.supplyQueue.map((queue) => {
+          const marketItem = marketsArr.find(
+            (market) => market.id.toLowerCase() == queue.market.id.toLowerCase()
+          );
+          return marketItem ? tokens[marketItem.inputToken.id] : "";
+        });
+        const activeCollaterals = collaterals.filter((item) => item.length > 0);
 
-                const tokenBalance = userAddress
-                  ? await getBalance(config, {
-                      token: vaultData.assetAddress as `0x${string}`,
-                      address: userAddress,
-                    })
-                  : initBalance;
+        // tokenBalance
+        const tokenBalance = await getTokenBallance(
+          vault.asset.id,
+          userAddress
+        );
 
-                return {
-                  vaultName: vaultData.vaultName,
-                  assetAddress: vaultData.assetAddress,
-                  tokenSymbol: tokens[vaultData.assetAddress],
-                  netAPY: 0,
-                  totalDeposits: Number(
-                    formatUnits(
-                      marketInfo.info.totalSupplyAssets,
-                      tokenBalance.decimals
-                    )
-                  ),
-                  totalValueUSD: 0,
-                  curator: vaultData.curator,
-                  collateral: [],
-                  unsecured: 0,
-                  tokenBalance,
-                  supplyQueue: marketId as string,
-                  market: marketInfo,
-                };
-              }
-            }
-          )
-        : [];
+        return {
+          vaultId: vault.id,
+          vaultName: vault.name,
+          assetAddress: vault.asset.id,
+          tokenSymbol: tokens[vault.asset.id],
+          netAPY: 0,
+          totalDeposits: Number(
+            formatUnits(vault.lastTotalAssets, tokenBalance.decimals)
+          ),
+          totalValueUSD: 0,
+          curator: vault.curator,
+          collateral: _.uniq(activeCollaterals),
+          unsecured: 0,
+          tokenBalance,
+          // market: marketInfo,
+        } as InvestmentData;
+      });
 
-      const vaultsArr = (await Promise.all(promises)).filter(
-        (item) => item !== undefined
-      );
-      setVaults(vaultsArr);
+      const fetchedVaults = await Promise.all(promises);
+      setVaults(fetchedVaults);
+      setIsPending(false);
     };
 
     initVaults();
-  }, [arrayOfVaults, userAddress, isStickyDisabled]);
+  }, [userAddress]);
 
   const goToDetail = (item: InvestmentData) => {
     router.push("/earn/" + item.tokenSymbol);

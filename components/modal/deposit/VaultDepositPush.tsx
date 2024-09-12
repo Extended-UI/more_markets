@@ -2,92 +2,94 @@
 
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { parseEther, MaxUint256 } from "ethers";
-import { writeContract, waitForTransaction } from "@wagmi/core";
+import { parseUnits } from "ethers";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import IconToken from "@/components/token/IconToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { config } from "@/utils/wagmi";
-import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { contracts } from "@/utils/const";
-import { getTokenAllowance, sendToMarkets } from "@/utils/contract";
+import { getTimestamp } from "@/utils/utils";
+import {
+  getTokenAllowance,
+  setTokenAllowance,
+  setTokenPermit,
+  getTokenPermit,
+  getPermitNonce,
+  supplyToVaults,
+} from "@/utils/contract";
 
 interface Props {
   item: InvestmentData;
   amount: number;
   closeModal: () => void;
   validDeposit: () => void;
-  setTxhash: (hash: string) => void;
+  setTxHash: (hash: string) => void;
 }
 
 const VaultDepositPush: React.FC<Props> = ({
   item,
   amount,
-  setTxhash,
   validDeposit,
   closeModal,
+  setTxHash,
 }) => {
   const { address: userAddress } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
+  const [hasPermit, setHasPermit] = useState(false);
+
+  const [signHash, setSignHash] = useState("");
+  const [deadline, setDeadline] = useState(BigInt(0));
+  const [permitNonce, setPermitNonce] = useState(0);
+
+  const tokenAmount = parseUnits(amount.toString(), item.tokenBalance.decimals);
 
   useEffect(() => {
     const initApprove = async () => {
+      const nonce = userAddress
+        ? await getPermitNonce([
+            userAddress,
+            item.assetAddress,
+            contracts.MORE_BUNDLER,
+          ])
+        : 0;
+      setPermitNonce(nonce);
+
+      const tokenPermit = userAddress
+        ? await getTokenPermit([
+            userAddress,
+            item.assetAddress,
+            contracts.MORE_BUNDLER,
+          ])
+        : BigInt(0);
+
       const allowance = userAddress
         ? await getTokenAllowance(
             item.assetAddress,
             userAddress,
-            contracts.MORE_MARKETS
+            contracts.MORE_BUNDLER
           )
         : BigInt(0);
 
-      if (allowance >= item.tokenBalance.value) setHasApprove(true);
+      if (tokenPermit >= tokenAmount) setHasPermit(true);
+      if (allowance >= tokenAmount) setHasApprove(true);
       else setHasApprove(false);
     };
 
     initApprove();
-  }, [userAddress, item, amount]);
-
-  const handleDeposit = async () => {
-    // generate deposit tx
-    if (item.market && userAddress) {
-      setIsLoading(true);
-      try {
-        const hash = await sendToMarkets("supply", [
-          item.market.params,
-          parseEther(amount.toString()),
-          BigInt(0),
-          userAddress,
-          "0x",
-        ]);
-
-        setTxhash(hash);
-        setIsLoading(false);
-        validDeposit();
-      } catch (err) {
-        console.log(err);
-        setIsLoading(false);
-      }
-    } else {
-      alert("No supply queue");
-    }
-  };
+  }, [userAddress, item, amount, isLoading]);
 
   const handleApprove = async () => {
     if (userAddress) {
       setIsLoading(true);
       try {
-        const hash = await writeContract(config, {
-          address: item.assetAddress as `0x${string}`,
-          abi: ERC20Abi,
-          functionName: "approve",
-          args: [contracts.MORE_MARKETS as `0x${string}`, MaxUint256],
-        });
-
-        await waitForTransaction(config, { hash });
+        await setTokenAllowance(
+          item.assetAddress,
+          contracts.MORE_BUNDLER,
+          tokenAmount
+        );
 
         setHasApprove(true);
         setIsLoading(false);
@@ -97,6 +99,58 @@ const VaultDepositPush: React.FC<Props> = ({
       }
     } else {
       alert("No supply queue");
+    }
+  };
+
+  const handlePermit = async () => {
+    if (userAddress) {
+      setIsLoading(true);
+      try {
+        const deadline = getTimestamp();
+        const signHash = await setTokenPermit(
+          item.assetAddress,
+          tokenAmount,
+          permitNonce,
+          contracts.MORE_BUNDLER,
+          deadline
+        );
+
+        setSignHash(signHash);
+        setDeadline(deadline);
+
+        setHasPermit(true);
+        setIsLoading(false);
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+      }
+    } else {
+      alert("No supply queue");
+    }
+  };
+
+  const handleDeposit = async () => {
+    // generate deposit tx
+    if (userAddress && hasApprove && hasPermit) {
+      try {
+        const txHash = await supplyToVaults(
+          item.vaultId,
+          item.assetAddress,
+          userAddress,
+          signHash,
+          deadline,
+          tokenAmount,
+          permitNonce
+        );
+
+        validDeposit();
+        setTxHash(txHash);
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+      }
+    } else {
+      alert("Not allowed before approve and permit");
     }
   };
 
@@ -131,6 +185,22 @@ const VaultDepositPush: React.FC<Props> = ({
         )}
       </div>
 
+      <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">
+        <TokenAmount
+          title="Permit"
+          token={item.tokenSymbol}
+          amount={amount}
+          ltv={"ltv"}
+          totalTokenAmount={item.totalDeposits}
+        />
+        {hasPermit && (
+          <CheckCircleIcon
+            className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+            style={{ position: "absolute", top: "1.5rem", left: "6.5rem" }}
+          />
+        )}
+      </div>
+
       <div className="more-bg-primary rounded-[5px] mx-5 px-4">
         <TokenAmount
           title="Deposit"
@@ -156,12 +226,20 @@ const VaultDepositPush: React.FC<Props> = ({
             color="gray"
           />
         </div>
-        {hasApprove ? (
+        {hasApprove && hasPermit ? (
           <MoreButton
             className="text-2xl py-2"
             text="Deposit"
             disabled={isLoading}
             onClick={() => handleDeposit()}
+            color="primary"
+          />
+        ) : hasApprove ? (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Permit"
+            disabled={isLoading}
+            onClick={() => handlePermit()}
             color="primary"
           />
         ) : (

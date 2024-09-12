@@ -17,5 +17,42 @@ export const positionQuery = (account: string): DocumentNode => {
       }
       balance
       market
-    }`;
+    }
+  }`;
 };
+
+export const marketsQuery = gql`
+  {
+    markets(first: 100) {
+      id
+      inputToken {
+        id
+      }
+      borrowedToken {
+        id
+      }
+    }
+  }
+`;
+
+export const vaultsQuery = gql`
+  {
+    metaMorphos(first: 100) {
+      id
+      supplyQueue(first: 100) {
+        market {
+          id
+        }
+      }
+      name
+      curator {
+        id
+      }
+      asset {
+        id
+      }
+      lastTotalAssets
+      totalShares
+    }
+  }
+`;

@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { waitForTransaction } from "@wagmi/core";
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { useAccount } from "wagmi";
+import MoreButton from "../../moreButton/MoreButton";
 import Icon from "../../FontAwesomeIcon";
 import TokenAmount from "@/components/token/TokenAmount";
 import { InvestmentData } from "@/types";
 import { config } from "@/utils/wagmi";
 
 interface Props {
-  item: InvestmentData;
   amount: number;
-  hash: string;
+  txhash: string;
+  item: InvestmentData;
   processDone: () => void;
   closeModal: () => void;
 }
@@ -18,28 +20,34 @@ interface Props {
 const VaultDepositResult: React.FC<Props> = ({
   item,
   amount,
-  hash,
+  txhash,
   processDone,
-  closeModal,
 }) => {
+  const { address: userAddress } = useAccount();
   const [executed, setExecuted] = useState(false);
-  
-  const hashStr =
-    hash.substring(0, 5) + "..." + hash.substring(hash.length - 4);
+
+  const txHashStr =
+    txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
   useEffect(() => {
     const waitTx = async () => {
       setExecuted(false);
 
-      if (hash.length > 0) {
-        await waitForTransaction(config, { hash: hash as `0x${string}` });
-
+      try {
+        if (userAddress && txhash.length > 0) {
+          await waitForTransactionReceipt(config, {
+            hash: txhash as `0x${string}`,
+          });
+          setExecuted(true);
+        }
+      } catch (err) {
+        console.log(err);
         setExecuted(true);
-        processDone();
       }
     };
+
     waitTx();
-  }, [hash]);
+  }, [userAddress, txhash]);
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
@@ -62,30 +70,41 @@ const VaultDepositResult: React.FC<Props> = ({
           totalTokenAmount={item.totalDeposits}
         />
       </div>
-      <div className="text-l my-5 px-4">
-        <span>
-          {executed ? (
-            <Icon
-              icon="circle-check"
-              className="text-secondary text-xl cursor-pointer mr-5"
-            />
-          ) : (
-            <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
-          )}
-        </span>
-        {executed ? (
-          <>Transaction {hashStr} has been successfully executed.</>
-        ) : (
-          <>Transaction {hashStr} has been sent.</>
-        )}
-      </div>
-      <div
-        className="more-bg-primary px-4  py-2  rounded-b-[20px]"
-        onClick={closeModal}
-      >
+      {txhash.length > 0 && (
+        <>
+          <div className="text-l my-5 px-4">
+            <span>
+              {executed ? (
+                <Icon
+                  icon="circle-check"
+                  className="text-secondary text-xl cursor-pointer mr-5"
+                />
+              ) : (
+                <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
+              )}
+            </span>
+            {executed ? (
+              <>Transaction {txHashStr} has been successfully executed.</>
+            ) : (
+              <>Transaction {txHashStr} has been sent.</>
+            )}
+          </div>
+        </>
+      )}
+      <div className="more-bg-primary px-4  py-2  rounded-b-[20px]">
         <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
           Confirming transaction... Browse MORE vaults while you wait.
         </div>
+        {executed && (
+          <div className="flex justify-end mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text="Done"
+              onClick={processDone}
+              color="gray"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

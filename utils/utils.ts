@@ -21,3 +21,8 @@ export const getVauleString = (param: any, ind: number): string => {
 export const getVauleBigintList = (param: any, ind: number): bigint[] => {
   return param.result ? (param.result[ind] as bigint[]) : [];
 };
+
+export const getTimestamp = (): bigint => {
+  // added 1 hour
+  return BigInt(Math.floor(Date.now() / 1000)) + BigInt(3600);
+};

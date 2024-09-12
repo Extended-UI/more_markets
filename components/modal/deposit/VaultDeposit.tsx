@@ -14,7 +14,7 @@ interface Props {
 const VaultDeposit: React.FC<Props> = ({ item, closeModal }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
-  const [txhash, setTxhash] = useState("");
+  const [txHash, setTxHash] = useState("");
 
   const handleSetDeposit = (amount: number) => {
     setAmount(amount);
@@ -41,15 +41,15 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal }) => {
         <VaultDepositPush
           item={item}
           amount={amount}
-          setTxhash={setTxhash}
           closeModal={closeModal}
+          setTxHash={setTxHash}
           validDeposit={() => handleValidDeposit()}
         />
       ) : step == 3 ? (
         <VaultDepositResult
-          amount={amount}
           item={item}
-          hash={txhash}
+          amount={amount}
+          txhash={txHash}
           processDone={() => handleProcessDone()}
           closeModal={closeModal}
         />
