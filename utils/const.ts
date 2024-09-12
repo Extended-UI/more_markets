@@ -15,7 +15,7 @@ export const contracts = {
 export const tokens: { [key: string]: string } = {
   "0x58f3875dbefcf784ea40a886ec24e3c3fab2db19": "doge",
   "0xc4dd98f4ecebfb0f86ff6f8a60668cf60c45e830": "usdc",
-  "0x1a9a8787b95871233d2421067b60af17cf44cd4f": "ripple",
+  "0x1a9a8787b95871233d2421067b60af17cf44cd4f": "rpx",
   "0xf1107a71103398641c899f0c2d9515d1cb3761b3": "usdt",
 };
 

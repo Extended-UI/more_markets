@@ -1,10 +1,4 @@
-import {
-  JsonRpcProvider,
-  Contract,
-  InterfaceAbi,
-  ZeroAddress,
-  MaxUint256,
-} from "ethers";
+import { ZeroAddress, MaxUint256 } from "ethers";
 import {
   readContract,
   readContracts,
@@ -20,7 +14,7 @@ import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
-import { Market, VaultData } from "../types";
+import { Market, MarketParams, VaultData } from "../types";
 import {
   contracts,
   marketsInstance,
@@ -37,20 +31,7 @@ import {
   getVauleBoolean,
   getVauleString,
   getVauleBigintList,
-  getTimestamp,
 } from "./utils";
-
-const provider = new JsonRpcProvider("https://testnet.evm.nodes.onflow.org");
-const marketsContract = new Contract(
-  contracts.MORE_MARKETS,
-  MarketsAbi as InterfaceAbi,
-  provider
-);
-
-export const getMarketParams = async (market: string) => {
-  const marketInfo = await marketsContract.idToMarketParams(market);
-  return marketInfo;
-};
 
 export const getTokenAllowance = async (
   token: string,
@@ -198,6 +179,30 @@ export const getTokenBallance = async (
     : initBalance;
 
   return userBalance;
+};
+
+export const getMarketParams = async (
+  marketId: string
+): Promise<MarketParams> => {
+  const params = await readContract(config, {
+    ...marketsInstance,
+    functionName: "idToMarketParams",
+    args: [marketId as `0x${string}`],
+  });
+
+  console.log(params);
+
+  return {
+    isPremiumMarket: (params as any[])[0],
+    loanToken: (params as any[])[1],
+    collateralToken: (params as any[])[2],
+    oracle: (params as any[])[3],
+    irm: (params as any[])[4],
+    lltv: (params as any[])[5],
+    creditAttestationService: (params as any[])[6],
+    irxMaxLltv: (params as any[])[7],
+    categoryLltv: (params as any[])[8],
+  } as MarketParams;
 };
 
 export const getMarketData = async (marketId: string): Promise<Market> => {
@@ -427,6 +432,92 @@ export const withdrawFromVaults = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[permit, erc4626Withdraw]],
+  });
+
+  return txHash;
+};
+
+export const supplycollateralAndBorrow = async (
+  supplyAsset: string,
+  account: string,
+  signhash: string,
+  deadline: bigint,
+  supplyAmount: bigint,
+  borrowAmount: bigint,
+  nonce: number,
+  marketParams: MarketParams
+): Promise<string> => {
+  // encode approve2
+  const approve2 = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "approve2",
+    args: [
+      [
+        [supplyAsset, supplyAmount, Uint48Max, nonce],
+        contracts.MORE_BUNDLER,
+        deadline,
+      ],
+      signhash,
+      false,
+    ],
+  });
+  
+  // encode transferFrom2
+  const transferFrom2 = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "transferFrom2",
+    args: [supplyAsset, supplyAmount],
+  });
+  
+  // encode morphoSupplyCollateral
+  const morphoSupplyCollateral = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "morphoSupplyCollateral",
+    args: [
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+      supplyAmount,
+      account,
+      "",
+    ],
+  });
+  
+  // encode morphoBorrow
+  const morphoBorrow = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "morphoBorrow",
+    args: [
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+      borrowAmount,
+      0,
+      MaxUint256,
+      account,
+    ],
+  });
+
+  const txHash = await writeContract(config, {
+    ...bundlerInstance,
+    functionName: "multicall",
+    args: [[approve2, transferFrom2, morphoSupplyCollateral, morphoBorrow]],
   });
 
   return txHash;

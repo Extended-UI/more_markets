@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import VaultBorrowSet from "./VaultBorrowInput";
+import VaultBorrowInput from "./VaultBorrowInput";
+import VaultBorrowPush from "./VaultBorrowPush";
 import VaultBorrowSummary from "./VaultBorrowResult";
-import { GraphMarket } from "@/types";
+import { BorrowMarket } from "@/types";
 
 interface Props {
-  item: GraphMarket;
+  item: BorrowMarket;
   closeModal: () => void;
 }
 
@@ -13,6 +14,7 @@ const VaultBorrow: React.FC<Props> = ({ item, closeModal }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [borrow, setBorrow] = useState(0);
+  const [txHash, setTxHash] = useState("");
 
   // Réinitialiser l'étape quand le composant reçoit de nouvelles props, typiquement quand il est affiché
   useEffect(() => {
@@ -33,19 +35,18 @@ const VaultBorrow: React.FC<Props> = ({ item, closeModal }) => {
 
   // likely useless
   const handleValidDeposit = () => {
-    console.log("DEPOSIT VALID");
     setStep(3);
   };
 
   const handleProcessDone = () => {
-    console.log("DEPOSIT DONE");
+    closeModal();
   };
 
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
-          <VaultBorrowSet
+          <VaultBorrowInput
             item={item}
             setAmount={(amount: number, borrow: number) =>
               handleSetBorrow(amount, borrow)
@@ -55,12 +56,23 @@ const VaultBorrow: React.FC<Props> = ({ item, closeModal }) => {
         );
       case 2:
         return (
+          <VaultBorrowPush
+            item={item}
+            supplyAmount={amount}
+            borrowAmount={borrow}
+            setTxHash={setTxHash}
+            validDeposit={handleValidDeposit}
+            closeModal={closeModal}
+          />
+        );
+      case 3:
+        return (
           <VaultBorrowSummary
             item={item}
-            amount={amount}
-            borrow={borrow}
-            processDone={() => handleProcessDone()}
-            closeModal={closeModal}
+            supplyAmount={amount}
+            borrowAmount={borrow}
+            txhash={txHash}
+            processDone={handleProcessDone}
           />
         );
       default:

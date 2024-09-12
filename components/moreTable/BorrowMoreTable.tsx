@@ -4,7 +4,8 @@ import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import TableHeaderCell from "./MoreTableHeader";
 import { useRouter } from "next/navigation";
-import { GraphMarket } from "@/types";
+import { GraphMarket, BorrowMarket } from "@/types";
+import { getMarketParams } from "@/utils/contract";
 import BorrowMoreTableRow from "./BorrowMoreTableRow";
 
 interface Props {
@@ -15,10 +16,24 @@ const BorrowMoreTable: React.FC<Props> = ({ marketsArr }) => {
   const router = useRouter();
   const { address: userAddress } = useAccount();
   const [isPending, setIsPending] = useState(true);
+  const [borrowMarkets, setBorrowMarkets] = useState<BorrowMarket[]>([]);
 
   useEffect(() => {
     const initMarkets = async () => {
       setIsPending(true);
+
+      if (marketsArr && marketsArr.length > 0) {
+        const promises = marketsArr.map(async (marketItem) => {
+          const params = await getMarketParams(marketItem.id);
+          return {
+            ...marketItem,
+            marketParams: params,
+          } as BorrowMarket;
+        });
+
+        const borrowMarketList = await Promise.all(promises);
+        setBorrowMarkets(borrowMarketList);
+      }
 
       setIsPending(false);
     };
@@ -104,7 +119,7 @@ const BorrowMoreTable: React.FC<Props> = ({ marketsArr }) => {
               </tr>
             </thead>
             <tbody className="bg-transparent">
-              {marketsArr?.map((item, index, arr) => (
+              {borrowMarkets.map((item, index, arr) => (
                 <tr
                   key={index}
                   onClick={() => goToDetail(item)}

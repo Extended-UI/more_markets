@@ -8,3 +8,4 @@ export * from "./depositMoreData";
 export * from "./vaultData";
 export * from "./graphMarket";
 export * from "./graphVault";
+export * from "./borrowMarket";

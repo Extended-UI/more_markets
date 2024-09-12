@@ -5,8 +5,8 @@ import MoreButton from "../moreButton/MoreButton";
 import { Market } from "@/types";
 
 interface ButtonDialogProps {
-  buttonText: string;
   color: string;
+  buttonText: string;
   children: (toggleModal: () => void) => ReactNode;
   onButtonClick?: () => void;
 }

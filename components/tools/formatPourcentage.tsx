@@ -9,7 +9,7 @@ const FormatPourcentage: React.FC<Props> = ({ value }) => {
   return (
     <div className="flex gap-1 justify-end">
       {" "}
-      <div className=" ">{value}</div> <div className="text-grey">%</div>
+      <div className=" ">{(value * 100).toFixed(2)}</div> <div className="text-grey">%</div>
     </div>
   );
 };

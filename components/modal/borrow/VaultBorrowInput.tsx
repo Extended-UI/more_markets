@@ -1,19 +1,14 @@
 "use client";
 
-import { ethers } from "ethers";
-import {
-  useAccount,
-  type BaseError,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-} from "wagmi";
-import React, { useState } from "react";
+import { useAccount } from "wagmi";
+import { type GetBalanceReturnType } from "@wagmi/core";
+import React, { useState, useEffect } from "react";
 import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { GraphMarket } from "@/types";
-import { ERC20Abi } from "@/app/abi/ERC20Abi";
-import { contracts } from "@/utils/const";
+import { getTokenBallance } from "@/utils/contract";
+import { tokens } from "@/utils/const";
 
 interface Props {
   item: GraphMarket;
@@ -22,12 +17,14 @@ interface Props {
 }
 
 const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
-  const [deposit, setDeposit] = useState<number>(0);
-  const [borrow, setBorrow] = useState<number>(0);
-  const { data: hash, error, isPending, writeContract } = useWriteContract();
+  const [borrow, setBorrow] = useState(0);
+  const [deposit, setDeposit] = useState(0);
+  const [supplyBalance, setSupplyBalance] =
+    useState<GetBalanceReturnType | null>(null);
+  const [borrowBalance, setBorrowBalance] =
+    useState<GetBalanceReturnType | null>(null);
 
-  const [txStep, setTxStep] = useState(1);
-  const { address } = useAccount();
+  const { address: userAddress } = useAccount();
 
   const handleInputDepositChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -50,25 +47,34 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   };
 
   const handleBorrow = () => {
-    if (deposit > 0 && borrow > 0) {
-      setAmount(deposit, borrow);
-    }
+    setAmount(deposit, borrow);
   };
 
-  const handleCancel = () => {
-    console.log("CANCEL");
-  };
+  useEffect(() => {
+    const initBalances = async () => {
+      setSupplyBalance(
+        userAddress
+          ? await getTokenBallance(item.inputToken.id, userAddress)
+          : null
+      );
+      setBorrowBalance(
+        userAddress
+          ? await getTokenBallance(item.borrowedToken.id, userAddress)
+          : null
+      );
+    };
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
+    initBalances();
+  }, [item, userAddress]);
+
+  const collateralToken = tokens[item.inputToken.id].toLocaleUpperCase();
+  const borrowToken = tokens[item.borrowedToken.id].toLocaleUpperCase();
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
       <div className="text-2xl mb-10 px-4 pt-5 ">Borrow</div>
       <div className="text-l mb-1 px-4">
-        Deposit {item.borrowedToken.id} Collateral
+        Deposit {collateralToken} Collateral
       </div>
       <div className=" py-2 px-4">
         <InputTokenMax
@@ -77,16 +83,17 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           onChange={handleInputDepositChange}
           min="0"
           max={"100"}
-          placeholder={`Deposit ${item.inputToken.id}`}
-          token={item.borrowedToken.id}
-          balance={0}
+          placeholder={`Deposit ${collateralToken}`}
+          token={tokens[item.inputToken.id]}
+          balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
           setMax={handleSetMaxToken}
         />
       </div>
       <div className="text-right more-text-gray py-2 px-4">
-        Balance: {0} {item.borrowedToken.id}
+        Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}{" "}
+        {collateralToken}
       </div>
-      <div className="text-l mb-1 px-4 py-2 mt-3">Borrow FLOW</div>
+      <div className="text-l mb-1 px-4 py-2 mt-3">Borrow {borrowToken}</div>
       <div className=" px-4">
         <InputTokenMax
           type="number"
@@ -94,14 +101,15 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           onChange={handleInputBorrowChange}
           min="0"
           max={"100"}
-          placeholder={`Deposit ${item.borrowedToken.id}`}
-          token="Flow"
-          balance={0}
+          placeholder={`Deposit ${borrowToken}`}
+          token={tokens[item.borrowedToken.id]}
+          balance={borrowBalance ? Number(borrowBalance.formatted) : 0}
           setMax={handleSetMaxFlow}
         />
       </div>
       <div className="text-right more-text-gray py-2 px-4">
-        Balance: {0} FLOW
+        Balance: {borrowBalance ? Number(borrowBalance.formatted) : 0}{" "}
+        {borrowToken}
       </div>
       <div className="flex justify-end mt-7 mb-7 px-4">
         <div className="mr-5">
@@ -112,27 +120,14 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
             color="gray"
           />
         </div>
-        <button type="submit" className="text-2xl py-2" color="secondary">
-          {txStep == 1
-            ? isConfirming
-              ? "Confirming..."
-              : "Approve"
-            : txStep == 2
-            ? isConfirming
-              ? "Confirming..."
-              : "Deposit"
-            : txStep == 3
-            ? isConfirming
-              ? "Confirming..."
-              : "Borrow"
-            : ""}
-          {hash && <div>Transaction Hash: {hash}</div>}
-        </button>
-        {isConfirming && <div>Waiting for confirmation...</div>}
-        {isConfirmed && <div>Transaction confirmed.</div>}
-        {error && (
-          <div>Error: {(error as BaseError).shortMessage || error.message}</div>
-        )}
+        <div className="mr-5">
+          <MoreButton
+            className="text-2xl py-2"
+            text="Borrow"
+            onClick={() => handleBorrow()}
+            color="gray"
+          />
+        </div>
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-secondary w-full"></div>
@@ -141,20 +136,20 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
         <div className="flex justify-between mt-10">
           <div>1D Borrow APY:</div>
           <div className="">
-            {"apy"}
+            {"0"}
             <span className="more-text-gray">%</span>
           </div>
         </div>
         <div className="flex justify-between mt-10 pb-4 ">
           <div>Your Premium Liquidation LTV</div>
           <div className="">
-            <FormatPourcentage value={0}></FormatPourcentage>{" "}
+            <FormatPourcentage value={0} />{" "}
           </div>
         </div>
         <div className="flex justify-between mt-10">
           <div>Available Liquidity</div>
           <div className="">
-            {0} <span className="more-text-gray">{item.borrowedToken.id}</span>{" "}
+            {0} <span className="more-text-gray">{borrowToken}</span>{" "}
           </div>
         </div>
         <div className="flex justify-between mt-10 pb-4 ">

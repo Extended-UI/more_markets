@@ -3,21 +3,15 @@
 import React, { useState, useEffect } from "react";
 import BorrowMoreTable from "@/components/moreTable/BorrowMoreTable";
 import LoanMoreTable from "@/components/moreTable/LoanMoreTable";
-import { fetchMarkets, fetchVaults } from "@/utils/graph";
-import { GraphMarket, GraphVault } from "@/types";
+import { fetchMarkets } from "@/utils/graph";
+import { GraphMarket } from "@/types";
 
 const BorrowPage: React.FC = () => {
-  const [vaults, setVaults] = useState<GraphVault[]>([]);
   const [markets, setMarkets] = useState<GraphMarket[]>([]);
 
   useEffect(() => {
     const initFunc = async () => {
-      const [vaultsArr, marketsArr] = await Promise.all([
-        fetchVaults(),
-        fetchMarkets(),
-      ]);
-
-      setVaults(vaultsArr);
+      const marketsArr = await fetchMarkets();
       setMarkets(marketsArr);
     };
 
