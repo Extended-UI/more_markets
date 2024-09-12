@@ -117,7 +117,7 @@ const VaultRepayTransaction: React.FC<Props> = ({
             <div className="flex  items-center gap-2">
               <FormatPourcentage value={apy} />{" "}
               <ArrowLongRightIcon className="w-4 h-4 text-grey" />{" "}
-              <FormatTwoPourcentage value={apy} value2={apy} />
+              <FormatTwoPourcentage value={apy} />
             </div>
           </div>
 

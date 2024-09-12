@@ -7,29 +7,18 @@ import Icon from "../../FontAwesomeIcon";
 import TokenAmount from "@/components/token/TokenAmount";
 import BorrowTokenAmount from "../../token/BorrowTokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { GraphMarket } from "@/types";
 
 interface Props {
-  title: string;
-  token: string;
-  balance: number;
-  apy: number;
-  ltv: string;
-  totalDeposit: number;
-  totalTokenAmount: number;
+  item: GraphMarket;
   amount: number;
   borrow: number;
   processDone: () => void;
   closeModal: () => void;
 }
 
-const VaultBorrowSummary: React.FC<Props> = ({
-  title,
-  token,
-  balance,
-  apy,
-  ltv,
-  totalDeposit,
-  totalTokenAmount,
+const VaultBorrowResult: React.FC<Props> = ({
+  item,
   amount,
   borrow,
   processDone,
@@ -53,7 +42,7 @@ const VaultBorrowSummary: React.FC<Props> = ({
         <span>
           <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />
         </span>
-        Approve the bundler to spend 12.35 {token} (via permit)
+        Approve the bundler to spend 12.35 {item.borrowedToken.id} (via permit)
       </div>
       <div className="text-l flex mb-5 px-4">
         <span>
@@ -64,18 +53,18 @@ const VaultBorrowSummary: React.FC<Props> = ({
       <div className="more-bg-primary px-4 mx-5">
         <TokenAmount
           title="Deposit"
-          token={token}
+          token={item.borrowedToken.id}
           amount={amount}
-          ltv={ltv}
-          totalTokenAmount={totalTokenAmount}
+          ltv={"ltv"}
+          totalTokenAmount={0}
         />
       </div>
       <div className="more-bg-primary px-4 mx-5">
         <BorrowTokenAmount
-          token={title}
+          token={"title"}
           amount={borrow}
-          ltv={ltv}
-          totalTokenAmount={totalTokenAmount}
+          ltv={"ltv"}
+          totalTokenAmount={0}
         />
       </div>
       <div className="text-l my-5 px-4">
@@ -96,4 +85,4 @@ const VaultBorrowSummary: React.FC<Props> = ({
   );
 };
 
-export default VaultBorrowSummary;
+export default VaultBorrowResult;

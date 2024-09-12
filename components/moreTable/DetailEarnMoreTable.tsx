@@ -154,7 +154,7 @@ const DetailEarnMoreTable: React.FC<Props> = () => {
                         </td>                        
                         <td className="py-4  items-center h-full"><div className='flex justify-start'><ListIconToken className="w-6 h-6 " iconNames={item.collateral} ></ListIconToken></div></td>
                         
-                        <td className="py-4 px-6 items-center  "><div className=' flex justify-start py-4 ' > <FormatTwoPourcentage value={item.liquidationLTV2} value2={item.liquidationLTV}></FormatTwoPourcentage> </div></td>
+                        <td className="py-4 px-6 items-center  "><div className=' flex justify-start py-4 ' > <FormatTwoPourcentage value={item.liquidationLTV2} /> </div></td>
                         
 
                         <td className="py-4  items-center h-full ">

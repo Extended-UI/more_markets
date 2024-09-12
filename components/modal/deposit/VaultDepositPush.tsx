@@ -165,7 +165,7 @@ const VaultDepositPush: React.FC<Props> = ({
         </div>
         <div className="flex  gap-2 text-l mb-5 px-4">
           <span className="more-text-gray">Liquidation LTV:</span>{" "}
-          <FormatTwoPourcentage value={item.netAPY} value2={item.netAPY} />{" "}
+          <FormatTwoPourcentage value={item.netAPY} />{" "}
         </div>
       </div>
       <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">

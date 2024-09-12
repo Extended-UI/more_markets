@@ -79,7 +79,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
           Withdraw <ArrowLongRightIcon className="w-4 h-4" /> Deposit APY /
           Projected Deposit APY
         </div>
-        <FormatTwoPourcentage value={item.netAPY} value2={item.netAPY} />
+        <FormatTwoPourcentage value={item.netAPY} />
       </div>
     </div>
   );

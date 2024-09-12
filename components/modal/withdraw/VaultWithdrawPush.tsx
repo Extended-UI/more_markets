@@ -108,7 +108,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
         </div>
         <div className="flex gap-2 text-l mb-5 px-4">
           <span className="more-text-gray">Liquidation LTV:</span>{" "}
-          <FormatTwoPourcentage value={90} value2={125} />{" "}
+          <FormatTwoPourcentage value={90} />{" "}
         </div>
       </div>
       <div className="relative more-bg-primary px-8 rounded-t-[5px] ">

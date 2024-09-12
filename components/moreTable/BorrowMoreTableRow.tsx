@@ -68,10 +68,10 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
             {(closeModal) => (
               <>
                 <div className=" w-full h-full">
-                  {/* <VaultBorrow
+                  <VaultBorrow
                     item={item}
                     closeModal={closeModal}
-                  ></VaultBorrow> */}
+                  ></VaultBorrow>
                 </div>
               </>
             )}

@@ -21,10 +21,10 @@ export const tokens: { [key: string]: string } = {
 
 export const curators: { [key: string]: string } = {};
 
-// export const MORE_SUBGRAPH = "http://18.233.102.130:8000/subgraphs/name/more-markets/more-subgraph/graphql";
-
 export const MORE_SUBGRAPH =
-  "http://localhost:8000/subgraphs/name/more-markets/more-subgraph";
+  "http://18.233.102.130:8000/subgraphs/name/more-markets/more-subgraph";
+
+// export const MORE_SUBGRAPH = "http://localhost:8000/subgraphs/name/more-markets/more-subgraph";
 
 export const initBalance: GetBalanceReturnType = {
   decimals: 18,

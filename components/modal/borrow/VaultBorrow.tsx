@@ -1,38 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import VaultBorrowSet from "./VaultBorrowSet";
-import VaultBorrowSummary from "./VaultBorrowSummary";
-import { MarketParams } from "@/types/marketParams";
+import VaultBorrowSet from "./VaultBorrowInput";
+import VaultBorrowSummary from "./VaultBorrowResult";
+import { GraphMarket } from "@/types";
 
 interface Props {
-  title: string;
-  token: string;
-  balanceToken: number;
-  balanceFlow: number;
-  apy: number;
-  ltv: string;
-  totalDeposit: number;
-  totalTokenAmount: number;
-  curator: string;
-  credora: string;
-  marketParams: MarketParams;
+  item: GraphMarket;
   closeModal: () => void;
 }
 
-const VaultBorrow: React.FC<Props> = ({
-  title,
-  token,
-  balanceToken,
-  balanceFlow,
-  apy,
-  ltv,
-  totalDeposit,
-  totalTokenAmount,
-  curator,
-  marketParams,
-  credora,
-  closeModal,
-}) => {
+const VaultBorrow: React.FC<Props> = ({ item, closeModal }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [borrow, setBorrow] = useState(0);
@@ -45,6 +22,7 @@ const VaultBorrow: React.FC<Props> = ({
       setStep(1); // Réinitialise l'étape à 1 quand le composant est démonté
     };
   }, []);
+
   const handleSetBorrow = (amount: number, borrow: number) => {
     console.log("BORROW SET");
     console.log(amount, borrow);
@@ -68,16 +46,7 @@ const VaultBorrow: React.FC<Props> = ({
       case 1:
         return (
           <VaultBorrowSet
-            credora={credora}
-            title={title}
-            token={token}
-            balanceToken={balanceToken}
-            balanceFlow={balanceFlow}
-            apy={apy}
-            ltv={ltv}
-            totalDeposit={totalDeposit}
-            totalTokenAmount={totalTokenAmount}
-            marketParams={marketParams}
+            item={item}
             setAmount={(amount: number, borrow: number) =>
               handleSetBorrow(amount, borrow)
             }
@@ -87,15 +56,9 @@ const VaultBorrow: React.FC<Props> = ({
       case 2:
         return (
           <VaultBorrowSummary
+            item={item}
             amount={amount}
             borrow={borrow}
-            title={title}
-            token={token}
-            balance={balanceToken}
-            apy={apy}
-            ltv={ltv}
-            totalDeposit={totalDeposit}
-            totalTokenAmount={totalTokenAmount}
             processDone={() => handleProcessDone()}
             closeModal={closeModal}
           />

@@ -32,7 +32,7 @@ const HeaderBorrowDetail: React.FC = () => {
           {(closeModal) => (
             <>
               <div className="h-full w-full">
-                <VaultBorrow
+                {/* <VaultBorrow
                   title="USDMax"
                   token={"usdc"}
                   apy={14.1}
@@ -45,7 +45,7 @@ const HeaderBorrowDetail: React.FC = () => {
                   credora="AAA"
                   marketParams={marketParams}
                   closeModal={closeModal}
-                ></VaultBorrow>
+                ></VaultBorrow> */}
               </div>
             </>
           )}

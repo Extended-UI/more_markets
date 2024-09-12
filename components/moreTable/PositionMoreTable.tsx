@@ -148,10 +148,7 @@ const PositionMoreTable: React.FC<Props> = () => {
 
               <td className="py-4 px-6 items-center flex  ">
                 <div className=" flex justify-start w-full py-4 ">
-                  <FormatTwoPourcentage
-                    value={item.liquidationLTV}
-                    value2={item.liquidationLTV2}
-                  ></FormatTwoPourcentage>
+                  <FormatTwoPourcentage value={item.liquidationLTV} />
                 </div>
               </td>
 
@@ -176,7 +173,7 @@ const PositionMoreTable: React.FC<Props> = () => {
                     {(closeModal) => (
                       <>
                         <div className=" w-full h-full">
-                          <VaultBorrow
+                          {/* <VaultBorrow
                             title="USDMax"
                             token={item.supplyCurrency}
                             apy={14.1}
@@ -189,7 +186,7 @@ const PositionMoreTable: React.FC<Props> = () => {
                             credora="AAA"
                             marketParams={marketParams}
                             closeModal={closeModal}
-                          ></VaultBorrow>
+                          ></VaultBorrow> */}
                         </div>
                       </>
                     )}
