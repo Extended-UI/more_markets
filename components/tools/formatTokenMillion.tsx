@@ -8,6 +8,7 @@ interface Props {
   totalValue: number;
   totalDanger?: boolean;
   currency?: string;
+  align?: boolean;
 }
 
 const FormatTokenMillion: React.FC<Props> = ({
@@ -16,10 +17,15 @@ const FormatTokenMillion: React.FC<Props> = ({
   totalValue,
   totalDanger,
   currency,
+  align,
 }) => {
   // Vous pouvez ajouter une vérification ici si besoin
   return (
-    <div className="flex gap-1 justify-center items-center gap-2  ">
+    <div
+      className={
+        "flex gap-1 items-center gap-2 " + (align ? "" : "justify-center")
+      }
+    >
       <div className=" ">
         <span className="text-grey">{currency}</span>
         <FormatNumber value={value} />

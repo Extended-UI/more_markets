@@ -146,14 +146,14 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                     infoText="The token(s) that borrowers must lock in order to borrow funds."
                   />
                 </th>
-                <th style={{ width: "200px" }}>
+                {/* <th style={{ width: "200px" }}>
                   <div className="flex justify-start">
                     <TableHeaderCell
                       title="Unsecured"
                       infoText="The total amount of credit (above the standard LTV) issued by the all markets in the vault to premium, rated borrowers."
                     />
                   </div>
-                </th>
+                </th> */}
                 {userAddress && (
                   <th
                     style={{
@@ -204,8 +204,9 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                       <FormatPourcentage value={item.netAPY} />
                     </div>
                   </td>
-                  <td className="py-4  items-center h-full ">
+                  <td className="py-4 items-left h-full ">
                     <FormatTokenMillion
+                      align={true}
                       value={item.totalDeposits}
                       token={item.tokenSymbol}
                       totalValue={item.totalValueUSD}
@@ -225,13 +226,13 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                       iconNames={item.collateral}
                     />
                   </td>
-                  <td className="py-4 px-6 items-center   h-full ">
+                  {/* <td className="py-4 px-6 items-center   h-full ">
                     <FormatTokenMillion
                       value={item.totalDeposits}
                       token={item.tokenSymbol}
                       totalValue={item.unsecured}
                     />
-                  </td>
+                  </td> */}
                   {userAddress && (
                     <td
                       className="py-4 px-6 items-center justify-end h-full"

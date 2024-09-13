@@ -8,7 +8,7 @@ export const contracts = {
   MORE_IRM: "0x9C1f2140AAbe64ABCfbBeCf1Bdb90022bC7c9052",
   MORE_VAULTS_FACTORY: "0xa738ff722cb86970eddca22e4f06eca62c1c581a",
   MULTICALL3: "0xF7d11c74B5706155d7C6DBe931d590611a371a8a",
-  MORE_BUNDLER: "0x817746248Ee90E004A97F70c9F47349AA726D894",
+  MORE_BUNDLER: "0x44F51B18a345A35A222Cb0bA188D79b22eB42293",
   PERMIT2: "0x000000000022D473030F116dDEE9F6B43aC78BA3",
 };
 
@@ -17,7 +17,7 @@ export const tokens: { [key: string]: string } = {
   "0x4d40cdce3864ca8fcba1b7de4c0a66f37b28092c": "USDf",
   "0x866e7292a4b9813146591cb6211aac33432cf07f": "BTCf",
   "0x50be444228f6f27899e52e56718c0ae67f962185": "ETHf",
-  "0x3d08ce8ba948ddd6ab0745670134a55e8e35aa8c": "ankrf",
+  "0x3d08ce8ba948ddd6ab0745670134a55e8e35aa8c": "ankr.FLOW",
   "0xe6de44ac50c1d1c83f67695f6b4820a317285fc6": "wFLOW",
 };
 
@@ -51,3 +51,12 @@ export const permit2Instance = {
 };
 
 export const Uint48Max = 281474976710655;
+
+export const coingecko_ids: { [key in string]: string } = {
+  usdcf: "usdc",
+  btcf: "bitcoin",
+  ethf: "ethereum",
+  usdf: "tether",
+  wflow: "flow",
+  "ankr.flow": "ankr-network",
+};
