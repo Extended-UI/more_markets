@@ -72,7 +72,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 />{" "}
               </div>
             </th>
-            <th style={{ width: "200px" }}>
+            {/* <th style={{ width: "200px" }}>
               {" "}
               <div className="flex justify-start">
                 <TableHeaderCell
@@ -81,7 +81,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 />{" "}
               </div>
             </th>
-            {/* <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }}>
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Unsecured Borrow"
@@ -145,11 +145,11 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 </div>
               </td>
 
-              <td className="py-4  items-center h-full ">
+              {/* <td className="py-4  items-center h-full ">
                 <div className="py-4 flex justify-start">{item.credora}</div>
               </td>
 
-              {/* <td className="py-4  items-center h-full ">
+              <td className="py-4  items-center h-full ">
                 <FormatTokenMillion
                   value={item.unsecuredBorrowAmount}
                   token={item.supplyCurrency}

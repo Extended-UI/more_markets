@@ -1,3 +1,4 @@
+import { useAccount } from "wagmi";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDetail from "../modal/VaultDetail";
 import VaultDeposit from "../modal/deposit/VaultDeposit";
@@ -9,6 +10,8 @@ interface Props {
 }
 
 const HeaderEarnDetail: React.FC<Props> = ({ vault }) => {
+  const { address: userAddress } = useAccount();
+
   return (
     <div className="flex flex-col sm:flex-row gap-8 w-full items-center justify-between my-4">
       <div className="flex items-center gap-10">
@@ -28,13 +31,16 @@ const HeaderEarnDetail: React.FC<Props> = ({ vault }) => {
         </div>
       </div>
       <div className="flex gap-2">
-        <ButtonDialog color="primary" buttonText="Deposit">
-          {(closeModal) => (
-            <div className="h-full w-full">
-              <VaultDeposit item={vault} closeModal={closeModal} />
-            </div>
-          )}
-        </ButtonDialog>
+        {userAddress && (
+          <ButtonDialog color="primary" buttonText="Deposit">
+            {(closeModal) => (
+              <div className="h-full w-full">
+                <VaultDeposit item={vault} closeModal={closeModal} />
+              </div>
+            )}
+          </ButtonDialog>
+        )}
+
         <ButtonDialog color="grey" buttonText="Vault Details">
           {(closeModal) => (
             <div className="h-full w-full">

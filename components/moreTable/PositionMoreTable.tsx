@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useAccount } from "wagmi";
 import { formatEther, formatUnits } from "ethers";
 import { BorrowMarket } from "@/types";
 import TableHeaderCell from "./MoreTableHeader";
@@ -18,6 +19,8 @@ interface Props {
 }
 
 const PositionMoreTable: React.FC<Props> = ({ item }) => {
+  const { address: userAddress } = useAccount();
+
   const collateralToken =
     tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
   const loanToken =
@@ -34,22 +37,6 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
           )
         )
       : null;
-
-  const tableData: DetailEarnData[] = [
-    {
-      allocation: 16.8,
-      supplyAmount: 3288.62,
-      supplyCurrency: "USDC",
-      supplyValue: 1.96,
-      collateral: ["usdc", "btc", "add", "ada"],
-      liquidationLTV: 90,
-      liquidationLTV2: 130,
-      credoraRating: "CCC+ / BBB",
-      unsecuredBorrowAmount: 7890.12,
-      unsecuredBorrowValue: 4.98,
-      unsecuredAPY: 16.8,
-    },
-  ];
 
   return (
     <div
@@ -102,7 +89,7 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
                 <TableHeaderCell title="Vault Listing" infoText="" />
               </div>
             </th> */}
-            <th style={{ width: "100px" }}></th>
+            {userAddress && <th style={{ width: "100px" }}></th>}
           </tr>
         </thead>
         <tbody className="bg-transparent ">
@@ -156,19 +143,21 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
                 </div>
               </td> */}
 
-            <td className="py-4 px-6  items-center justify-end h-full">
-              <div onClick={(event) => event.stopPropagation()}>
-                <ButtonDialog color="secondary" buttonText="Borrow">
-                  {(closeModal) => (
-                    <>
-                      <div className=" w-full h-full">
-                        <VaultBorrow item={item} closeModal={closeModal} />
-                      </div>
-                    </>
-                  )}
-                </ButtonDialog>
-              </div>
-            </td>
+            {userAddress && (
+              <td className="py-4 px-6  items-center justify-end h-full">
+                <div onClick={(event) => event.stopPropagation()}>
+                  <ButtonDialog color="secondary" buttonText="Borrow">
+                    {(closeModal) => (
+                      <>
+                        <div className=" w-full h-full">
+                          <VaultBorrow item={item} closeModal={closeModal} />
+                        </div>
+                      </>
+                    )}
+                  </ButtonDialog>
+                </div>
+              </td>
+            )}
           </tr>
         </tbody>
       </table>

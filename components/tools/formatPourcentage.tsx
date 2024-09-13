@@ -1,7 +1,7 @@
 import React from "react";
 
 interface Props {
-  value: number; // Définit clairement que la prop attendue est un nombre
+  value: number | string; // Définit clairement que la prop attendue est un nombre
 }
 
 const FormatPourcentage: React.FC<Props> = ({ value }) => {
@@ -9,7 +9,10 @@ const FormatPourcentage: React.FC<Props> = ({ value }) => {
   return (
     <div className="flex gap-1 justify-end">
       {" "}
-      <div className=" ">{(value * 100).toFixed(2)}</div> <div className="text-grey">%</div>
+      <div className=" ">
+        {typeof value == "string" ? value : (value * 100).toFixed(2)}
+      </div>{" "}
+      <div className="text-grey">{typeof value == "string" ? "" : "%"}</div>
     </div>
   );
 };

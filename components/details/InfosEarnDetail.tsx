@@ -44,7 +44,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           infoText=""
           className="flex-1 m-2  min-w-[200px]"
         >
-          <span>17.1</span>
+          <span>{"N/A"}</span>
           <span className="text-[#888888] font-[600] ">%</span>
         </InfoDetailGrey>
         {/* <InfoDetailGrey

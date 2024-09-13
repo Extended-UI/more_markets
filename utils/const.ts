@@ -21,7 +21,13 @@ export const tokens: { [key: string]: string } = {
   "0xe6de44ac50c1d1c83f67695f6b4820a317285fc6": "wFLOW",
 };
 
-export const curators: { [key: string]: string } = {};
+export const curators: { [key: string]: string } = {
+  "0x401d24076331c077099dea08fe898ea7ff7254cd": "Lighthouse curator",
+  "0xa1947019f5989c5c417cc6eece404d684b855bb2": "Lighthouse curator",
+  "0xf3cfc1694ed953764a699dac485cf3ea6e259fa4": "Lighthouse curator",
+  "0xa05a8570c963ff6710281d57d48c4f902ff16f37": "Lighthouse curator",
+  "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Lighthouse curator",
+};
 
 export const MORE_SUBGRAPH =
   "https://graph.more.markets/subgraphs/name/more-markets/more-subgraph";

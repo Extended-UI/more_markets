@@ -1,3 +1,4 @@
+import { useAccount } from "wagmi";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDetail from "../modal/VaultDetail";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
@@ -11,6 +12,8 @@ interface Props {
 }
 
 const HeaderBorrowDetail: React.FC<Props> = ({ item }) => {
+  const { address: userAddress } = useAccount();
+
   const collateralToken = tokens[item.inputToken.id].toLocaleUpperCase();
   const borrowToken = tokens[item.borrowedToken.id].toLocaleUpperCase();
 
@@ -22,15 +25,16 @@ const HeaderBorrowDetail: React.FC<Props> = ({ item }) => {
           <div>{collateralToken + "/" + borrowToken}</div>
         </div>
       </div>
-      <div className="flex gap-2">
-        <ButtonDialog color="secondary" buttonText="Borrow">
-          {(closeModal) => (
-            <div className="h-full w-full">
-              <VaultBorrow item={item} closeModal={closeModal} />
-            </div>
-          )}
-        </ButtonDialog>
-        {/* <ButtonDialog color="grey" buttonText="Market Details">
+      {userAddress && (
+        <div className="flex gap-2">
+          <ButtonDialog color="secondary" buttonText="Borrow">
+            {(closeModal) => (
+              <div className="h-full w-full">
+                <VaultBorrow item={item} closeModal={closeModal} />
+              </div>
+            )}
+          </ButtonDialog>
+          {/* <ButtonDialog color="grey" buttonText="Market Details">
           {(closeModal) => (
             <>
               <div className="h-full w-full">
@@ -55,7 +59,8 @@ const HeaderBorrowDetail: React.FC<Props> = ({ item }) => {
             </>
           )}
         </ButtonDialog> */}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

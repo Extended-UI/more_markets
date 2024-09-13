@@ -53,7 +53,7 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
       </td>
       <td className="py-4 px-6 items-center h-full">
         <div className="flex justify-start">
-          <FormatPourcentage value={0} />
+          <FormatPourcentage value={"N/A"} />
         </div>
       </td>
       <td className="py-4 px-6 items-center h-full">

@@ -69,7 +69,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           infoText="The average annualized rate that borrowers paid over the trailing 24-hour period."
           className="flex-1 m-2 min-w-[180px]"
         >
-          <span className="">17.1</span>
+          <span className="">{"N/A"}</span>
           <span className="text-[#888888] font-[600] ">%</span>
         </InfoDetailGrey>
       </div>
