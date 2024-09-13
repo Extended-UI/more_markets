@@ -75,7 +75,7 @@ const MoreGraphicsV1: React.FC<Props> =  ({ datasets, labelsX, comment, isFill, 
         <div>
             <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn m-1 btn-neutral">1 Week <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 ml-2 stroke-current"> 
-                  <path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path> 
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path> 
                 </svg></label>
                 <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
                   <li className="bg-neutral"><a>Item 1</a></li>

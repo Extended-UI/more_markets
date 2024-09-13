@@ -10,6 +10,7 @@ import {
   marketsQuery,
   vaultsQuery,
   vaultFilterQuery,
+  marketFilterQuery,
 } from "./query";
 
 const apolloFetcher = async (query: DocumentNode) => {
@@ -59,7 +60,12 @@ export const fetchPositions = async (
   }
 };
 
-export const fetchVaultInfo = async (vault: string): Promise<GraphVault> => {
+export const fetchVault = async (vault: string): Promise<GraphVault> => {
   const vaultInfo = await apolloFetcher(vaultFilterQuery(vault));
   return vaultInfo.data.metaMorpho as GraphVault;
+};
+
+export const fetchMarket = async (marketId: string): Promise<GraphMarket> => {
+  const marketInfo = await apolloFetcher(marketFilterQuery(marketId));
+  return marketInfo.data.market as GraphMarket;
 };

@@ -1,18 +1,14 @@
 "use client";
-import React, { useState } from "react";
-import InputTokenMax from "../input/InputTokenMax";
-import TotalVolumeToken from "../token/TotalVolumeToken";
-import MoreButton from "../moreButton/MoreButton";
-import TokenAmount from "../token/TokenAmount";
+
+import React from "react";
 import IconToken from "../token/IconToken";
 import { InvestmentData } from "@/types";
 
 interface Props {
   item: InvestmentData;
-  closeModal: () => void;
 }
 
-const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
+const VaultDetail: React.FC<Props> = ({ item }) => {
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full">
       <div className="mb-7 px-4 pt-5  text-xl">{item.vaultName}</div>

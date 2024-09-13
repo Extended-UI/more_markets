@@ -1,26 +1,40 @@
 "use client";
 
-import { InvestmentData } from "@/types";
 import React from "react";
-import Icon from "../FontAwesomeIcon";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { formatEther, formatUnits } from "ethers";
+import { BorrowMarket } from "@/types";
 import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
-import VaultDeposit from "../modal/deposit/VaultDeposit";
-import TotalVolumeToken from "../token/TotalVolumeToken";
 import IconToken from "../token/IconToken";
-import ListIconToken from "../token/ListIconToken";
-import { useRouter } from "next/navigation";
 import { DetailEarnData } from "@/types/detailEarnData";
-import VaultBorrow from "../modal/borrow/VaultBorrow";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
+import VaultBorrow from "../modal/borrow/VaultBorrow";
 import FormatPourcentage from "../tools/formatPourcentage";
-import { MarketParams } from "@/types/marketParams";
+import { tokens } from "@/utils/const";
 
-interface Props {}
+interface Props {
+  item: BorrowMarket;
+}
 
-const PositionMoreTable: React.FC<Props> = () => {
+const PositionMoreTable: React.FC<Props> = ({ item }) => {
+  const collateralToken =
+    tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
+  const loanToken =
+    tokens[item.marketParams.loanToken.toLowerCase()].toUpperCase();
+
+  const lltv2 =
+    item.marketParams.isPremiumMarket &&
+    item.marketParams.categoryLltv.length > 0
+      ? Number(
+          formatEther(
+            item.marketParams.categoryLltv[
+              item.marketParams.categoryLltv.length - 1
+            ]
+          )
+        )
+      : null;
+
   const tableData: DetailEarnData[] = [
     {
       allocation: 16.8,
@@ -36,18 +50,6 @@ const PositionMoreTable: React.FC<Props> = () => {
       unsecuredAPY: 16.8,
     },
   ];
-
-  const marketParams: MarketParams = {
-    loanToken: `0x0`,
-    collateralToken: `0x0`,
-    oracle: `0x0`,
-    irm: `0x0`,
-    lltv: BigInt(0),
-    isPremiumMarket: false,
-    creditAttestationService: `0x123456`,
-    irxMaxLltv: BigInt(123),
-    categoryLltv: [BigInt(123)],
-  };
 
   return (
     <div
@@ -89,112 +91,85 @@ const PositionMoreTable: React.FC<Props> = () => {
                 />{" "}
               </div>
             </th>
-            <th style={{ width: "200px" }}>
+            {/* <th style={{ width: "200px" }}>
               {" "}
               <div className="flex justify-start">
                 <TableHeaderCell title="1D Interest" infoText="" />{" "}
               </div>
-            </th>
-            <th style={{ width: "200px" }}>
+            </th> */}
+            {/* <th style={{ width: "200px" }}>
               <div className="flex justify-start">
                 <TableHeaderCell title="Vault Listing" infoText="" />
               </div>
-            </th>
+            </th> */}
             <th style={{ width: "100px" }}></th>
           </tr>
         </thead>
         <tbody className="bg-transparent ">
-          {tableData.map((item, index, arr) => (
-            <tr
-              key={index}
-              style={
-                index === arr.length - 1
-                  ? {
-                      borderBottomLeftRadius: "8px",
-                      borderBottomRightRadius: "8px",
-                    }
-                  : undefined
-              }
-              className={`last:border-b-0 text-[12px]  cursor-pointer ${
-                index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
-              }`}
-            >
-              <td className="py-4  items-center h-full ">
-                <div className="flex gap-1 justify-start items-center gap-2 pl-4">
-                  <div className="mr-2 w-8 h-8">
-                    <IconToken tokenName="usdt"></IconToken>
-                  </div>
-                  <FormatTokenMillion
-                    value={item.supplyAmount}
-                    totalValue={item.supplyValue}
-                    token={item.supplyCurrency}
-                  ></FormatTokenMillion>
+          <tr className="last:border-b-0 text-[12px] dark:bg-[#191919] cursor-pointer">
+            <td className="py-4  items-center h-full ">
+              <div className="flex gap-1 justify-start items-center gap-2 pl-4">
+                <div className="mr-2 w-8 h-8">
+                  <IconToken tokenName={collateralToken} />
                 </div>
-              </td>
+                <FormatTokenMillion
+                  value={Number(formatUnits(item.totalSupply))}
+                  totalValue={Number(formatUnits(item.totalSupply))}
+                  token={collateralToken}
+                />
+              </div>
+            </td>
 
-              <td className="py-4  items-center h-full ">
-                <div className="flex gap-1 justify-start items-center gap-2">
-                  <div className="mr-2 w-8 h-8">
-                    <IconToken tokenName="usdt"></IconToken>
-                  </div>
-                  <FormatTokenMillion
-                    value={item.supplyAmount}
-                    totalValue={item.supplyValue}
-                    token={item.supplyCurrency}
-                    totalDanger={true}
-                  ></FormatTokenMillion>
+            <td className="py-4  items-center h-full ">
+              <div className="flex gap-1 justify-start items-center gap-2">
+                <div className="mr-2 w-8 h-8">
+                  <IconToken tokenName={loanToken} />
                 </div>
-              </td>
+                <FormatTokenMillion
+                  value={Number(formatUnits(item.totalBorrow))}
+                  totalValue={Number(formatUnits(item.totalBorrow))}
+                  token={loanToken}
+                  totalDanger={true}
+                />
+              </div>
+            </td>
 
-              <td className="py-4 px-6 items-center flex  ">
-                <div className=" flex justify-start w-full py-4 ">
-                  <FormatTwoPourcentage value={item.liquidationLTV} />
-                </div>
-              </td>
+            <td className="py-4 px-6 items-center flex  ">
+              <div className=" flex justify-start w-full py-4 ">
+                <FormatTwoPourcentage
+                  value={Number(formatEther(item.lltv))}
+                  value2={lltv2}
+                />
+              </div>
+            </td>
 
-              <td className="py-4 px-6  items-center justify-start h-full ">
+            {/* <td className="py-4 px-6  items-center justify-start h-full ">
                 <div className="flex gap-1 justify-start">
                   {" "}
-                  <FormatPourcentage
-                    value={item.unsecuredAPY}
-                  ></FormatPourcentage>{" "}
+                  <FormatPourcentage value={item.unsecuredAPY} />{" "}
                 </div>
-              </td>
+              </td> */}
 
-              <td className="py-4 px-6  items-center  h-full flex justify-start">
+            {/* <td className="py-4 px-6  items-center  h-full flex justify-start">
                 <div className="mr-2 w-8 h-8 py-2">
-                  <IconToken tokenName="usdt"></IconToken>
+                  <IconToken tokenName="usdt" />
                 </div>
-              </td>
+              </td> */}
 
-              <td className="py-4 px-6  items-center justify-end h-full">
-                <div onClick={(event) => event.stopPropagation()}>
-                  <ButtonDialog color="secondary" buttonText="Borrow">
-                    {(closeModal) => (
-                      <>
-                        <div className=" w-full h-full">
-                          {/* <VaultBorrow
-                            title="USDMax"
-                            token={item.supplyCurrency}
-                            apy={14.1}
-                            balanceToken={473.18}
-                            balanceFlow={785.45}
-                            ltv="90% / 125%"
-                            totalDeposit={3289.62}
-                            totalTokenAmount={1.96}
-                            curator="Flowverse"
-                            credora="AAA"
-                            marketParams={marketParams}
-                            closeModal={closeModal}
-                          ></VaultBorrow> */}
-                        </div>
-                      </>
-                    )}
-                  </ButtonDialog>
-                </div>
-              </td>
-            </tr>
-          ))}
+            <td className="py-4 px-6  items-center justify-end h-full">
+              <div onClick={(event) => event.stopPropagation()}>
+                <ButtonDialog color="secondary" buttonText="Borrow">
+                  {(closeModal) => (
+                    <>
+                      <div className=" w-full h-full">
+                        <VaultBorrow item={item} closeModal={closeModal} />
+                      </div>
+                    </>
+                  )}
+                </ButtonDialog>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

@@ -38,8 +38,6 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
             (position) => position.market.id == marketItem.id
           );
 
-          console.log(selPositions, marketItem.id, positionArr);
-
           if (selPositions.length > 0) {
             let totalCollateral = BigInt(0);
             let totalLoan = BigInt(0);

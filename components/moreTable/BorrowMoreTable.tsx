@@ -42,7 +42,7 @@ const BorrowMoreTable: React.FC<Props> = ({ marketsArr }) => {
   }, [userAddress, marketsArr]);
 
   const goToDetail = (item: GraphMarket) => {
-    router.push("/borrow/" + item.inputToken.id);
+    router.push("/borrow/" + item.id);
   };
 
   return (

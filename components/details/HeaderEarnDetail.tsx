@@ -38,7 +38,7 @@ const HeaderEarnDetail: React.FC<Props> = ({ vault }) => {
         <ButtonDialog color="grey" buttonText="Vault Details">
           {(closeModal) => (
             <div className="h-full w-full">
-              <VaultDetail item={vault} closeModal={closeModal} />
+              <VaultDetail item={vault} />
             </div>
           )}
         </ButtonDialog>

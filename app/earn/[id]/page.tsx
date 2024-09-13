@@ -6,13 +6,13 @@ import { usePathname, useRouter } from "next/navigation";
 import HeaderEarnDetail from "@/components/details/HeaderEarnDetail";
 import InfosEarnDetails from "@/components/details/InfosEarnDetail";
 import DetailEarnMoreTable from "@/components/moreTable/DetailEarnMoreTable";
-import { fetchVaultInfo, fetchMarkets } from "@/utils/graph";
+import { fetchVault, fetchMarkets } from "@/utils/graph";
 import { InvestmentData, VaultBreakdown } from "@/types";
 import { initBalance, tokens } from "@/utils/const";
 
 const EarnDetailPage: React.FC = () => {
-  const params = usePathname();
   const router = useRouter();
+  const params = usePathname();
 
   const [totalBorrow, setTotalBorrow] = useState(0);
   const [breakdowns, setBreakdowns] = useState<VaultBreakdown[]>([]);
@@ -24,7 +24,7 @@ const EarnDetailPage: React.FC = () => {
     const initVault = async () => {
       try {
         const [fetchedVault, marketsArr] = await Promise.all([
-          fetchVaultInfo(vaultId),
+          fetchVault(vaultId),
           fetchMarkets(),
         ]);
 

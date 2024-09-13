@@ -96,3 +96,24 @@ export const vaultFilterQuery = (vaultAddress: string): DocumentNode => {
     }
   `;
 };
+
+export const marketFilterQuery = (marketId: string): DocumentNode => {
+  return gql`
+    {
+      market(
+        id: "${marketId.toLowerCase()}"
+      ) {
+        id
+        inputToken {
+          id
+        }
+        borrowedToken {
+          id
+        }
+        lltv
+        totalSupply
+        totalBorrow
+      }
+    }
+  `;
+};
