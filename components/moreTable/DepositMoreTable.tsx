@@ -24,13 +24,10 @@ interface Props {
 const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
   const { address: userAddress } = useAccount();
 
-  const [isPending, setIsPending] = useState(true);
   const [vaults, setVaults] = useState<InvestmentData[]>([]);
 
   useEffect(() => {
     const initVaults = async () => {
-      setIsPending(true);
-
       if (marketsArr && vaultsArr && userAddress) {
         const promises = vaultsArr.map(async (vault) => {
           // check vault balance
@@ -88,7 +85,6 @@ const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
         );
         setVaults(fetchedVaults);
       }
-      setIsPending(false);
     };
 
     initVaults();
@@ -96,158 +92,163 @@ const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
 
   return (
     <>
-      {isPending ? (
-        <div> ...isLoading</div>
-      ) : (
-        <div
-          className="overflow-x-auto relative rounded-[15px] mb-16"
-          style={{
-            overflowX: "auto",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            position: "relative",
-            overflow: "visible",
-          }}
-        >
-          <table className="w-full text-sm text-left   border border-gray-800 ">
-            <thead
-              className="bg-[#212121] h-20  text-xs "
-              style={{
-                boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)",
-              }}
-            >
-              <tr className="rounded-t-lg">
-                <th style={{ width: "200px" }} className="rounded-tl-lg">
-                  <TableHeaderCell title="Vault Name" infoText="" />
-                </th>
-                <th style={{ width: "200px" }} className="rounded-tl-lg">
-                  <TableHeaderCell
-                    title="Deposit Token"
-                    infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
-                  />
-                </th>
-                <th style={{ width: "200px" }}>
-                  <TableHeaderCell
-                    title="Net APY"
-                    infoText="The annualized return you earn on your deposited amount after all fees. This rate fluctuates in real-time based on supply and demand in the underlying markets."
-                  />
-                </th>
-                <th style={{ width: "300px" }}>
-                  <div className="flex justify-start ">
-                    <TableHeaderCell title="My Deposit" infoText="" />
-                  </div>
-                </th>
-                <th style={{ width: "200px" }}>
-                  <TableHeaderCell
-                    title="Curator"
-                    infoText="The organization that manages the vault parameters such as included markets, allocations, caps and performance fees."
-                  />
-                </th>
-                <th style={{ width: "200px" }}>
-                  <TableHeaderCell
-                    title="Collateral"
-                    infoText="The token(s) that borrowers must lock in order to borrow funds."
-                  />
-                </th>
-                <th
-                  style={{
-                    position: "static",
-                    right: 0,
-                    backgroundColor: "#212121",
-                  }}
-                />
-              </tr>
-            </thead>
-            <tbody className="bg-transparent">
-              {vaults.map((item, index, arr) => (
-                <tr
-                  key={index}
-                  style={
-                    index === arr.length - 1
-                      ? {
-                          borderBottomLeftRadius: "8px",
-                          borderBottomRightRadius: "8px",
-                        }
-                      : undefined
-                  }
-                  className={`last:border-b-0 text-[12px]  cursor-pointer  ${
-                    index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
-                  }`}
-                >
-                  <td className="py-4 px-6 items-start h-full">
-                    <div className="flex items-start">
-                      <div className="mr-2 w-6 h-6">
-                        <IconToken tokenName={item.tokenSymbol} />
-                      </div>
-                      {item.tokenSymbol}
-                    </div>
-                  </td>
-                  <td className="py-4 px-6 items-start h-full">
-                    <div className="flex items-start">
-                      <div className="mr-2 w-6 h-6">
-                        <IconToken tokenName={item.tokenSymbol} />
-                      </div>
-                      {item.tokenSymbol}
-                    </div>
-                  </td>
-                  <td className="py-4 px-6 items-start h-full   ">
-                    <div className="flex justify-start">
-                      <FormatPourcentage
-                        value={item.netAPY}
-                      ></FormatPourcentage>
-                    </div>
-                  </td>
-                  <td className=" items-start   h-full ">
-                    <div className="flex justify-start">
-                      <FormatTokenMillion
-                        value={item.totalDeposits}
-                        token={item.tokenSymbol}
-                        totalValue={item.totalValueUSD}
-                      />
-                    </div>
-                  </td>
-                  <td className="py-4 px-6 items-start h-full  ">
-                    <div className="flex items-start">
-                      <div className="mr-2 w-6 h-6">
-                        <IconToken tokenName={item.tokenSymbol} />
-                      </div>
-                      {item.curator}
-                    </div>
-                  </td>
-                  <td className="py-4  items-start h-full">
-                    <ListIconToken
-                      className="w-6 h-6"
-                      iconNames={item.collateral}
+      {vaults.length > 0 && (
+        <>
+          <h1 className="text-4xl mb-8">My Deposits</h1>
+          <div
+            className="overflow-x-auto relative rounded-[15px] mb-16"
+            style={{
+              overflowX: "auto",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              position: "relative",
+              overflow: "visible",
+            }}
+          >
+            <table className="w-full text-sm text-left   border border-gray-800 ">
+              <thead
+                className="bg-[#212121] h-20  text-xs "
+                style={{
+                  boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)",
+                }}
+              >
+                <tr className="rounded-t-lg">
+                  <th style={{ width: "200px" }} className="rounded-tl-lg">
+                    <TableHeaderCell title="Vault Name" infoText="" />
+                  </th>
+                  <th style={{ width: "200px" }} className="rounded-tl-lg">
+                    <TableHeaderCell
+                      title="Deposit Token"
+                      infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
                     />
-                  </td>
-                  <td
-                    className="py-4 px-6 flex gap-2 items-center justify-end h-full"
+                  </th>
+                  <th style={{ width: "200px" }}>
+                    <TableHeaderCell
+                      title="Net APY"
+                      infoText="The annualized return you earn on your deposited amount after all fees. This rate fluctuates in real-time based on supply and demand in the underlying markets."
+                    />
+                  </th>
+                  <th style={{ width: "300px" }}>
+                    <div className="flex justify-start ">
+                      <TableHeaderCell title="My Deposit" infoText="" />
+                    </div>
+                  </th>
+                  <th style={{ width: "200px" }}>
+                    <TableHeaderCell
+                      title="Curator"
+                      infoText="The organization that manages the vault parameters such as included markets, allocations, caps and performance fees."
+                    />
+                  </th>
+                  <th style={{ width: "200px" }}>
+                    <TableHeaderCell
+                      title="Collateral"
+                      infoText="The token(s) that borrowers must lock in order to borrow funds."
+                    />
+                  </th>
+                  <th
                     style={{
+                      position: "static",
                       right: 0,
-                      backgroundColor: index % 2 === 0 ? "#141414" : "#191919",
+                      backgroundColor: "#212121",
                     }}
-                  >
-                    <ButtonDialog color="primary" buttonText="Deposit More">
-                      {(closeModal) => (
-                        <div className=" w-full h-full">
-                          <VaultDeposit item={item} closeModal={closeModal} />
-                        </div>
-                      )}
-                    </ButtonDialog>
-
-                    <ButtonDialog color="grey" buttonText="Withdraw">
-                      {(closeModal) => (
-                        <div className=" w-full h-full">
-                          <VaultWithdraw item={item} closeModal={closeModal} />
-                        </div>
-                      )}
-                    </ButtonDialog>
-                  </td>
+                  />
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="bg-transparent">
+                {vaults.map((item, index, arr) => (
+                  <tr
+                    key={index}
+                    style={
+                      index === arr.length - 1
+                        ? {
+                            borderBottomLeftRadius: "8px",
+                            borderBottomRightRadius: "8px",
+                          }
+                        : undefined
+                    }
+                    className={`last:border-b-0 text-[12px]  cursor-pointer  ${
+                      index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
+                    }`}
+                  >
+                    <td className="py-4 px-6 items-start h-full">
+                      <div className="flex items-start">
+                        <div className="mr-2 w-6 h-6">
+                          <IconToken tokenName={item.tokenSymbol} />
+                        </div>
+                        {item.tokenSymbol}
+                      </div>
+                    </td>
+                    <td className="py-4 px-6 items-start h-full">
+                      <div className="flex items-start">
+                        <div className="mr-2 w-6 h-6">
+                          <IconToken tokenName={item.tokenSymbol} />
+                        </div>
+                        {item.tokenSymbol}
+                      </div>
+                    </td>
+                    <td className="py-4 px-6 items-start h-full   ">
+                      <div className="flex justify-start">
+                        <FormatPourcentage
+                          value={item.netAPY}
+                        ></FormatPourcentage>
+                      </div>
+                    </td>
+                    <td className=" items-start   h-full ">
+                      <div className="flex justify-start">
+                        <FormatTokenMillion
+                          value={item.totalDeposits}
+                          token={item.tokenSymbol}
+                          totalValue={item.totalValueUSD}
+                        />
+                      </div>
+                    </td>
+                    <td className="py-4 px-6 items-start h-full  ">
+                      <div className="flex items-start">
+                        <div className="mr-2 w-6 h-6">
+                          <IconToken tokenName={item.tokenSymbol} />
+                        </div>
+                        {item.curator}
+                      </div>
+                    </td>
+                    <td className="py-4  items-start h-full">
+                      <ListIconToken
+                        className="w-6 h-6"
+                        iconNames={item.collateral}
+                      />
+                    </td>
+                    <td
+                      className="py-4 px-6 flex gap-2 items-center justify-end h-full"
+                      style={{
+                        right: 0,
+                        backgroundColor:
+                          index % 2 === 0 ? "#141414" : "#191919",
+                      }}
+                    >
+                      <ButtonDialog color="primary" buttonText="Deposit More">
+                        {(closeModal) => (
+                          <div className=" w-full h-full">
+                            <VaultDeposit item={item} closeModal={closeModal} />
+                          </div>
+                        )}
+                      </ButtonDialog>
+
+                      <ButtonDialog color="grey" buttonText="Withdraw">
+                        {(closeModal) => (
+                          <div className=" w-full h-full">
+                            <VaultWithdraw
+                              item={item}
+                              closeModal={closeModal}
+                            />
+                          </div>
+                        )}
+                      </ButtonDialog>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </>
   );

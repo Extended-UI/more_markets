@@ -26,7 +26,6 @@ const EarnPage: React.FC = () => {
 
   return (
     <>
-      <h1 className="text-4xl mb-8">My Deposits</h1>
       <DepositMoreTable vaultsArr={vaults} marketsArr={markets} />
 
       <h1 className="text-4xl mb-8">MORE Vaults</h1>

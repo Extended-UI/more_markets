@@ -27,13 +27,12 @@ const BorrowPage: React.FC = () => {
   }, [userAddress]);
 
   return (
-    <div>
-      <h1 className="text-4xl mb-4">My Loans</h1>
+    <>
       <LoanMoreTable positionArr={positions} marketsArr={markets} />
 
       <h1 className="text-4xl mb-4">MORE Markets</h1>
       <BorrowMoreTable marketsArr={markets} />
-    </div>
+    </>
   );
 };
 
