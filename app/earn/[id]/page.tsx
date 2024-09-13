@@ -1,26 +1,111 @@
-"use client"
+"use client";
+
+import { formatUnits } from "ethers";
+import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import HeaderEarnDetail from "@/components/details/HeaderEarnDetail";
 import InfosEarnDetails from "@/components/details/InfosEarnDetail";
-import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
 import DetailEarnMoreTable from "@/components/moreTable/DetailEarnMoreTable";
-import EarnMoreTable from "@/components/moreTable/EarnMoreTable";
-import { useRouter } from "next/navigation";
+import { fetchVaultInfo, fetchMarkets } from "@/utils/graph";
+import { InvestmentData, VaultBreakdown } from "@/types";
+import { initBalance, tokens } from "@/utils/const";
 
 const EarnDetailPage: React.FC = () => {
+  const params = usePathname();
   const router = useRouter();
 
-  // Check if the router is ready and has populated all its fields
- 
+  const [totalBorrow, setTotalBorrow] = useState(0);
+  const [breakdowns, setBreakdowns] = useState<VaultBreakdown[]>([]);
+  const [vaultInfo, setVaultInfo] = useState<InvestmentData | null>(null);
+
+  const vaultId = params.replace("/earn/", "");
+
+  useEffect(() => {
+    const initVault = async () => {
+      try {
+        const [fetchedVault, marketsArr] = await Promise.all([
+          fetchVaultInfo(vaultId),
+          fetchMarkets(),
+        ]);
+
+        if (fetchedVault) {
+          const breakdownList = fetchedVault.supplyQueue
+            .map((queueItem) => {
+              const marketId = queueItem.market.id.toLowerCase();
+              const marketItem = marketsArr.find(
+                (item) => item.id.toLowerCase() == marketId
+              );
+
+              if (marketItem) {
+                return {
+                  allowcation: 0,
+                  supply: formatUnits(marketItem.totalSupply),
+                  borrow: formatUnits(marketItem.totalBorrow),
+                  collateral: tokens[marketItem.inputToken.id.toLowerCase()],
+                  lltv: Number(formatUnits(BigInt(marketItem.lltv))),
+                  credora: "rating",
+                } as VaultBreakdown;
+              }
+            })
+            .filter((item) => item !== undefined);
+
+          let totalSupply = 0;
+          let totalBorrows = 0;
+          for (const breakdown of breakdownList) {
+            totalSupply += Number(breakdown.supply);
+            totalBorrows += Number(breakdown.borrow);
+          }
+          setTotalBorrow(totalBorrows);
+
+          const updated = breakdownList.map((item) => {
+            return {
+              ...item,
+              allowcation:
+                totalSupply > 0
+                  ? (Number(item.supply) * 100) / totalSupply
+                  : "0",
+            } as VaultBreakdown;
+          });
+          setBreakdowns(updated);
+
+          setVaultInfo({
+            vaultId: fetchedVault.id,
+            vaultName: fetchedVault.name,
+            assetAddress: fetchedVault.asset.id,
+            tokenSymbol: tokens[fetchedVault.asset.id.toLowerCase()],
+            netAPY: 0,
+            totalDeposits: totalSupply,
+            totalValueUSD: 0,
+            curator: fetchedVault.curator,
+            collateral: [],
+            unsecured: 0,
+            guardian: fetchedVault.guardian ? fetchedVault.guardian.id : "",
+            tokenBalance: initBalance,
+            // market: marketInfo,
+          } as InvestmentData);
+        }
+      } catch (err) {
+        console.log(err);
+        router.push("/earn");
+      }
+    };
+
+    initVault();
+  }, [vaultId]);
 
   return (
-    <div>
-      <div className="mb-8 overflow-visible">
-        <HeaderEarnDetail></HeaderEarnDetail>
-        <InfosEarnDetails></InfosEarnDetails>
-      </div>
-      <h1 className="text-4xl mt-16 mb-8">Vault Breakdown</h1>
-      <DetailEarnMoreTable />
-    </div>
+    <>
+      {vaultInfo && (
+        <>
+          <div className="mb-8 overflow-visible">
+            <HeaderEarnDetail vault={vaultInfo} />
+            <InfosEarnDetails vault={vaultInfo} totalBorrow={totalBorrow} />
+          </div>
+          <h1 className="text-4xl mt-16 mb-8">Vault Breakdown</h1>
+          <DetailEarnMoreTable breakdowns={breakdowns} />
+        </>
+      )}
+    </>
   );
 };
 

@@ -5,7 +5,12 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { DocumentNode } from "graphql";
 import { MORE_SUBGRAPH } from "./const";
 import { GraphMarket, GraphVault, GraphPosition } from "@/types";
-import { positionQuery, marketsQuery, vaultsQuery } from "./query";
+import {
+  positionQuery,
+  marketsQuery,
+  vaultsQuery,
+  vaultFilterQuery,
+} from "./query";
 
 const apolloFetcher = async (query: DocumentNode) => {
   const client = new ApolloClient({
@@ -52,4 +57,9 @@ export const fetchPositions = async (
   } else {
     return [];
   }
+};
+
+export const fetchVaultInfo = async (vault: string): Promise<GraphVault> => {
+  const vaultInfo = await apolloFetcher(vaultFilterQuery(vault));
+  return vaultInfo.data.metaMorpho as GraphVault;
 };

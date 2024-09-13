@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
 import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
@@ -10,7 +10,6 @@ const BorrowDetailPage: React.FC = () => {
   const router = useRouter();
 
   // Check if the router is ready and has populated all its fields
- 
 
   return (
     <div>
@@ -21,7 +20,6 @@ const BorrowDetailPage: React.FC = () => {
         <GraphsBorrowDetails></GraphsBorrowDetails>
         <ActivityBorrowDetail></ActivityBorrowDetail>
       </div>
-      
     </div>
   );
 };

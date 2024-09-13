@@ -14,4 +14,7 @@ export interface GraphVault {
   };
   lastTotalAssets: string;
   totalShares: string;
+  guardian: {
+    id: string;
+  } | null;
 }

@@ -11,3 +11,4 @@ export * from "./graphVault";
 export * from "./borrowMarket";
 export * from "./graphPosition";
 export * from "./borrowPosition";
+export * from "./vaultBreakdown";

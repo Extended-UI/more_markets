@@ -66,6 +66,7 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
             collateral: _.uniq(activeCollaterals),
             unsecured: 0,
             tokenBalance,
+            guardian: vault.guardian ? vault.guardian.id : "",
             // market: marketInfo,
           } as InvestmentData;
         });
@@ -81,7 +82,7 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
   }, [userAddress, vaultsArr, marketsArr]);
 
   const goToDetail = (item: InvestmentData) => {
-    router.push("/earn/" + item.tokenSymbol);
+    router.push("/earn/" + item.vaultId);
   };
 
   return (
@@ -244,7 +245,7 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                               <VaultDeposit
                                 item={item}
                                 closeModal={closeModal}
-                              ></VaultDeposit>
+                              />
                             </div>
                           )}
                         </ButtonDialog>

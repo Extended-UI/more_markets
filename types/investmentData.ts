@@ -12,6 +12,7 @@ export interface InvestmentData {
   curator: string;
   collateral: string[];
   unsecured: number;
+  guardian: string;
   tokenBalance: GetBalanceReturnType;
   // market: Market | null;
 }

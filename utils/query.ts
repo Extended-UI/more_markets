@@ -67,3 +67,32 @@ export const vaultsQuery = gql`
     }
   }
 `;
+
+export const vaultFilterQuery = (vaultAddress: string): DocumentNode => {
+  return gql`
+    {
+      metaMorpho(
+        id: "${vaultAddress.toLowerCase()}"
+      ) {
+        id
+        supplyQueue(first: 100) {
+          market {
+            id
+          }
+        }
+        name
+        curator {
+          id
+        }
+        asset {
+          id
+        }
+        lastTotalAssets
+        totalShares
+        guardian {
+          id
+        }
+      }
+    }
+  `;
+};
