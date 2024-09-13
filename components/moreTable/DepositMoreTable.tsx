@@ -1,7 +1,7 @@
 "use client";
 
 import _ from "lodash";
-import { formatUnits } from "ethers";
+import { formatUnits, ZeroAddress } from "ethers";
 import React, { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import TableHeaderCell from "./MoreTableHeader";
@@ -12,7 +12,7 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
-import { tokens } from "@/utils/const";
+import { tokens, curators } from "@/utils/const";
 import { getTokenBallance, getVaultDetail } from "@/utils/contract";
 import { GraphMarket, GraphVault, InvestmentData } from "@/types";
 
@@ -71,7 +71,10 @@ const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                 )
               ),
               totalValueUSD: 0,
-              curator: vault.curator,
+              curator:
+                vault.curator && vault.curator.id != ZeroAddress
+                  ? curators[vault.curator.id]
+                  : "",
               collateral: _.uniq(activeCollaterals),
               unsecured: 0,
               tokenBalance,
