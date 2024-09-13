@@ -8,7 +8,10 @@ interface IconTokenProps {
 const IconToken: React.FC<IconTokenProps> = ({ tokenName, className }) => {
   return (
     <div className={`${className}`}>
-      <img src={`/assets/tokens/${tokenName}.svg`} alt={tokenName} />
+      <img
+        src={`/assets/tokens/${tokenName.toLowerCase()}.svg`}
+        alt={tokenName}
+      />
     </div>
   );
 };
