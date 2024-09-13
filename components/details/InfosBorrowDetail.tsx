@@ -43,7 +43,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           infoText="The total amount of tokens currently lent in the given market."
           className="flex-1 m-2 min-w-[220px]"
         >
-          <span className="text-[#888888] font-[600] "></span>
+          <span className="text-[#888888] font-[600] ">$</span>{" "}
           <span className="">
             {Number(formatUnits(item.totalBorrow)).toLocaleString()}
           </span>

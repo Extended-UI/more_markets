@@ -8,7 +8,9 @@ export interface GraphVault {
   id: string;
   supplyQueue: IQueue[];
   name: string;
-  curator: string | null;
+  curator: {
+    id: string;
+  } | null;
   asset: {
     id: string;
   };

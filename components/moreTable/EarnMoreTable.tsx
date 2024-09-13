@@ -1,7 +1,7 @@
 "use client";
 
 import _ from "lodash";
-import { formatUnits } from "ethers";
+import { formatUnits, ZeroAddress } from "ethers";
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { GraphMarket, GraphVault, InvestmentData } from "@/types";
-import { tokens } from "@/utils/const";
+import { tokens, curators } from "@/utils/const";
 import { getTokenBallance } from "@/utils/contract";
 
 interface Props {
@@ -62,7 +62,10 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
               formatUnits(vault.lastTotalAssets, tokenBalance.decimals)
             ),
             totalValueUSD: 0,
-            curator: vault.curator,
+            curator:
+              vault.curator && vault.curator.id != ZeroAddress
+                ? curators[vault.curator.id]
+                : "",
             collateral: _.uniq(activeCollaterals),
             unsecured: 0,
             tokenBalance,
@@ -211,7 +214,7 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                   <td className="py-4 px-6 items-center h-full">
                     <div className="flex">
                       <div className="mr-2 w-5 h-5">
-                        <IconToken tokenName="abt" />
+                        <IconToken tokenName={tokens[item.assetAddress]} />
                       </div>
                       {item.curator}
                     </div>
