@@ -16,7 +16,15 @@ export const positionQuery = (account: string): DocumentNode => {
         id
       }
       balance
-      market
+      borrows {
+        amount
+      }
+      repays {
+        amount
+      }
+      market {
+        id
+      }
     }
   }`;
 };

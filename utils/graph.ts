@@ -4,7 +4,7 @@ import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { DocumentNode } from "graphql";
 import { MORE_SUBGRAPH } from "./const";
-import { GraphMarket, GraphVault } from "@/types";
+import { GraphMarket, GraphVault, GraphPosition } from "@/types";
 import { positionQuery, marketsQuery, vaultsQuery } from "./query";
 
 const apolloFetcher = async (query: DocumentNode) => {
@@ -19,10 +19,6 @@ const apolloFetcher = async (query: DocumentNode) => {
     query: query,
     fetchPolicy: "cache-first",
   });
-};
-
-const fetchUserPositions = async (account: string) => {
-  const positionInfos = await apolloFetcher(positionQuery(account));
 };
 
 export const fetchMarkets = async (): Promise<GraphMarket[]> => {
@@ -43,4 +39,17 @@ export const fetchVaults = async (): Promise<GraphVault[]> => {
   );
 
   return validVaults;
+};
+
+export const fetchPositions = async (
+  account: string | undefined
+): Promise<GraphPosition[]> => {
+  if (account) {
+    const positionsInfo = await apolloFetcher(positionQuery(account));
+    const { positions } = positionsInfo.data;
+
+    return positions as GraphPosition[];
+  } else {
+    return [];
+  }
 };

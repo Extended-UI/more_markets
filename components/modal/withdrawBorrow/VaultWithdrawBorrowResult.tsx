@@ -1,40 +1,40 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import { useAccount } from "wagmi";
+import InputTokenMax from "../../input/InputTokenMax";
+import TotalVolumeToken from "../../token/TotalVolumeToken";
 import MoreButton from "../../moreButton/MoreButton";
 import Icon from "../../FontAwesomeIcon";
+import ListIconToken from "@/components/token/ListIconToken";
 import TokenAmount from "@/components/token/TokenAmount";
-import { InvestmentData } from "@/types";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { config } from "@/utils/wagmi";
+import { tokens } from "@/utils/const";
+import { BorrowPosition } from "@/types";
 
 interface Props {
+  item: BorrowPosition;
   amount: number;
   txhash: string;
-  item: InvestmentData;
   processDone: () => void;
   closeModal: () => void;
 }
 
-const VaultDepositResult: React.FC<Props> = ({
+const VaultWithdrawBorrowResult: React.FC<Props> = ({
   item,
-  amount,
   txhash,
+  amount,
   processDone,
 }) => {
-  const { address: userAddress } = useAccount();
   const [executed, setExecuted] = useState(false);
-
-  const txHashStr =
-    txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
   useEffect(() => {
     const waitTx = async () => {
       setExecuted(false);
 
       try {
-        if (userAddress && txhash.length > 0) {
+        if (txhash.length > 0) {
           await waitForTransactionReceipt(config, {
             hash: txhash as `0x${string}`,
           });
@@ -47,29 +47,31 @@ const VaultDepositResult: React.FC<Props> = ({
     };
 
     waitTx();
-  }, [userAddress, txhash]);
+  }, [txhash]);
+
+  const txHashStr =
+    txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
+
+  const collateralToken =
+    tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
+  const loanToken =
+    tokens[item.marketParams.loanToken.toLowerCase()].toUpperCase();
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
       <div className="text-xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
-      <div className="text-l mb-5 px-4">
-        <span>
-          <Icon
-            icon="circle-check"
-            className="text-secondary text-xl cursor-pointer mr-5"
-          />
-        </span>
-        Execute the following actions
+      <div className="flex items-center mb-10 px-8 gap-2">
+        <ListIconToken iconNames={["usdc", "abt"]} className="w-7 h-7" />
+        <div className="text-l   flex items-center'">
+          {" "}
+          {collateralToken} / {loanToken}
+        </div>
       </div>
-      <div className="more-bg-primary px-4 mx-5 ">
-        <TokenAmount
-          title="Deposit"
-          token={item.tokenSymbol}
-          amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
-        />
+
+      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5 ">
+        Withdraw {amount} {collateralToken}
       </div>
+
       {txhash.length > 0 && (
         <>
           <div className="text-l my-5 px-4">
@@ -110,4 +112,4 @@ const VaultDepositResult: React.FC<Props> = ({
   );
 };
 
-export default VaultDepositResult;
+export default VaultWithdrawBorrowResult;

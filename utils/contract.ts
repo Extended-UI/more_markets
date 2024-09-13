@@ -190,8 +190,6 @@ export const getMarketParams = async (
     args: [marketId as `0x${string}`],
   });
 
-  console.log(params);
-
   return {
     isPremiumMarket: (params as any[])[0],
     loanToken: (params as any[])[1],
@@ -461,14 +459,14 @@ export const supplycollateralAndBorrow = async (
       false,
     ],
   });
-  
+
   // encode transferFrom2
   const transferFrom2 = encodeFunctionData({
     abi: BundlerAbi,
     functionName: "transferFrom2",
     args: [supplyAsset, supplyAmount],
   });
-  
+
   // encode morphoSupplyCollateral
   const morphoSupplyCollateral = encodeFunctionData({
     abi: BundlerAbi,
@@ -490,7 +488,7 @@ export const supplycollateralAndBorrow = async (
       "",
     ],
   });
-  
+
   // encode morphoBorrow
   const morphoBorrow = encodeFunctionData({
     abi: BundlerAbi,
@@ -518,6 +516,103 @@ export const supplycollateralAndBorrow = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[approve2, transferFrom2, morphoSupplyCollateral, morphoBorrow]],
+  });
+
+  return txHash;
+};
+
+export const supplycollateral = async (
+  supplyAsset: string,
+  account: string,
+  signhash: string,
+  deadline: bigint,
+  supplyAmount: bigint,
+  nonce: number,
+  marketParams: MarketParams
+): Promise<string> => {
+  // encode approve2
+  const approve2 = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "approve2",
+    args: [
+      [
+        [supplyAsset, supplyAmount, Uint48Max, nonce],
+        contracts.MORE_BUNDLER,
+        deadline,
+      ],
+      signhash,
+      false,
+    ],
+  });
+
+  // encode transferFrom2
+  const transferFrom2 = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "transferFrom2",
+    args: [supplyAsset, supplyAmount],
+  });
+
+  // encode morphoSupplyCollateral
+  const morphoSupplyCollateral = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "morphoSupplyCollateral",
+    args: [
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+      supplyAmount,
+      account,
+      "",
+    ],
+  });
+
+  const txHash = await writeContract(config, {
+    ...bundlerInstance,
+    functionName: "multicall",
+    args: [[approve2, transferFrom2, morphoSupplyCollateral]],
+  });
+
+  return txHash;
+};
+
+export const withdrawCollateral = async (
+  marketParams: MarketParams,
+  amount: bigint,
+  account: string
+) => {
+  // encode morphoWithdrawCollateral
+  const morphoWithdrawCollateral = encodeFunctionData({
+    abi: BundlerAbi,
+    functionName: "morphoWithdrawCollateral",
+    args: [
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+      amount,
+      account,
+    ],
+  });
+
+  const txHash = await writeContract(config, {
+    ...bundlerInstance,
+    functionName: "multicall",
+    args: [[morphoWithdrawCollateral]],
   });
 
   return txHash;

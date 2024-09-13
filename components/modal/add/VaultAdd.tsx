@@ -1,40 +1,22 @@
 "use client";
+
 import React, { useState } from "react";
-import VaultAddSet from "./VaultAddSet";
-import VaultAddTransaction from "./VaultAddTransaction";
-import VaultAddConfirm from "./VaultAddConfirm";
-import { MarketParams } from "@/types/marketParams";
+import VaultAddPush from "./VaultAddPush";
+import VaultAddInput from "./VaultAddInput";
+import VaultAddResult from "./VaultAddResult";
+import { BorrowPosition } from "@/types";
 
 interface Props {
-  title: string;
-  token: string;
-  balance: number;
-  apy: number;
-  ltv: string;
-  totalAdd: number;
-  totalTokenAmount: number;
-  curator: string;
-  marketParams: MarketParams | undefined;
+  item: BorrowPosition;
   closeModal: () => void;
 }
 
-const VaultAdd: React.FC<Props> = ({
-  title,
-  token,
-  balance,
-  apy,
-  ltv,
-  totalAdd,
-  totalTokenAmount,
-  curator,
-  marketParams,
-  closeModal,
-}) => {
+const VaultAdd: React.FC<Props> = ({ item, closeModal }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
+  const [txHash, setTxHash] = useState("");
 
   const handleSetAdd = (amount: number) => {
-    console.log("DEPOSIT SET", amount);
     setAmount(amount);
     setStep(2);
   };
@@ -46,57 +28,38 @@ const VaultAdd: React.FC<Props> = ({
 
   const handleProcessDone = () => {
     console.log("DEPOSIT DONE");
+    closeModal();
   };
-
-  console.log("test", apy);
 
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
-          <VaultAddSet
-            title={title}
-            token={token}
-            balance={balance}
-            apy={apy}
-            ltv={ltv}
-            totalAdd={totalAdd}
-            totalTokenAmount={totalTokenAmount}
-            marketParams={marketParams}
-            setAmount={(amount: number) => handleSetAdd(amount)}
+          <VaultAddInput
+            item={item}
             closeModal={closeModal}
+            setAmount={(amount: number) => handleSetAdd(amount)}
           />
         );
       case 2:
         return (
-          <VaultAddTransaction
-            title={title}
-            token={token}
-            balance={balance}
-            apy={apy}
-            ltv={ltv}
-            totalAdd={totalAdd}
-            totalTokenAmount={totalTokenAmount}
-            curator={curator}
+          <VaultAddPush
+            item={item}
             amount={amount}
-            validAdd={() => handleValidAdd()}
+            setTxHash={setTxHash}
             closeModal={closeModal}
+            validAdd={handleValidAdd}
           />
         );
       case 3:
         return (
-          <VaultAddConfirm
+          <VaultAddResult
+            item={item}
+            txhash={txHash}
             amount={amount}
-            title={title}
-            token={token}
-            balance={balance}
-            apy={apy}
-            ltv={ltv}
-            totalAdd={totalAdd}
-            totalTokenAmount={totalTokenAmount}
-            processDone={() => handleProcessDone()}
             closeModal={closeModal}
-          ></VaultAddConfirm>
+            processDone={handleProcessDone}
+          />
         );
       default:
         return null; // ou une vue par défaut

@@ -19,7 +19,6 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
   index,
 }) => {
   const totalSupply = BigInt(item.totalSupply);
-  console.log(item.totalSupply, item.totalBorrow);
   const utilization =
     totalSupply == BigInt(0)
       ? 0

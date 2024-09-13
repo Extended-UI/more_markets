@@ -9,3 +9,5 @@ export * from "./vaultData";
 export * from "./graphMarket";
 export * from "./graphVault";
 export * from "./borrowMarket";
+export * from "./graphPosition";
+export * from "./borrowPosition";
