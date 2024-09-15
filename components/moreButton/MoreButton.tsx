@@ -20,6 +20,8 @@ const MoreButton: React.FC<ButtonProps> = ({
   // Use state to store the color dynamically
   const [myColor, setMyColor] = useState("#737373");
 
+  const isFaucet = text == "Get Testnet Tokens";
+
   useEffect(() => {
     switch (color) {
       case "primary":
@@ -46,8 +48,12 @@ const MoreButton: React.FC<ButtonProps> = ({
     width: "auto",
     whiteSpace: "nowrap",
   };
+  if (isFaucet) {
+    defaultStyle.paddingTop = "7px";
+    defaultStyle.paddingBottom = "7px";
+  }
   // Combining default class with any additional classes provided
-  const classes = `  min-h-10 border   px-4 rounded-[5px] ${className || ""}`;
+  const classes = ` min-h-10 border px-4 rounded-[5px] ${className || ""}`;
 
   return (
     <button

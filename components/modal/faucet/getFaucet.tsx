@@ -1,5 +1,6 @@
 "use client";
 
+import SyncLoader from "react-spinners/SyncLoader";
 import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 
@@ -10,10 +11,12 @@ interface Props {
 
 const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
   const [completed, setCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const initFaucet = async () => {
     if (wallet) {
       setCompleted(false);
+      setIsLoading(true);
       try {
         const res = await fetch("/api/faucet", {
           method: "POST",
@@ -31,6 +34,7 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
         }
 
         setCompleted(true);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -39,9 +43,19 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
-      <div className="text-4xl mb-10 px-4 pt-10 ">Faucet</div>
-      <div className="text-l mb-5 px-4">Transfer 10 Flow</div>
-      <div className="text-l mb-5 px-4">Transfer each 1000 test tokens</div>
+      <div className="text-4xl mb-10 px-4 pt-10 ">
+        Faucet - Get Your Testnet Tokens
+      </div>
+      <div className="text-xl mb-5 px-4">
+        <p className="mb-5">
+          Claim free tokens to use within MORE Markets on Flow Testnet. These
+          tokens are for testing purposes only and have no real-world value.
+        </p>
+        <p />
+        <p className="text-xl">Action Summary:</p>1 Flow will be transferred to
+        your account. 1000 USDf, 1000 USDCf, 1000 ETHf, 1000 BTCf, and 1000
+        ankr.FLOW will be transferred.
+      </div>
       <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
         <div className="flex justify-end mr-5">
           {completed ? (
@@ -51,6 +65,13 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
               onClick={closeModal}
               color="primary"
             />
+          ) : isLoading ? (
+            <button
+              className="text-lg px-5 py-3 wallet-networks ml-3"
+              color="primary"
+            >
+              <SyncLoader color="#0900f8" />
+            </button>
           ) : (
             <MoreButton
               className="text-2xl py-2"

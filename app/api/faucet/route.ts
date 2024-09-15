@@ -22,6 +22,8 @@ interface IMintRequet {
   callData: string;
 }
 
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
 export async function POST(req: NextRequest, res: NextResponse) {
   const params = await req.json();
   const paramWallet = params.wallet;
@@ -34,39 +36,46 @@ export async function POST(req: NextRequest, res: NextResponse) {
     });
     await tx.wait();
 
-    // then mint tokens
-    let reqList: IMintRequet[] = [];
-    _.forOwn(tokens, async (value, token) => {
-      const decimals = ["USDCf", "USDf"].includes(value)
-        ? 6
-        : ["BTCf"].includes(value)
-        ? 8
-        : 18;
+    // wait for 2sec
+    await delay(2000);
 
-      const amount = parseUnits("1000", decimals);
-      const mintRequest = encodeFunctionData({
-        abi: ERC20Abi,
-        functionName: "mint",
-        args: [paramWallet, amount],
+    try {
+      // then mint tokens
+      let reqList: IMintRequet[] = [];
+      _.forOwn(tokens, async (value, token) => {
+        const decimals = ["USDCf", "USDf"].includes(value)
+          ? 6
+          : ["BTCf"].includes(value)
+          ? 8
+          : 18;
+
+        const amount = parseUnits("1000", decimals);
+        const mintRequest = encodeFunctionData({
+          abi: ERC20Abi,
+          functionName: "mint",
+          args: [paramWallet, amount],
+        });
+
+        reqList.push({
+          target: token,
+          callData: mintRequest,
+        });
       });
 
-      reqList.push({
-        target: token,
-        callData: mintRequest,
+      const mintTxRequest = encodeFunctionData({
+        abi: MulticallAbi,
+        functionName: "aggregate",
+        args: [reqList],
       });
-    });
 
-    const mintTxRequest = encodeFunctionData({
-      abi: MulticallAbi,
-      functionName: "aggregate",
-      args: [reqList],
-    });
-
-    const txHash = faucetWallet.sendTransaction({
-      to: contracts.MULTICALL3,
-      data: mintTxRequest,
-    });
-    (await txHash).wait();
+      const txHash = faucetWallet.sendTransaction({
+        to: contracts.MULTICALL3,
+        data: mintTxRequest,
+      });
+      (await txHash).wait();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return NextResponse.json({ params });
