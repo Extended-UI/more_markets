@@ -24,11 +24,12 @@ interface IMintRequet {
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const params = await req.json();
+  const paramWallet = params.wallet;
 
-  if (params.wallet) {
+  if (paramWallet) {
     // transfer flow
     const tx = await faucetWallet.sendTransaction({
-      to: params.wallet,
+      to: paramWallet,
       value: parseUnits("1"),
     });
     await tx.wait();
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       const mintRequest = encodeFunctionData({
         abi: ERC20Abi,
         functionName: "mint",
-        args: [params.wallet, amount],
+        args: [paramWallet, amount],
       });
 
       reqList.push({

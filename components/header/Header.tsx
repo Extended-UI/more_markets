@@ -24,7 +24,7 @@ const Header: FC = () => {
 
         <div className="w-full flex justify-end space-x-4 mt-10 sm:mt-0">
           {userAddress && (
-            <ButtonDialog color="primary" buttonText="Get faucet">
+            <ButtonDialog color="primary" buttonText="Get Testnet Tokens">
               {(closeModal) => (
                 <div className="h-full w-full">
                   <GetFaucet wallet={userAddress} closeModal={closeModal} />

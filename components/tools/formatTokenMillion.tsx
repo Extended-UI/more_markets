@@ -22,7 +22,6 @@ const FormatTokenMillion: React.FC<Props> = ({
 }) => {
   const { fetchTokenPrice } = usePrice();
   const tokenPrice = value > 0 ? fetchTokenPrice(token) : 0;
-  console.log(tokenPrice, token);
 
   // Vous pouvez ajouter une vérification ici si besoin
   return (

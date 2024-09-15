@@ -26,8 +26,7 @@ const MoreGraphicsV1: React.FC<Props> =  ({ datasets, labelsX, comment, isFill, 
       acc[dataset.label] = true; // Par défaut, tous les graphiques sont visibles
       return acc;
     }, {});
-    setVisibility(initialVisibility);    
-    console.log("visibility create: ", visibility);
+    setVisibility(initialVisibility);
   }, [datasets]);
 
 
