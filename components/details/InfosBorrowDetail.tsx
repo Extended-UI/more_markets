@@ -70,7 +70,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           className="flex-1 m-2 min-w-[180px]"
         >
           <span className="">{"N/A"}</span>
-          <span className="text-[#888888] font-[600] ">%</span>
+          {/* <span className="text-[#888888] font-[600] ">%</span> */}
         </InfoDetailGrey>
       </div>
       {/* <h1 className="text-2xl mt-16 mb-8">Open a position</h1>
