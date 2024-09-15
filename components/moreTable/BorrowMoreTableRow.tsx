@@ -1,4 +1,5 @@
 import React from "react";
+import { useAccount } from "wagmi";
 import { formatEther } from "ethers";
 import TokenName from "../token/TokenName";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
@@ -18,6 +19,8 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
   item,
   index,
 }) => {
+  const { address: userAddress } = useAccount();
+
   const totalSupply = BigInt(item.totalSupply);
   const utilization =
     totalSupply == BigInt(0)
@@ -70,24 +73,26 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
           />
         </div>
       </td>
-      <td
-        className="py-4 px-6 items-center justify-end h-full"
-        style={{
-          paddingRight: 10,
-          right: 0,
-          backgroundColor: `${index % 2 === 0 ? "#141414" : "#191919"}`,
-        }}
-      >
-        <div onClick={(event) => event.stopPropagation()}>
-          <ButtonDialog color="secondary" buttonText="Borrow">
-            {(closeModal) => (
-              <div className=" w-full h-full">
-                <VaultBorrow item={item} closeModal={closeModal} />
-              </div>
-            )}
-          </ButtonDialog>
-        </div>
-      </td>
+      {userAddress && (
+        <td
+          className="py-4 px-6 items-center justify-end h-full"
+          style={{
+            paddingRight: 10,
+            right: 0,
+            backgroundColor: `${index % 2 === 0 ? "#141414" : "#191919"}`,
+          }}
+        >
+          <div onClick={(event) => event.stopPropagation()}>
+            <ButtonDialog color="secondary" buttonText="Borrow">
+              {(closeModal) => (
+                <div className=" w-full h-full">
+                  <VaultBorrow item={item} closeModal={closeModal} />
+                </div>
+              )}
+            </ButtonDialog>
+          </div>
+        </td>
+      )}
     </>
   );
 };

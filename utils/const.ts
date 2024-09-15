@@ -22,11 +22,11 @@ export const tokens: { [key: string]: string } = {
 };
 
 export const curators: { [key: string]: string } = {
-  "0x401d24076331c077099dea08fe898ea7ff7254cd": "Lighthouse curator",
-  "0xa1947019f5989c5c417cc6eece404d684b855bb2": "Lighthouse curator",
-  "0xf3cfc1694ed953764a699dac485cf3ea6e259fa4": "Lighthouse curator",
-  "0xa05a8570c963ff6710281d57d48c4f902ff16f37": "Lighthouse curator",
-  "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Lighthouse curator",
+  "0x401d24076331c077099dea08fe898ea7ff7254cd": "Lighthouse Labs",
+  "0xa1947019f5989c5c417cc6eece404d684b855bb2": "Lighthouse Labs",
+  "0xf3cfc1694ed953764a699dac485cf3ea6e259fa4": "Lighthouse Labs",
+  "0xa05a8570c963ff6710281d57d48c4f902ff16f37": "Lighthouse Labs",
+  "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Lighthouse Labs",
 };
 
 export const MORE_SUBGRAPH =
@@ -59,10 +59,10 @@ export const permit2Instance = {
 export const Uint48Max = 281474976710655;
 
 export const coingecko_ids: { [key in string]: string } = {
-  usdcf: "usdc",
-  btcf: "bitcoin",
-  ethf: "ethereum",
-  usdf: "tether",
-  wflow: "flow",
-  "ankr.flow": "ankr-network",
+  usdc: "usdc",
+  bitcoin: "bitcoin",
+  ethereum: "ethereum",
+  tether: "tether",
+  flow: "flow",
+  "ankr-network": "ankr-network",
 };

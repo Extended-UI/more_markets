@@ -24,7 +24,8 @@ const HeaderEarnDetail: React.FC<Props> = ({ vault }) => {
           <div>{vault.tokenSymbol.toUpperCase()}</div>
         </div>
         <div className="flex gap-2 items-center text-[14px] pt-2 leading-normal">
-          <IconToken tokenName={vault.tokenSymbol} className="w-6 h-6 " />
+          {/* <IconToken tokenName={vault.tokenSymbol} className="w-6 h-6 " /> */}
+          <IconToken tokenName="wflow" className="w-6 h-6" />
           <div>
             {vault.curator && vault.curator.length > 0 ? vault.curator : "-"}
           </div>

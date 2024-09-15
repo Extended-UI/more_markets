@@ -47,8 +47,8 @@ const BorrowDetailPage: React.FC = () => {
           <HeaderBorrowDetail item={borrowMarket} />
           <InfosBorrowDetails item={borrowMarket} />
           <PositionMoreTable item={borrowMarket} />
-          {/* <GraphsBorrowDetails /> */}
-          {/* <ActivityBorrowDetail /> */}
+          <GraphsBorrowDetails />
+          <ActivityBorrowDetail />
         </div>
       )}
     </>

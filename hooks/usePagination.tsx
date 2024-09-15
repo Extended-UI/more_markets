@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface UsePaginationReturn {
   currentPage: number;
@@ -8,16 +8,19 @@ interface UsePaginationReturn {
   goToPreviousPage: () => void;
 }
 
-function usePagination(totalItems: number, itemsPerPage: number = 5): UsePaginationReturn {
+function usePagination(
+  totalItems: number,
+  itemsPerPage: number = 5
+): UsePaginationReturn {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const goToNextPage = () => {
-    setCurrentPage(current => current < totalPages ? current + 1 : current);
+    setCurrentPage((current) => (current < totalPages ? current + 1 : current));
   };
 
   const goToPreviousPage = () => {
-    setCurrentPage(current => current > 1 ? current - 1 : current);
+    setCurrentPage((current) => (current > 1 ? current - 1 : current));
   };
 
   return {
@@ -25,7 +28,7 @@ function usePagination(totalItems: number, itemsPerPage: number = 5): UsePaginat
     setCurrentPage,
     totalPages,
     goToNextPage,
-    goToPreviousPage
+    goToPreviousPage,
   };
 }
 

@@ -65,7 +65,7 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
             curator:
               vault.curator && vault.curator.id != ZeroAddress
                 ? curators[vault.curator.id]
-                : "Lighthouse curator",
+                : "",
             collateral: _.uniq(activeCollaterals),
             unsecured: 0,
             tokenBalance,
@@ -75,7 +75,6 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
         });
 
         const fetchedVaults = await Promise.all(promises);
-        console.log(fetchedVaults);
         setVaults(fetchedVaults);
       }
 
@@ -216,7 +215,7 @@ const EarnMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                   <td className="py-4 px-6 items-center h-full">
                     <div className="flex">
                       <div className="mr-2 w-5 h-5">
-                        <IconToken tokenName={tokens[item.assetAddress]} />
+                        <IconToken tokenName="wflow" />
                       </div>
                       {item.curator}
                     </div>
