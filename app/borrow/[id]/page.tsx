@@ -17,20 +17,24 @@ const BorrowDetailPage: React.FC = () => {
 
   const [borrowMarket, setBorrowMarket] = useState<BorrowMarket | null>(null);
 
-  const marketId = params.replace("/borrow/", "");
+  const marketId = params ? params.replace("/borrow/", "") : "";
 
   useEffect(() => {
     const initMarket = async () => {
       try {
-        const [marketInfo, params] = await Promise.all([
-          fetchMarket(marketId),
-          getMarketParams(marketId),
-        ]);
+        if (marketId.length > 0) {
+          const [marketInfo, marketParams] = await Promise.all([
+            fetchMarket(marketId),
+            getMarketParams(marketId),
+          ]);
 
-        setBorrowMarket({
-          ...marketInfo,
-          marketParams: params,
-        } as BorrowMarket);
+          setBorrowMarket({
+            ...marketInfo,
+            marketParams: marketParams,
+          } as BorrowMarket);
+        } else {
+          router.push("/borrow");
+        }
       } catch (err) {
         console.log(err);
         router.push("/borrow");
@@ -38,7 +42,7 @@ const BorrowDetailPage: React.FC = () => {
     };
 
     initMarket();
-  }, [marketId]);
+  }, [params]);
 
   return (
     <>
