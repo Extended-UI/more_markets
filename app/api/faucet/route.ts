@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { encodeFunctionData } from "viem";
-import { JsonRpcProvider, Wallet, Contract, parseUnits } from "ethers";
+import { JsonRpcProvider, Wallet, parseUnits } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
 
 import { contracts, tokens } from "@/utils/const";
@@ -10,11 +10,6 @@ import { MulticallAbi } from "../../abi/Multicall";
 const provider = new JsonRpcProvider("https://testnet.evm.nodes.onflow.org/");
 const faucetWallet = new Wallet(process.env.faucet_key as string, provider);
 const faucetWallet1 = new Wallet(process.env.faucet_key1 as string, provider);
-const multicallContract = new Contract(
-  contracts.MULTICALL3,
-  MulticallAbi,
-  provider
-);
 
 interface IMintRequet {
   target: string;
@@ -61,11 +56,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
       });
 
       // transfer flow
-      const tx = await faucetWallet.sendTransaction({
+      faucetWallet.sendTransaction({
         to: paramWallet,
         value: parseUnits("1"),
       });
-      await tx.wait();
     } catch (err) {
       console.log(err);
     }
