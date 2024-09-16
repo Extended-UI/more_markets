@@ -26,11 +26,10 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
           },
         });
 
-        console.log(res);
         if (res.ok) {
-          console.log("Yeai!");
+          // console.log("Yeai!");
         } else {
-          console.log("Oops! Something is wrong.");
+          // console.log("Oops! Something is wrong.");
         }
 
         setCompleted(true);

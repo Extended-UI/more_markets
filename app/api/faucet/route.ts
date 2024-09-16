@@ -50,16 +50,18 @@ export async function POST(req: NextRequest, res: NextResponse) {
         args: [reqList],
       });
 
-      faucetWallet1.sendTransaction({
+      const mintTx = faucetWallet1.sendTransaction({
         to: contracts.MULTICALL3,
         data: mintTxRequest,
       });
+      (await mintTx).wait();
 
       // transfer flow
-      faucetWallet.sendTransaction({
+      const tx = await faucetWallet.sendTransaction({
         to: paramWallet,
         value: parseUnits("1"),
       });
+      await tx.wait();
     } catch (err) {
       console.log(err);
     }
