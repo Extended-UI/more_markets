@@ -10,7 +10,7 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
-import { getTokenInfo, formatTokenValue } from "@/utils/utils";
+import { formatTokenValue } from "@/utils/utils";
 import { InvestmentData, IInvestmentProps } from "@/types";
 import { getTokenBallance, getVaultDetail } from "@/utils/contract";
 
@@ -167,9 +167,9 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     <td className=" items-start   h-full ">
                       <div className="flex justify-start">
                         <FormatTokenMillion
-                          value={item.totalDeposits}
+                          value={item.userDeposits}
                           token={item.assetAddress}
-                          totalValue={item.totalValueUSD}
+                          totalValue={0}
                         />
                       </div>
                     </td>
