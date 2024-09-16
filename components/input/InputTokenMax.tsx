@@ -43,7 +43,7 @@ const InputTokenMax: React.FC<Props> = ({
         </div>
       </div>
       <div className="flex gap-2 items-center">
-        <IconToken className="h-8 w-8" tokenName={logo}></IconToken>
+        <IconToken className="h-8 w-8" tokenName={logo} />
         <div className="text-xl">{token.toUpperCase()}</div>
         <MoreButton
           text="Max"

@@ -1,4 +1,4 @@
-import { ZeroAddress, MaxUint256 } from "ethers";
+import { ZeroAddress, MaxUint256, parseUnits } from "ethers";
 import {
   readContract,
   readContracts,
@@ -23,6 +23,7 @@ import {
   bundlerInstance,
   permit2Instance,
   Uint48Max,
+  gasLimit
 } from "./const";
 import {
   getVaule,
@@ -55,7 +56,7 @@ export const setTokenAllowance = async (
     address: token as `0x${string}`,
     abi: erc20Abi,
     functionName: "approve",
-    args: [spender as `0x${string}`, amount],
+    args: [spender as `0x${string}`, amount]
   });
 
   await waitForTransactionReceipt(config, { hash: txHash });
@@ -325,6 +326,7 @@ export const sendToMarkets = async (
     abi: MarketsAbi,
     functionName: functionName,
     args: args,
+    gas: parseUnits(gasLimit, 6)
   });
 
   return txHash;
@@ -396,6 +398,7 @@ export const supplyToVaults = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[approve2, transferFrom2, erc4626Deposit]],
+    gas: parseUnits(gasLimit, 6)
   });
 
   return txHash;
@@ -430,6 +433,7 @@ export const withdrawFromVaults = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[permit, erc4626Withdraw]],
+    gas: parseUnits(gasLimit, 6)
   });
 
   return txHash;
@@ -516,6 +520,7 @@ export const supplycollateralAndBorrow = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[approve2, transferFrom2, morphoSupplyCollateral, morphoBorrow]],
+    gas: parseUnits(gasLimit, 6)
   });
 
   return txHash;
@@ -578,6 +583,7 @@ export const supplycollateral = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[approve2, transferFrom2, morphoSupplyCollateral]],
+    gas: parseUnits(gasLimit, 6)
   });
 
   return txHash;
@@ -613,6 +619,7 @@ export const withdrawCollateral = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[morphoWithdrawCollateral]],
+    gas: parseUnits(gasLimit, 6)
   });
 
   return txHash;

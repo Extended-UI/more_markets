@@ -66,3 +66,5 @@ export const coingecko_ids: { [key in string]: string } = {
   flow: "flow",
   "ankr-network": "ankr-network",
 };
+
+export const gasLimit = "0.8";
