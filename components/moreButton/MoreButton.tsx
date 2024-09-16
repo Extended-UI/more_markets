@@ -1,6 +1,8 @@
 // components/Button.tsx
 "use client";
-import React, { CSSProperties, ReactNode, useEffect, useState } from "react";
+
+import React, { CSSProperties, useEffect, useState } from "react";
+import SyncLoader from "react-spinners/SyncLoader";
 
 interface ButtonProps {
   text: string;
@@ -56,17 +58,25 @@ const MoreButton: React.FC<ButtonProps> = ({
   const classes = ` min-h-10 border px-4 rounded-[5px] ${className || ""}`;
 
   return (
-    <button
-      type="submit"
-      onClick={(e) => {
-        onClick();
-      }}
-      className={classes}
-      style={defaultStyle}
-      disabled={disabled}
-    >
-      {text}
-    </button>
+    <>
+      {disabled ? (
+        <button
+          className="text-lg px-5 py-1 wallet-networks"
+          color="primary"
+        >
+          <SyncLoader color={myColor} />
+        </button>
+      ) : (
+        <button
+          type="submit"
+          onClick={onClick}
+          className={classes}
+          style={defaultStyle}
+        >
+          {text}
+        </button>
+      )}
+    </>
   );
 };
 

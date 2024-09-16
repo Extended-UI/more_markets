@@ -1,6 +1,5 @@
 "use client";
 
-import SyncLoader from "react-spinners/SyncLoader";
 import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 
@@ -64,19 +63,13 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
               onClick={closeModal}
               color="primary"
             />
-          ) : isLoading ? (
-            <button
-              className="text-lg px-5 py-3 wallet-networks ml-3"
-              color="primary"
-            >
-              <SyncLoader color="#0900f8" />
-            </button>
           ) : (
             <MoreButton
               className="text-2xl py-2"
               text="Request"
               onClick={initFaucet}
               color="primary"
+              disabled={isLoading}
             />
           )}
         </div>
