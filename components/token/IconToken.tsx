@@ -17,7 +17,7 @@ const IconToken: React.FC<IconTokenProps> = ({
   return (
     <>
       <div className={`${className}`}>
-        <img src={`/assets/tokens/${tokenInfo.symbol}.svg`} alt={tokenName} />
+        <img src={`/assets/tokens/${tokenInfo.symbol.toLowerCase()}.svg`} alt={tokenInfo.symbol} />
       </div>
       {showSymbol && <div>{tokenInfo.symbol.toUpperCase()}</div>}
     </>
