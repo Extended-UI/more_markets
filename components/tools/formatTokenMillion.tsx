@@ -1,7 +1,9 @@
 import React from "react";
+import usePrice from "@/hooks/usePrice";
+import { getTokenInfo } from "@/utils/utils";
+
 import TotalVolumeToken from "../token/TotalVolumeToken";
 import FormatNumber from "./formatNumber";
-import usePrice from "@/hooks/usePrice";
 
 interface Props {
   token?: string;
@@ -23,6 +25,8 @@ const FormatTokenMillion: React.FC<Props> = ({
   const { fetchTokenPrice } = usePrice();
   const tokenPrice = value > 0 ? fetchTokenPrice(token) : 0;
 
+  const tokenInfo = getTokenInfo(token);
+
   // Vous pouvez ajouter une vérification ici si besoin
   return (
     <div
@@ -34,7 +38,7 @@ const FormatTokenMillion: React.FC<Props> = ({
         <span className="text-grey">{currency}</span>
         <FormatNumber value={value} />
       </div>
-      <div className="text-grey ">{token ? token.toUpperCase() : ""}</div>
+      <div className="text-grey">{tokenInfo.symbol}</div>
       <TotalVolumeToken totalDanger={totalDanger}>
         {/* {totalValue} */}
         {(tokenPrice * value).toFixed(2)}

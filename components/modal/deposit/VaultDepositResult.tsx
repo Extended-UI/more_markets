@@ -64,7 +64,7 @@ const VaultDepositResult: React.FC<Props> = ({
       <div className="more-bg-primary px-4 mx-5 ">
         <TokenAmount
           title="Deposit"
-          token={item.tokenSymbol}
+          token={item.assetAddress}
           amount={amount}
           ltv={"ltv"}
           totalTokenAmount={item.totalDeposits}

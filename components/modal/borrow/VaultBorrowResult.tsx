@@ -64,7 +64,7 @@ const VaultBorrowResult: React.FC<Props> = ({
         <div className="more-bg-primary px-4 mx-5">
           <TokenAmount
             title="Supply"
-            token={tokens[item.borrowedToken.id]}
+            token={item.borrowedToken.id}
             amount={supplyAmount}
             ltv={"ltv"}
             totalTokenAmount={supplyAmount}

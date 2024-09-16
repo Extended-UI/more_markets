@@ -1,7 +1,5 @@
 "use client";
 
-import _ from "lodash";
-import { formatUnits, ZeroAddress } from "ethers";
 import React, { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import TableHeaderCell from "./MoreTableHeader";
@@ -12,73 +10,41 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
-import { tokens, curators } from "@/utils/const";
+import { getTokenInfo, formatTokenValue } from "@/utils/utils";
+import { InvestmentData, IInvestmentProps } from "@/types";
 import { getTokenBallance, getVaultDetail } from "@/utils/contract";
-import { GraphMarket, GraphVault, InvestmentData } from "@/types";
 
-interface Props {
-  vaultsArr: GraphVault[];
-  marketsArr: GraphMarket[];
-}
-
-const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
+const DepositMoreTable: React.FC<IInvestmentProps> = ({
+  investments,
+  updateInfo,
+}) => {
   const { address: userAddress } = useAccount();
-
   const [vaults, setVaults] = useState<InvestmentData[]>([]);
 
   useEffect(() => {
     const initVaults = async () => {
-      if (marketsArr && vaultsArr && userAddress) {
-        const promises = vaultsArr.map(async (vault) => {
+      if (investments && userAddress) {
+        const promises = investments.map(async (investment) => {
           // check vault balance
-          const vaultShares = await getTokenBallance(vault.id, userAddress);
+          const vaultShares = await getTokenBallance(
+            investment.vaultId,
+            userAddress
+          );
 
           if (vaultShares.value > 0) {
-            const userAssets = await getVaultDetail(
-              vault.id as `0x${string}`,
+            const userAssets = (await getVaultDetail(
+              investment.vaultId,
               "convertToAssets",
               [vaultShares.value]
-            );
-
-            // get collaterals
-            const collaterals: string[] = vault.supplyQueue.map((queue) => {
-              const marketItem = marketsArr.find(
-                (market) =>
-                  market.id.toLowerCase() == queue.market.id.toLowerCase()
-              );
-              return marketItem ? tokens[marketItem.inputToken.id] : "";
-            });
-            const activeCollaterals = collaterals.filter(
-              (item) => item.length > 0
-            );
-
-            // tokenBalance
-            const tokenBalance = await getTokenBallance(
-              vault.asset.id,
-              userAddress
-            );
+            )) as bigint;
 
             return {
-              vaultId: vault.id,
-              vaultName: vault.name,
-              assetAddress: vault.asset.id,
-              tokenSymbol: tokens[vault.asset.id],
-              netAPY: 0,
-              totalDeposits: Number(
-                formatUnits(
-                  (userAssets as bigint).toString(),
-                  tokenBalance.decimals
-                )
+              ...investment,
+              userDeposits: formatTokenValue(
+                userAssets,
+                investment.assetAddress
               ),
-              totalValueUSD: 0,
-              curator:
-                vault.curator && vault.curator.id != ZeroAddress
-                  ? curators[vault.curator.id]
-                  : "",
-              collateral: _.uniq(activeCollaterals),
-              unsecured: 0,
-              tokenBalance,
-              // market: marketInfo,
+              userShares: vaultShares.value,
             } as InvestmentData;
           }
         });
@@ -87,11 +53,13 @@ const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
           (item) => item !== undefined
         );
         setVaults(fetchedVaults);
+      } else {
+        setVaults([]);
       }
     };
 
     initVaults();
-  }, [userAddress, vaultsArr, marketsArr]);
+  }, [userAddress, investments]);
 
   return (
     <>
@@ -175,41 +143,42 @@ const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                   >
                     <td className="py-4 px-6 items-start h-full">
                       <div className="flex items-start">
-                        <div className="mr-2 w-6 h-6">
-                          <IconToken tokenName={item.tokenSymbol} />
-                        </div>
-                        {item.tokenSymbol}
+                        <IconToken
+                          className="mr-2 w-6 h-6"
+                          tokenName={item.assetAddress}
+                        />
+                        {item.vaultName}
                       </div>
                     </td>
                     <td className="py-4 px-6 items-start h-full">
                       <div className="flex items-start">
-                        <div className="mr-2 w-6 h-6">
-                          <IconToken tokenName={item.tokenSymbol} />
-                        </div>
-                        {item.tokenSymbol}
+                        <IconToken
+                          className="mr-2 w-6 h-6"
+                          tokenName={item.assetAddress}
+                          showSymbol={true}
+                        />
                       </div>
                     </td>
                     <td className="py-4 px-6 items-start h-full   ">
                       <div className="flex justify-start">
-                        <FormatPourcentage
-                          value={item.netAPY}
-                        ></FormatPourcentage>
+                        <FormatPourcentage value={item.netAPY} />
                       </div>
                     </td>
                     <td className=" items-start   h-full ">
                       <div className="flex justify-start">
                         <FormatTokenMillion
                           value={item.totalDeposits}
-                          token={item.tokenSymbol}
+                          token={item.assetAddress}
                           totalValue={item.totalValueUSD}
                         />
                       </div>
                     </td>
                     <td className="py-4 px-6 items-start h-full  ">
                       <div className="flex items-start">
-                        <div className="mr-2 w-6 h-6">
-                          <IconToken tokenName={item.tokenSymbol} />
-                        </div>
+                        <IconToken
+                          className="mr-2 w-6 h-6"
+                          tokenName={item.assetAddress}
+                        />
                         {item.curator}
                       </div>
                     </td>
@@ -230,7 +199,11 @@ const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                       <ButtonDialog color="primary" buttonText="Deposit More">
                         {(closeModal) => (
                           <div className=" w-full h-full">
-                            <VaultDeposit item={item} closeModal={closeModal} />
+                            <VaultDeposit
+                              item={item}
+                              closeModal={closeModal}
+                              updateInfo={updateInfo}
+                            />
                           </div>
                         )}
                       </ButtonDialog>
@@ -240,6 +213,7 @@ const DepositMoreTable: React.FC<Props> = ({ vaultsArr, marketsArr }) => {
                           <div className=" w-full h-full">
                             <VaultWithdraw
                               item={item}
+                              updateInfo={updateInfo}
                               closeModal={closeModal}
                             />
                           </div>

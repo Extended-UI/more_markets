@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import { useAccount } from "wagmi";
+import React, { useEffect, useState } from "react";
+import { type GetBalanceReturnType } from "@wagmi/core";
 import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
 import FormatTokenMillion from "@/components/tools/formatTokenMillion";
 import { InvestmentData } from "@/types";
+import { getTokenInfo } from "@/utils/utils";
+import { initBalance } from "@/utils/const";
+import { getTokenBallance } from "@/utils/contract";
 
 interface Props {
   item: InvestmentData;
@@ -17,10 +22,25 @@ const VaultDepositInput: React.FC<Props> = ({
   setAmount,
   closeModal,
 }) => {
+  const { address: userAddress } = useAccount();
   const [deposit, setDeposit] = useState<number>(0);
+  const [balanceString, setBalanceString] =
+    useState<GetBalanceReturnType>(initBalance);
+
+  useEffect(() => {
+    const initBalance = async () => {
+      if (userAddress) {
+        const balance = await getTokenBallance(item.assetAddress, userAddress);
+        setBalanceString(balance);
+      }
+    };
+
+    initBalance();
+  }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeposit(parseFloat(event.target.value));
+    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
+    setDeposit(parseFloat(inputValue));
   };
 
   const handleSetMax = (maxValue: number) => {
@@ -33,27 +53,25 @@ const VaultDepositInput: React.FC<Props> = ({
     }
   };
 
-  const balanceString = item.tokenBalance.formatted;
+  const tokenInfo = getTokenInfo(item.assetAddress);
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
       <div className="text-4xl mb-10 px-4 pt-10 ">{item.vaultName}</div>
-      <div className="text-l mb-5 px-4">Deposit {item.tokenSymbol}</div>
+      <div className="text-l mb-5 px-4">Deposit {tokenInfo.symbol}</div>
       <div className="px-4">
         <InputTokenMax
           type="number"
           value={deposit}
           onChange={handleInputChange}
-          min="0"
-          max={balanceString}
-          placeholder={`Deposit ${item.tokenSymbol}`}
-          token={item.tokenSymbol}
-          balance={Number(balanceString)}
+          placeholder={`Deposit ${tokenInfo.symbol}`}
+          token={item.assetAddress}
+          balance={Number(balanceString.formatted)}
           setMax={handleSetMax}
         />
       </div>
       <div className="text-right more-text-gray px-4 mt-4">
-        Balance: {balanceString} {item.tokenSymbol}
+        Balance: {balanceString.formatted} {tokenInfo.symbol}
       </div>
       <div className="flex justify-end mt-7 mb-7 px-4">
         <div className="mr-5 ">
@@ -87,14 +105,10 @@ const VaultDepositInput: React.FC<Props> = ({
           <div>
             <FormatTokenMillion
               value={item.totalDeposits}
-              totalValue={item.totalValueUSD}
-              token={item.tokenSymbol}
+              totalValue={item.totalDeposits}
+              token={tokenInfo.symbol}
             />
           </div>
-        </div>
-        <div className="flex justify-between mt-10 pb-4 ">
-          <div>Liquidation LTV</div>
-          <div className="text-primary">{"ltv"}</div>
         </div>
       </div>
     </div>

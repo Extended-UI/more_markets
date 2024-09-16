@@ -15,7 +15,7 @@ const VaultDetail: React.FC<Props> = ({ item }) => {
       <div className="flex flex-row justify-between items-center">
         <div className="text-l flex items-center gap-2 flex mb-5 px-4">
           <span className="more-text-gray">Curator:</span>
-          <IconToken className="w-6 h-6" tokenName={item.tokenSymbol} />
+          <IconToken className="w-6 h-6" tokenName={item.assetAddress} />
           <span>{item.curator}</span>
         </div>
       </div>

@@ -7,12 +7,12 @@ import { BorrowMarket } from "@/types";
 import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import IconToken from "../token/IconToken";
-import { DetailEarnData } from "@/types/detailEarnData";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
 import FormatPourcentage from "../tools/formatPourcentage";
 import { tokens } from "@/utils/const";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -21,10 +21,10 @@ interface Props {
 const PositionMoreTable: React.FC<Props> = ({ item }) => {
   const { address: userAddress } = useAccount();
 
-  const collateralToken =
-    tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
-  const loanToken =
-    tokens[item.marketParams.loanToken.toLowerCase()].toUpperCase();
+  const collateralToken = getTokenInfo(
+    item.marketParams.collateralToken
+  ).symbol;
+  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
 
   const lltv2 =
     item.marketParams.isPremiumMarket &&

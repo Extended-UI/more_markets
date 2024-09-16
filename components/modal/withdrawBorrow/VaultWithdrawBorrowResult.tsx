@@ -2,16 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import InputTokenMax from "../../input/InputTokenMax";
-import TotalVolumeToken from "../../token/TotalVolumeToken";
 import MoreButton from "../../moreButton/MoreButton";
 import Icon from "../../FontAwesomeIcon";
 import ListIconToken from "@/components/token/ListIconToken";
-import TokenAmount from "@/components/token/TokenAmount";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { config } from "@/utils/wagmi";
-import { tokens } from "@/utils/const";
 import { BorrowPosition } from "@/types";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: BorrowPosition;
@@ -52,10 +48,10 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
   const txHashStr =
     txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
-  const collateralToken =
-    tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
-  const loanToken =
-    tokens[item.marketParams.loanToken.toLowerCase()].toUpperCase();
+  const collateralToken = getTokenInfo(
+    item.marketParams.collateralToken
+  ).symbol;
+  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">

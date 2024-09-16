@@ -1,4 +1,6 @@
-import { coingecko_ids } from "./const";
+import { IToken } from "@/types";
+import { formatUnits } from "ethers";
+import { coingecko_ids, tokens } from "./const";
 
 export const getVaule = (param: any): string => {
   return param.result ? param.result.toString() : "";
@@ -44,4 +46,32 @@ export const getTokenPrice = async (token: string): Promise<number> => {
   } catch {
     return 0;
   }
+};
+
+export const getTokenInfo = (token: string | undefined): IToken => {
+  const initVal = {
+    name: "",
+    symbol: "",
+    decimals: 18,
+  };
+
+  if (token) {
+    const tokenAddress =
+      token == "wflow" ? "0xe6de44ac50c1d1c83f67695f6b4820a317285fc6" : token;
+    const tokenInfo = tokens[tokenAddress];
+
+    return tokenInfo ? tokenInfo : initVal;
+  }
+
+  return initVal;
+};
+
+export const formatTokenValue = (
+  amount: bigint,
+  token: string,
+  decimals?: number
+): number => {
+  return Number(
+    formatUnits(amount, decimals ? decimals : getTokenInfo(token).decimals)
+  );
 };

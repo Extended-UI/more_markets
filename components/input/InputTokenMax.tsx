@@ -25,9 +25,6 @@ const InputTokenMax: React.FC<Props> = ({
   balance,
   setMax,
 }) => {
-  let logo = token.toLowerCase();
-  if (token === "Flow") logo = "abt";
-
   return (
     <div className="w-full flex  rounded-[8px] more-input-bg-color flex justify-between items-center px-4 py-2 gap-4">
       <div className="flex w-full flex-col items-center gap-2">
@@ -43,8 +40,7 @@ const InputTokenMax: React.FC<Props> = ({
         </div>
       </div>
       <div className="flex gap-2 items-center">
-        <IconToken className="h-8 w-8" tokenName={logo} />
-        <div className="text-xl">{token.toUpperCase()}</div>
+        <IconToken className="h-8 w-8" tokenName={token} showSymbol={true} />
         <MoreButton
           text="Max"
           onClick={() => setMax(balance)}

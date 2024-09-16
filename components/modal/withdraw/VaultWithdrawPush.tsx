@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import { parseUnits } from "ethers";
+import { parseUnits, MaxUint256 } from "ethers";
+import React, { useState, useEffect } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "../../token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
-import MoreToggle from "@/components/moreToggle/MoreToggle";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import IconToken from "@/components/token/IconToken";
 import { InvestmentData } from "@/types";
-import { getTimestamp } from "@/utils/utils";
+import { getTimestamp, getTokenInfo } from "@/utils/utils";
 import {
   withdrawFromVaults,
   getVaultNonce,
@@ -40,7 +39,8 @@ const VaultWithdrawPush: React.FC<Props> = ({
   const [deadline, setDeadline] = useState(BigInt(0));
   const [vaultNonce, setVaultNonce] = useState(BigInt(0));
 
-  const tokenAmount = parseUnits(amount.toString(), item.tokenBalance.decimals);
+  const tokenInfo = getTokenInfo(item.assetAddress);
+  const tokenAmount = parseUnits(amount.toString(), tokenInfo.decimals);
 
   useEffect(() => {
     const initApprove = async () => {
@@ -61,7 +61,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           item.vaultName,
           userAddress,
           item.vaultId,
-          tokenAmount,
+          MaxUint256,
           vaultNonce,
           deadline
         );
@@ -98,23 +98,22 @@ const VaultWithdrawPush: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">
       <div className="mb-10 px-4 pt-10  text-3xl">Review Transaction</div>
-      <div className="text-l mb-1 px-4 pt-5 ">{item.tokenSymbol}</div>
       <div className="flex flex-row justify-between mt-4 items-center">
         <div className="flex gap-2 text-l mb-5  px-4 items-center">
           {" "}
           <span className="more-text-gray">Curator:</span>
-          <IconToken className="w-6 h-6" tokenName="abt" />{" "}
+          <IconToken className="w-6 h-6" tokenName="wflow" />{" "}
           <span>{"curator"}</span>
         </div>
         <div className="flex gap-2 text-l mb-5 px-4">
-          <span className="more-text-gray">Liquidation LTV:</span>{" "}
-          <FormatTwoPourcentage value={90} />{" "}
+          <span className="more-text-gray">Net APY:</span>{" "}
+          <FormatTwoPourcentage value={item.netAPY} />{" "}
         </div>
       </div>
       <div className="relative more-bg-primary px-8 rounded-t-[5px] ">
         <TokenAmount
           title="Permit"
-          token={item.tokenSymbol}
+          token={item.assetAddress}
           amount={amount}
           ltv={"ltv"}
           totalTokenAmount={item.totalDeposits}
@@ -129,7 +128,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
       <div className="more-bg-primary px-8 rounded-t-[5px] ">
         <TokenAmount
           title="Withdraw"
-          token={item.tokenSymbol}
+          token={item.assetAddress}
           amount={amount}
           ltv={"ltv"}
           totalTokenAmount={item.totalDeposits}
@@ -139,9 +138,9 @@ const VaultWithdrawPush: React.FC<Props> = ({
         <div className="text-grey pb-4"> Position Change </div>
         <PositionChangeToken
           title="Withdraw"
-          value={amount}
-          token={item.tokenSymbol}
-          value2={0}
+          value={item.userDeposits}
+          token={tokenInfo.symbol}
+          value2={item.userDeposits - amount}
         />
       </div>
 

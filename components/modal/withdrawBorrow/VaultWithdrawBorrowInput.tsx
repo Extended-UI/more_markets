@@ -8,7 +8,7 @@ import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
-import { tokens } from "@/utils/const";
+import { getTokenInfo } from "@/utils/utils";
 import { getTokenBallance } from "@/utils/contract";
 
 interface Props {
@@ -58,10 +58,10 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
     }
   };
 
-  const collateralToken =
-    tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
-  const loanToken =
-    tokens[item.marketParams.loanToken.toLowerCase()].toUpperCase();
+  const collateralToken = getTokenInfo(
+    item.marketParams.collateralToken
+  ).symbol;
+  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
 
   return (
     <div className="more-bg-secondary w-full pt-8 rounded-[20px]">

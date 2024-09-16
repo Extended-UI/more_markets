@@ -6,6 +6,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { InvestmentData } from "@/types";
 import { config } from "@/utils/wagmi";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   amount: number;
@@ -27,6 +28,8 @@ const VaultWithdrawResult: React.FC<Props> = ({
   const hashStr =
     hash.substring(0, 5) + "..." + hash.substring(hash.length - 4);
 
+  const tokenInfo = getTokenInfo(item.assetAddress);
+
   useEffect(() => {
     const waitTx = async () => {
       setExecuted(false);
@@ -47,7 +50,7 @@ const VaultWithdrawResult: React.FC<Props> = ({
     <div className="more-bg-secondary h-full rounded-[20px]">
       <div className="text-3xl mb-10 px-4 pt-10 ">Transaction Confirmation</div>
       <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5 ">
-        Withdraw {amount} {item.tokenSymbol} from Vault
+        Withdraw {amount} {tokenInfo.symbol} from Vault
       </div>
 
       {hash.length > 0 && (

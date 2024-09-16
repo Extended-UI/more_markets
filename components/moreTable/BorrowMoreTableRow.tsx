@@ -1,14 +1,14 @@
 import React from "react";
 import { useAccount } from "wagmi";
 import { formatEther } from "ethers";
-import TokenName from "../token/TokenName";
+import IconToken from "../token/IconToken";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
 import { BorrowMarket } from "@/types";
-import { tokens } from "@/utils/const";
+import { formatTokenValue } from "@/utils/utils";
 
 interface BorrowMoreTableRowProps {
   item: BorrowMarket;
@@ -30,10 +30,22 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
   return (
     <>
       <td className="py-4 px-6 items-center h-full">
-        <TokenName token={item.inputToken.id} />
+        <div className="flex items-center">
+          <IconToken
+            className="mr-2 w-6 h-6"
+            tokenName={item.inputToken.id}
+            showSymbol={true}
+          />
+        </div>
       </td>
       <td className="py-4 px-6 items-center h-full  ">
-        <TokenName token={item.borrowedToken.id} />
+        <div className="flex items-center">
+          <IconToken
+            className="mr-2 w-6 h-6"
+            tokenName={item.borrowedToken.id}
+            showSymbol={true}
+          />
+        </div>
       </td>
       <td className="py-4  items-center h-full ">
         <div className="flex gap-1 justify-start">
@@ -67,9 +79,12 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
       <td className="py-4 px-6 items-center   h-full ">
         <div className="flex justify-start">
           <FormatTokenMillion
-            value={Number(formatEther(item.totalSupply))}
-            token={tokens[item.inputToken.id]}
-            totalValue={Number(formatEther(item.totalSupply))}
+            value={formatTokenValue(
+              item.marketInfo.totalSupplyAssets,
+              item.inputToken.id
+            )}
+            token={item.inputToken.id}
+            totalValue={0}
           />
         </div>
       </td>

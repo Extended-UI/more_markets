@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import VaultDepositInput from "./VaultDepositInput";
 import VaultDepositPush from "./VaultDepositPush";
 import VaultDepositResult from "./VaultDepositResult";
@@ -9,9 +9,10 @@ import { InvestmentData } from "@/types";
 interface Props {
   item: InvestmentData;
   closeModal: () => void;
+  updateInfo: (vaultId: string) => void;
 }
 
-const VaultDeposit: React.FC<Props> = ({ item, closeModal }) => {
+const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [txHash, setTxHash] = useState("");
@@ -27,6 +28,7 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal }) => {
 
   const handleProcessDone = () => {
     closeModal();
+    updateInfo(item.vaultId);
   };
 
   return (
@@ -43,14 +45,14 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal }) => {
           amount={amount}
           closeModal={closeModal}
           setTxHash={setTxHash}
-          validDeposit={() => handleValidDeposit()}
+          validDeposit={handleValidDeposit}
         />
       ) : step == 3 ? (
         <VaultDepositResult
           item={item}
           amount={amount}
           txhash={txHash}
-          processDone={() => handleProcessDone()}
+          processDone={handleProcessDone}
           closeModal={closeModal}
         />
       ) : null}

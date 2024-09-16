@@ -14,7 +14,7 @@ import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
-import { Market, MarketParams, VaultData } from "../types";
+import { Market, MarketInfo, MarketParams, VaultData } from "../types";
 import {
   contracts,
   marketsInstance,
@@ -23,7 +23,7 @@ import {
   bundlerInstance,
   permit2Instance,
   Uint48Max,
-  gasLimit
+  gasLimit,
 } from "./const";
 import {
   getVaule,
@@ -56,7 +56,7 @@ export const setTokenAllowance = async (
     address: token as `0x${string}`,
     abi: erc20Abi,
     functionName: "approve",
-    args: [spender as `0x${string}`, amount]
+    args: [spender as `0x${string}`, amount],
   });
 
   await waitForTransactionReceipt(config, { hash: txHash });
@@ -173,10 +173,14 @@ export const getTokenBallance = async (
   wallet: `0x${string}` | undefined
 ): Promise<GetBalanceReturnType> => {
   const userBalance = wallet
-    ? await getBalance(config, {
-        token: token as `0x${string}`,
-        address: wallet,
-      })
+    ? token.toLowerCase() == ZeroAddress.toLowerCase()
+      ? await getBalance(config, {
+          address: wallet,
+        })
+      : await getBalance(config, {
+          token: token as `0x${string}`,
+          address: wallet,
+        })
     : initBalance;
 
   return userBalance;
@@ -202,6 +206,25 @@ export const getMarketParams = async (
     irxMaxLltv: (params as any[])[7],
     categoryLltv: (params as any[])[8],
   } as MarketParams;
+};
+
+export const getMarketInfo = async (marketId: string): Promise<MarketInfo> => {
+  const infos = await readContract(config, {
+    ...marketsInstance,
+    functionName: "market",
+    args: [marketId as `0x${string}`],
+  });
+
+  return {
+    totalSupplyAssets: (infos as any[])[0],
+    totalSupplyShares: (infos as any[])[1],
+    totalBorrowAssets: (infos as any[])[2],
+    totalBorrowShares: (infos as any[])[3],
+    lastUpdate: (infos as any[])[4],
+    fee: (infos as any[])[5],
+    isPremiumFeeEnabled: (infos as any[])[6],
+    premiumFee: (infos as any[])[7],
+  } as MarketInfo;
 };
 
 export const getMarketData = async (marketId: string): Promise<Market> => {
@@ -301,12 +324,12 @@ export const getVaultData = async (
 };
 
 export const getVaultDetail = async (
-  vaultAddress: `0x${string}`,
+  vaultAddress: string,
   functionName: string,
   args: any[]
 ) => {
   const vaultContract = {
-    address: vaultAddress,
+    address: vaultAddress as `0x${string}`,
     abi: VaultsAbi,
   };
 
@@ -326,7 +349,7 @@ export const sendToMarkets = async (
     abi: MarketsAbi,
     functionName: functionName,
     args: args,
-    gas: parseUnits(gasLimit, 6)
+    gas: parseUnits(gasLimit, 6),
   });
 
   return txHash;
@@ -398,7 +421,7 @@ export const supplyToVaults = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[approve2, transferFrom2, erc4626Deposit]],
-    gas: parseUnits(gasLimit, 6)
+    gas: parseUnits(gasLimit, 6),
   });
 
   return txHash;
@@ -419,7 +442,7 @@ export const withdrawFromVaults = async (
   const permit = encodeFunctionData({
     abi: BundlerAbi,
     functionName: "permit",
-    args: [vaultAddress, amount, deadline, v, r, s, false],
+    args: [vaultAddress, MaxUint256, deadline, v, r, s, false],
   });
 
   // encode erc4626Withdraw
@@ -433,7 +456,7 @@ export const withdrawFromVaults = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[permit, erc4626Withdraw]],
-    gas: parseUnits(gasLimit, 6)
+    gas: parseUnits(gasLimit, 6),
   });
 
   return txHash;
@@ -520,7 +543,7 @@ export const supplycollateralAndBorrow = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[approve2, transferFrom2, morphoSupplyCollateral, morphoBorrow]],
-    gas: parseUnits(gasLimit, 6)
+    gas: parseUnits(gasLimit, 6),
   });
 
   return txHash;
@@ -583,7 +606,7 @@ export const supplycollateral = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[approve2, transferFrom2, morphoSupplyCollateral]],
-    gas: parseUnits(gasLimit, 6)
+    gas: parseUnits(gasLimit, 6),
   });
 
   return txHash;
@@ -619,7 +642,7 @@ export const withdrawCollateral = async (
     ...bundlerInstance,
     functionName: "multicall",
     args: [[morphoWithdrawCollateral]],
-    gas: parseUnits(gasLimit, 6)
+    gas: parseUnits(gasLimit, 6),
   });
 
   return txHash;

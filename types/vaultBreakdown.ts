@@ -1,7 +1,7 @@
 export interface VaultBreakdown {
   allowcation: number;
-  supply: string;
-  borrow: string;
+  supply: number;
+  borrow: number;
   collateral: string;
   lltv: number;
   credora: string;

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import React, { useEffect, useState } from "react";
 import { parseUnits, formatEther } from "ethers";
 import MoreButton from "../../moreButton/MoreButton";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
@@ -9,8 +9,8 @@ import TokenAmount from "@/components/token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
-import { getTimestamp } from "@/utils/utils";
-import { contracts, tokens } from "@/utils/const";
+import { contracts } from "@/utils/const";
+import { getTimestamp, getTokenInfo } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -43,11 +43,11 @@ const VaultAddPush: React.FC<Props> = ({
   const [signHash, setSignHash] = useState("");
   const [deadline, setDeadline] = useState(BigInt(0));
 
-  const collateralToken =
-    tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
-  const loanToken =
-    tokens[item.marketParams.loanToken.toLowerCase()].toUpperCase();
   const supplyAmount = parseUnits(amount.toString());
+  const collateralToken = getTokenInfo(
+    item.marketParams.collateralToken
+  ).symbol;
+  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
 
   useEffect(() => {
     const initApprove = async () => {

@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { parseUnits } from "ethers";
+import { parseUnits, MaxUint256 } from "ethers";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import IconToken from "@/components/token/IconToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { contracts } from "@/utils/const";
+import { contracts, tokens } from "@/utils/const";
 import { getTimestamp } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -43,7 +43,10 @@ const VaultDepositPush: React.FC<Props> = ({
   const [deadline, setDeadline] = useState(BigInt(0));
   const [permitNonce, setPermitNonce] = useState(0);
 
-  const tokenAmount = parseUnits(amount.toString(), item.tokenBalance.decimals);
+  const tokenAmount = parseUnits(
+    amount.toString(),
+    tokens[item.assetAddress].decimals
+  );
 
   useEffect(() => {
     const initApprove = async () => {
@@ -87,7 +90,7 @@ const VaultDepositPush: React.FC<Props> = ({
         await setTokenAllowance(
           item.assetAddress,
           contracts.PERMIT2,
-          tokenAmount
+          MaxUint256
         );
 
         setHasApprove(true);
@@ -160,18 +163,18 @@ const VaultDepositPush: React.FC<Props> = ({
       <div className="flex flex-row justify-between items-center px-2">
         <div className="text-l flex items-center gap-2 flex mb-5 px-4">
           <span className="more-text-gray">Curator:</span>
-          <IconToken className="w-6 h-6" tokenName={item.tokenSymbol} />
+          <IconToken className="w-6 h-6" tokenName="wflow" />
           <span>{item.curator}</span>
         </div>
         <div className="flex  gap-2 text-l mb-5 px-4">
-          <span className="more-text-gray">Liquidation LTV:</span>{" "}
+          <span className="more-text-gray">Net APY:</span>{" "}
           <FormatTwoPourcentage value={item.netAPY} />{" "}
         </div>
       </div>
       <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">
         <TokenAmount
           title="Approve"
-          token={item.tokenSymbol}
+          token={item.assetAddress}
           amount={amount}
           ltv={"ltv"}
           totalTokenAmount={item.totalDeposits}
@@ -187,7 +190,7 @@ const VaultDepositPush: React.FC<Props> = ({
       <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">
         <TokenAmount
           title="Permit"
-          token={item.tokenSymbol}
+          token={item.assetAddress}
           amount={amount}
           ltv={"ltv"}
           totalTokenAmount={item.totalDeposits}
@@ -203,7 +206,7 @@ const VaultDepositPush: React.FC<Props> = ({
       <div className="more-bg-primary rounded-[5px] mx-5 px-4">
         <TokenAmount
           title="Deposit"
-          token={item.tokenSymbol}
+          token={item.assetAddress}
           amount={amount}
           ltv={"ltv"}
           totalTokenAmount={item.totalDeposits}

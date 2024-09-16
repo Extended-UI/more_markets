@@ -9,9 +9,10 @@ import { InvestmentData } from "@/types";
 interface Props {
   item: InvestmentData;
   closeModal: () => void;
+  updateInfo: (vaultId: string) => void;
 }
 
-const VaultWithdraw: React.FC<Props> = ({ item, closeModal }) => {
+const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [txhash, setTxhash] = useState("");
@@ -22,12 +23,11 @@ const VaultWithdraw: React.FC<Props> = ({ item, closeModal }) => {
   };
 
   const handleValidWithdraw = () => {
-    console.log("withdraw VALID");
     setStep(3);
   };
 
   const handleProcessDone = () => {
-    console.log("withdraw DONE");
+    updateInfo(item.vaultId);
   };
 
   return (

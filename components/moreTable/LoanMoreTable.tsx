@@ -13,7 +13,6 @@ import VaultRepay from "../modal/repay/VaultRepay";
 import VaultAdd from "../modal/add/VaultAdd";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
 import { GraphPosition, BorrowPosition, GraphMarket } from "@/types";
-import { tokens } from "@/utils/const";
 import { getMarketParams } from "@/utils/contract";
 
 interface Props {
@@ -145,17 +144,13 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
                         <div className="flex items-center">
                           <div className="mr-2 w-6 h-6">
                             <IconToken
-                              tokenName={
-                                tokens[
-                                  item.marketParams.collateralToken.toLowerCase()
-                                ]
-                              }
+                              tokenName={item.marketParams.collateralToken}
                             />
                           </div>
                         </div>
                         <FormatTokenMillion
                           value={Number(formatEther(item.collateral))}
-                          token={tokens[item.marketParams.collateralToken]}
+                          token={item.marketParams.collateralToken}
                           totalValue={Number(formatEther(item.collateral))}
                         />
                         <div className="ml-8"></div>
@@ -188,13 +183,11 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
                       <div className="flex gap-2 items-center">
                         <IconToken
                           className="w-6 h-6"
-                          tokenName={
-                            tokens[item.marketParams.loanToken.toLowerCase()]
-                          }
+                          tokenName={item.marketParams.loanToken}
                         />
                         <FormatTokenMillion
                           value={Number(formatEther(item.loan))}
-                          token={tokens[item.marketParams.loanToken]}
+                          token={item.marketParams.loanToken}
                           totalValue={Number(formatEther(item.loan))}
                         />
                         <div className="ml-8"></div>

@@ -3,13 +3,13 @@
 import { formatEther } from "ethers";
 import React, { useState, useEffect } from "react";
 import { waitForTransactionReceipt } from "@wagmi/core";
+import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
-import { tokens } from "@/utils/const";
 import { config } from "@/utils/wagmi";
-import Icon from "../../FontAwesomeIcon";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: BorrowPosition;
@@ -27,10 +27,10 @@ const VaultAddResult: React.FC<Props> = ({
 }) => {
   const [executed, setExecuted] = useState(false);
 
-  const collateralToken =
-    tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
-  const loanToken =
-    tokens[item.marketParams.loanToken.toLowerCase()].toUpperCase();
+  const collateralToken = getTokenInfo(
+    item.marketParams.collateralToken
+  ).symbol;
+  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
 
   useEffect(() => {
     const waitTx = async () => {

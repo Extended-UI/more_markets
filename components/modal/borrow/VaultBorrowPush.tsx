@@ -9,7 +9,7 @@ import TokenAmount from "@/components/token/TokenAmount";
 import BorrowTokenAmount from "../../token/BorrowTokenAmount";
 import { BorrowMarket } from "@/types";
 import { contracts, tokens } from "@/utils/const";
-import { getTimestamp } from "@/utils/utils";
+import { getTimestamp, getTokenInfo } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -164,7 +164,7 @@ const VaultBorrowPush: React.FC<Props> = ({
             <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />
           </span>
           Approve the bundler to spend {supplyAmount}{" "}
-          {tokens[item.borrowedToken.id].toUpperCase()} (via permit)
+          {getTokenInfo(item.borrowedToken.id).symbol} (via permit)
         </div>
       )}
       <div className="text-l flex mb-5 px-4">
@@ -177,7 +177,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         <div className="more-bg-primary px-4 mx-5">
           <TokenAmount
             title="Supply"
-            token={tokens[item.borrowedToken.id]}
+            token={item.borrowedToken.id}
             amount={supplyAmount}
             ltv={"ltv"}
             totalTokenAmount={supplyAmount}

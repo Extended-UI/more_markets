@@ -2,6 +2,7 @@ import { type GetBalanceReturnType } from "@wagmi/core";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
+import { IToken } from "@/types";
 
 export const contracts = {
   MORE_MARKETS: "0x7EBf3217f8A54De432ACFe6E803576CB859E22a3",
@@ -12,13 +13,37 @@ export const contracts = {
   PERMIT2: "0x000000000022D473030F116dDEE9F6B43aC78BA3",
 };
 
-export const tokens: { [key: string]: string } = {
-  "0xaca1ab5eb856f7645cd6b9694ba840f3c18bc83e": "USDCf",
-  "0x4d40cdce3864ca8fcba1b7de4c0a66f37b28092c": "USDf",
-  "0x866e7292a4b9813146591cb6211aac33432cf07f": "BTCf",
-  "0x50be444228f6f27899e52e56718c0ae67f962185": "ETHf",
-  "0x3d08ce8ba948ddd6ab0745670134a55e8e35aa8c": "ankr.FLOW",
-  "0xe6de44ac50c1d1c83f67695f6b4820a317285fc6": "wFLOW",
+export const tokens: { [key: string]: IToken } = {
+  "0xaca1ab5eb856f7645cd6b9694ba840f3c18bc83e": {
+    symbol: "USDCf",
+    name: "USDCf(USDC) mock coin",
+    decimals: 6,
+  },
+  "0x4d40cdce3864ca8fcba1b7de4c0a66f37b28092c": {
+    symbol: "USDf",
+    name: "USDf(PYUSD) mock coin",
+    decimals: 6,
+  },
+  "0x866e7292a4b9813146591cb6211aac33432cf07f": {
+    symbol: "BTCf",
+    name: "BTCf(wBTC) mock coin",
+    decimals: 8,
+  },
+  "0x50be444228f6f27899e52e56718c0ae67f962185": {
+    symbol: "ETHf",
+    name: "ETHf(wETH) mock coin",
+    decimals: 18,
+  },
+  "0x3d08ce8ba948ddd6ab0745670134a55e8e35aa8c": {
+    symbol: "ankr.FLOW",
+    name: "ankr.FLOW mock coin",
+    decimals: 18,
+  },
+  "0xe6de44ac50c1d1c83f67695f6b4820a317285fc6": {
+    symbol: "wFLOW",
+    name: "Wrapped FLOW",
+    decimals: 18,
+  },
 };
 
 export const curators: { [key: string]: string } = {

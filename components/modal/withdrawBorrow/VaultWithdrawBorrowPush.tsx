@@ -7,7 +7,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "../../token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import { BorrowPosition } from "@/types";
-import { tokens } from "@/utils/const";
+import { getTokenInfo } from "@/utils/utils";
 import ListIconToken from "@/components/token/ListIconToken";
 import { withdrawCollateral } from "@/utils/contract";
 
@@ -49,10 +49,10 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
     validWithdraw();
   };
 
-  const collateralToken =
-    tokens[item.marketParams.collateralToken.toLowerCase()].toUpperCase();
-  const loanToken =
-    tokens[item.marketParams.loanToken.toLowerCase()].toUpperCase();
+  const collateralToken = getTokenInfo(
+    item.marketParams.collateralToken
+  ).symbol;
+  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
 
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">

@@ -8,7 +8,9 @@ import InfosEarnDetails from "@/components/details/InfosEarnDetail";
 import DetailEarnMoreTable from "@/components/moreTable/DetailEarnMoreTable";
 import { fetchVault, fetchMarkets } from "@/utils/graph";
 import { InvestmentData, VaultBreakdown } from "@/types";
-import { initBalance, tokens, curators } from "@/utils/const";
+import { curators } from "@/utils/const";
+import { formatTokenValue } from "@/utils/utils";
+import { getVaultDetail, getMarketInfo } from "@/utils/contract";
 
 const EarnDetailPage: React.FC = () => {
   const router = useRouter();
@@ -31,36 +33,54 @@ const EarnDetailPage: React.FC = () => {
             fetchMarkets(),
           ]);
 
+          const deposited = (await getVaultDetail(
+            vaultId,
+            "totalAssets",
+            []
+          )) as bigint;
+
           if (fetchedVault) {
-            const breakdownList = fetchedVault.supplyQueue
-              .map((queueItem) => {
+            const breakdownList = fetchedVault.supplyQueue.map(
+              async (queueItem) => {
                 const marketId = queueItem.market.id.toLowerCase();
                 const marketItem = marketsArr.find(
                   (item) => item.id.toLowerCase() == marketId
                 );
 
                 if (marketItem) {
+                  const marketInfo = await getMarketInfo(queueItem.market.id);
+
                   return {
                     allowcation: 0,
-                    supply: formatUnits(marketItem.totalSupply),
-                    borrow: formatUnits(marketItem.totalBorrow),
-                    collateral: tokens[marketItem.inputToken.id.toLowerCase()],
+                    supply: formatTokenValue(
+                      marketInfo.totalSupplyAssets,
+                      marketItem.inputToken.id
+                    ),
+                    borrow: formatTokenValue(
+                      marketInfo.totalBorrowAssets,
+                      marketItem.borrowedToken.id
+                    ),
+                    collateral: marketItem.inputToken.id,
                     lltv: Number(formatUnits(BigInt(marketItem.lltv))),
                     credora: "rating",
                   } as VaultBreakdown;
                 }
-              })
-              .filter((item) => item !== undefined);
+              }
+            );
+
+            const filtered = (await Promise.all(breakdownList)).filter(
+              (item) => item !== undefined
+            );
 
             let totalSupply = 0;
             let totalBorrows = 0;
-            for (const breakdown of breakdownList) {
-              totalSupply += Number(breakdown.supply);
-              totalBorrows += Number(breakdown.borrow);
+            for (const breakdown of filtered) {
+              totalSupply += breakdown.supply;
+              totalBorrows += breakdown.borrow;
             }
             setTotalBorrow(totalBorrows);
 
-            const updated = breakdownList.map((item) => {
+            const updated = filtered.map((item) => {
               return {
                 ...item,
                 allowcation:
@@ -75,37 +95,50 @@ const EarnDetailPage: React.FC = () => {
               vaultId: fetchedVault.id,
               vaultName: fetchedVault.name,
               assetAddress: fetchedVault.asset.id,
-              tokenSymbol: tokens[fetchedVault.asset.id.toLowerCase()],
               netAPY: 0,
-              totalDeposits: totalSupply,
+              userDeposits: 0,
+              userShares: BigInt(0),
+              totalDeposits: formatTokenValue(deposited, fetchedVault.asset.id),
               totalValueUSD: 0,
               curator:
                 fetchedVault.curator && fetchedVault.curator.id != ZeroAddress
                   ? curators[fetchedVault.curator.id]
                   : "",
               collateral: [],
-              unsecured: 0,
               guardian: fetchedVault.guardian ? fetchedVault.guardian.id : "",
-              tokenBalance: initBalance,
-              // market: marketInfo,
             } as InvestmentData);
           }
         }
       } catch (err) {
         console.log(err);
-        router.push("/earn");
+        // router.push("/earn");
       }
     };
 
     initVault();
   }, [vaultId]);
 
+  const updateInfo = async (id: string) => {
+    if (vaultInfo) {
+      const deposited = (await getVaultDetail(
+        vaultId,
+        "totalAssets",
+        []
+      )) as bigint;
+
+      setVaultInfo({
+        ...vaultInfo,
+        totalDeposits: formatTokenValue(deposited, vaultInfo.assetAddress),
+      } as InvestmentData);
+    }
+  };
+
   return (
     <>
       {vaultInfo && (
         <>
           <div className="mb-8 overflow-visible">
-            <HeaderEarnDetail vault={vaultInfo} />
+            <HeaderEarnDetail updateInfo={updateInfo} vault={vaultInfo} />
             <InfosEarnDetails vault={vaultInfo} totalBorrow={totalBorrow} />
           </div>
           <h1 className="text-4xl mt-16 mb-8">Vault Breakdown</h1>

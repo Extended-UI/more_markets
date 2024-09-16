@@ -1,11 +1,9 @@
 import { useAccount } from "wagmi";
 import ButtonDialog from "../buttonDialog/buttonDialog";
-import VaultDetail from "../modal/VaultDetail";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
-import VaultDeposit from "../modal/deposit/VaultDepositPush";
 import IconToken from "../token/IconToken";
 import { BorrowMarket } from "@/types";
-import { tokens } from "@/utils/const";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -14,8 +12,8 @@ interface Props {
 const HeaderBorrowDetail: React.FC<Props> = ({ item }) => {
   const { address: userAddress } = useAccount();
 
-  const collateralToken = tokens[item.inputToken.id].toLocaleUpperCase();
-  const borrowToken = tokens[item.borrowedToken.id].toLocaleUpperCase();
+  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
+  const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
     <div className="flex w-full items-center justify-between my-4">

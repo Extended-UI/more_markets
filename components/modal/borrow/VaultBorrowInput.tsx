@@ -8,7 +8,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { GraphMarket } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
-import { tokens } from "@/utils/const";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: GraphMarket;
@@ -67,8 +67,8 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
     initBalances();
   }, [item, userAddress]);
 
-  const collateralToken = tokens[item.inputToken.id].toLocaleUpperCase();
-  const borrowToken = tokens[item.borrowedToken.id].toLocaleUpperCase();
+  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
+  const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
@@ -84,7 +84,7 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           min="0"
           max={"100"}
           placeholder={`Deposit ${collateralToken}`}
-          token={tokens[item.inputToken.id]}
+          token={item.inputToken.id}
           balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
           setMax={handleSetMaxToken}
         />
@@ -102,7 +102,7 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           min="0"
           max={"100"}
           placeholder={`Deposit ${borrowToken}`}
-          token={tokens[item.borrowedToken.id]}
+          token={item.borrowedToken.id}
           balance={borrowBalance ? Number(borrowBalance.formatted) : 0}
           setMax={handleSetMaxFlow}
         />

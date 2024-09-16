@@ -24,8 +24,8 @@ function usePrice() {
     const initPrices = () => {
       let prices: ITokenPrice[] = [];
       _.forOwn(coingecko_ids, async (value, token) => {
-        const tokenPrice = await getTokenPrice(value);
-        // const tokenPrice = Math.random();
+        // const tokenPrice = await getTokenPrice(value);
+        const tokenPrice = Math.random();
         prices.push({
           token: token,
           price: tokenPrice,

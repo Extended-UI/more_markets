@@ -6,11 +6,12 @@ import MoreButton from "../../moreButton/MoreButton";
 import { ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: InvestmentData;
-  setAmount: (amount: number) => void;
   closeModal: () => void;
+  setAmount: (amount: number) => void;
 }
 
 const VaultWithdrawInput: React.FC<Props> = ({
@@ -21,7 +22,8 @@ const VaultWithdrawInput: React.FC<Props> = ({
   const [withdraw, setWithdraw] = useState<number>(0);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setWithdraw(parseFloat(event.target.value));
+    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
+    setWithdraw(parseFloat(inputValue));
   };
 
   const handleSetMax = (maxValue: number) => {
@@ -35,21 +37,20 @@ const VaultWithdrawInput: React.FC<Props> = ({
   };
 
   const balanceString = item.totalDeposits.toString();
+  const tokenInfo = getTokenInfo(item.assetAddress);
 
   return (
     <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
       <div className="px-6">
-        <div className="text-3xl mb-10 pt-5 ">{item.tokenSymbol}</div>
-        <div className="text-l mb-5">Withdraw {item.tokenSymbol}</div>
+        <div className="text-3xl mb-10 pt-5 ">{item.vaultName}</div>
+        <div className="text-l mb-5">Withdraw {tokenInfo.symbol}</div>
         <div className="w-full flex justify-center">
           <InputTokenMax
             type="number"
             value={withdraw}
             onChange={handleInputChange}
-            min="0"
-            max={balanceString}
-            placeholder={`Withdraw ${item.tokenSymbol}`}
-            token={item.tokenSymbol}
+            placeholder={`Withdraw ${tokenInfo.symbol}`}
+            token={item.assetAddress}
             balance={item.totalDeposits}
             setMax={handleSetMax}
           />
