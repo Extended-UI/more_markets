@@ -48,18 +48,20 @@ const EarnDetailPage: React.FC = () => {
                 );
 
                 if (marketItem) {
-                  const marketInfo = await getMarketInfo(queueItem.market.id);
+                  // const marketInfo = await getMarketInfo(queueItem.market.id);
 
                   return {
                     allowcation: 0,
-                    supply: formatTokenValue(
-                      marketInfo.totalSupplyAssets,
-                      marketItem.inputToken.id
-                    ),
-                    borrow: formatTokenValue(
-                      marketInfo.totalBorrowAssets,
-                      marketItem.borrowedToken.id
-                    ),
+                    // supply: formatTokenValue(
+                    //   marketInfo.totalSupplyAssets,
+                    //   marketItem.inputToken.id
+                    // ),
+                    // borrow: formatTokenValue(
+                    //   marketInfo.totalBorrowAssets,
+                    //   marketItem.borrowedToken.id
+                    // ),
+                    supply: 0,
+                    borrow: 0,
                     collateral: marketItem.inputToken.id,
                     lltv: Number(formatUnits(BigInt(marketItem.lltv))),
                     credora: "rating",
