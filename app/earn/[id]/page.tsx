@@ -1,6 +1,6 @@
 "use client";
 
-import { formatUnits, ZeroAddress } from "ethers";
+import { ZeroAddress } from "ethers";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import HeaderEarnDetail from "@/components/details/HeaderEarnDetail";
@@ -9,8 +9,8 @@ import DetailEarnMoreTable from "@/components/moreTable/DetailEarnMoreTable";
 import { fetchVault, fetchMarkets } from "@/utils/graph";
 import { InvestmentData, VaultBreakdown } from "@/types";
 import { curators } from "@/utils/const";
-import { formatTokenValue } from "@/utils/utils";
-import { getVaultDetail } from "@/utils/contract";
+import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
+import { getVaultDetail, getMarketInfo } from "@/utils/contract";
 
 const EarnDetailPage: React.FC = () => {
   const router = useRouter();
@@ -48,20 +48,19 @@ const EarnDetailPage: React.FC = () => {
                 );
 
                 if (marketItem) {
-                  // const marketInfo = await getMarketInfo(queueItem.market.id);
+                  const marketInfo = await getMarketInfo(marketItem.id);
 
                   return {
                     allowcation: 0,
-                    // supply: formatTokenValue(
-                    //   marketInfo.totalSupplyAssets,
-                    //   marketItem.inputToken.id
-                    // ),
-                    // borrow: formatTokenValue(
-                    //   marketInfo.totalBorrowAssets,
-                    //   marketItem.borrowedToken.id
-                    // ),
-                    supply: 0,
-                    borrow: 0,
+                    supply: formatTokenValue(
+                      marketInfo.totalSupplyAssets,
+                      fetchedVault.asset.id
+                    ),
+                    borrow: formatTokenValue(
+                      marketInfo.totalBorrowAssets,
+                      fetchedVault.asset.id
+                    ),
+                    supplyToken: fetchedVault.asset.id,
                     collateral: marketItem.inputToken.id,
                     lltv: formatTokenValue(BigInt(marketItem.lltv), "", 18),
                     credora: "rating",

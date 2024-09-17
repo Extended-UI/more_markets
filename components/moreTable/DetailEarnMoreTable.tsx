@@ -1,20 +1,12 @@
 "use client";
 
 import React from "react";
-import Icon from "../FontAwesomeIcon";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import TableHeaderCell from "./MoreTableHeader";
-import ButtonDialog from "../buttonDialog/buttonDialog";
-import VaultDeposit from "../modal/deposit/VaultDeposit";
-import TotalVolumeToken from "../token/TotalVolumeToken";
-import IconToken from "../token/IconToken";
 import ListIconToken from "../token/ListIconToken";
-import { useRouter } from "next/navigation";
-import { DetailEarnData } from "@/types/detailEarnData";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import { InvestmentData, VaultBreakdown } from "@/types";
+import { VaultBreakdown } from "@/types";
 
 interface Props {
   breakdowns: VaultBreakdown[];
@@ -117,15 +109,15 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
             >
               <td className="py-4 px-6 items-center h-full  ">
                 <div className="flex justify-start ">
-                  <FormatPourcentage value={(item.allowcation / 100)} />
+                  <FormatPourcentage value={item.allowcation / 100} />
                 </div>
               </td>
               <td className="py-4  items-center h-full ">
                 <div className="flex justify-start">
                   <FormatTokenMillion
                     value={Number(item.supply)}
-                    token={item.collateral}
-                    totalValue={Number(item.supply)}
+                    token={item.supplyToken}
+                    totalValue={0}
                   />
                 </div>
               </td>
