@@ -131,6 +131,38 @@ export const setTokenPermit = async (
   return result;
 };
 
+export const setMarketsAuthorize = async (
+  account: `0x${string}`,
+  nonce: bigint,
+  deadline: bigint
+): Promise<string> => {
+  const result = await signTypedData(config, {
+    types: {
+      Authorization: [
+        { name: "authorizer", type: "address" },
+        { name: "authorized", type: "address" },
+        { name: "isAuthorized", type: "bool" },
+        { name: "nonce", type: "uint256" },
+        { name: "deadline", type: "uint256" },
+      ],
+    },
+    primaryType: "Authorization",
+    message: {
+      authorizer: account,
+      authorized: contracts.MORE_BUNDLER as `0x${string}`,
+      isAuthorized: true,
+      nonce,
+      deadline,
+    },
+    domain: {
+      verifyingContract: contracts.MORE_MARKETS as `0x${string}`,
+      chainId: 545,
+    },
+  });
+
+  return result;
+};
+
 export const setVaultPermit = async (
   vaultName: string,
   account: `0x${string}`,
@@ -222,8 +254,7 @@ export const getMarketInfo = async (marketId: string): Promise<MarketInfo> => {
     totalBorrowShares: (infos as any[])[3],
     lastUpdate: (infos as any[])[4],
     fee: (infos as any[])[5],
-    isPremiumFeeEnabled: (infos as any[])[6],
-    premiumFee: (infos as any[])[7],
+    premiumFee: (infos as any[])[6],
   } as MarketInfo;
 };
 
@@ -273,8 +304,7 @@ export const getMarketData = async (marketId: string): Promise<Market> => {
       totalBorrowShares: getVauleBigint(infos, 3),
       lastUpdate: getVauleBigint(infos, 4),
       fee: getVauleBigint(infos, 5),
-      isPremiumFeeEnabled: getVauleBoolean(infos, 6),
-      premiumFee: getVauleBigint(infos, 7),
+      premiumFee: getVauleBigint(infos, 6),
     },
   } as Market;
 };
@@ -365,6 +395,26 @@ export const getPermitNonce = async (args: any[]): Promise<number> => {
   return Number((nonceInfo as any[])[2]);
 };
 
+export const getAuthorizeNonce = async (account: string): Promise<bigint> => {
+  const nonceInfo = await readContract(config, {
+    ...marketsInstance,
+    functionName: "nonce",
+    args: [account],
+  });
+
+  return nonceInfo as bigint;
+};
+
+export const checkAuthorized = async (account: string): Promise<boolean> => {
+  const authorizeInfo = await readContract(config, {
+    ...marketsInstance,
+    functionName: "isAuthorized",
+    args: [account, contracts.MORE_BUNDLER],
+  });
+
+  return authorizeInfo as boolean;
+};
+
 export const getVaultNonce = async (
   vaultAddress: `0x${string}`,
   account: string
@@ -432,8 +482,29 @@ export const withdrawFromVaults = async (
   account: string,
   amount: bigint,
   deadline: bigint,
-  signhash: string
+  signhash: string,
+  authHash: string,
+  authNonce: bigint
 ): Promise<string> => {
+  // authorize
+  const authorized = authHash.length > 0;
+  let authorize;
+  if (!authorized) {
+    const r1 = authHash.slice(0, 66);
+    const s1 = "0x" + authHash.slice(66, 130);
+    const v1 = "0x" + authHash.slice(130, 132);
+
+    authorize = encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "morphoSetAuthorizationWithSig",
+      args: [
+        [account, contracts.MORE_BUNDLER, true, authNonce, deadline],
+        [v1, r1, s1],
+        false,
+      ],
+    });
+  }
+
   const r = signhash.slice(0, 66);
   const s = "0x" + signhash.slice(66, 130);
   const v = "0x" + signhash.slice(130, 132);
@@ -455,7 +526,11 @@ export const withdrawFromVaults = async (
   const txHash = await writeContract(config, {
     ...bundlerInstance,
     functionName: "multicall",
-    args: [[permit, erc4626Withdraw]],
+    args: [
+      authorized
+        ? [permit, erc4626Withdraw]
+        : [authorize, permit, erc4626Withdraw],
+    ],
     gas: parseUnits(gasLimit, 6),
   });
 

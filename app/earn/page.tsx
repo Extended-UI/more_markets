@@ -6,10 +6,10 @@ import React, { useEffect, useState } from "react";
 import EarnMoreTable from "@/components/moreTable/EarnMoreTable";
 import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
 import { InvestmentData } from "@/types";
-import { curators } from "@/utils/const";
 import { formatTokenValue } from "@/utils/utils";
 import { getVaultDetail } from "@/utils/contract";
 import { fetchMarkets, fetchVaults } from "@/utils/graph";
+import { curators, blacklistedVaults } from "@/utils/const";
 
 const EarnPage: React.FC = () => {
   const [investments, setInvestments] = useState<InvestmentData[]>([]);
@@ -23,6 +23,8 @@ const EarnPage: React.FC = () => {
 
       if (marketsArr && vaultsArr) {
         const promises = vaultsArr.map(async (vault) => {
+          if (blacklistedVaults.includes(vault.id)) return null;
+
           // get collaterals
           const collaterals: string[] = vault.supplyQueue.map((queue) => {
             const marketItem = marketsArr.find(
@@ -58,7 +60,9 @@ const EarnPage: React.FC = () => {
           } as InvestmentData;
         });
 
-        const fetchedVaults = await Promise.all(promises);
+        const fetchedVaults = (await Promise.all(promises)).filter(
+          (item) => item !== null
+        );
         setInvestments(fetchedVaults);
       }
     };

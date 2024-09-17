@@ -2,16 +2,15 @@
 
 import { useAccount } from "wagmi";
 import React, { useState, useEffect } from "react";
-import BorrowMoreTable from "@/components/moreTable/BorrowMoreTable";
 import LoanMoreTable from "@/components/moreTable/LoanMoreTable";
-import { fetchMarkets, fetchPositions } from "@/utils/graph";
-import { GraphMarket, GraphPosition, BorrowMarket } from "@/types";
+import BorrowMoreTable from "@/components/moreTable/BorrowMoreTable";
 import { getMarketData } from "@/utils/contract";
+import { GraphPosition, BorrowMarket } from "@/types";
+import { fetchMarkets, fetchPositions } from "@/utils/graph";
 
 const BorrowPage: React.FC = () => {
   const { address: userAddress } = useAccount();
 
-  const [markets, setMarkets] = useState<GraphMarket[]>([]);
   const [positions, setPositions] = useState<GraphPosition[]>([]);
   const [borrowMarkets, setBorrowMarkets] = useState<BorrowMarket[]>([]);
 
@@ -34,16 +33,18 @@ const BorrowPage: React.FC = () => {
       const borrowMarketList = await Promise.all(promises);
       setBorrowMarkets(borrowMarketList);
 
-      setMarkets(marketsArr);
+      console.log(positionsArr);
       setPositions(positionsArr);
     };
 
     initFunc();
   }, [userAddress]);
 
+  const updateInfo = async (marketId: string) => {};
+
   return (
     <>
-      <LoanMoreTable positionArr={positions} marketsArr={markets} />
+      <LoanMoreTable positions={positions} borrowMarkets={borrowMarkets} />
 
       <h1 className="text-4xl mb-4">MORE Markets</h1>
       <BorrowMoreTable borrowMarketList={borrowMarkets} />

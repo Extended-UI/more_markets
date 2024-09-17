@@ -10,7 +10,7 @@ import { fetchVault, fetchMarkets } from "@/utils/graph";
 import { InvestmentData, VaultBreakdown } from "@/types";
 import { curators } from "@/utils/const";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
-import { getVaultDetail, getMarketInfo } from "@/utils/contract";
+import { getVaultDetail, getMarketData } from "@/utils/contract";
 
 const EarnDetailPage: React.FC = () => {
   const router = useRouter();
@@ -48,21 +48,22 @@ const EarnDetailPage: React.FC = () => {
                 );
 
                 if (marketItem) {
-                  const marketInfo = await getMarketInfo(marketItem.id);
+                  const marketData = await getMarketData(marketItem.id);
 
                   return {
                     allowcation: 0,
                     supply: formatTokenValue(
-                      marketInfo.totalSupplyAssets,
+                      marketData.info.totalSupplyAssets,
                       fetchedVault.asset.id
                     ),
                     borrow: formatTokenValue(
-                      marketInfo.totalBorrowAssets,
+                      marketData.info.totalBorrowAssets,
                       fetchedVault.asset.id
                     ),
                     supplyToken: fetchedVault.asset.id,
                     collateral: marketItem.inputToken.id,
                     lltv: formatTokenValue(BigInt(marketItem.lltv), "", 18),
+                    lltv2: getPremiumLltv(marketData.params),
                     credora: "rating",
                   } as VaultBreakdown;
                 }

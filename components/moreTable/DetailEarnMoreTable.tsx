@@ -115,7 +115,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
               <td className="py-4  items-center h-full ">
                 <div className="flex justify-start">
                   <FormatTokenMillion
-                    value={Number(item.supply)}
+                    value={item.supply}
                     token={item.supplyToken}
                     totalValue={0}
                   />
@@ -133,7 +133,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
               <td className="py-4 px-6 items-center  ">
                 <div className=" flex justify-start py-4 ">
                   {" "}
-                  <FormatTwoPourcentage value={Number(item.lltv)} />{" "}
+                  <FormatTwoPourcentage value={item.lltv} value2={item.lltv2} />
                 </div>
               </td>
 

@@ -5,6 +5,6 @@ export interface VaultBreakdown {
   supplyToken: string;
   collateral: string;
   lltv: number;
-  // lltv2: number | null;
+  lltv2: number | null;
   credora: string;
 }

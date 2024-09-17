@@ -5,14 +5,26 @@ export const VaultsAbi: Abi = [
     type: "function",
     name: "DECIMALS_OFFSET",
     inputs: [],
-    outputs: [{ name: "", type: "uint8", internalType: "uint8" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "uint8",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "DOMAIN_SEPARATOR",
     inputs: [],
-    outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -65,9 +77,21 @@ export const VaultsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -114,97 +138,221 @@ export const VaultsAbi: Abi = [
     type: "function",
     name: "allowance",
     inputs: [
-      { name: "owner", type: "address", internalType: "address" },
-      { name: "spender", type: "address", internalType: "address" },
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "spender",
+        type: "address",
+        internalType: "address",
+      },
     ],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "approve",
     inputs: [
-      { name: "spender", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "spender",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "asset",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "balanceOf",
-    inputs: [{ name: "account", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "config",
-    inputs: [{ name: "", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
     outputs: [
-      { name: "cap", type: "uint184", internalType: "uint184" },
-      { name: "enabled", type: "bool", internalType: "bool" },
-      { name: "removableAt", type: "uint64", internalType: "uint64" },
+      {
+        name: "cap",
+        type: "uint184",
+        internalType: "uint184",
+      },
+      {
+        name: "enabled",
+        type: "bool",
+        internalType: "bool",
+      },
+      {
+        name: "removableAt",
+        type: "uint64",
+        internalType: "uint64",
+      },
     ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "convertToAssets",
-    inputs: [{ name: "shares", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "convertToShares",
-    inputs: [{ name: "assets", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "curator",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "decimals",
     inputs: [],
-    outputs: [{ name: "", type: "uint8", internalType: "uint8" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "uint8",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "decreaseAllowance",
     inputs: [
-      { name: "spender", type: "address", internalType: "address" },
+      {
+        name: "spender",
+        type: "address",
+        internalType: "address",
+      },
       {
         name: "subtractedValue",
         type: "uint256",
         internalType: "uint256",
       },
     ],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "deposit",
     inputs: [
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
     ],
-    outputs: [{ name: "shares", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
@@ -212,16 +360,36 @@ export const VaultsAbi: Abi = [
     name: "eip712Domain",
     inputs: [],
     outputs: [
-      { name: "fields", type: "bytes1", internalType: "bytes1" },
-      { name: "name", type: "string", internalType: "string" },
-      { name: "version", type: "string", internalType: "string" },
-      { name: "chainId", type: "uint256", internalType: "uint256" },
+      {
+        name: "fields",
+        type: "bytes1",
+        internalType: "bytes1",
+      },
+      {
+        name: "name",
+        type: "string",
+        internalType: "string",
+      },
+      {
+        name: "version",
+        type: "string",
+        internalType: "string",
+      },
+      {
+        name: "chainId",
+        type: "uint256",
+        internalType: "uint256",
+      },
       {
         name: "verifyingContract",
         type: "address",
         internalType: "address",
       },
-      { name: "salt", type: "bytes32", internalType: "bytes32" },
+      {
+        name: "salt",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
       {
         name: "extensions",
         type: "uint256[]",
@@ -234,39 +402,79 @@ export const VaultsAbi: Abi = [
     type: "function",
     name: "fee",
     inputs: [],
-    outputs: [{ name: "", type: "uint96", internalType: "uint96" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint96",
+        internalType: "uint96",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "feeRecipient",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "guardian",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "increaseAllowance",
     inputs: [
-      { name: "spender", type: "address", internalType: "address" },
-      { name: "addedValue", type: "uint256", internalType: "uint256" },
+      {
+        name: "spender",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "addedValue",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "initialize",
     inputs: [
-      { name: "owner", type: "address", internalType: "address" },
-      { name: "moreMarkets", type: "address", internalType: "address" },
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "moreMarkets",
+        type: "address",
+        internalType: "address",
+      },
       {
         name: "vaultsFactory",
         type: "address",
@@ -277,9 +485,21 @@ export const VaultsAbi: Abi = [
         type: "uint256",
         internalType: "uint256",
       },
-      { name: "_asset", type: "address", internalType: "address" },
-      { name: "_name", type: "string", internalType: "string" },
-      { name: "_symbol", type: "string", internalType: "string" },
+      {
+        name: "_asset",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "_name",
+        type: "string",
+        internalType: "string",
+      },
+      {
+        name: "_symbol",
+        type: "string",
+        internalType: "string",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -287,90 +507,220 @@ export const VaultsAbi: Abi = [
   {
     type: "function",
     name: "isAllocator",
-    inputs: [{ name: "", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "lastTotalAssets",
     inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "maxDeposit",
-    inputs: [{ name: "", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "maxMint",
-    inputs: [{ name: "", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "maxRedeem",
-    inputs: [{ name: "owner", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "maxWithdraw",
-    inputs: [{ name: "owner", type: "address", internalType: "address" }],
-    outputs: [{ name: "assets", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "mint",
     inputs: [
-      { name: "shares", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
     ],
-    outputs: [{ name: "assets", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "multicall",
-    inputs: [{ name: "data", type: "bytes[]", internalType: "bytes[]" }],
-    outputs: [{ name: "results", type: "bytes[]", internalType: "bytes[]" }],
+    inputs: [
+      {
+        name: "data",
+        type: "bytes[]",
+        internalType: "bytes[]",
+      },
+    ],
+    outputs: [
+      {
+        name: "results",
+        type: "bytes[]",
+        internalType: "bytes[]",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "name",
     inputs: [],
-    outputs: [{ name: "", type: "string", internalType: "string" }],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "nonces",
-    inputs: [{ name: "owner", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "owner",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "pendingCap",
-    inputs: [{ name: "", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
     outputs: [
-      { name: "value", type: "uint192", internalType: "uint192" },
-      { name: "validAt", type: "uint64", internalType: "uint64" },
+      {
+        name: "value",
+        type: "uint192",
+        internalType: "uint192",
+      },
+      {
+        name: "validAt",
+        type: "uint64",
+        internalType: "uint64",
+      },
     ],
     stateMutability: "view",
   },
@@ -379,8 +729,16 @@ export const VaultsAbi: Abi = [
     name: "pendingGuardian",
     inputs: [],
     outputs: [
-      { name: "value", type: "address", internalType: "address" },
-      { name: "validAt", type: "uint64", internalType: "uint64" },
+      {
+        name: "value",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "validAt",
+        type: "uint64",
+        internalType: "uint64",
+      },
     ],
     stateMutability: "view",
   },
@@ -388,7 +746,13 @@ export const VaultsAbi: Abi = [
     type: "function",
     name: "pendingOwner",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -396,8 +760,16 @@ export const VaultsAbi: Abi = [
     name: "pendingTimelock",
     inputs: [],
     outputs: [
-      { name: "value", type: "uint192", internalType: "uint192" },
-      { name: "validAt", type: "uint64", internalType: "uint64" },
+      {
+        name: "value",
+        type: "uint192",
+        internalType: "uint192",
+      },
+      {
+        name: "validAt",
+        type: "uint64",
+        internalType: "uint64",
+      },
     ],
     stateMutability: "view",
   },
@@ -405,13 +777,41 @@ export const VaultsAbi: Abi = [
     type: "function",
     name: "permit",
     inputs: [
-      { name: "owner", type: "address", internalType: "address" },
-      { name: "spender", type: "address", internalType: "address" },
-      { name: "value", type: "uint256", internalType: "uint256" },
-      { name: "deadline", type: "uint256", internalType: "uint256" },
-      { name: "v", type: "uint8", internalType: "uint8" },
-      { name: "r", type: "bytes32", internalType: "bytes32" },
-      { name: "s", type: "bytes32", internalType: "bytes32" },
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "spender",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "value",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "deadline",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "v",
+        type: "uint8",
+        internalType: "uint8",
+      },
+      {
+        name: "r",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+      {
+        name: "s",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -419,29 +819,77 @@ export const VaultsAbi: Abi = [
   {
     type: "function",
     name: "previewDeposit",
-    inputs: [{ name: "assets", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "previewMint",
-    inputs: [{ name: "shares", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "previewRedeem",
-    inputs: [{ name: "shares", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "previewWithdraw",
-    inputs: [{ name: "assets", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -478,7 +926,11 @@ export const VaultsAbi: Abi = [
                 type: "address",
                 internalType: "address",
               },
-              { name: "irm", type: "address", internalType: "address" },
+              {
+                name: "irm",
+                type: "address",
+                internalType: "address",
+              },
               {
                 name: "lltv",
                 type: "uint256",
@@ -501,7 +953,11 @@ export const VaultsAbi: Abi = [
               },
             ],
           },
-          { name: "assets", type: "uint256", internalType: "uint256" },
+          {
+            name: "assets",
+            type: "uint256",
+            internalType: "uint256",
+          },
         ],
       },
     ],
@@ -512,11 +968,29 @@ export const VaultsAbi: Abi = [
     type: "function",
     name: "redeem",
     inputs: [
-      { name: "shares", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
-      { name: "owner", type: "address", internalType: "address" },
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
     ],
-    outputs: [{ name: "assets", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
@@ -529,7 +1003,13 @@ export const VaultsAbi: Abi = [
   {
     type: "function",
     name: "revokePendingCap",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -543,7 +1023,13 @@ export const VaultsAbi: Abi = [
   {
     type: "function",
     name: "revokePendingMarketRemoval",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -557,14 +1043,26 @@ export const VaultsAbi: Abi = [
   {
     type: "function",
     name: "setCurator",
-    inputs: [{ name: "newCurator", type: "address", internalType: "address" }],
+    inputs: [
+      {
+        name: "newCurator",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "setFee",
-    inputs: [{ name: "newFee", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "newFee",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -590,7 +1088,11 @@ export const VaultsAbi: Abi = [
         type: "address",
         internalType: "address",
       },
-      { name: "newIsAllocator", type: "bool", internalType: "bool" },
+      {
+        name: "newIsAllocator",
+        type: "bool",
+        internalType: "bool",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -624,7 +1126,13 @@ export const VaultsAbi: Abi = [
   {
     type: "function",
     name: "skim",
-    inputs: [{ name: "token", type: "address", internalType: "address" }],
+    inputs: [
+      {
+        name: "token",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -632,7 +1140,13 @@ export const VaultsAbi: Abi = [
     type: "function",
     name: "skimRecipient",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -659,9 +1173,21 @@ export const VaultsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -679,7 +1205,11 @@ export const VaultsAbi: Abi = [
           },
         ],
       },
-      { name: "newSupplyCap", type: "uint256", internalType: "uint256" },
+      {
+        name: "newSupplyCap",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -687,7 +1217,13 @@ export const VaultsAbi: Abi = [
   {
     type: "function",
     name: "submitGuardian",
-    inputs: [{ name: "newGuardian", type: "address", internalType: "address" }],
+    inputs: [
+      {
+        name: "newGuardian",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -715,9 +1251,21 @@ export const VaultsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -742,84 +1290,176 @@ export const VaultsAbi: Abi = [
   {
     type: "function",
     name: "submitTimelock",
-    inputs: [{ name: "newTimelock", type: "uint256", internalType: "uint256" }],
+    inputs: [
+      {
+        name: "newTimelock",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "supplyQueue",
-    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "supplyQueueLength",
     inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "symbol",
     inputs: [],
-    outputs: [{ name: "", type: "string", internalType: "string" }],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "timelock",
     inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "totalAssets",
     inputs: [],
-    outputs: [{ name: "assets", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "totalSupply",
     inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "transfer",
     inputs: [
-      { name: "to", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "to",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "transferFrom",
     inputs: [
-      { name: "from", type: "address", internalType: "address" },
-      { name: "to", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "from",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "to",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "transferOwnership",
-    inputs: [{ name: "newOwner", type: "address", internalType: "address" }],
+    inputs: [
+      {
+        name: "newOwner",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "updateWithdrawQueue",
-    inputs: [{ name: "indexes", type: "uint256[]", internalType: "uint256[]" }],
+    inputs: [
+      {
+        name: "indexes",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -827,25 +1467,61 @@ export const VaultsAbi: Abi = [
     type: "function",
     name: "withdraw",
     inputs: [
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
-      { name: "owner", type: "address", internalType: "address" },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
     ],
-    outputs: [{ name: "shares", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "withdrawQueue",
-    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    outputs: [{ name: "", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "withdrawQueueLength",
     inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -1454,77 +2130,219 @@ export const VaultsAbi: Abi = [
     ],
     anonymous: false,
   },
-  { type: "error", name: "AboveMaxTimelock", inputs: [] },
-  { type: "error", name: "AllCapsReached", inputs: [] },
-  { type: "error", name: "AlreadyPending", inputs: [] },
-  { type: "error", name: "AlreadySet", inputs: [] },
-  { type: "error", name: "BelowMinTimelock", inputs: [] },
+  {
+    type: "error",
+    name: "AboveMaxTimelock",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "AllCapsReached",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "AlreadyPending",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "AlreadySet",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "BelowMinTimelock",
+    inputs: [],
+  },
   {
     type: "error",
     name: "DuplicateMarket",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
   {
     type: "error",
     name: "InconsistentAsset",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
-  { type: "error", name: "InconsistentReallocation", inputs: [] },
+  {
+    type: "error",
+    name: "InconsistentReallocation",
+    inputs: [],
+  },
   {
     type: "error",
     name: "InvalidMarketRemovalNonZeroCap",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
   {
     type: "error",
     name: "InvalidMarketRemovalNonZeroSupply",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
   {
     type: "error",
     name: "InvalidMarketRemovalTimelockNotElapsed",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
-  { type: "error", name: "MarketNotCreated", inputs: [] },
+  {
+    type: "error",
+    name: "MarketNotCreated",
+    inputs: [],
+  },
   {
     type: "error",
     name: "MarketNotEnabled",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
-  { type: "error", name: "MaxFeeExceeded", inputs: [] },
-  { type: "error", name: "MaxQueueLengthExceeded", inputs: [] },
-  { type: "error", name: "NoPendingValue", inputs: [] },
-  { type: "error", name: "NonZeroCap", inputs: [] },
-  { type: "error", name: "NotAllocatorRole", inputs: [] },
-  { type: "error", name: "NotCuratorNorGuardianRole", inputs: [] },
-  { type: "error", name: "NotCuratorRole", inputs: [] },
-  { type: "error", name: "NotEnoughLiquidity", inputs: [] },
-  { type: "error", name: "NotGuardianRole", inputs: [] },
+  {
+    type: "error",
+    name: "MaxFeeExceeded",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "MaxQueueLengthExceeded",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NoPendingValue",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NonZeroCap",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NotAllocatorRole",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NotCuratorNorGuardianRole",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NotCuratorRole",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NotEnoughLiquidity",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NotGuardianRole",
+    inputs: [],
+  },
   {
     type: "error",
     name: "PendingCap",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
-  { type: "error", name: "PendingRemoval", inputs: [] },
+  {
+    type: "error",
+    name: "PendingRemoval",
+    inputs: [],
+  },
   {
     type: "error",
     name: "SafeCastOverflowedUintDowncast",
     inputs: [
-      { name: "bits", type: "uint8", internalType: "uint8" },
-      { name: "value", type: "uint256", internalType: "uint256" },
+      {
+        name: "bits",
+        type: "uint8",
+        internalType: "uint8",
+      },
+      {
+        name: "value",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
   },
   {
     type: "error",
     name: "SupplyCapExceeded",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
-  { type: "error", name: "TimelockNotElapsed", inputs: [] },
+  {
+    type: "error",
+    name: "TimelockNotElapsed",
+    inputs: [],
+  },
   {
     type: "error",
     name: "UnauthorizedMarket",
-    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    inputs: [
+      {
+        name: "id",
+        type: "bytes32",
+        internalType: "Id",
+      },
+    ],
   },
-  { type: "error", name: "ZeroAddress", inputs: [] },
-  { type: "error", name: "ZeroFeeRecipient", inputs: [] },
+  {
+    type: "error",
+    name: "ZeroAddress",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "ZeroFeeRecipient",
+    inputs: [],
+  },
 ] as const;

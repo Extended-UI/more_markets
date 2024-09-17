@@ -36,7 +36,6 @@ const VaultWithdrawInput: React.FC<Props> = ({
     }
   };
 
-  const balanceString = item.totalDeposits.toString();
   const tokenInfo = getTokenInfo(item.assetAddress);
 
   return (

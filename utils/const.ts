@@ -5,41 +5,40 @@ import { Permit2Abi } from "@/app/abi/Permit2Abi";
 import { IToken } from "@/types";
 
 export const contracts = {
-  MORE_MARKETS: "0x7EBf3217f8A54De432ACFe6E803576CB859E22a3",
-  MORE_IRM: "0x9C1f2140AAbe64ABCfbBeCf1Bdb90022bC7c9052",
-  MORE_VAULTS_FACTORY: "0xa738ff722cb86970eddca22e4f06eca62c1c581a",
+  MORE_MARKETS: "0x9a9B20fAb58a0fF084e70283E91448bB31d0FAfa",
+  MORE_BUNDLER: "0x34596c09bd484e315c9915a2a1aa6b50bc99428a",
+  MORE_VAULTS_FACTORY: "0xACBdE7028CC21FD95496e3481AdCe5aDdB3C3B38",
   MULTICALL3: "0xF7d11c74B5706155d7C6DBe931d590611a371a8a",
-  MORE_BUNDLER: "0x44F51B18a345A35A222Cb0bA188D79b22eB42293",
   PERMIT2: "0x000000000022D473030F116dDEE9F6B43aC78BA3",
 };
 
 export const tokens: { [key: string]: IToken } = {
-  "0xaca1ab5eb856f7645cd6b9694ba840f3c18bc83e": {
+  "0x5e65b6b04fba51d95409712978cb91e99d93ae73": {
     symbol: "USDCf",
     name: "USDCf(USDC) mock coin",
     decimals: 6,
   },
-  "0x4d40cdce3864ca8fcba1b7de4c0a66f37b28092c": {
+  "0xd7d43ab7b365f0d0789ae83f4385fa710ffdc98f": {
     symbol: "USDf",
     name: "USDf(PYUSD) mock coin",
     decimals: 6,
   },
-  "0x866e7292a4b9813146591cb6211aac33432cf07f": {
+  "0x208d09d2a6dd176e3e95b3f0de172a7471c5b2d6": {
     symbol: "BTCf",
     name: "BTCf(wBTC) mock coin",
     decimals: 8,
   },
-  "0x50be444228f6f27899e52e56718c0ae67f962185": {
+  "0x059a77239dafa770977dd9f1e98632c3e4559848": {
     symbol: "ETHf",
     name: "ETHf(wETH) mock coin",
     decimals: 18,
   },
-  "0x3d08ce8ba948ddd6ab0745670134a55e8e35aa8c": {
+  "0xe132751ab5a14ac0bd3cb40571a9248ee7a2a9ea": {
     symbol: "ankr.FLOW",
     name: "ankr.FLOW mock coin",
     decimals: 18,
   },
-  "0xe6de44ac50c1d1c83f67695f6b4820a317285fc6": {
+  "0xe0fd0a2a4c2e59a479aab0cf44244e355c508766": {
     symbol: "wFLOW",
     name: "Wrapped FLOW",
     decimals: 18,
@@ -54,10 +53,11 @@ export const curators: { [key: string]: string } = {
   "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Lighthouse Labs",
 };
 
-export const MORE_SUBGRAPH =
-  "https://graph.more.markets/subgraphs/name/more-markets/more-subgraph";
+// export const MORE_SUBGRAPH =
+//   "https://graph.more.markets/subgraphs/name/more-markets/more-subgraph";
 
-// export const MORE_SUBGRAPH = "http://localhost:8000/subgraphs/name/more-markets/more-subgraph";
+export const MORE_SUBGRAPH =
+  "http://localhost:8000/subgraphs/name/more-markets/more-subgraph";
 
 export const initBalance: GetBalanceReturnType = {
   decimals: 18,
@@ -93,3 +93,5 @@ export const coingecko_ids: { [key in string]: string } = {
 };
 
 export const gasLimit = "0.8";
+
+export const blacklistedVaults = ["0xeabddabfe3d118092a4bbaf3c13bd923bc8f134e"];

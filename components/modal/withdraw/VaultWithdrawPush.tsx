@@ -15,6 +15,9 @@ import {
   withdrawFromVaults,
   getVaultNonce,
   setVaultPermit,
+  getAuthorizeNonce,
+  checkAuthorized,
+  setMarketsAuthorize,
 } from "@/utils/contract";
 
 interface Props {
@@ -33,21 +36,31 @@ const VaultWithdrawPush: React.FC<Props> = ({
   validWithdraw,
 }) => {
   const { address: userAddress } = useAccount();
+  const [hasAuth, setHasAuth] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [permitHash, setPermitHash] = useState("");
   const [deadline, setDeadline] = useState(BigInt(0));
+  const [authorizeHash, setAuthorizeHash] = useState("");
   const [vaultNonce, setVaultNonce] = useState(BigInt(0));
+  const [authorizeNonce, setAuthorizeNonce] = useState(BigInt(0));
 
   const tokenInfo = getTokenInfo(item.assetAddress);
   const tokenAmount = parseUnits(amount.toString(), tokenInfo.decimals);
 
   useEffect(() => {
     const initApprove = async () => {
-      const nonce = userAddress
-        ? await getVaultNonce(item.vaultId as `0x${string}`, userAddress)
-        : BigInt(0);
+      const [nonce, aNonce, authInfo] = userAddress
+        ? await Promise.all([
+            getVaultNonce(item.vaultId as `0x${string}`, userAddress),
+            getAuthorizeNonce(userAddress),
+            checkAuthorized(userAddress),
+          ])
+        : [BigInt(0), BigInt(0), false];
+
       setVaultNonce(nonce);
+      setHasAuth(authInfo);
+      setAuthorizeNonce(aNonce);
     };
 
     initApprove();
@@ -56,7 +69,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
   const handlePermit = async () => {
     if (userAddress) {
       try {
-        const deadline = getTimestamp();
         const signHash = await setVaultPermit(
           item.vaultName,
           userAddress,
@@ -68,7 +80,23 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
         setPermitHash(signHash);
         setHasPermit(true);
-        setDeadline(deadline);
+      } catch (err) {}
+    }
+  };
+
+  const handleAuthorize = async () => {
+    if (userAddress && !hasAuth) {
+      try {
+        const authDeadline = getTimestamp();
+        const authHash = await setMarketsAuthorize(
+          userAddress,
+          authorizeNonce + BigInt(1),
+          authDeadline
+        );
+
+        setHasAuth(true);
+        setAuthorizeHash(authHash);
+        setDeadline(authDeadline);
       } catch (err) {}
     }
   };
@@ -82,7 +110,9 @@ const VaultWithdrawPush: React.FC<Props> = ({
           userAddress,
           tokenAmount,
           deadline,
-          permitHash
+          permitHash,
+          authorizeHash,
+          authorizeNonce
         );
 
         setTxhash(hash);
@@ -109,6 +139,21 @@ const VaultWithdrawPush: React.FC<Props> = ({
           <span className="more-text-gray">Net APY:</span>{" "}
           <FormatTwoPourcentage value={item.netAPY} />{" "}
         </div>
+      </div>
+      <div className="relative more-bg-primary px-8 rounded-t-[5px] ">
+        <TokenAmount
+          title="Authorize"
+          token={item.assetAddress}
+          amount={amount}
+          ltv={"ltv"}
+          totalTokenAmount={item.totalDeposits}
+        />
+        {hasAuth && (
+          <CheckCircleIcon
+            className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+            style={{ position: "absolute", top: "1.5rem", left: "8.5rem" }}
+          />
+        )}
       </div>
       <div className="relative more-bg-primary px-8 rounded-t-[5px] ">
         <TokenAmount
@@ -165,7 +210,15 @@ const VaultWithdrawPush: React.FC<Props> = ({
             color="gray"
           />
         </div>
-        {hasPermit ? (
+        {!hasAuth ? (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Authorize"
+            disabled={isLoading}
+            onClick={handleAuthorize}
+            color="primary"
+          />
+        ) : hasPermit ? (
           <MoreButton
             className="text-2xl py-2"
             text="Withdraw"

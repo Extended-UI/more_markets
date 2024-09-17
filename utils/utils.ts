@@ -57,7 +57,7 @@ export const getTokenInfo = (token: string | undefined): IToken => {
 
   if (token) {
     const tokenAddress =
-      token == "wflow" ? "0xe6de44ac50c1d1c83f67695f6b4820a317285fc6" : token;
+      token == "wflow" ? "0xe0fd0a2a4c2e59a479aab0cf44244e355c508766" : token;
     const tokenInfo = tokens[tokenAddress];
 
     return tokenInfo ? tokenInfo : initVal;

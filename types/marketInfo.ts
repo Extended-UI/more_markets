@@ -5,6 +5,5 @@ export interface MarketInfo {
   totalBorrowShares: bigint;
   lastUpdate: bigint;
   fee: bigint;
-  isPremiumFeeEnabled: boolean;
   premiumFee: bigint;
 }

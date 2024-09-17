@@ -3,8 +3,23 @@ import { Abi } from "viem";
 export const BundlerAbi: Abi = [
   {
     type: "constructor",
-    inputs: [{ name: "morpho", type: "address", internalType: "address" }],
+    inputs: [
+      {
+        name: "morpho",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "wNative",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "receive",
+    stateMutability: "payable",
   },
   {
     type: "function",
@@ -15,6 +30,19 @@ export const BundlerAbi: Abi = [
         name: "",
         type: "address",
         internalType: "contract IMoreMarketsBase",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "WRAPPED_NATIVE",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
       },
     ],
     stateMutability: "view",
@@ -48,10 +76,18 @@ export const BundlerAbi: Abi = [
                 type: "uint48",
                 internalType: "uint48",
               },
-              { name: "nonce", type: "uint48", internalType: "uint48" },
+              {
+                name: "nonce",
+                type: "uint48",
+                internalType: "uint48",
+              },
             ],
           },
-          { name: "spender", type: "address", internalType: "address" },
+          {
+            name: "spender",
+            type: "address",
+            internalType: "address",
+          },
           {
             name: "sigDeadline",
             type: "uint256",
@@ -59,8 +95,16 @@ export const BundlerAbi: Abi = [
           },
         ],
       },
-      { name: "signature", type: "bytes", internalType: "bytes" },
-      { name: "skipRevert", type: "bool", internalType: "bool" },
+      {
+        name: "signature",
+        type: "bytes",
+        internalType: "bytes",
+      },
+      {
+        name: "skipRevert",
+        type: "bool",
+        internalType: "bool",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -69,9 +113,21 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "erc20Transfer",
     inputs: [
-      { name: "asset", type: "address", internalType: "address" },
-      { name: "recipient", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "asset",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "recipient",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -80,8 +136,16 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "erc20TransferFrom",
     inputs: [
-      { name: "asset", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "asset",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -90,8 +154,16 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "erc20WrapperDepositFor",
     inputs: [
-      { name: "wrapper", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "wrapper",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -100,9 +172,21 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "erc20WrapperWithdrawTo",
     inputs: [
-      { name: "wrapper", type: "address", internalType: "address" },
-      { name: "account", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "wrapper",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -111,10 +195,26 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "erc4626Deposit",
     inputs: [
-      { name: "vault", type: "address", internalType: "address" },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "minShares", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
+      {
+        name: "vault",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "minShares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -123,10 +223,26 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "erc4626Mint",
     inputs: [
-      { name: "vault", type: "address", internalType: "address" },
-      { name: "shares", type: "uint256", internalType: "uint256" },
-      { name: "maxAssets", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
+      {
+        name: "vault",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "maxAssets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -135,11 +251,31 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "erc4626Redeem",
     inputs: [
-      { name: "vault", type: "address", internalType: "address" },
-      { name: "shares", type: "uint256", internalType: "uint256" },
-      { name: "minAssets", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
-      { name: "owner", type: "address", internalType: "address" },
+      {
+        name: "vault",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "minAssets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -148,11 +284,31 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "erc4626Withdraw",
     inputs: [
-      { name: "vault", type: "address", internalType: "address" },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "maxShares", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
-      { name: "owner", type: "address", internalType: "address" },
+      {
+        name: "vault",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "maxShares",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -161,7 +317,13 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "initiator",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -188,9 +350,21 @@ export const BundlerAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -208,14 +382,26 @@ export const BundlerAbi: Abi = [
           },
         ],
       },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "shares", type: "uint256", internalType: "uint256" },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
       {
         name: "slippageAmount",
         type: "uint256",
         internalType: "uint256",
       },
-      { name: "receiver", type: "address", internalType: "address" },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -224,9 +410,21 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "morphoFlashLoan",
     inputs: [
-      { name: "token", type: "address", internalType: "address" },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      {
+        name: "token",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "data",
+        type: "bytes",
+        internalType: "bytes",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -255,9 +453,21 @@ export const BundlerAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -275,15 +485,31 @@ export const BundlerAbi: Abi = [
           },
         ],
       },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "shares", type: "uint256", internalType: "uint256" },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
       {
         name: "slippageAmount",
         type: "uint256",
         internalType: "uint256",
       },
-      { name: "onBehalf", type: "address", internalType: "address" },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      {
+        name: "onBehalf",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "data",
+        type: "bytes",
+        internalType: "bytes",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -307,9 +533,21 @@ export const BundlerAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "isAuthorized", type: "bool", internalType: "bool" },
-          { name: "nonce", type: "uint256", internalType: "uint256" },
-          { name: "deadline", type: "uint256", internalType: "uint256" },
+          {
+            name: "isAuthorized",
+            type: "bool",
+            internalType: "bool",
+          },
+          {
+            name: "nonce",
+            type: "uint256",
+            internalType: "uint256",
+          },
+          {
+            name: "deadline",
+            type: "uint256",
+            internalType: "uint256",
+          },
         ],
       },
       {
@@ -317,12 +555,28 @@ export const BundlerAbi: Abi = [
         type: "tuple",
         internalType: "struct Signature",
         components: [
-          { name: "v", type: "uint8", internalType: "uint8" },
-          { name: "r", type: "bytes32", internalType: "bytes32" },
-          { name: "s", type: "bytes32", internalType: "bytes32" },
+          {
+            name: "v",
+            type: "uint8",
+            internalType: "uint8",
+          },
+          {
+            name: "r",
+            type: "bytes32",
+            internalType: "bytes32",
+          },
+          {
+            name: "s",
+            type: "bytes32",
+            internalType: "bytes32",
+          },
         ],
       },
-      { name: "skipRevert", type: "bool", internalType: "bool" },
+      {
+        name: "skipRevert",
+        type: "bool",
+        internalType: "bool",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -351,9 +605,21 @@ export const BundlerAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -371,15 +637,31 @@ export const BundlerAbi: Abi = [
           },
         ],
       },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "shares", type: "uint256", internalType: "uint256" },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
       {
         name: "slippageAmount",
         type: "uint256",
         internalType: "uint256",
       },
-      { name: "onBehalf", type: "address", internalType: "address" },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      {
+        name: "onBehalf",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "data",
+        type: "bytes",
+        internalType: "bytes",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -408,9 +690,21 @@ export const BundlerAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -428,9 +722,21 @@ export const BundlerAbi: Abi = [
           },
         ],
       },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "onBehalf", type: "address", internalType: "address" },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "onBehalf",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "data",
+        type: "bytes",
+        internalType: "bytes",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -459,9 +765,21 @@ export const BundlerAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -479,14 +797,26 @@ export const BundlerAbi: Abi = [
           },
         ],
       },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "shares", type: "uint256", internalType: "uint256" },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "shares",
+        type: "uint256",
+        internalType: "uint256",
+      },
       {
         name: "slippageAmount",
         type: "uint256",
         internalType: "uint256",
       },
-      { name: "receiver", type: "address", internalType: "address" },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -515,9 +845,21 @@ export const BundlerAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -535,8 +877,16 @@ export const BundlerAbi: Abi = [
           },
         ],
       },
-      { name: "assets", type: "uint256", internalType: "uint256" },
-      { name: "receiver", type: "address", internalType: "address" },
+      {
+        name: "assets",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -544,7 +894,13 @@ export const BundlerAbi: Abi = [
   {
     type: "function",
     name: "multicall",
-    inputs: [{ name: "data", type: "bytes[]", internalType: "bytes[]" }],
+    inputs: [
+      {
+        name: "data",
+        type: "bytes[]",
+        internalType: "bytes[]",
+      },
+    ],
     outputs: [],
     stateMutability: "payable",
   },
@@ -552,8 +908,16 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "nativeTransfer",
     inputs: [
-      { name: "recipient", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "recipient",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -562,8 +926,16 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "onMorphoFlashLoan",
     inputs: [
-      { name: "", type: "uint256", internalType: "uint256" },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "data",
+        type: "bytes",
+        internalType: "bytes",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -572,8 +944,16 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "onMorphoRepay",
     inputs: [
-      { name: "", type: "uint256", internalType: "uint256" },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "data",
+        type: "bytes",
+        internalType: "bytes",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -582,8 +962,16 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "onMorphoSupply",
     inputs: [
-      { name: "", type: "uint256", internalType: "uint256" },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "data",
+        type: "bytes",
+        internalType: "bytes",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -592,8 +980,16 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "onMorphoSupplyCollateral",
     inputs: [
-      { name: "", type: "uint256", internalType: "uint256" },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "data",
+        type: "bytes",
+        internalType: "bytes",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -602,13 +998,41 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "permit",
     inputs: [
-      { name: "asset", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
-      { name: "deadline", type: "uint256", internalType: "uint256" },
-      { name: "v", type: "uint8", internalType: "uint8" },
-      { name: "r", type: "bytes32", internalType: "bytes32" },
-      { name: "s", type: "bytes32", internalType: "bytes32" },
-      { name: "skipRevert", type: "bool", internalType: "bool" },
+      {
+        name: "asset",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "deadline",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "v",
+        type: "uint8",
+        internalType: "uint8",
+      },
+      {
+        name: "r",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+      {
+        name: "s",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+      {
+        name: "skipRevert",
+        type: "bool",
+        internalType: "bool",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -622,8 +1046,16 @@ export const BundlerAbi: Abi = [
         type: "address",
         internalType: "address",
       },
-      { name: "vault", type: "address", internalType: "address" },
-      { name: "value", type: "uint256", internalType: "uint256" },
+      {
+        name: "vault",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "value",
+        type: "uint256",
+        internalType: "uint256",
+      },
       {
         name: "withdrawals",
         type: "tuple[]",
@@ -654,7 +1086,11 @@ export const BundlerAbi: Abi = [
                 type: "address",
                 internalType: "address",
               },
-              { name: "irm", type: "address", internalType: "address" },
+              {
+                name: "irm",
+                type: "address",
+                internalType: "address",
+              },
               {
                 name: "lltv",
                 type: "uint256",
@@ -677,7 +1113,11 @@ export const BundlerAbi: Abi = [
               },
             ],
           },
-          { name: "amount", type: "uint128", internalType: "uint128" },
+          {
+            name: "amount",
+            type: "uint128",
+            internalType: "uint128",
+          },
         ],
       },
       {
@@ -700,9 +1140,21 @@ export const BundlerAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          { name: "oracle", type: "address", internalType: "address" },
-          { name: "irm", type: "address", internalType: "address" },
-          { name: "lltv", type: "uint256", internalType: "uint256" },
+          {
+            name: "oracle",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "irm",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "lltv",
+            type: "uint256",
+            internalType: "uint256",
+          },
           {
             name: "creditAttestationService",
             type: "address",
@@ -728,11 +1180,49 @@ export const BundlerAbi: Abi = [
     type: "function",
     name: "transferFrom2",
     inputs: [
-      { name: "asset", type: "address", internalType: "address" },
-      { name: "amount", type: "uint256", internalType: "uint256" },
+      {
+        name: "asset",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "payable",
   },
-  { type: "error", name: "UnsafeCast", inputs: [] },
-];
+  {
+    type: "function",
+    name: "unwrapNative",
+    inputs: [
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "wrapNative",
+    inputs: [
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "error",
+    name: "UnsafeCast",
+    inputs: [],
+  },
+] as const;

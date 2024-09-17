@@ -12,30 +12,29 @@ import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
-import { getMarketParams } from "@/utils/contract";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
-import { GraphPosition, BorrowPosition, GraphMarket } from "@/types";
+import { GraphPosition, BorrowPosition, BorrowMarket } from "@/types";
 
 interface Props {
-  marketsArr: GraphMarket[];
-  positionArr: GraphPosition[];
+  positions: GraphPosition[];
+  borrowMarkets: BorrowMarket[];
 }
 
-const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
+const LoanMoreTable: React.FC<Props> = ({ positions, borrowMarkets }) => {
   const { address: userAddress } = useAccount();
-  const [borrowMarkets, setBorrowMarkets] = useState<BorrowPosition[]>([]);
+  const [borrowPositions, setBorrowPositions] = useState<BorrowPosition[]>([]);
 
   useEffect(() => {
     const initMarkets = async () => {
-      if (positionArr && marketsArr && marketsArr.length > 0) {
-        const promises = marketsArr.map(async (marketItem) => {
-          const selPositions = positionArr.filter(
+      if (positions && borrowMarkets && borrowMarkets.length > 0) {
+        const promises = borrowMarkets.map(async (marketItem) => {
+          const selPositions = positions.filter(
             (position) => position.market.id == marketItem.id
           );
 
           if (selPositions.length > 0) {
-            let totalCollateral = BigInt(0);
             let totalLoan = BigInt(0);
+            let totalCollateral = BigInt(0);
 
             for (const selPosition of selPositions) {
               if (selPosition.id.includes("-BORROWER-")) {
@@ -47,34 +46,29 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
               }
             }
 
-            const params = await getMarketParams(marketItem.id);
             return {
               ...marketItem,
-              marketParams: params,
               loan: totalLoan,
               collateral: totalCollateral,
             } as BorrowPosition;
           }
         });
 
-        const borrowMarketList = await Promise.all(promises);
-        const borrowMarkets1 = borrowMarketList.filter(
-          (item) => item !== undefined
-        );
-        setBorrowMarkets(
-          borrowMarkets1.filter(
+        const borrowMarketList = (await Promise.all(promises))
+          .filter((item) => item !== undefined)
+          .filter(
             (item) => item.collateral > BigInt(0) && item.loan > BigInt(0)
-          )
-        );
+          );
+        setBorrowPositions(borrowMarketList);
       }
     };
 
     initMarkets();
-  }, [userAddress, marketsArr]);
+  }, [userAddress, borrowMarkets]);
 
   return (
     <>
-      {borrowMarkets.length > 0 && (
+      {borrowPositions.length > 0 && (
         <>
           <h1 className="text-4xl mb-4">My Loans</h1>
           <div
@@ -125,7 +119,7 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
                 </tr>
               </thead>
               <tbody className="bg-transparent">
-                {borrowMarkets.map((item, index, arr) => (
+                {borrowPositions.map((item, index, arr) => (
                   <tr
                     key={index}
                     style={
@@ -157,24 +151,20 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
                         <div className="ml-8"></div>
                         <ButtonDialog color="secondary" buttonText="Add">
                           {(closeModal) => (
-                            <>
-                              <div className=" w-full h-full">
-                                <VaultAdd item={item} closeModal={closeModal} />
-                              </div>
-                            </>
+                            <div className=" w-full h-full">
+                              <VaultAdd item={item} closeModal={closeModal} />
+                            </div>
                           )}
                         </ButtonDialog>
 
                         <ButtonDialog color="grey" buttonText="Withdraw">
                           {(closeModal) => (
-                            <>
-                              <div className=" w-full h-full">
-                                <VaultWithdrawBorrow
-                                  item={item}
-                                  closeModal={closeModal}
-                                />
-                              </div>
-                            </>
+                            <div className=" w-full h-full">
+                              <VaultWithdrawBorrow
+                                item={item}
+                                closeModal={closeModal}
+                              />
+                            </div>
                           )}
                         </ButtonDialog>
                       </div>
@@ -197,9 +187,8 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
                           buttonText="Borrow More"
                         >
                           {(closeModal) => (
-                            <>
-                              <div className=" w-full h-full">
-                                {/* <VaultBorrow
+                            <div className=" w-full h-full">
+                              {/* <VaultBorrow
                             title="USDMax"
                             token={item.token}
                             apy={14.1}
@@ -213,28 +202,25 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
                             marketParams={item.market?.params}
                             closeModal={closeModal}
                           /> */}
-                              </div>
-                            </>
+                            </div>
                           )}
                         </ButtonDialog>
 
                         <ButtonDialog color="grey" buttonText="Repay">
                           {(closeModal) => (
-                            <>
-                              <div className=" w-full h-full">
-                                <VaultRepay
-                                  title="Repay"
-                                  token="USDC"
-                                  apy={14.1}
-                                  balance={473.18}
-                                  ltv="90% / 125%"
-                                  totalRepay={3289.62}
-                                  totalTokenAmount={1.96}
-                                  curator="Flowverse"
-                                  closeModal={closeModal}
-                                />
-                              </div>
-                            </>
+                            <div className=" w-full h-full">
+                              <VaultRepay
+                                title="Repay"
+                                token="USDC"
+                                apy={14.1}
+                                balance={473.18}
+                                ltv="90% / 125%"
+                                totalRepay={3289.62}
+                                totalTokenAmount={1.96}
+                                curator="Flowverse"
+                                closeModal={closeModal}
+                              />
+                            </div>
                           )}
                         </ButtonDialog>
                       </div>

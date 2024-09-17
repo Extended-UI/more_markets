@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import TableHeaderCell from "./MoreTableHeader";
 import { useRouter } from "next/navigation";
-import { GraphMarket, BorrowMarket } from "@/types";
+import TableHeaderCell from "./MoreTableHeader";
 import BorrowMoreTableRow from "./BorrowMoreTableRow";
+import { GraphMarket, BorrowMarket } from "@/types";
 
 interface Props {
   borrowMarketList: BorrowMarket[];
@@ -71,7 +71,7 @@ const BorrowMoreTable: React.FC<Props> = ({ borrowMarketList }) => {
             <th style={{ width: "300px" }}>
               <div className="flex justify-start">
                 <TableHeaderCell
-                  title="Total Deposits"
+                  title="Available Liquidity"
                   infoText="The total amount of tokens that have been deposited into the vault and made available to borrowers for loans."
                 />
               </div>

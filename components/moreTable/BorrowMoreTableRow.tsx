@@ -66,12 +66,17 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
       </td>
       <td className="py-4 px-6 items-center   h-full ">
         <div className="flex justify-start">
+          <IconToken
+            className="mr-2 mt-1 w-6 h-6"
+            tokenName={item.borrowedToken.id}
+          />
           <FormatTokenMillion
             value={formatTokenValue(
-              item.marketInfo.totalSupplyAssets,
-              item.inputToken.id
+              item.marketInfo.totalSupplyAssets -
+                item.marketInfo.totalBorrowAssets,
+              item.borrowedToken.id
             )}
-            token={item.inputToken.id}
+            token={item.borrowedToken.id}
             totalValue={0}
           />
         </div>
