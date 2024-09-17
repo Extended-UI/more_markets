@@ -93,7 +93,7 @@ const EarnPage: React.FC = () => {
     <>
       <DepositMoreTable investments={investments} updateInfo={updateInfo} />
 
-      <h1 className="text-4xl mb-8">MORE Vaults</h1>
+      <h1 className="text-4xl mb-8 mt-28">MORE Vaults</h1>
       <EarnMoreTable investments={investments} updateInfo={updateInfo} />
     </>
   );

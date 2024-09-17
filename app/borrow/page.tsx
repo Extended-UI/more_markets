@@ -69,7 +69,7 @@ const BorrowPage: React.FC = () => {
         borrowMarkets={borrowMarkets}
       />
 
-      <h1 className="text-4xl mb-4">MORE Markets</h1>
+      <h1 className="text-4xl mb-8 mt-28">MORE Markets</h1>
       <BorrowMoreTable
         updateInfo={updateInfo}
         borrowMarketList={borrowMarkets}

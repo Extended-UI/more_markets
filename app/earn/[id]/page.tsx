@@ -139,7 +139,7 @@ const EarnDetailPage: React.FC = () => {
     <>
       {vaultInfo && (
         <>
-          <div className="mb-8 overflow-visible">
+          <div className="mb-8 overflow-visible mt-28">
             <HeaderEarnDetail updateInfo={updateInfo} vault={vaultInfo} />
             <InfosEarnDetails vault={vaultInfo} totalBorrow={totalBorrow} />
           </div>

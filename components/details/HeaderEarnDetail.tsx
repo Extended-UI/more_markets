@@ -15,7 +15,7 @@ const HeaderEarnDetail: React.FC<Props> = ({ vault, updateInfo }) => {
 
   return (
     <div className="flex flex-col sm:flex-row gap-8 w-full items-center justify-between my-4">
-      <div className="flex items-center gap-10">
+      <div className="flex items-center gap-14">
         <div className="flex gap-2 items-center text-[25px] items-start">
           <IconToken tokenName={vault.assetAddress} className="w-10 h-10" />
           <div>{vault.vaultName}</div>

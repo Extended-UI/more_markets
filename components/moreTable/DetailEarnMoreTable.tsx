@@ -15,21 +15,20 @@ interface Props {
 const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
   return (
     <div
-      className="overflow-x-auto relative rounded-[15px] mb-16"
+      className="overflow-x-scroll  rounded-2xl  table-wrapper  mb-16"
       style={{
         overflowX: "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
         position: "relative",
-        overflow: "visible",
       }}
     >
-      <table className="w-full text-sm text-left   border border-gray-800 ">
+      <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll ">
         <thead
-          className="bg-[#212121] h-20  text-xs "
+          className="bg-[#212121] h-20 text-white  text-xs"
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
-          <tr className="rounded-t-lg">
+          <tr className="">
             <th style={{ width: "140px" }} className="rounded-tl-lg  ">
               <div className="flex justify-start">
                 <TableHeaderCell

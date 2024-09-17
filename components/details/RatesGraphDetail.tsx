@@ -143,7 +143,11 @@ const RatesGraphDetail = () => {
   return (
     <>
       <div className="text-2xl mb-5 ">Rates (Coming Soon)</div>
-      <div className="mockup-window border-base-300 border">
+
+      <div
+        className="mockup-window border-[#343434] border p-4"
+        style={{ backgroundColor: "#181818" }}
+      >
         <MoreGraphicsV1
           datasets={datasets}
           labelsX={labelsX}

@@ -58,7 +58,7 @@ export const WalletConnect = () => {
                 <div className="flex">
                   <Menu as="div" className="relative inline-block">
                     <MenuButton className="flex" type="button">
-                      <div className="flex items-center text-lg px-5 py-2 wallet-networks wallet-menu">
+                      <div className="flex items-center text-[16px] text-lg px-5 py-2 wallet-networks wallet-menu">
                         {chain.hasIcon && (
                           <div
                             style={{
@@ -98,7 +98,7 @@ export const WalletConnect = () => {
                           <MenuItem>
                             <div
                               onClick={openChainModal}
-                              className="flex cursor-pointer px-4 py-2 text-md text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                              className="flex cursor-pointer text-[16px] px-4 py-2 text-md text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                             >
                               <img
                                 alt={network.name ?? "Chain icon"}
