@@ -6,9 +6,8 @@ import { parseUnits } from "ethers";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
-import BorrowTokenAmount from "../../token/BorrowTokenAmount";
 import { BorrowMarket } from "@/types";
-import { contracts, tokens } from "@/utils/const";
+import { contracts } from "@/utils/const";
 import { getTimestamp, getTokenInfo } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -43,8 +42,16 @@ const VaultBorrowPush: React.FC<Props> = ({
   const [deadline, setDeadline] = useState(BigInt(0));
   const [permitNonce, setPermitNonce] = useState(0);
 
-  const supplyTokenAmount = parseUnits(supplyAmount.toString());
-  const borrowTokenAmount = parseUnits(borrowAmount.toString());
+  const supplyToken = getTokenInfo(item.inputToken.id);
+  const borrowToken = getTokenInfo(item.borrowedToken.id);
+  const supplyTokenAmount = parseUnits(
+    supplyAmount.toString(),
+    supplyToken.decimals
+  );
+  const borrowTokenAmount = parseUnits(
+    borrowAmount.toString(),
+    borrowToken.decimals
+  );
 
   useEffect(() => {
     const initApprove = async () => {
@@ -163,8 +170,8 @@ const VaultBorrowPush: React.FC<Props> = ({
           <span>
             <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />
           </span>
-          Approve the bundler to spend {supplyAmount}{" "}
-          {getTokenInfo(item.borrowedToken.id).symbol} (via permit)
+          Approve the bundler to spend {supplyAmount} {borrowToken.symbol} (via
+          permit)
         </div>
       )}
       <div className="text-l flex mb-5 px-4">
@@ -177,7 +184,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         <div className="more-bg-primary px-4 mx-5">
           <TokenAmount
             title="Supply"
-            token={item.borrowedToken.id}
+            token={item.inputToken.id}
             amount={supplyAmount}
             ltv={"ltv"}
             totalTokenAmount={supplyAmount}
@@ -185,8 +192,9 @@ const VaultBorrowPush: React.FC<Props> = ({
         </div>
       )}
       <div className="more-bg-primary px-4 mx-5">
-        <BorrowTokenAmount
-          token={"title"}
+        <TokenAmount
+          title="Borrow"
+          token={item.borrowedToken.id}
           amount={borrowAmount}
           ltv={"ltv"}
           totalTokenAmount={borrowAmount}

@@ -1,5 +1,4 @@
 import React from "react";
-import TotalVolumeToken from "./TotalVolumeToken";
 import IconToken from "./IconToken";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 

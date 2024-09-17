@@ -1,14 +1,13 @@
 import React from "react";
 import { useAccount } from "wagmi";
-import { formatEther } from "ethers";
 import IconToken from "../token/IconToken";
-import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
+import VaultBorrow from "../modal/borrow/VaultBorrow";
+import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
-import ButtonDialog from "../buttonDialog/buttonDialog";
-import VaultBorrow from "../modal/borrow/VaultBorrow";
+import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import { BorrowMarket } from "@/types";
-import { formatTokenValue } from "@/utils/utils";
+import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 
 interface BorrowMoreTableRowProps {
   item: BorrowMarket;
@@ -50,19 +49,8 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
       <td className="py-4  items-center h-full ">
         <div className="flex gap-1 justify-start">
           <FormatTwoPourcentage
-            value={Number(formatEther(BigInt(item.lltv)))}
-            value2={
-              item.marketParams.isPremiumMarket &&
-              item.marketParams.categoryLltv.length > 0
-                ? Number(
-                    formatEther(
-                      item.marketParams.categoryLltv[
-                        item.marketParams.categoryLltv.length - 1
-                      ]
-                    )
-                  )
-                : null
-            }
+            value={formatTokenValue(BigInt(item.lltv), "", 18)}
+            value2={getPremiumLltv(item.marketParams)}
           />
         </div>
       </td>
@@ -100,7 +88,7 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
           <div onClick={(event) => event.stopPropagation()}>
             <ButtonDialog color="secondary" buttonText="Borrow">
               {(closeModal) => (
-                <div className=" w-full h-full">
+                <div className="w-full h-full">
                   <VaultBorrow item={item} closeModal={closeModal} />
                 </div>
               )}

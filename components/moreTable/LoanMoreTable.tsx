@@ -3,17 +3,18 @@
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { formatEther } from "ethers";
-import TableHeaderCell from "./MoreTableHeader";
-import ButtonDialog from "../buttonDialog/buttonDialog";
 import IconToken from "../token/IconToken";
+import VaultAdd from "../modal/add/VaultAdd";
+import TableHeaderCell from "./MoreTableHeader";
+import VaultRepay from "../modal/repay/VaultRepay";
+import ButtonDialog from "../buttonDialog/buttonDialog";
+import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import FormatPourcentage from "../tools/formatPourcentage";
-import VaultRepay from "../modal/repay/VaultRepay";
-import VaultAdd from "../modal/add/VaultAdd";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
-import { GraphPosition, BorrowPosition, GraphMarket } from "@/types";
 import { getMarketParams } from "@/utils/contract";
+import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
+import { GraphPosition, BorrowPosition, GraphMarket } from "@/types";
 
 interface Props {
   marketsArr: GraphMarket[];
@@ -242,19 +243,8 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
                     <td className="py-4 pl-4 items-center h-full ">
                       <div className="flex gap-1 justify-start">
                         <FormatTwoPourcentage
-                          value={Number(formatEther(BigInt(item.lltv)))}
-                          value2={
-                            item.marketParams.isPremiumMarket &&
-                            item.marketParams.categoryLltv.length > 0
-                              ? Number(
-                                  formatEther(
-                                    item.marketParams.categoryLltv[
-                                      item.marketParams.categoryLltv.length - 1
-                                    ]
-                                  )
-                                )
-                              : null
-                          }
+                          value={formatTokenValue(BigInt(item.lltv), "", 18)}
+                          value2={getPremiumLltv(item.marketParams)}
                         />
                       </div>
                     </td>
@@ -273,4 +263,5 @@ const LoanMoreTable: React.FC<Props> = ({ positionArr, marketsArr }) => {
     </>
   );
 };
+
 export default LoanMoreTable;

@@ -1,6 +1,5 @@
 "use client";
 
-import { formatEther } from "ethers";
 import React, { useState, useEffect } from "react";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import Icon from "../../FontAwesomeIcon";
@@ -9,7 +8,7 @@ import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
 import { config } from "@/utils/wagmi";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
 
 interface Props {
   item: BorrowPosition;
@@ -72,19 +71,8 @@ const VaultAddResult: React.FC<Props> = ({
         <div className="flex gap-2 text-l mb-5 px-4">
           <span className="more-text-gray">Liquidation LTV:</span>{" "}
           <FormatTwoPourcentage
-            value={Number(formatEther(BigInt(item.lltv)))}
-            value2={
-              item.marketParams.isPremiumMarket &&
-              item.marketParams.categoryLltv.length > 0
-                ? Number(
-                    formatEther(
-                      item.marketParams.categoryLltv[
-                        item.marketParams.categoryLltv.length - 1
-                      ]
-                    )
-                  )
-                : null
-            }
+            value={formatTokenValue(BigInt(item.lltv), "", 18)}
+            value2={getPremiumLltv(item.marketParams)}
           />
         </div>
       </div>

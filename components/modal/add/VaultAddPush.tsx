@@ -43,11 +43,9 @@ const VaultAddPush: React.FC<Props> = ({
   const [signHash, setSignHash] = useState("");
   const [deadline, setDeadline] = useState(BigInt(0));
 
-  const supplyAmount = parseUnits(amount.toString());
-  const collateralToken = getTokenInfo(
-    item.marketParams.collateralToken
-  ).symbol;
+  const collateralToken = getTokenInfo(item.marketParams.collateralToken);
   const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
+  const supplyAmount = parseUnits(amount.toString(), collateralToken.decimals);
 
   useEffect(() => {
     const initApprove = async () => {
@@ -155,14 +153,15 @@ const VaultAddPush: React.FC<Props> = ({
         <ListIconToken iconNames={["usdc", "abt"]} className="w-7 h-7" />
         <div className="text-l   flex items-center'">
           {" "}
-          {collateralToken} / {loanToken}
+          {collateralToken.symbol} / {loanToken}
         </div>
       </div>
       <div className="flex items-center text-l mb-5 px-4">
         <span>
           <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />
         </span>
-        Approve the bundler to spend {amount} {collateralToken} (via permit){" "}
+        Approve the bundler to spend {amount} {collateralToken.symbol} (via
+        permit){" "}
       </div>
       <div className="flex items-center text-l mb-5 px-4">
         <span>
@@ -174,10 +173,10 @@ const VaultAddPush: React.FC<Props> = ({
       <div className="more-bg-primary px-8 rounded-t-[5px] ">
         <TokenAmount
           title="Add"
-          token={collateralToken}
+          token={item.marketParams.collateralToken}
           amount={amount}
           ltv={formatEther(item.marketParams.lltv)}
-          totalTokenAmount={Number(formatEther(item.collateral))}
+          totalTokenAmount={amount}
         />
       </div>
       <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
@@ -185,7 +184,7 @@ const VaultAddPush: React.FC<Props> = ({
         <PositionChangeToken
           title="Deposit"
           value={amount}
-          token={collateralToken}
+          token={collateralToken.symbol}
           value2={0}
         />
       </div>

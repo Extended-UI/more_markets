@@ -2,17 +2,15 @@
 
 import React from "react";
 import { useAccount } from "wagmi";
-import { formatEther, formatUnits } from "ethers";
-import { BorrowMarket } from "@/types";
-import TableHeaderCell from "./MoreTableHeader";
-import ButtonDialog from "../buttonDialog/buttonDialog";
+import { formatUnits } from "ethers";
 import IconToken from "../token/IconToken";
+import TableHeaderCell from "./MoreTableHeader";
+import VaultBorrow from "../modal/borrow/VaultBorrow";
+import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import VaultBorrow from "../modal/borrow/VaultBorrow";
-import FormatPourcentage from "../tools/formatPourcentage";
-import { tokens } from "@/utils/const";
-import { getTokenInfo } from "@/utils/utils";
+import { BorrowMarket } from "@/types";
+import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -21,22 +19,8 @@ interface Props {
 const PositionMoreTable: React.FC<Props> = ({ item }) => {
   const { address: userAddress } = useAccount();
 
-  const collateralToken = getTokenInfo(
-    item.marketParams.collateralToken
-  ).symbol;
-  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
-
-  const lltv2 =
-    item.marketParams.isPremiumMarket &&
-    item.marketParams.categoryLltv.length > 0
-      ? Number(
-          formatEther(
-            item.marketParams.categoryLltv[
-              item.marketParams.categoryLltv.length - 1
-            ]
-          )
-        )
-      : null;
+  const collateralToken = getTokenInfo(item.marketParams.collateralToken);
+  const loanToken = getTokenInfo(item.marketParams.loanToken);
 
   return (
     <div
@@ -97,12 +81,16 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
             <td className="py-4  items-center h-full ">
               <div className="flex gap-1 justify-start items-center gap-2 pl-4">
                 <div className="mr-2 w-8 h-8">
-                  <IconToken tokenName={collateralToken} />
+                  <IconToken tokenName={collateralToken.symbol} />
                 </div>
                 <FormatTokenMillion
-                  value={Number(formatUnits(item.totalSupply))}
-                  totalValue={Number(formatUnits(item.totalSupply))}
-                  token={collateralToken}
+                  value={formatTokenValue(
+                    BigInt(item.totalSupply),
+                    "",
+                    collateralToken.decimals
+                  )}
+                  totalValue={0}
+                  token={collateralToken.symbol}
                 />
               </div>
             </td>
@@ -110,12 +98,16 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
             <td className="py-4  items-center h-full ">
               <div className="flex gap-1 justify-start items-center gap-2">
                 <div className="mr-2 w-8 h-8">
-                  <IconToken tokenName={loanToken} />
+                  <IconToken tokenName={loanToken.symbol} />
                 </div>
                 <FormatTokenMillion
-                  value={Number(formatUnits(item.totalBorrow))}
-                  totalValue={Number(formatUnits(item.totalBorrow))}
-                  token={loanToken}
+                  value={formatTokenValue(
+                    BigInt(item.totalBorrow),
+                    "",
+                    loanToken.decimals
+                  )}
+                  totalValue={0}
+                  token={loanToken.symbol}
                   totalDanger={true}
                 />
               </div>
@@ -124,8 +116,8 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
             <td className="py-4 px-6 items-center flex  ">
               <div className=" flex justify-start w-full py-4 ">
                 <FormatTwoPourcentage
-                  value={Number(formatEther(item.lltv))}
-                  value2={lltv2}
+                  value={formatTokenValue(BigInt(item.lltv), "", 18)}
+                  value2={getPremiumLltv(item.marketParams)}
                 />
               </div>
             </td>
@@ -148,11 +140,9 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
                 <div onClick={(event) => event.stopPropagation()}>
                   <ButtonDialog color="secondary" buttonText="Borrow">
                     {(closeModal) => (
-                      <>
-                        <div className=" w-full h-full">
-                          <VaultBorrow item={item} closeModal={closeModal} />
-                        </div>
-                      </>
+                      <div className=" w-full h-full">
+                        <VaultBorrow item={item} closeModal={closeModal} />
+                      </div>
                     )}
                   </ButtonDialog>
                 </div>

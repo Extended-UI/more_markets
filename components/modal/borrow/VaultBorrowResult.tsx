@@ -3,12 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import Icon from "../../FontAwesomeIcon";
-import TokenAmount from "@/components/token/TokenAmount";
-import BorrowTokenAmount from "../../token/BorrowTokenAmount";
 import MoreButton from "../../moreButton/MoreButton";
+import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { GraphMarket } from "@/types";
-import { tokens } from "@/utils/const";
 import { config } from "@/utils/wagmi";
 
 interface Props {
@@ -64,7 +62,7 @@ const VaultBorrowResult: React.FC<Props> = ({
         <div className="more-bg-primary px-4 mx-5">
           <TokenAmount
             title="Supply"
-            token={item.borrowedToken.id}
+            token={item.inputToken.id}
             amount={supplyAmount}
             ltv={"ltv"}
             totalTokenAmount={supplyAmount}
@@ -72,8 +70,9 @@ const VaultBorrowResult: React.FC<Props> = ({
         </div>
       )}
       <div className="more-bg-primary px-4 mx-5">
-        <BorrowTokenAmount
-          token={"title"}
+        <TokenAmount
+          title="Borrow"
+          token={item.borrowedToken.id}
           amount={borrowAmount}
           ltv={"ltv"}
           totalTokenAmount={borrowAmount}

@@ -1,4 +1,4 @@
-import { IToken } from "@/types";
+import { IToken, MarketParams } from "@/types";
 import { formatUnits } from "ethers";
 import { coingecko_ids, tokens } from "./const";
 
@@ -74,4 +74,14 @@ export const formatTokenValue = (
   return Number(
     formatUnits(amount, decimals ? decimals : getTokenInfo(token).decimals)
   );
+};
+
+export const getPremiumLltv = (params: MarketParams): number | null => {
+  return params.isPremiumMarket && params.categoryLltv.length > 0
+    ? formatTokenValue(
+        params.categoryLltv[params.categoryLltv.length - 1],
+        "",
+        18
+      )
+    : null;
 };

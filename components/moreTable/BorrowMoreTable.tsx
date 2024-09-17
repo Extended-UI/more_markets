@@ -83,7 +83,7 @@ const BorrowMoreTable: React.FC<Props> = ({ borrowMarketList }) => {
                 backgroundColor: "#212121",
                 boxShadow: "inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)",
               }}
-            ></th>
+            />
           </tr>
         </thead>
         <tbody className="bg-transparent">

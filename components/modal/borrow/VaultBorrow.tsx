@@ -1,9 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import VaultBorrowInput from "./VaultBorrowInput";
-import VaultBorrowPush from "./VaultBorrowPush";
-import VaultBorrowSummary from "./VaultBorrowResult";
+
+import React, { useState } from "react";
 import { BorrowMarket } from "@/types";
+
+import VaultBorrowPush from "./VaultBorrowPush";
+import VaultBorrowInput from "./VaultBorrowInput";
+import VaultBorrowSummary from "./VaultBorrowResult";
 
 interface Props {
   item: BorrowMarket;
@@ -16,18 +18,7 @@ const VaultBorrow: React.FC<Props> = ({ item, closeModal }) => {
   const [borrow, setBorrow] = useState(0);
   const [txHash, setTxHash] = useState("");
 
-  // Réinitialiser l'étape quand le composant reçoit de nouvelles props, typiquement quand il est affiché
-  useEffect(() => {
-    // Réinitialisation de l'état quand la modale est fermée
-    console.log("MOUNT");
-    return () => {
-      setStep(1); // Réinitialise l'étape à 1 quand le composant est démonté
-    };
-  }, []);
-
   const handleSetBorrow = (amount: number, borrow: number) => {
-    console.log("BORROW SET");
-    console.log(amount, borrow);
     setStep(2);
     setAmount(amount);
     setBorrow(borrow);

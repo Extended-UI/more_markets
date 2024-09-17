@@ -10,7 +10,7 @@ import { fetchVault, fetchMarkets } from "@/utils/graph";
 import { InvestmentData, VaultBreakdown } from "@/types";
 import { curators } from "@/utils/const";
 import { formatTokenValue } from "@/utils/utils";
-import { getVaultDetail, getMarketInfo } from "@/utils/contract";
+import { getVaultDetail } from "@/utils/contract";
 
 const EarnDetailPage: React.FC = () => {
   const router = useRouter();
@@ -63,7 +63,7 @@ const EarnDetailPage: React.FC = () => {
                     supply: 0,
                     borrow: 0,
                     collateral: marketItem.inputToken.id,
-                    lltv: Number(formatUnits(BigInt(marketItem.lltv))),
+                    lltv: formatTokenValue(BigInt(marketItem.lltv), "", 18),
                     credora: "rating",
                   } as VaultBreakdown;
                 }
