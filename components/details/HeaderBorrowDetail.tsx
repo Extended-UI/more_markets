@@ -7,9 +7,10 @@ import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
+  updateInfo: (marketId: string) => void;
 }
 
-const HeaderBorrowDetail: React.FC<Props> = ({ item }) => {
+const HeaderBorrowDetail: React.FC<Props> = ({ item, updateInfo }) => {
   const { address: userAddress } = useAccount();
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
@@ -28,7 +29,11 @@ const HeaderBorrowDetail: React.FC<Props> = ({ item }) => {
           <ButtonDialog color="secondary" buttonText="Borrow">
             {(closeModal) => (
               <div className="h-full w-full">
-                <VaultBorrow item={item} closeModal={closeModal} />
+                <VaultBorrow
+                  item={item}
+                  updateInfo={updateInfo}
+                  closeModal={closeModal}
+                />
               </div>
             )}
           </ButtonDialog>

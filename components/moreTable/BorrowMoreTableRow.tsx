@@ -10,13 +10,15 @@ import { BorrowMarket } from "@/types";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 
 interface BorrowMoreTableRowProps {
-  item: BorrowMarket;
   index: number;
+  item: BorrowMarket;
+  updateInfo: (marketId: string) => void;
 }
 
 const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
   item,
   index,
+  updateInfo,
 }) => {
   const { address: userAddress } = useAccount();
 
@@ -94,7 +96,7 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
             <ButtonDialog color="secondary" buttonText="Borrow">
               {(closeModal) => (
                 <div className="w-full h-full">
-                  <VaultBorrow item={item} closeModal={closeModal} />
+                  <VaultBorrow item={item} updateInfo={updateInfo} closeModal={closeModal} />
                 </div>
               )}
             </ButtonDialog>

@@ -6,12 +6,12 @@ import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { GraphMarket } from "@/types";
+import { BorrowMarket } from "@/types";
 import { config } from "@/utils/wagmi";
 
 interface Props {
-  item: GraphMarket;
   txhash: string;
+  item: BorrowMarket;
   supplyAmount: number;
   borrowAmount: number;
   processDone: () => void;
@@ -35,6 +35,7 @@ const VaultBorrowResult: React.FC<Props> = ({
           await waitForTransactionReceipt(config, {
             hash: txhash as `0x${string}`,
           });
+
           setExecuted(true);
         }
       } catch (err) {

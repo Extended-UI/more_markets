@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { parseUnits } from "ethers";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { BorrowMarket } from "@/types";
 import { contracts } from "@/utils/const";
 import { getTimestamp, getTokenInfo } from "@/utils/utils";
@@ -15,12 +15,16 @@ import {
   setTokenPermit,
   getPermitNonce,
   supplycollateralAndBorrow,
+  getAuthorizeNonce,
+  checkAuthorized,
+  setMarketsAuthorize,
 } from "@/utils/contract";
 
 interface Props {
   item: BorrowMarket;
   supplyAmount: number;
   borrowAmount: number;
+  onlyBorrow?: boolean;
   closeModal: () => void;
   validDeposit: () => void;
   setTxHash: (hash: string) => void;
@@ -28,6 +32,7 @@ interface Props {
 
 const VaultBorrowPush: React.FC<Props> = ({
   item,
+  onlyBorrow,
   supplyAmount,
   borrowAmount,
   validDeposit,
@@ -36,11 +41,14 @@ const VaultBorrowPush: React.FC<Props> = ({
 }) => {
   const { address: userAddress } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
+  const [hasAuth, setHasAuth] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
   const [signHash, setSignHash] = useState("");
+  const [authorizeHash, setAuthorizeHash] = useState("");
   const [deadline, setDeadline] = useState(BigInt(0));
   const [permitNonce, setPermitNonce] = useState(0);
+  const [authorizeNonce, setAuthorizeNonce] = useState(BigInt(0));
 
   const supplyToken = getTokenInfo(item.inputToken.id);
   const borrowToken = getTokenInfo(item.borrowedToken.id);
@@ -55,31 +63,41 @@ const VaultBorrowPush: React.FC<Props> = ({
 
   useEffect(() => {
     const initApprove = async () => {
-      const nonce = userAddress
-        ? await getPermitNonce([
-            userAddress,
-            item.inputToken.id,
-            contracts.MORE_BUNDLER,
+      const [nonce, allowance, authNonce, authInfo] = userAddress
+        ? await Promise.all([
+            getPermitNonce([
+              userAddress,
+              item.inputToken.id,
+              contracts.MORE_BUNDLER,
+            ]),
+            getTokenAllowance(
+              item.inputToken.id,
+              userAddress,
+              contracts.PERMIT2
+            ),
+            getAuthorizeNonce(userAddress),
+            checkAuthorized(userAddress),
           ])
-        : 0;
+        : [0, BigInt(0), BigInt(0), false];
+
+      console.log(authNonce);
+
       setPermitNonce(nonce);
+      setAuthorizeNonce(authNonce);
+      setHasAuth(authInfo);
 
-      const allowance = userAddress
-        ? await getTokenAllowance(
-            item.inputToken.id,
-            userAddress,
-            contracts.PERMIT2
-          )
-        : BigInt(0);
-
-      if (allowance >= supplyTokenAmount) setHasApprove(true);
-      else setHasApprove(false);
+      if (onlyBorrow) {
+        setHasApprove(true);
+      } else {
+        if (allowance >= supplyTokenAmount) setHasApprove(true);
+        else setHasApprove(false);
+      }
 
       if (supplyAmount == 0) setHasPermit(true);
     };
 
     initApprove();
-  }, [userAddress, item, supplyAmount, borrowAmount, isLoading]);
+  }, [userAddress, item, supplyAmount, onlyBorrow]);
 
   const handleApprove = async () => {
     if (userAddress) {
@@ -102,22 +120,45 @@ const VaultBorrowPush: React.FC<Props> = ({
     }
   };
 
+  const handleAuthorize = async () => {
+    if (userAddress && !hasAuth) {
+      setIsLoading(true);
+      try {
+        const authDeadline = getTimestamp();
+        const authHash = await setMarketsAuthorize(
+          userAddress,
+          authorizeNonce,
+          authDeadline
+        );
+
+        setHasAuth(true);
+        setAuthorizeHash(authHash);
+        setDeadline(authDeadline);
+        setIsLoading(false);
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+      }
+    }
+  };
+
   const handlePermit = async () => {
     if (userAddress && supplyAmount > 0) {
       setIsLoading(true);
       try {
-        const deadline = getTimestamp();
+        const permitDeadline =
+          deadline == BigInt(0) ? getTimestamp() : deadline;
+
         const signHash = await setTokenPermit(
           item.inputToken.id,
           supplyTokenAmount,
           permitNonce,
           contracts.MORE_BUNDLER,
-          deadline
+          permitDeadline
         );
 
         setSignHash(signHash);
-        setDeadline(deadline);
-
+        setDeadline(permitDeadline);
         setHasPermit(true);
         setIsLoading(false);
       } catch (err) {
@@ -132,8 +173,11 @@ const VaultBorrowPush: React.FC<Props> = ({
   const handleBorrow = async () => {
     // generate borrow tx
     if (userAddress && hasApprove && hasPermit) {
+      setIsLoading(true);
       try {
         const txHash = await supplycollateralAndBorrow(
+          authorizeHash,
+          authorizeNonce,
           item.inputToken.id,
           userAddress,
           signHash,
@@ -141,11 +185,13 @@ const VaultBorrowPush: React.FC<Props> = ({
           supplyTokenAmount,
           borrowTokenAmount,
           permitNonce,
-          item.marketParams
+          item.marketParams,
+          onlyBorrow ? true : false
         );
 
         validDeposit();
         setTxHash(txHash);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
         setIsLoading(false);
@@ -154,6 +200,8 @@ const VaultBorrowPush: React.FC<Props> = ({
       alert("Not allowed before approve and permit");
     }
   };
+
+  console.log(hasAuth, "hasAuth");
 
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full">
@@ -165,7 +213,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         Authorize the MORE to execute multiple actions in a single transaction
         when updating your positions
       </div>
-      {supplyAmount > 0 && (
+      {!onlyBorrow && (
         <div className="text-l flex mb-5 px-4">
           <span>
             <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />
@@ -217,12 +265,20 @@ const VaultBorrowPush: React.FC<Props> = ({
             color="gray"
           />
         </div>
-        {hasApprove && hasPermit ? (
+        {hasAuth && hasApprove && hasPermit ? (
           <MoreButton
             className="text-2xl py-2"
             text="Borrow"
             disabled={isLoading}
-            onClick={() => handleBorrow()}
+            onClick={handleBorrow}
+            color="primary"
+          />
+        ) : !hasAuth ? (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Authorize"
+            disabled={isLoading}
+            onClick={handleAuthorize}
             color="primary"
           />
         ) : hasApprove ? (
@@ -230,7 +286,7 @@ const VaultBorrowPush: React.FC<Props> = ({
             className="text-2xl py-2"
             text="Permit"
             disabled={isLoading}
-            onClick={() => handlePermit()}
+            onClick={handlePermit}
             color="primary"
           />
         ) : (
@@ -238,7 +294,7 @@ const VaultBorrowPush: React.FC<Props> = ({
             className="text-2xl py-2"
             text="Approve"
             disabled={isLoading}
-            onClick={() => handleApprove()}
+            onClick={handleApprove}
             color="primary"
           />
         )}

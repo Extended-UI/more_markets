@@ -59,7 +59,13 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
     <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
       <div className="text-2xl mb-10 px-4 pt-5 ">Add Collateral</div>
       <div className="flex items-center mb-10 px-8 gap-2">
-        <ListIconToken iconNames={["usdc", "abt"]} className="w-7 h-7" />
+        <ListIconToken
+          iconNames={[
+            item.marketParams.collateralToken,
+            item.marketParams.loanToken,
+          ]}
+          className="w-7 h-7"
+        />
         <div className="text-l flex items-center'">
           {" "}
           {collateralToken} / {loanToken}

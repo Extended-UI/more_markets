@@ -60,9 +60,12 @@ const VaultAddResult: React.FC<Props> = ({
       <div className="flex flex-row justify-between mt-4 items-center">
         <div className="flex items-center mb-10  gap-2">
           <ListIconToken
-            iconNames={["usdc", "abt"]}
+            iconNames={[
+              item.marketParams.collateralToken,
+              item.marketParams.loanToken,
+            ]}
             className="w-8 h-8"
-          ></ListIconToken>
+          />
           <div className="text-2xl   flex items-center'">
             {" "}
             {collateralToken} / {loanToken}

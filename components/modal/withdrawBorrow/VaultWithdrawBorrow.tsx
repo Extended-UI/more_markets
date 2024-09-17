@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import VaultWithdrawBorrowInput from "./VaultWithdrawBorrowInput";
-import VaultWithdrawBorrowPush from "./VaultWithdrawBorrowPush";
 import VaultWithdrawConfirm from "./VaultWithdrawBorrowResult";
+import VaultWithdrawBorrowPush from "./VaultWithdrawBorrowPush";
+import VaultWithdrawBorrowInput from "./VaultWithdrawBorrowInput";
 import { BorrowPosition } from "@/types";
 
 interface Props {
   item: BorrowPosition;
   closeModal: () => void;
+  updateInfo: (marketId: string) => void;
 }
 
-const VaultWithdraw: React.FC<Props> = ({ item, closeModal }) => {
+const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [txHash, setTxHash] = useState("");
@@ -26,6 +27,7 @@ const VaultWithdraw: React.FC<Props> = ({ item, closeModal }) => {
   };
 
   const handleProcessDone = () => {
+    updateInfo(item.id);
     closeModal();
   };
 

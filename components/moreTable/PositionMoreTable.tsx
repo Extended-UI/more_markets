@@ -14,9 +14,10 @@ import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
+  updateInfo: (marketId: string) => void;
 }
 
-const PositionMoreTable: React.FC<Props> = ({ item }) => {
+const PositionMoreTable: React.FC<Props> = ({ item, updateInfo }) => {
   const { address: userAddress } = useAccount();
 
   const collateralToken = getTokenInfo(item.marketParams.collateralToken);
@@ -141,7 +142,11 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
                   <ButtonDialog color="secondary" buttonText="Borrow">
                     {(closeModal) => (
                       <div className=" w-full h-full">
-                        <VaultBorrow item={item} closeModal={closeModal} />
+                        <VaultBorrow
+                          item={item}
+                          closeModal={closeModal}
+                          updateInfo={updateInfo}
+                        />
                       </div>
                     )}
                   </ButtonDialog>
@@ -154,4 +159,5 @@ const PositionMoreTable: React.FC<Props> = ({ item }) => {
     </div>
   );
 };
+
 export default PositionMoreTable;

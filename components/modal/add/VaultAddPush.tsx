@@ -150,8 +150,14 @@ const VaultAddPush: React.FC<Props> = ({
     <div className="more-bg-secondary h-full rounded-[20px]">
       <div className="text-xl mb-10 px-4 pt-5 ">Review Transaction</div>
       <div className="flex items-center mb-10 px-8 gap-2">
-        <ListIconToken iconNames={["usdc", "abt"]} className="w-7 h-7" />
-        <div className="text-l   flex items-center'">
+        <ListIconToken
+          iconNames={[
+            item.marketParams.collateralToken,
+            item.marketParams.loanToken,
+          ]}
+          className="w-7 h-7"
+        />
+        <div className="text-l flex items-center'">
           {" "}
           {collateralToken.symbol} / {loanToken}
         </div>

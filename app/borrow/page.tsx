@@ -33,21 +33,47 @@ const BorrowPage: React.FC = () => {
       const borrowMarketList = await Promise.all(promises);
       setBorrowMarkets(borrowMarketList);
 
-      console.log(positionsArr);
       setPositions(positionsArr);
     };
 
     initFunc();
   }, [userAddress]);
 
-  const updateInfo = async (marketId: string) => {};
+  const updateInfo = async (marketId: string) => {
+    if (userAddress) {
+      const [marketInfo, positionsArr] = await Promise.all([
+        getMarketData(marketId),
+        fetchPositions(userAddress),
+      ]);
+
+      setPositions(positionsArr);
+      setBorrowMarkets((prevItems) =>
+        prevItems.map((item) =>
+          item.id.toLowerCase() == marketId.toLowerCase()
+            ? {
+                ...item,
+                marketInfo: marketInfo.info,
+                marketParams: marketInfo.params,
+              }
+            : item
+        )
+      );
+    }
+  };
 
   return (
     <>
-      <LoanMoreTable positions={positions} borrowMarkets={borrowMarkets} />
+      <LoanMoreTable
+        updateInfo={updateInfo}
+        positions={positions}
+        borrowMarkets={borrowMarkets}
+      />
 
       <h1 className="text-4xl mb-4">MORE Markets</h1>
-      <BorrowMoreTable borrowMarketList={borrowMarkets} />
+      <BorrowMoreTable
+        updateInfo={updateInfo}
+        borrowMarketList={borrowMarkets}
+      />
     </>
   );
 };

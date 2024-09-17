@@ -12,11 +12,17 @@ import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: GraphMarket;
+  onlyBorrow?: boolean;
   closeModal: () => void;
   setAmount: (amount: number, borrow: number) => void;
 }
 
-const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
+const VaultBorrowInput: React.FC<Props> = ({
+  item,
+  onlyBorrow,
+  setAmount,
+  closeModal,
+}) => {
   const [borrow, setBorrow] = useState(0);
   const [deposit, setDeposit] = useState(0);
   const [supplyBalance, setSupplyBalance] =
@@ -76,23 +82,27 @@ const VaultBorrowInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
       <div className="text-l mb-1 px-4">
         Deposit {collateralToken} Collateral
       </div>
-      <div className=" py-2 px-4">
-        <InputTokenMax
-          type="number"
-          value={deposit}
-          onChange={handleInputDepositChange}
-          min="0"
-          max={"100"}
-          placeholder={`Deposit ${collateralToken}`}
-          token={item.inputToken.id}
-          balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
-          setMax={handleSetMaxToken}
-        />
-      </div>
-      <div className="text-right more-text-gray py-2 px-4">
-        Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}{" "}
-        {collateralToken}
-      </div>
+      {!onlyBorrow && (
+        <>
+          <div className=" py-2 px-4">
+            <InputTokenMax
+              type="number"
+              value={deposit}
+              onChange={handleInputDepositChange}
+              min="0"
+              max={"100"}
+              placeholder={`Deposit ${collateralToken}`}
+              token={item.inputToken.id}
+              balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
+              setMax={handleSetMaxToken}
+            />
+          </div>
+          <div className="text-right more-text-gray py-2 px-4">
+            Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}{" "}
+            {collateralToken}
+          </div>
+        </>
+      )}
       <div className="text-l mb-1 px-4 py-2 mt-3">Borrow {borrowToken}</div>
       <div className=" px-4">
         <InputTokenMax

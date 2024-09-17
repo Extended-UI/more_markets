@@ -8,9 +8,10 @@ import { GraphMarket, BorrowMarket } from "@/types";
 
 interface Props {
   borrowMarketList: BorrowMarket[];
+  updateInfo: (marketId: string) => void;
 }
 
-const BorrowMoreTable: React.FC<Props> = ({ borrowMarketList }) => {
+const BorrowMoreTable: React.FC<Props> = ({ updateInfo, borrowMarketList }) => {
   const router = useRouter();
 
   const goToDetail = (item: GraphMarket) => {
@@ -103,7 +104,7 @@ const BorrowMoreTable: React.FC<Props> = ({ borrowMarketList }) => {
                 index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
               }`}
             >
-              <BorrowMoreTableRow key={index} item={item} index={index} />
+              <BorrowMoreTableRow key={index} updateInfo={updateInfo} item={item} index={index} />
             </tr>
           ))}
         </tbody>

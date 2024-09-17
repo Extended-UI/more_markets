@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { formatEther } from "ethers";
 import IconToken from "../token/IconToken";
 import VaultAdd from "../modal/add/VaultAdd";
 import TableHeaderCell from "./MoreTableHeader";
 import VaultRepay from "../modal/repay/VaultRepay";
+import VaultBorrow from "../modal/borrow/VaultBorrow";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
@@ -18,9 +18,14 @@ import { GraphPosition, BorrowPosition, BorrowMarket } from "@/types";
 interface Props {
   positions: GraphPosition[];
   borrowMarkets: BorrowMarket[];
+  updateInfo: (marketId: string) => void;
 }
 
-const LoanMoreTable: React.FC<Props> = ({ positions, borrowMarkets }) => {
+const LoanMoreTable: React.FC<Props> = ({
+  positions,
+  borrowMarkets,
+  updateInfo,
+}) => {
   const { address: userAddress } = useAccount();
   const [borrowPositions, setBorrowPositions] = useState<BorrowPosition[]>([]);
 
@@ -59,12 +64,13 @@ const LoanMoreTable: React.FC<Props> = ({ positions, borrowMarkets }) => {
           .filter(
             (item) => item.collateral > BigInt(0) && item.loan > BigInt(0)
           );
+        console.log(borrowMarketList, borrowMarketList.length);
         setBorrowPositions(borrowMarketList);
       }
     };
 
     initMarkets();
-  }, [userAddress, borrowMarkets]);
+  }, [userAddress, positions, borrowMarkets]);
 
   return (
     <>
@@ -137,22 +143,28 @@ const LoanMoreTable: React.FC<Props> = ({ positions, borrowMarkets }) => {
                     <td className=" py-4 px-6 items-center h-full gap-2">
                       <div className="flex gap-2 items-center">
                         <div className="flex items-center">
-                          <div className="mr-2 w-6 h-6">
-                            <IconToken
-                              tokenName={item.marketParams.collateralToken}
-                            />
-                          </div>
+                          <IconToken
+                            className="mr-2 w-6 h-6"
+                            tokenName={item.marketParams.collateralToken}
+                          />
                         </div>
                         <FormatTokenMillion
-                          value={Number(formatEther(item.collateral))}
+                          value={formatTokenValue(
+                            item.collateral,
+                            item.marketParams.collateralToken
+                          )}
                           token={item.marketParams.collateralToken}
-                          totalValue={Number(formatEther(item.collateral))}
+                          totalValue={0}
                         />
                         <div className="ml-8"></div>
                         <ButtonDialog color="secondary" buttonText="Add">
                           {(closeModal) => (
                             <div className=" w-full h-full">
-                              <VaultAdd item={item} closeModal={closeModal} />
+                              <VaultAdd
+                                item={item}
+                                closeModal={closeModal}
+                                updateInfo={updateInfo}
+                              />
                             </div>
                           )}
                         </ButtonDialog>
@@ -163,6 +175,7 @@ const LoanMoreTable: React.FC<Props> = ({ positions, borrowMarkets }) => {
                               <VaultWithdrawBorrow
                                 item={item}
                                 closeModal={closeModal}
+                                updateInfo={updateInfo}
                               />
                             </div>
                           )}
@@ -177,9 +190,12 @@ const LoanMoreTable: React.FC<Props> = ({ positions, borrowMarkets }) => {
                           tokenName={item.marketParams.loanToken}
                         />
                         <FormatTokenMillion
-                          value={Number(formatEther(item.loan))}
+                          value={formatTokenValue(
+                            item.loan,
+                            item.marketParams.loanToken
+                          )}
                           token={item.marketParams.loanToken}
-                          totalValue={Number(formatEther(item.loan))}
+                          totalValue={0}
                         />
                         <div className="ml-8"></div>
                         <ButtonDialog
@@ -188,20 +204,12 @@ const LoanMoreTable: React.FC<Props> = ({ positions, borrowMarkets }) => {
                         >
                           {(closeModal) => (
                             <div className=" w-full h-full">
-                              {/* <VaultBorrow
-                            title="USDMax"
-                            token={item.token}
-                            apy={14.1}
-                            balanceToken={473.18}
-                            balanceFlow={785.45}
-                            ltv="90% / 125%"
-                            totalDeposit={3289.62}
-                            totalTokenAmount={1.96}
-                            curator="Flowverse"
-                            credora="AAA"
-                            marketParams={item.market?.params}
-                            closeModal={closeModal}
-                          /> */}
+                              <VaultBorrow
+                                item={item}
+                                onlyBorrow={true}
+                                updateInfo={updateInfo}
+                                closeModal={closeModal}
+                              />
                             </div>
                           )}
                         </ButtonDialog>
@@ -236,7 +244,7 @@ const LoanMoreTable: React.FC<Props> = ({ positions, borrowMarkets }) => {
                     </td>
                     <td className="py-4 items-center h-full   ">
                       <div className="flex justify-start ml-3">
-                        <FormatPourcentage value={0} />
+                        <FormatPourcentage value={"N/A"} />
                       </div>
                     </td>
                   </tr>

@@ -7,8 +7,8 @@ import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import InfosBorrowDetails from "@/components/details/InfosBorrowDetail";
 import PositionMoreTable from "@/components/moreTable/PositionMoreTable";
-import { fetchMarket } from "@/utils/graph";
 import { BorrowMarket } from "@/types";
+import { fetchMarket } from "@/utils/graph";
 import { getMarketParams } from "@/utils/contract";
 
 const BorrowDetailPage: React.FC = () => {
@@ -44,13 +44,15 @@ const BorrowDetailPage: React.FC = () => {
     initMarket();
   }, [params]);
 
+  const updateInfo = async (marketId: string) => {};
+
   return (
     <>
       {borrowMarket && (
         <div className="mb-8 p-3">
-          <HeaderBorrowDetail item={borrowMarket} />
+          <HeaderBorrowDetail item={borrowMarket} updateInfo={updateInfo} />
           <InfosBorrowDetails item={borrowMarket} />
-          <PositionMoreTable item={borrowMarket} />
+          <PositionMoreTable item={borrowMarket} updateInfo={updateInfo} />
           <GraphsBorrowDetails />
           <ActivityBorrowDetail />
         </div>

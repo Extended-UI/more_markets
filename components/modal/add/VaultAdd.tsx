@@ -9,9 +9,10 @@ import { BorrowPosition } from "@/types";
 interface Props {
   item: BorrowPosition;
   closeModal: () => void;
+  updateInfo: (marketId: string) => void;
 }
 
-const VaultAdd: React.FC<Props> = ({ item, closeModal }) => {
+const VaultAdd: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [txHash, setTxHash] = useState("");
@@ -28,6 +29,7 @@ const VaultAdd: React.FC<Props> = ({ item, closeModal }) => {
 
   const handleProcessDone = () => {
     console.log("DEPOSIT DONE");
+    updateInfo(item.id);
     closeModal();
   };
 

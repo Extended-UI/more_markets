@@ -64,23 +64,31 @@ const VaultWithdrawPush: React.FC<Props> = ({
     };
 
     initApprove();
-  }, [userAddress, item, amount, isLoading]);
+  }, [userAddress, item]);
 
   const handlePermit = async () => {
     if (userAddress) {
+      setIsLoading(true);
       try {
+        const permitDeadline =
+          deadline == BigInt(0) ? getTimestamp() : deadline;
+
         const signHash = await setVaultPermit(
           item.vaultName,
           userAddress,
           item.vaultId,
           MaxUint256,
           vaultNonce,
-          deadline
+          permitDeadline
         );
 
         setPermitHash(signHash);
         setHasPermit(true);
-      } catch (err) {}
+        setDeadline(permitDeadline);
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -90,7 +98,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
         const authDeadline = getTimestamp();
         const authHash = await setMarketsAuthorize(
           userAddress,
-          authorizeNonce + BigInt(1),
+          authorizeNonce,
           authDeadline
         );
 

@@ -53,11 +53,11 @@ export const curators: { [key: string]: string } = {
   "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Lighthouse Labs",
 };
 
-export const MORE_SUBGRAPH =
-  "https://graph.more.markets/subgraphs/name/more-markets/more-subgraph";
-
 // export const MORE_SUBGRAPH =
-//   "http://localhost:8000/subgraphs/name/more-markets/more-subgraph";
+//   "https://graph.more.markets/subgraphs/name/more-markets/more-subgraph";
+
+export const MORE_SUBGRAPH =
+  "http://localhost:8000/subgraphs/name/more-markets/more-subgraph";
 
 export const initBalance: GetBalanceReturnType = {
   decimals: 18,
