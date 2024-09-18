@@ -1,7 +1,7 @@
 import React from "react";
 import InfoDetailGrey from "./InfoDetailGrey";
-import InfoDetail from "./InfoDetail";
 import { InvestmentData } from "@/types";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   vault: InvestmentData;
@@ -9,6 +9,8 @@ interface Props {
 }
 
 const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
+  const tokenInfo = getTokenInfo(vault.assetAddress);
+
   return (
     <div className="flex w-full flex-col overflow-visible">
       <div
@@ -28,16 +30,21 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           infoText="The total amount of tokens that have been deposited into the vault and made available to borrowers for loans."
           className="flex-1 m-2  min-w-[200px]"
         >
-          <span className="text-[#888888] font-[600] ">$</span>{" "}
-          <span>{vault.totalDeposits.toLocaleString()}</span>
+          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
+          <span>
+            {vault.totalDeposits.toLocaleString()} {tokenInfo.symbol}
+          </span>
         </InfoDetailGrey>
         <InfoDetailGrey
           title="Available Liquidity"
           infoText="The total value available for withdrawal during the current epoch."
           className="flex-1 m-2  min-w-[200px]"
         >
-          <span className="text-[#888888] font-[600] ">$</span>{" "}
-          <span>{(vault.totalDeposits - totalBorrow).toLocaleString()}</span>{" "}
+          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
+          <span>
+            {(vault.totalDeposits - totalBorrow).toLocaleString()}{" "}
+            {tokenInfo.symbol}
+          </span>{" "}
         </InfoDetailGrey>
         <InfoDetailGrey
           title="Total 7D APY"

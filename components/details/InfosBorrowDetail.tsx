@@ -1,7 +1,7 @@
 import React from "react";
 import InfoDetailGrey from "./InfoDetailGrey";
 import { BorrowMarket } from "@/types";
-import { formatTokenValue } from "@/utils/utils";
+import { formatTokenValue, getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -14,6 +14,8 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
     totalSupply == BigInt(0)
       ? 0
       : Number((totalBorrow * BigInt(100)) / totalSupply);
+
+  const borrowToken = getTokenInfo(item.borrowedToken.id);
 
   return (
     <div className="flex w-full flex-col overflow-visible">
@@ -34,9 +36,10 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           infoText="The total amount of tokens that have been deposited into the vault and made available to borrowers for loans."
           className="flex-1 m-2 min-w-[180px]"
         >
-          <span className="text-[#888888] font-[600] ">$</span>{" "}
+          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
           <span className="">
-            {formatTokenValue(totalSupply, item.borrowedToken.id)}
+            {formatTokenValue(totalSupply, item.borrowedToken.id)}{" "}
+            {borrowToken.symbol}
           </span>
         </InfoDetailGrey>
         <InfoDetailGrey
@@ -44,9 +47,10 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           infoText="The total amount of tokens currently lent in the given market."
           className="flex-1 m-2 min-w-[220px]"
         >
-          <span className="text-[#888888] font-[600] ">$</span>{" "}
+          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
           <span className="">
-            {formatTokenValue(totalBorrow, item.borrowedToken.id)}
+            {formatTokenValue(totalBorrow, item.borrowedToken.id)}{" "}
+            {borrowToken.symbol}
           </span>
           <span className="text-secondary text-[14px] ml-4">
             ({utilization}%)
@@ -57,9 +61,10 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           infoText="The total value available for withdrawal during the current epoch."
           className="flex-1 m-2 min-w-[180px]"
         >
-          <span className="text-[#888888] font-[600] ">$</span>{" "}
+          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
           <span className="">
-            {formatTokenValue(totalSupply - totalBorrow, item.borrowedToken.id)}
+            {formatTokenValue(totalSupply - totalBorrow, item.borrowedToken.id)}{" "}
+            {borrowToken.symbol}
           </span>
         </InfoDetailGrey>
         <InfoDetailGrey
