@@ -182,10 +182,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     </td>
                     <td className="py-4 px-6 items-start h-full  ">
                       <div className="flex items-start">
-                        <IconToken
-                          className="mr-2 w-6 h-6"
-                          tokenName="wflow"
-                        />
+                        <IconToken className="mr-2 w-6 h-6" tokenName="wflow" />
                         {item.curator}
                       </div>
                     </td>
@@ -203,29 +200,31 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                           index % 2 === 0 ? "#141414" : "#191919",
                       }}
                     >
-                      <ButtonDialog color="primary" buttonText="Deposit More">
-                        {(closeModal) => (
-                          <div className=" w-full h-full">
-                            <VaultDeposit
-                              item={item}
-                              closeModal={closeModal}
-                              updateInfo={updateInfo}
-                            />
-                          </div>
-                        )}
-                      </ButtonDialog>
-
-                      <ButtonDialog color="grey" buttonText="Withdraw">
-                        {(closeModal) => (
-                          <div className=" w-full h-full">
-                            <VaultWithdraw
-                              item={item}
-                              updateInfo={updateInfo}
-                              closeModal={closeModal}
-                            />
-                          </div>
-                        )}
-                      </ButtonDialog>
+                      <div className="flex" onClick={(event) => event.stopPropagation()}>
+                        <ButtonDialog color="primary" buttonText="Deposit More">
+                          {(closeModal) => (
+                            <div className=" w-full h-full">
+                              <VaultDeposit
+                                item={item}
+                                closeModal={closeModal}
+                                updateInfo={updateInfo}
+                              />
+                            </div>
+                          )}
+                        </ButtonDialog>
+                        <div className="ml-2" />
+                        <ButtonDialog color="grey" buttonText="Withdraw">
+                          {(closeModal) => (
+                            <div className=" w-full h-full">
+                              <VaultWithdraw
+                                item={item}
+                                updateInfo={updateInfo}
+                                closeModal={closeModal}
+                              />
+                            </div>
+                          )}
+                        </ButtonDialog>
+                      </div>
                     </td>
                   </tr>
                 ))}
