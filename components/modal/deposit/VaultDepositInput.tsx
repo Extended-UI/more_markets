@@ -39,8 +39,7 @@ const VaultDepositInput: React.FC<Props> = ({
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
-    setDeposit(parseFloat(inputValue));
+    setDeposit(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {

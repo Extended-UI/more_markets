@@ -181,7 +181,7 @@ const VaultRepayPush: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="more-bg-primary rounded-b-[5px] mt-[1px] px-8 flex flex-col gap-4 py-8">
+      {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] px-8 flex flex-col gap-4 py-8">
         <div className="text-grey ">Position Change</div>
         <div className="flex flex-row justify-between items-center ">
           <div className="text-xl">Loan</div>
@@ -197,7 +197,7 @@ const VaultRepayPush: React.FC<Props> = ({
           value2={loanAmount - amount}
         />
 
-        {/* <div className="flex flex-row justify-between items-center ">
+        <div className="flex flex-row justify-between items-center ">
           <div className="text-xl">LTV / Liquidation LTV</div>
           <div className="flex  items-center gap-2">
             <FormatPourcentage value={apy} />{" "}
@@ -211,8 +211,8 @@ const VaultRepayPush: React.FC<Props> = ({
           token={token}
           value={balance}
           value2={balance}
-        /> */}
-      </div>
+        /> 
+      </div> */}
 
       <div className="py-8 px-2">
         By confirming this transaction, you agree to the{" "}

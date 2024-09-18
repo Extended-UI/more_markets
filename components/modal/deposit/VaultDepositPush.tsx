@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { parseUnits, MaxUint256 } from "ethers";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { parseUnits } from "ethers";
+import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
-import TokenAmount from "@/components/token/TokenAmount";
 import IconToken from "@/components/token/IconToken";
+import TokenAmount from "@/components/token/TokenAmount";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { contracts, tokens } from "@/utils/const";
 import { getTimestamp } from "@/utils/utils";
+import { contracts, tokens } from "@/utils/const";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -90,7 +90,7 @@ const VaultDepositPush: React.FC<Props> = ({
         await setTokenAllowance(
           item.assetAddress,
           contracts.PERMIT2,
-          MaxUint256
+          tokenAmount
         );
 
         setHasApprove(true);

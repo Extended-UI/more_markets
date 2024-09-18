@@ -35,9 +35,9 @@ const InputTokenMax: React.FC<Props> = ({
           className="noBorder noArrows input mt-1  text-left text-2xl w-full more-input-text-color more-input-bg-color"
           placeholder={placeholder}
         />
-        <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center ">
+        {/* <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center ">
           <span className="text-grey">${value.toFixed(2)}</span>
-        </div>
+        </div> */}
       </div>
       <div className="flex gap-2 items-center">
         <IconToken className="h-8 w-8" tokenName={token} showSymbol={true} />
