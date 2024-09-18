@@ -14,7 +14,13 @@ import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
-import { Market, MarketInfo, MarketParams, VaultData } from "../types";
+import {
+  Market,
+  MarketInfo,
+  MarketParams,
+  VaultData,
+  Position,
+} from "../types";
 import {
   contracts,
   marketsInstance,
@@ -216,6 +222,42 @@ export const getTokenBallance = async (
     : initBalance;
 
   return userBalance;
+};
+
+export const getPositions = async (
+  account: string,
+  marketIds: string[]
+): Promise<Position[]> => {
+  const contracts = marketIds.map((marketId) => {
+    return {
+      ...marketsInstance,
+      functionName: "position",
+      args: [marketId, account],
+    };
+  });
+
+  const fetchedPositions = await readContracts(config, {
+    contracts,
+  });
+  const positionDetails = fetchedPositions
+    .map((fetchedPosition, ind) => {
+      return {
+        id: marketIds[ind],
+        supplyShares: getVauleBigint(fetchedPosition, 0),
+        borrowShares: getVauleBigint(fetchedPosition, 1),
+        collateral: getVauleBigint(fetchedPosition, 2),
+        lastMultiplier: getVauleBigint(fetchedPosition, 3),
+        debtTokenMissed: getVauleBigint(fetchedPosition, 4),
+        debtTokenGained: getVauleBigint(fetchedPosition, 5),
+      } as Position;
+    })
+    .filter(
+      (positionItem) =>
+        positionItem.collateral > BigInt(0) ||
+        positionItem.borrowShares > BigInt(0)
+    );
+
+  return positionDetails;
 };
 
 export const getMarketParams = async (
@@ -643,6 +685,79 @@ export const supplycollateralAndBorrow = async (
         0,
         MaxUint256,
         account,
+      ],
+    })
+  );
+
+  const txHash = await writeContract(config, {
+    ...bundlerInstance,
+    functionName: "multicall",
+    args: [multicallArgs],
+    gas: parseUnits(gasLimit, 6),
+  });
+
+  return txHash;
+};
+
+export const repayLoanToMarkets = async (
+  account: string,
+  repayToken: string,
+  repayAmount: bigint,
+  nonce: number,
+  deadline: bigint,
+  signhash: string,
+  marketParams: MarketParams
+): Promise<string> => {
+  let multicallArgs: string[] = [];
+
+  // encode approve2
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "approve2",
+      args: [
+        [
+          [repayToken, repayAmount, Uint48Max, nonce],
+          contracts.MORE_BUNDLER,
+          deadline,
+        ],
+        signhash,
+        false,
+      ],
+    })
+  );
+
+  // encode transferFrom2
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "transferFrom2",
+      args: [repayToken, repayAmount],
+    })
+  );
+
+  // encode morphoRepay
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "morphoRepay",
+      args: [
+        [
+          marketParams.isPremiumMarket,
+          marketParams.loanToken,
+          marketParams.collateralToken,
+          marketParams.oracle,
+          marketParams.irm,
+          marketParams.lltv,
+          marketParams.creditAttestationService,
+          marketParams.irxMaxLltv,
+          marketParams.categoryLltv,
+        ],
+        repayAmount,
+        0,
+        0,
+        account,
+        "",
       ],
     })
   );

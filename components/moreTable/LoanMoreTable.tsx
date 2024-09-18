@@ -12,6 +12,7 @@ import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
+import { getPositions } from "@/utils/contract";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 import { GraphPosition, BorrowPosition, BorrowMarket } from "@/types";
 
@@ -29,32 +30,67 @@ const LoanMoreTable: React.FC<Props> = ({
   const { address: userAddress } = useAccount();
   const [borrowPositions, setBorrowPositions] = useState<BorrowPosition[]>([]);
 
+  // useEffect(() => {
+  //   const initMarkets = async () => {
+  //     if (positions && borrowMarkets && borrowMarkets.length > 0) {
+  //       const promises = borrowMarkets.map(async (marketItem) => {
+  //         const selPositions = positions.filter(
+  //           (position) => position.market.id == marketItem.id
+  //         );
+
+  //         if (selPositions.length > 0) {
+  //           let totalLoan = BigInt(0);
+  //           let totalCollateral = BigInt(0);
+
+  //           for (const selPosition of selPositions) {
+  //             if (selPosition.id.includes("-BORROWER-")) {
+  //               for (const borrow of selPosition.borrows) {
+  //                 totalLoan += BigInt(borrow.amount);
+  //               }
+  //             } else if (selPosition.id.includes("-COLLATERAL-")) {
+  //               totalCollateral += BigInt(selPosition.balance);
+  //             }
+  //           }
+
+  //           return {
+  //             ...marketItem,
+  //             loan: totalLoan,
+  //             collateral: totalCollateral,
+  //           } as BorrowPosition;
+  //         }
+  //       });
+
+  //       const borrowMarketList = (await Promise.all(promises))
+  //         .filter((item) => item !== undefined)
+  //         .filter(
+  //           (item) => item.collateral > BigInt(0) && item.loan > BigInt(0)
+  //         );
+  //       console.log(borrowMarketList, borrowMarketList.length);
+  //       setBorrowPositions(borrowMarketList);
+  //     }
+  //   };
+
+  //   initMarkets();
+  // }, [userAddress, positions, borrowMarkets]);
+
   useEffect(() => {
     const initMarkets = async () => {
-      if (positions && borrowMarkets && borrowMarkets.length > 0) {
+      if (userAddress && borrowMarkets && borrowMarkets.length > 0) {
+        const marketIds = borrowMarkets.map((marketItem) => marketItem.id);
+        const fetchedPositions = await getPositions(userAddress, marketIds);
+
         const promises = borrowMarkets.map(async (marketItem) => {
-          const selPositions = positions.filter(
-            (position) => position.market.id == marketItem.id
+          const selPosition = fetchedPositions.find(
+            (position) =>
+              position.id.toLowerCase() == marketItem.id.toLowerCase()
           );
 
-          if (selPositions.length > 0) {
-            let totalLoan = BigInt(0);
-            let totalCollateral = BigInt(0);
-
-            for (const selPosition of selPositions) {
-              if (selPosition.id.includes("-BORROWER-")) {
-                for (const borrow of selPosition.borrows) {
-                  totalLoan += BigInt(borrow.amount);
-                }
-              } else if (selPosition.id.includes("-COLLATERAL-")) {
-                totalCollateral += BigInt(selPosition.balance);
-              }
-            }
-
+          console.log(selPosition);
+          if (selPosition) {
             return {
               ...marketItem,
-              loan: totalLoan,
-              collateral: totalCollateral,
+              loan: selPosition.borrowShares,
+              collateral: selPosition.collateral,
             } as BorrowPosition;
           }
         });
@@ -64,13 +100,12 @@ const LoanMoreTable: React.FC<Props> = ({
           .filter(
             (item) => item.collateral > BigInt(0) && item.loan > BigInt(0)
           );
-        console.log(borrowMarketList, borrowMarketList.length);
         setBorrowPositions(borrowMarketList);
       }
     };
 
     initMarkets();
-  }, [userAddress, positions, borrowMarkets]);
+  }, [userAddress, borrowMarkets]);
 
   return (
     <>
@@ -192,7 +227,9 @@ const LoanMoreTable: React.FC<Props> = ({
                         <FormatTokenMillion
                           value={formatTokenValue(
                             item.loan,
-                            item.marketParams.loanToken
+                            item.marketParams.loanToken,
+                            0,
+                            true
                           )}
                           token={item.marketParams.loanToken}
                           totalValue={0}
@@ -218,15 +255,9 @@ const LoanMoreTable: React.FC<Props> = ({
                           {(closeModal) => (
                             <div className=" w-full h-full">
                               <VaultRepay
-                                title="Repay"
-                                token="USDC"
-                                apy={14.1}
-                                balance={473.18}
-                                ltv="90% / 125%"
-                                totalRepay={3289.62}
-                                totalTokenAmount={1.96}
-                                curator="Flowverse"
+                                item={item}
                                 closeModal={closeModal}
+                                updateInfo={updateInfo}
                               />
                             </div>
                           )}

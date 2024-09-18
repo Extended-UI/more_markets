@@ -57,7 +57,6 @@ const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
             item={item}
             amount={amount}
             txhash={txHash}
-            closeModal={closeModal}
             processDone={handleProcessDone}
           />
         );

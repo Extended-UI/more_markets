@@ -1,5 +1,4 @@
 import React from "react";
-import TotalVolumeToken from "../token/TotalVolumeToken";
 import FormatNumber from "./formatNumber";
 
 interface Props {
@@ -12,9 +11,9 @@ const FormatPrice: React.FC<Props> = ({ token, value }) => {
   return (
     <div className="flex gap-1 justify-center items-center gap-2  ">
       <div className=" ">
-        <FormatNumber value={value}></FormatNumber>
+        <FormatNumber value={value} />
       </div>
-      <div className="text-grey ">{token}</div>
+      <div className="text-grey">{token}</div>
     </div>
   );
 };

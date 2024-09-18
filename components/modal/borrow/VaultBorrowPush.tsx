@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { parseUnits } from "ethers";
+import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
@@ -79,8 +79,6 @@ const VaultBorrowPush: React.FC<Props> = ({
             checkAuthorized(userAddress),
           ])
         : [0, BigInt(0), BigInt(0), false];
-
-      console.log(authNonce);
 
       setPermitNonce(nonce);
       setAuthorizeNonce(authNonce);
@@ -200,8 +198,6 @@ const VaultBorrowPush: React.FC<Props> = ({
       alert("Not allowed before approve and permit");
     }
   };
-
-  console.log(hasAuth, "hasAuth");
 
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full">

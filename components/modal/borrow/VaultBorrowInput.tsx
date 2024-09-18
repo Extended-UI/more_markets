@@ -1,17 +1,17 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { type GetBalanceReturnType } from "@wagmi/core";
 import React, { useState, useEffect } from "react";
+import { type GetBalanceReturnType } from "@wagmi/core";
 import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
-import { GraphMarket } from "@/types";
+import { BorrowMarket } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, formatTokenValue } from "@/utils/utils";
 
 interface Props {
-  item: GraphMarket;
+  item: BorrowMarket;
   onlyBorrow?: boolean;
   closeModal: () => void;
   setAmount: (amount: number, borrow: number) => void;
@@ -89,8 +89,6 @@ const VaultBorrowInput: React.FC<Props> = ({
               type="number"
               value={deposit}
               onChange={handleInputDepositChange}
-              min="0"
-              max={"100"}
               placeholder={`Deposit ${collateralToken}`}
               token={item.inputToken.id}
               balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
@@ -104,7 +102,7 @@ const VaultBorrowInput: React.FC<Props> = ({
         </>
       )}
       <div className="text-l mb-1 px-4 py-2 mt-3">Borrow {borrowToken}</div>
-      <div className=" px-4">
+      <div className="px-4">
         <InputTokenMax
           type="number"
           value={borrow}
@@ -134,7 +132,7 @@ const VaultBorrowInput: React.FC<Props> = ({
           <MoreButton
             className="text-2xl py-2"
             text="Borrow"
-            onClick={() => handleBorrow()}
+            onClick={handleBorrow}
             color="gray"
           />
         </div>
@@ -146,8 +144,8 @@ const VaultBorrowInput: React.FC<Props> = ({
         <div className="flex justify-between mt-10">
           <div>1D Borrow APY:</div>
           <div className="">
-            {"0"}
-            <span className="more-text-gray">%</span>
+            {"N/A"}
+            {/* <span className="more-text-gray">%</span> */}
           </div>
         </div>
         <div className="flex justify-between mt-10 pb-4 ">
@@ -159,13 +157,18 @@ const VaultBorrowInput: React.FC<Props> = ({
         <div className="flex justify-between mt-10">
           <div>Available Liquidity</div>
           <div className="">
-            {0} <span className="more-text-gray">{borrowToken}</span>{" "}
+            {formatTokenValue(
+              item.marketInfo.totalSupplyAssets -
+                item.marketInfo.totalBorrowAssets,
+              item.borrowedToken.id
+            )}{" "}
+            <span className="more-text-gray">{borrowToken}</span>{" "}
           </div>
         </div>
-        <div className="flex justify-between mt-10 pb-4 ">
+        {/* <div className="flex justify-between mt-10 pb-4 ">
           <div>Your Credora Rating</div>
           <div className="">{0}</div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

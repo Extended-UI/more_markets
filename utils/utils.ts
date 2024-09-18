@@ -69,10 +69,16 @@ export const getTokenInfo = (token: string | undefined): IToken => {
 export const formatTokenValue = (
   amount: bigint,
   token: string,
-  decimals?: number
+  decimals?: number,
+  shares?: boolean
 ): number => {
+  const extraDecimals = shares ? 6 : 0;
   return Number(
-    formatUnits(amount, decimals ? decimals : getTokenInfo(token).decimals)
+    formatUnits(
+      amount,
+      (decimals && decimals > 0 ? decimals : getTokenInfo(token).decimals) +
+        extraDecimals
+    )
   );
 };
 
