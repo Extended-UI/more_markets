@@ -75,7 +75,7 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
           ]}
           className="w-7 h-7"
         />
-        <div className="text-l   flex items-center'">
+        <div className="text-l flex items-center'">
           {" "}
           {collateralToken} / {loanToken}
         </div>
@@ -92,9 +92,6 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
             balance={Number(supplyBalance ? supplyBalance.formatted : 0)}
             setMax={handleSetMax}
           />
-        </div>
-        <div className="text-right more-text-gray px-4 mt-4">
-          Balance: {supplyBalance?.formatted} {collateralToken}
         </div>
       </div>
       <div className="flex justify-end mt-7 mb-7 px-4">
