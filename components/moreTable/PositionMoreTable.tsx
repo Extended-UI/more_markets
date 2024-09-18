@@ -89,7 +89,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
                     item.marketParams.collateralToken
                   )}
                   totalValue={0}
-                  token={collateralToken.symbol}
+                  token={item.inputToken.id}
                 />
               </div>
             </td>
@@ -106,7 +106,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
                     true
                   )}
                   totalValue={0}
-                  token={loanToken.symbol}
+                  token={item.borrowedToken.id}
                   totalDanger={true}
                 />
               </div>
