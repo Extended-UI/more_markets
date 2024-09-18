@@ -80,11 +80,11 @@ const VaultBorrowInput: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
       <div className="text-2xl mb-10 px-4 pt-5">Borrow</div>
-      <div className="text-l mb-1 px-4">
-        Deposit {collateralToken} Collateral
-      </div>
       {!onlyBorrow && (
         <>
+          <div className="text-l mb-1 px-4">
+            Deposit {collateralToken} Collateral
+          </div>
           <div className=" py-2 px-4">
             <InputTokenMax
               type="number"

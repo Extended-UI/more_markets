@@ -5,6 +5,7 @@ import {
   writeContract,
   getBalance,
   signTypedData,
+  watchAsset,
   type GetBalanceReturnType,
   waitForTransactionReceipt,
 } from "@wagmi/core";
@@ -289,6 +290,32 @@ export const getPositions = async (
     );
 
   return positionDetails;
+};
+
+export const getPosition = async (
+  account: string,
+  marketId: string
+): Promise<Position | null> => {
+  const fetchedPosition = await readContract(config, {
+    ...marketsInstance,
+    functionName: "position",
+    args: [marketId, account],
+  });
+
+  const positionItem = {
+    id: marketId,
+    supplyShares: BigInt((fetchedPosition as any[])[0]),
+    borrowShares: BigInt((fetchedPosition as any[])[1]),
+    collateral: BigInt((fetchedPosition as any[])[2]),
+    lastMultiplier: BigInt((fetchedPosition as any[])[3]),
+    debtTokenMissed: BigInt((fetchedPosition as any[])[4]),
+    debtTokenGained: BigInt((fetchedPosition as any[])[5]),
+  } as Position;
+
+  return positionItem.collateral > BigInt(0) ||
+    positionItem.borrowShares > BigInt(0)
+    ? positionItem
+    : null;
 };
 
 export const getMarketParams = async (
@@ -900,4 +927,19 @@ export const withdrawCollateral = async (
   });
 
   return txHash;
+};
+
+export const addNewToken = async (
+  token: string,
+  symbol: string,
+  decimals: number
+) => {
+  await watchAsset(config, {
+    type: "ERC20",
+    options: {
+      address: token,
+      symbol,
+      decimals,
+    },
+  });
 };

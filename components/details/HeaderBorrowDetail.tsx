@@ -17,8 +17,6 @@ const HeaderBorrowDetail: React.FC<Props> = ({ item, updateInfo }) => {
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
   const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
 
-  console.log([item.inputToken.id, item.borrowedToken.id]);
-
   return (
     <div className="flex w-full items-center justify-between my-4">
       <div className="flex items-center gap-10">

@@ -171,8 +171,6 @@ const [chartAnnotations, setAnnotations] = useState<any[]>([]);
         
       }
 
-      console.log("guideLinesData");
-      console.log(guideLinesData);
       setAnnotations(guideLinesData);
     }    
 

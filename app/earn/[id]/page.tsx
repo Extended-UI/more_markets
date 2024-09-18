@@ -51,6 +51,7 @@ const EarnDetailPage: React.FC = () => {
                   const marketData = await getMarketData(marketItem.id);
 
                   return {
+                    id: marketId,
                     allowcation: 0,
                     supply: formatTokenValue(
                       marketData.info.totalSupplyAssets,

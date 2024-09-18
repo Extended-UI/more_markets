@@ -23,12 +23,10 @@ const VaultAdd: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   };
 
   const handleValidAdd = () => {
-    console.log("DEPOSIT VALID");
     setStep(3);
   };
 
   const handleProcessDone = () => {
-    console.log("DEPOSIT DONE");
     updateInfo(item.id);
     closeModal();
   };

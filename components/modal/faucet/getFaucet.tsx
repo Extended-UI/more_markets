@@ -4,6 +4,7 @@ import _ from "lodash";
 import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import { tokens } from "@/utils/const";
+import { addNewToken } from "@/utils/contract";
 
 interface Props {
   wallet: string;
@@ -13,11 +14,18 @@ interface Props {
 interface ITokenItem {
   address: string;
   symbol: string;
+  decimals: number;
 }
 
 const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
   const [completed, setCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const addToken = async (token: ITokenItem) => {
+    try {
+      await addNewToken(token.address, token.symbol, token.decimals);
+    } catch (err) {}
+  };
 
   const initFaucet = async () => {
     if (wallet) {
@@ -51,6 +59,7 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
     tokenList.push({
       address: token,
       symbol: value.symbol,
+      decimals: value.decimals,
     });
   });
 
@@ -81,6 +90,12 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
         {tokenList.map((tokenItem) => (
           <p className="mb-1" key={tokenItem.address}>
             For {tokenItem.symbol}, {tokenItem.address}
+            <span
+              className="cursor-pointer ml-5 text-blue-600"
+              onClick={() => addToken(tokenItem)}
+            >
+              Import this token
+            </span>
           </p>
         ))}
       </div>

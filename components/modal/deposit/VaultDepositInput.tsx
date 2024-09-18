@@ -105,8 +105,8 @@ const VaultDepositInput: React.FC<Props> = ({
           <div>
             <FormatTokenMillion
               value={item.totalDeposits}
-              totalValue={item.totalDeposits}
-              token={tokenInfo.symbol}
+              totalValue={0}
+              token={item.assetAddress}
             />
           </div>
         </div>

@@ -52,7 +52,6 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
   };
 
   const handleWithdraw = () => {
-    console.log("DEPOSIT");
     if (deposit > 0) {
       setAmount(deposit);
     }

@@ -44,7 +44,7 @@ const FormatTokenMillion: React.FC<Props> = ({
         "flex gap-1 items-center gap-2 " + (align ? "" : "justify-center")
       }
     >
-      <div className=" ">
+      <div>
         <span className="text-grey">{currency}</span>
         <FormatNumber value={value} />
       </div>

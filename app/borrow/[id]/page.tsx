@@ -1,5 +1,6 @@
 "use client";
 
+import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import InfosBorrowDetails from "@/components/details/InfosBorrowDetail";
@@ -7,14 +8,16 @@ import PositionMoreTable from "@/components/moreTable/PositionMoreTable";
 import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
-import { BorrowMarket } from "@/types";
 import { fetchMarket } from "@/utils/graph";
-import { getMarketData } from "@/utils/contract";
+import { BorrowMarket, Position } from "@/types";
+import { getMarketData, getPosition } from "@/utils/contract";
 
 const BorrowDetailPage: React.FC = () => {
   const router = useRouter();
   const params = usePathname();
+  const { address: userAddress } = useAccount();
 
+  const [borrowPosition, setBorrowPosition] = useState<Position | null>(null);
   const [borrowMarket, setBorrowMarket] = useState<BorrowMarket | null>(null);
 
   const marketId = params ? params.replace("/borrow/", "") : "";
@@ -32,6 +35,11 @@ const BorrowDetailPage: React.FC = () => {
           marketParams: marketData.params,
           marketInfo: marketData.info,
         } as BorrowMarket);
+
+        if (userAddress) {
+          const positionInfo = await getPosition(userAddress, marketId);
+          setBorrowPosition(positionInfo);
+        }
       } else {
         router.push("/borrow");
       }
@@ -43,7 +51,7 @@ const BorrowDetailPage: React.FC = () => {
 
   useEffect(() => {
     initMarket();
-  }, [params]);
+  }, [userAddress, params]);
 
   const updateInfo = async (marketId: string) => {
     const marketData = await getMarketData(marketId);
@@ -60,7 +68,14 @@ const BorrowDetailPage: React.FC = () => {
         <div className="mb-8 p-3">
           <HeaderBorrowDetail item={borrowMarket} updateInfo={updateInfo} />
           <InfosBorrowDetails item={borrowMarket} />
-          <PositionMoreTable item={borrowMarket} updateInfo={updateInfo} />
+          {borrowPosition && (
+            <PositionMoreTable
+              item={borrowMarket}
+              position={borrowPosition}
+              updateInfo={updateInfo}
+            />
+          )}
+
           <GraphsBorrowDetails />
           <ActivityBorrowDetail />
         </div>

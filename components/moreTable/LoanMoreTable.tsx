@@ -71,7 +71,6 @@ const LoanMoreTable: React.FC<Props> = ({
   //         .filter(
   //           (item) => item.collateral > BigInt(0) && item.loan > BigInt(0)
   //         );
-  //       console.log(borrowMarketList, borrowMarketList.length);
   //       setBorrowPositions(borrowMarketList);
   //     }
   //   };
@@ -91,7 +90,6 @@ const LoanMoreTable: React.FC<Props> = ({
               position.id.toLowerCase() == marketItem.id.toLowerCase()
           );
 
-          console.log(selPosition);
           if (selPosition) {
             return {
               ...marketItem,
@@ -198,30 +196,34 @@ const LoanMoreTable: React.FC<Props> = ({
                           token={item.marketParams.collateralToken}
                           totalValue={0}
                         />
-                        <div className="ml-8"></div>
-                        <ButtonDialog color="secondary" buttonText="Add">
-                          {(closeModal) => (
-                            <div className=" w-full h-full">
-                              <VaultAdd
-                                item={item}
-                                closeModal={closeModal}
-                                updateInfo={updateInfo}
-                              />
-                            </div>
-                          )}
-                        </ButtonDialog>
-
-                        <ButtonDialog color="grey" buttonText="Withdraw">
-                          {(closeModal) => (
-                            <div className=" w-full h-full">
-                              <VaultWithdrawBorrow
-                                item={item}
-                                closeModal={closeModal}
-                                updateInfo={updateInfo}
-                              />
-                            </div>
-                          )}
-                        </ButtonDialog>
+                        <div
+                          className="ml-8 flex"
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          <ButtonDialog color="secondary" buttonText="Add">
+                            {(closeModal) => (
+                              <div className="w-full h-full">
+                                <VaultAdd
+                                  item={item}
+                                  closeModal={closeModal}
+                                  updateInfo={updateInfo}
+                                />
+                              </div>
+                            )}
+                          </ButtonDialog>
+                          <div className="ml-2"></div>
+                          <ButtonDialog color="grey" buttonText="Withdraw">
+                            {(closeModal) => (
+                              <div className="w-full h-full">
+                                <VaultWithdrawBorrow
+                                  item={item}
+                                  closeModal={closeModal}
+                                  updateInfo={updateInfo}
+                                />
+                              </div>
+                            )}
+                          </ButtonDialog>
+                        </div>
                       </div>
                     </td>
 
@@ -241,34 +243,38 @@ const LoanMoreTable: React.FC<Props> = ({
                           token={item.marketParams.loanToken}
                           totalValue={0}
                         />
-                        <div className="ml-8"></div>
-                        <ButtonDialog
-                          color="secondary"
-                          buttonText="Borrow More"
+                        <div
+                          className="ml-8 flex"
+                          onClick={(event) => event.stopPropagation()}
                         >
-                          {(closeModal) => (
-                            <div className=" w-full h-full">
-                              <VaultBorrow
-                                item={item}
-                                onlyBorrow={true}
-                                updateInfo={updateInfo}
-                                closeModal={closeModal}
-                              />
-                            </div>
-                          )}
-                        </ButtonDialog>
-
-                        <ButtonDialog color="grey" buttonText="Repay">
-                          {(closeModal) => (
-                            <div className=" w-full h-full">
-                              <VaultRepay
-                                item={item}
-                                closeModal={closeModal}
-                                updateInfo={updateInfo}
-                              />
-                            </div>
-                          )}
-                        </ButtonDialog>
+                          <ButtonDialog
+                            color="secondary"
+                            buttonText="Borrow More"
+                          >
+                            {(closeModal) => (
+                              <div className=" w-full h-full">
+                                <VaultBorrow
+                                  item={item}
+                                  onlyBorrow={true}
+                                  updateInfo={updateInfo}
+                                  closeModal={closeModal}
+                                />
+                              </div>
+                            )}
+                          </ButtonDialog>
+                          <div className="ml-2" />
+                          <ButtonDialog color="grey" buttonText="Repay">
+                            {(closeModal) => (
+                              <div className=" w-full h-full">
+                                <VaultRepay
+                                  item={item}
+                                  closeModal={closeModal}
+                                  updateInfo={updateInfo}
+                                />
+                              </div>
+                            )}
+                          </ButtonDialog>
+                        </div>
                       </div>
                     </td>
 

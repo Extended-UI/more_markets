@@ -1,4 +1,5 @@
 export interface VaultBreakdown {
+  id: string;
   allowcation: number;
   supply: number;
   borrow: number;
