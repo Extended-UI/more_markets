@@ -99,8 +99,6 @@ const VaultDepositPush: React.FC<Props> = ({
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
@@ -126,14 +124,13 @@ const VaultDepositPush: React.FC<Props> = ({
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
   const handleDeposit = async () => {
     // generate deposit tx
     if (userAddress && hasApprove && hasPermit) {
+      setIsLoading(true);
       try {
         const txHash = await supplyToVaults(
           item.vaultId,
@@ -147,12 +144,11 @@ const VaultDepositPush: React.FC<Props> = ({
 
         validDeposit();
         setTxHash(txHash);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("Not allowed before approve and permit");
     }
   };
 

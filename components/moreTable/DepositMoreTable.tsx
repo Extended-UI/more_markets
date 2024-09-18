@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
 import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDeposit from "../modal/deposit/VaultDeposit";
@@ -18,6 +19,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
   investments,
   updateInfo,
 }) => {
+  const router = useRouter();
   const { address: userAddress } = useAccount();
   const [vaults, setVaults] = useState<InvestmentData[]>([]);
 
@@ -60,6 +62,10 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
 
     initVaults();
   }, [userAddress, investments]);
+
+  const goToDetail = (item: InvestmentData) => {
+    router.push("/earn/" + item.vaultId);
+  };
 
   return (
     <>
@@ -129,6 +135,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                 {vaults.map((item, index, arr) => (
                   <tr
                     key={index}
+                    onClick={() => goToDetail(item)}
                     style={
                       index === arr.length - 1
                         ? {

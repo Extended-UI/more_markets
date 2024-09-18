@@ -8,7 +8,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { BorrowMarket } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
-import { getTokenInfo, formatTokenValue } from "@/utils/utils";
+import { getTokenInfo, formatTokenValue, getPremiumLltv } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -75,10 +75,11 @@ const VaultBorrowInput: React.FC<Props> = ({
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
   const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
+  const lltv2: number | null = getPremiumLltv(item.marketParams);
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
-      <div className="text-2xl mb-10 px-4 pt-5 ">Borrow</div>
+      <div className="text-2xl mb-10 px-4 pt-5">Borrow</div>
       <div className="text-l mb-1 px-4">
         Deposit {collateralToken} Collateral
       </div>
@@ -140,23 +141,26 @@ const VaultBorrowInput: React.FC<Props> = ({
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-secondary w-full"></div>
       </div>
-      <div className="more-bg-primary px-4 rounded-b-[10px] py-2">
-        <div className="flex justify-between mt-10">
+      <div className="more-bg-primary px-4 rounded-b-[10px] py-2 pb-5">
+        <div className="flex justify-between mt-4">
           <div>1D Borrow APY:</div>
-          <div className="">
-            {"N/A"}
+          <div>
+            N/A
             {/* <span className="more-text-gray">%</span> */}
           </div>
         </div>
-        <div className="flex justify-between mt-10 pb-4 ">
-          <div>Your Premium Liquidation LTV</div>
-          <div className="">
-            <FormatPourcentage value={0} />{" "}
+        {lltv2 && (
+          <div className="flex justify-between mt-10 pb-4 ">
+            <div>Your Premium Liquidation LTV</div>
+            <div>
+              <FormatPourcentage value={lltv2.toFixed(2)} />{" "}
+            </div>
           </div>
-        </div>
+        )}
+
         <div className="flex justify-between mt-10">
           <div>Available Liquidity</div>
-          <div className="">
+          <div>
             {formatTokenValue(
               item.marketInfo.totalSupplyAssets -
                 item.marketInfo.totalBorrowAssets,

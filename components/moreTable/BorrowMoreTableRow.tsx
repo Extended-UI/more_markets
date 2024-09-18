@@ -22,11 +22,11 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
 }) => {
   const { address: userAddress } = useAccount();
 
-  const totalSupply = BigInt(item.totalSupply);
+  const totalSupply = item.marketInfo.totalSupplyAssets;
   const utilization =
     totalSupply == BigInt(0)
       ? 0
-      : Number((BigInt(item.totalBorrow) * BigInt(100)) / totalSupply);
+      : Number((item.marketInfo.totalBorrowAssets * BigInt(100)) / totalSupply);
 
   return (
     <>
@@ -96,7 +96,11 @@ const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
             <ButtonDialog color="secondary" buttonText="Borrow">
               {(closeModal) => (
                 <div className="w-full h-full">
-                  <VaultBorrow item={item} updateInfo={updateInfo} closeModal={closeModal} />
+                  <VaultBorrow
+                    item={item}
+                    updateInfo={updateInfo}
+                    closeModal={closeModal}
+                  />
                 </div>
               )}
             </ButtonDialog>

@@ -1,11 +1,18 @@
 "use client";
 
+import _ from "lodash";
 import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
+import { tokens } from "@/utils/const";
 
 interface Props {
   wallet: string;
   closeModal: () => void;
+}
+
+interface ITokenItem {
+  address: string;
+  symbol: string;
 }
 
 const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
@@ -39,20 +46,43 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
     }
   };
 
+  let tokenList: ITokenItem[] = [];
+  _.forOwn(tokens, (value, token) => {
+    tokenList.push({
+      address: token,
+      symbol: value.symbol,
+    });
+  });
+
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
-      <div className="text-4xl mb-10 px-4 pt-10 ">
-        Faucet - Get Your Testnet Tokens
-      </div>
+      <div className="text-4xl mb-10 px-4 pt-10">Get Free Testnet Tokens</div>
       <div className="text-xl mb-5 px-4">
-        <p className="mb-5">
-          Claim free tokens to use within MORE Markets on Flow Testnet. These
-          tokens are for testing purposes only and have no real-world value.
+        <p className="mb-5 text-xl">
+          When you click the Request button, the protocol will transfer you the
+          following tokens:
+        </p>
+        <p className="mb-1 text-xl">* 1 FLOW</p>
+        {tokenList.map((tokenItem) => (
+          <p className="mb-1 text-xl" key={tokenItem.address}>
+            * 1000 {tokenItem.symbol}
+          </p>
+        ))}
+        <p className="mt-5 mb-5 text-xl">
+          When you access vaults and markets you will see these tokens in your
+          available balance, but they will not show in MetaMask by default.
         </p>
         <p />
-        <p className="text-xl">Action Summary:</p>1 Flow will be transferred to
-        your account. 1000 USDf, 1000 USDCf, 1000 ETHf, 1000 BTCf, and 1000
-        ankr.FLOW will be transferred.
+        <p className="mb-5 text-xl">
+          To add these tokens to MetaMask, in MetaMask, you can click on click
+          Import tokens and add the following token contract addresses:
+        </p>
+        <p />
+        {tokenList.map((tokenItem) => (
+          <p className="mb-1" key={tokenItem.address}>
+            For {tokenItem.symbol}, {tokenItem.address}
+          </p>
+        ))}
       </div>
       <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
         <div className="flex justify-end mr-5">

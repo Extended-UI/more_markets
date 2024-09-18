@@ -1,18 +1,19 @@
 import React from "react";
-import { formatUnits } from "ethers";
-import { BorrowMarket } from "@/types";
 import InfoDetailGrey from "./InfoDetailGrey";
+import { BorrowMarket } from "@/types";
+import { formatTokenValue } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
 }
 
 const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
-  const totalSupply = BigInt(item.totalSupply);
+  const totalSupply = item.marketInfo.totalSupplyAssets;
+  const totalBorrow = item.marketInfo.totalBorrowAssets;
   const utilization =
     totalSupply == BigInt(0)
       ? 0
-      : Number((BigInt(item.totalBorrow) * BigInt(100)) / totalSupply);
+      : Number((totalBorrow * BigInt(100)) / totalSupply);
 
   return (
     <div className="flex w-full flex-col overflow-visible">
@@ -35,7 +36,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
         >
           <span className="text-[#888888] font-[600] ">$</span>{" "}
           <span className="">
-            {Number(formatUnits(item.totalSupply)).toLocaleString()}
+            {formatTokenValue(totalSupply, item.borrowedToken.id)}
           </span>
         </InfoDetailGrey>
         <InfoDetailGrey
@@ -45,7 +46,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
         >
           <span className="text-[#888888] font-[600] ">$</span>{" "}
           <span className="">
-            {Number(formatUnits(item.totalBorrow)).toLocaleString()}
+            {formatTokenValue(totalBorrow, item.borrowedToken.id)}
           </span>
           <span className="text-secondary text-[14px] ml-4">
             ({utilization}%)
@@ -58,10 +59,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
         >
           <span className="text-[#888888] font-[600] ">$</span>{" "}
           <span className="">
-            {(
-              Number(formatUnits(item.totalSupply)) -
-              Number(formatUnits(item.totalBorrow))
-            ).toLocaleString()}
+            {formatTokenValue(totalSupply - totalBorrow, item.borrowedToken.id)}
           </span>
         </InfoDetailGrey>
         <InfoDetailGrey
@@ -73,46 +71,6 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           {/* <span className="text-[#888888] font-[600] ">%</span> */}
         </InfoDetailGrey>
       </div>
-      {/* <h1 className="text-2xl mt-16 mb-8">Open a position</h1>
-      <div
-        className="flex  w-full overflow-x-auto"
-        style={{
-          WebkitOverflowScrolling: "touch",
-          scrollbarWidth: "none", // Works in Firefox
-          msOverflowStyle: "none", // Works in IE and Edge
-          width: "calc(100% + 2rem)",
-          position: "relative",
-          left: "0",
-        }}
-      >
-        <InfoDetail
-          title="Your Credora Rating"
-          className="flex-1 m-2 min-w-[200px]"
-        >
-          <span className=" font-[600] ">BBB/AA</span>{" "}
-        </InfoDetail>
-        <InfoDetail
-          title="Unsecured Loan Limit"
-          className="flex-1 m-2 min-w-[200px]"
-        >
-          <span className="">17.1</span>
-          <span className="text-[#888888] font-[600] ">%</span>
-        </InfoDetail>
-        <InfoDetail
-          title="Your LiquidationLTV"
-          className="flex-1 m-2 min-w-[200px]"
-        >
-          <span className="text-[#888888] font-[600] ">$</span>
-          <span className="">194.7k</span>{" "}
-        </InfoDetail>
-        <InfoDetail
-          title="1D Unsecured APY"
-          className="flex-1 m-2 min-w-[200px]"
-        >
-          <span className="">20</span>
-          <span className="text-[#888888] font-[600] ">%</span>
-        </InfoDetail>
-      </div> */}
     </div>
   );
 };

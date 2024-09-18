@@ -113,8 +113,6 @@ const VaultBorrowPush: React.FC<Props> = ({
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
@@ -163,8 +161,6 @@ const VaultBorrowPush: React.FC<Props> = ({
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
@@ -194,8 +190,6 @@ const VaultBorrowPush: React.FC<Props> = ({
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("Not allowed before approve and permit");
     }
   };
 

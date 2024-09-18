@@ -89,8 +89,6 @@ const VaultAddPush: React.FC<Props> = ({
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
@@ -116,14 +114,13 @@ const VaultAddPush: React.FC<Props> = ({
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
   const handleSupply = async () => {
     // generate borrow tx
     if (userAddress && hasApprove && hasPermit) {
+      setIsLoading(true);
       try {
         const txHash = await supplycollateral(
           item.inputToken.id,
@@ -137,12 +134,11 @@ const VaultAddPush: React.FC<Props> = ({
 
         validAdd();
         setTxHash(txHash);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
         setIsLoading(false);
       }
-    } else {
-      alert("Not allowed before approve and permit");
     }
   };
 

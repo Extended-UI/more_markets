@@ -31,6 +31,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleWithdraw = async () => {
+    setIsLoading(true);
     try {
       if (userAddress) {
         const txHash = await withdrawCollateral(
@@ -41,6 +42,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
 
         validWithdraw();
         setTxHash(txHash);
+        setIsLoading(false);
       }
     } catch (err) {
       console.log(err);

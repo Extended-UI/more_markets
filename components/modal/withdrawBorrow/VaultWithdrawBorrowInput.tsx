@@ -43,7 +43,8 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setWithdraw(parseFloat(event.target.value));
+    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
+    setWithdraw(parseFloat(inputValue));
   };
 
   const handleSetMax = (maxValue: number) => {
@@ -142,7 +143,7 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <div>Loan {loanToken}</div>
           <div>
             <span className="more-text-gray">

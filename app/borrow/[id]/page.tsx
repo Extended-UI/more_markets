@@ -9,7 +9,7 @@ import InfosBorrowDetails from "@/components/details/InfosBorrowDetail";
 import PositionMoreTable from "@/components/moreTable/PositionMoreTable";
 import { BorrowMarket } from "@/types";
 import { fetchMarket } from "@/utils/graph";
-import { getMarketParams } from "@/utils/contract";
+import { getMarketData } from "@/utils/contract";
 
 const BorrowDetailPage: React.FC = () => {
   const router = useRouter();
@@ -23,14 +23,15 @@ const BorrowDetailPage: React.FC = () => {
     const initMarket = async () => {
       try {
         if (marketId.length > 0) {
-          const [marketInfo, marketParams] = await Promise.all([
+          const [marketInfo, marketData] = await Promise.all([
             fetchMarket(marketId),
-            getMarketParams(marketId),
+            getMarketData(marketId),
           ]);
 
           setBorrowMarket({
             ...marketInfo,
-            marketParams: marketParams,
+            marketParams: marketData.params,
+            marketInfo: marketData.info,
           } as BorrowMarket);
         } else {
           router.push("/borrow");

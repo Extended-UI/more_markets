@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useAccount } from "wagmi";
-import { formatUnits } from "ethers";
 import IconToken from "../token/IconToken";
 import TableHeaderCell from "./MoreTableHeader";
 import VaultBorrow from "../modal/borrow/VaultBorrow";

@@ -37,7 +37,8 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRepay(parseFloat(event.target.value));
+    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
+    setRepay(parseFloat(inputValue));
   };
 
   const handleSetMax = (maxValue: number) => {
@@ -108,7 +109,7 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
         <div className="glowing-text-primary w-full"></div>
       </div>
       <div className="flex text-xl  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4 ">
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <div>Borrow APY / Projected Borrow APY</div>
           <div>
             <span className="more-text-gray">N/A</span>

@@ -3,12 +3,12 @@
 import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
+import InputTokenMax from "../../input/InputTokenMax";
 import FormatTokenMillion from "@/components/tools/formatTokenMillion";
 import { InvestmentData } from "@/types";
-import { getTokenInfo } from "@/utils/utils";
 import { initBalance } from "@/utils/const";
+import { getTokenInfo } from "@/utils/utils";
 import { getTokenBallance } from "@/utils/contract";
 
 interface Props {
@@ -92,12 +92,13 @@ const VaultDepositInput: React.FC<Props> = ({
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-primary w-full"></div>
       </div>
-      <div className="more-bg-primary px-4 rounded-b-[10px] py-2">
-        <div className="flex justify-between mt-10">
+      <div className="more-bg-primary px-4 rounded-b-[10px] py-2 pb-5">
+        <div className="flex justify-between mt-4">
           <div>APY:</div>
           <div>
-            {item.netAPY}
-            <span className="more-text-gray">%</span>
+            {/* {item.netAPY}
+            <span className="more-text-gray">%</span> */}
+            N/A
           </div>
         </div>
         <div className="flex justify-between mt-10">

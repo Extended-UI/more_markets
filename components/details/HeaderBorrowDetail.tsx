@@ -1,7 +1,8 @@
 import { useAccount } from "wagmi";
-import ButtonDialog from "../buttonDialog/buttonDialog";
-import VaultBorrow from "../modal/borrow/VaultBorrow";
 import IconToken from "../token/IconToken";
+import VaultBorrow from "../modal/borrow/VaultBorrow";
+import ButtonDialog from "../buttonDialog/buttonDialog";
+import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowMarket } from "@/types";
 import { getTokenInfo } from "@/utils/utils";
 
@@ -16,12 +17,16 @@ const HeaderBorrowDetail: React.FC<Props> = ({ item, updateInfo }) => {
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
   const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
 
+  console.log([item.inputToken.id, item.borrowedToken.id]);
+
   return (
     <div className="flex w-full items-center justify-between my-4">
       <div className="flex items-center gap-10">
         <div className="flex gap-2 items-center sm:text-[25px] text-[16px] items-start">
-          <IconToken tokenName="usdc" className="w-10 h-10 " />
-          <div>{collateralToken + "/" + borrowToken}</div>
+          <ListIconToken
+            iconNames={[item.inputToken.id, item.borrowedToken.id]}
+          />
+          <div>{collateralToken + " / " + borrowToken}</div>
         </div>
       </div>
       {userAddress && (

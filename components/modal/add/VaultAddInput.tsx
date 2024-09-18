@@ -81,7 +81,6 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
             type="number"
             value={deposit}
             onChange={handleInputChange}
-            min="0"
             placeholder={`Add ${collateralToken}`}
             token={collateralToken}
             balance={Number(supplyBalance ? supplyBalance.formatted : 0)}

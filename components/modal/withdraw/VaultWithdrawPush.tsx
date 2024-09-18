@@ -94,6 +94,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
   const handleAuthorize = async () => {
     if (userAddress && !hasAuth) {
+      setIsLoading(true);
       try {
         const authDeadline = getTimestamp();
         const authHash = await setMarketsAuthorize(
@@ -105,7 +106,10 @@ const VaultWithdrawPush: React.FC<Props> = ({
         setHasAuth(true);
         setAuthorizeHash(authHash);
         setDeadline(authDeadline);
-      } catch (err) {}
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+      }
     }
   };
 
