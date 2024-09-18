@@ -72,7 +72,7 @@ const VaultWithdrawResult: React.FC<Props> = ({
                   className="text-2xl py-2"
                   text="Done"
                   onClick={closeModal}
-                  color="secondary"
+                  color="primary"
                 />
               </div>
             </div>

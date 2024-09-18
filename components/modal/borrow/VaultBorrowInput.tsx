@@ -134,7 +134,7 @@ const VaultBorrowInput: React.FC<Props> = ({
             className="text-2xl py-2"
             text="Borrow"
             onClick={handleBorrow}
-            color="gray"
+            color="primary"
           />
         </div>
       </div>

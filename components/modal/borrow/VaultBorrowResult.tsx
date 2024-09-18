@@ -110,7 +110,7 @@ const VaultBorrowResult: React.FC<Props> = ({
               className="text-2xl py-2"
               text="Done"
               onClick={processDone}
-              color="gray"
+              color="primary"
             />
           </div>
         )}
