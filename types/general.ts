@@ -4,6 +4,7 @@ export interface IToken {
   name: string;
   symbol: string;
   decimals: number;
+  oracle: string;
 }
 
 export interface IInvestmentProps {

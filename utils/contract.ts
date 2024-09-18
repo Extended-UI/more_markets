@@ -8,12 +8,13 @@ import {
   type GetBalanceReturnType,
   waitForTransactionReceipt,
 } from "@wagmi/core";
-import { encodeFunctionData, erc20Abi } from "viem";
+import { encodeFunctionData, erc20Abi, formatUnits } from "viem";
 import { config } from "./wagmi";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
+import { OracleAbi } from "@/app/abi/OracleAbi";
 import {
   Market,
   MarketInfo,
@@ -38,7 +39,37 @@ import {
   getVauleBoolean,
   getVauleString,
   getVauleBigintList,
+  getTokenInfo,
 } from "./utils";
+
+export const getTokenPrice = async (token: string): Promise<number> => {
+  try {
+    const oracleContract = {
+      address: getTokenInfo(token).oracle as `0x${string}`,
+      abi: OracleAbi,
+    };
+
+    const [decimals, latestAnswer] = await readContracts(config, {
+      contracts: [
+        {
+          ...oracleContract,
+          functionName: "decimals",
+        },
+        {
+          ...oracleContract,
+          functionName: "latestAnswer",
+        },
+      ],
+    });
+
+    const decimalVal = Number(decimals.result);
+    const answerVal = latestAnswer.result as bigint;
+
+    return parseFloat(formatUnits(answerVal, decimalVal));
+  } catch {
+    return 0;
+  }
+};
 
 export const getTokenAllowance = async (
   token: string,

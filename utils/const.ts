@@ -17,31 +17,37 @@ export const tokens: { [key: string]: IToken } = {
     symbol: "USDCf",
     name: "USDCf(USDC) mock coin",
     decimals: 6,
+    oracle: "0xBEfB2b2B48fdEece45253b2eD008540a23d25AFE",
   },
   "0xd7d43ab7b365f0d0789ae83f4385fa710ffdc98f": {
     symbol: "USDf",
     name: "USDf(PYUSD) mock coin",
     decimals: 6,
+    oracle: "0x2e9EcBf2D63094A08c9ff5eb20A4EbBFfBFc12eD",
   },
   "0x208d09d2a6dd176e3e95b3f0de172a7471c5b2d6": {
     symbol: "BTCf",
     name: "BTCf(wBTC) mock coin",
     decimals: 8,
+    oracle: "0xe65b5154aE462fD08faD32B2A85841803135894b",
   },
   "0x059a77239dafa770977dd9f1e98632c3e4559848": {
     symbol: "ETHf",
     name: "ETHf(wETH) mock coin",
     decimals: 18,
+    oracle: "0x2b40Fc7326E3bF1DB3571e414d006Ee42d49C427",
   },
   "0xe132751ab5a14ac0bd3cb40571a9248ee7a2a9ea": {
     symbol: "ankr.FLOW",
     name: "ankr.FLOW mock coin",
     decimals: 18,
+    oracle: "0x017efB6272Dc61DCcfc9a757c29Fd99187c9d208",
   },
   "0xe0fd0a2a4c2e59a479aab0cf44244e355c508766": {
     symbol: "wFLOW",
     name: "Wrapped FLOW",
     decimals: 18,
+    oracle: "0xaCAd8eB605A93b8E0fF993f437f64155FB68D5DD",
   },
 };
 

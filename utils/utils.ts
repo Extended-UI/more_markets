@@ -1,5 +1,5 @@
-import { IToken, MarketParams } from "@/types";
 import { formatUnits } from "ethers";
+import { IToken, MarketParams } from "@/types";
 import { coingecko_ids, tokens } from "./const";
 
 export const getVaule = (param: any): string => {
@@ -31,7 +31,7 @@ export const getTimestamp = (): bigint => {
   return BigInt(Math.floor(Date.now() / 1000)) + BigInt(3600);
 };
 
-export const getTokenPrice = async (token: string): Promise<number> => {
+export const getCGTokenPrice = async (token: string): Promise<number> => {
   try {
     const tokenId = coingecko_ids[token];
     const response = await fetch(
@@ -53,6 +53,7 @@ export const getTokenInfo = (token: string | undefined): IToken => {
     name: "",
     symbol: "",
     decimals: 18,
+    oracle: "",
   };
 
   if (token) {

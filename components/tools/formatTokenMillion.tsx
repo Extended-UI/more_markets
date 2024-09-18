@@ -1,9 +1,9 @@
-import React from "react";
-import usePrice from "@/hooks/usePrice";
-import { getTokenInfo } from "@/utils/utils";
-
-import TotalVolumeToken from "../token/TotalVolumeToken";
+import millify from "millify";
+import React, { useEffect, useState } from "react";
 import FormatNumber from "./formatNumber";
+import TotalVolumeToken from "../token/TotalVolumeToken";
+import { getTokenInfo } from "@/utils/utils";
+import { getTokenPrice } from "@/utils/contract";
 
 interface Props {
   token?: string;
@@ -22,8 +22,18 @@ const FormatTokenMillion: React.FC<Props> = ({
   currency,
   align,
 }) => {
-  const { fetchTokenPrice } = usePrice();
-  const tokenPrice = value > 0 ? fetchTokenPrice(token) : 0;
+  const [tokenPrice, setTokenPrice] = useState(0);
+
+  useEffect(() => {
+    const initPrice = async () => {
+      if (token) {
+        const priceVal = await getTokenPrice(token);
+        setTokenPrice(priceVal);
+      }
+    };
+
+    initPrice();
+  }, [token]);
 
   const tokenInfo = getTokenInfo(token);
 
@@ -41,7 +51,7 @@ const FormatTokenMillion: React.FC<Props> = ({
       <div className="text-grey">{tokenInfo.symbol}</div>
       <TotalVolumeToken totalDanger={totalDanger}>
         {/* {totalValue} */}
-        {(tokenPrice * value).toFixed(2)}
+        {millify(tokenPrice * value)}
       </TotalVolumeToken>
     </div>
   );
