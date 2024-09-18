@@ -113,7 +113,7 @@ const EarnDetailPage: React.FC = () => {
         }
       } catch (err) {
         console.log(err);
-        // router.push("/earn");
+        router.push("/earn");
       }
     };
 

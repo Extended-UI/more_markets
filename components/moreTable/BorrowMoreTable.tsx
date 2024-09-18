@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
 import BorrowMoreTableRow from "./BorrowMoreTableRow";
-import { GraphMarket, BorrowMarket } from "@/types";
+import { BorrowMarket } from "@/types";
 
 interface Props {
   borrowMarketList: BorrowMarket[];
@@ -14,7 +14,7 @@ interface Props {
 const BorrowMoreTable: React.FC<Props> = ({ updateInfo, borrowMarketList }) => {
   const router = useRouter();
 
-  const goToDetail = (item: GraphMarket) => {
+  const goToDetail = (item: BorrowMarket) => {
     router.push("/borrow/" + item.id);
   };
 

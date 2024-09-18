@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import IconToken from "../token/IconToken";
 import VaultAdd from "../modal/add/VaultAdd";
 import TableHeaderCell from "./MoreTableHeader";
@@ -29,6 +30,11 @@ const LoanMoreTable: React.FC<Props> = ({
 }) => {
   const { address: userAddress } = useAccount();
   const [borrowPositions, setBorrowPositions] = useState<BorrowPosition[]>([]);
+  const router = useRouter();
+
+  const goToDetail = (item: BorrowMarket) => {
+    router.push("/borrow/" + item.id);
+  };
 
   // useEffect(() => {
   //   const initMarkets = async () => {
@@ -163,6 +169,7 @@ const LoanMoreTable: React.FC<Props> = ({
                 {borrowPositions.map((item, index, arr) => (
                   <tr
                     key={index}
+                    onClick={() => goToDetail(item)}
                     style={
                       index === arr.length - 1
                         ? {
