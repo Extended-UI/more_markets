@@ -101,3 +101,27 @@ export const coingecko_ids: { [key in string]: string } = {
 export const gasLimit = "0.8";
 
 export const blacklistedVaults = ["0xeabddabfe3d118092a4bbaf3c13bd923bc8f134e"];
+
+// ******************************************
+export const vaultIds = [
+  "0x8C1CEc925beB7944941b612B70aE280C984FA633",
+  "0x6dCbc5E23Aab3CBb702974D5cDb3837dc0b2e9D6",
+  "0x5c53Fe805381e588Aa17dA5a0635edc4D4bab8DF",
+  "0x60e72F2D276619115a11BFb3Cf89B2f28432887E",
+  "0xAe631435Fc9096047Bc2698c705382F4DA94663B",
+];
+export const marketIds = [
+  "0x6bed9b33d3ee7142f53ba4cf930d61e4aff25a4677150cfe354e9b75a2ee2547",
+  "0x75a964099ef99a0c7dc893c659a4dec8f6beeb3d7c9705e28df7d793694b6164",
+  "0x0f0de7ddadc86a7be1a3d3e1a9d2e8090a791299bcf0985626ae4ebd65add87e",
+  "0xa60293202460d7df68151ac06ec00f6b3dfb5ff119ca579107673bd843547875",
+  "0x0f510c5cca1c8b24bbbccb04833d1243dcb4e6ae07e4f39397dbd9fa6534dece",
+  "0x16893ff750ddec34e292a65a8cb6a014627b3f4ad0b2b82c6da4cc28d1e0576d",
+  "0x19993995e633d686a7a7a4db10d363c2f6dddc744f3ec31e6f8f12d6344bc25d",
+  "0x81721c60cf152bf1395d9c1cae5ab87453bba99636c4a3e3f985570e4a7bcb7c",
+  "0xbb1c25a3dd81910d745b07e0926dc1cc7be6f09c2c5cc025c0d581e44c21c67f",
+  "0x595199e0d78e7769da797d595abf4801bf0ed2bedd0e745a24bb4aebc0310e53",
+  "0x65e3819781cfb3d6865688fe41757484af047fc1aeaca1752b0bf4cacaae555c",
+  "0xaccc9ce078cc2228bc0a0328b0f207311a9dcdfd96d7e34ac829a38e8af953d1",
+];
+// ******************************************

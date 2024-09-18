@@ -184,7 +184,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                       <div className="flex items-start">
                         <IconToken
                           className="mr-2 w-6 h-6"
-                          tokenName={item.assetAddress}
+                          tokenName="wflow"
                         />
                         {item.curator}
                       </div>

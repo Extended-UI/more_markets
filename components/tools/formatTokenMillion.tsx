@@ -1,9 +1,8 @@
 import millify from "millify";
-import React, { useEffect, useState } from "react";
 import FormatNumber from "./formatNumber";
 import TotalVolumeToken from "../token/TotalVolumeToken";
+import usePrice from "@/hooks/usePrice";
 import { getTokenInfo } from "@/utils/utils";
-import { getTokenPrice } from "@/utils/contract";
 
 interface Props {
   token?: string;
@@ -22,19 +21,7 @@ const FormatTokenMillion: React.FC<Props> = ({
   currency,
   align,
 }) => {
-  const [tokenPrice, setTokenPrice] = useState(0);
-
-  useEffect(() => {
-    const initPrice = async () => {
-      if (token) {
-        const priceVal = await getTokenPrice(token);
-        setTokenPrice(priceVal);
-      }
-    };
-
-    initPrice();
-  }, [token]);
-
+  const { tokenPrice } = usePrice(token);
   const tokenInfo = getTokenInfo(token);
 
   // Vous pouvez ajouter une vérification ici si besoin

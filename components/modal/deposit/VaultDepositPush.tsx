@@ -9,8 +9,8 @@ import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { getTimestamp } from "@/utils/utils";
-import { contracts, tokens } from "@/utils/const";
+import { contracts } from "@/utils/const";
+import { getTimestamp, getTokenInfo } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -45,7 +45,7 @@ const VaultDepositPush: React.FC<Props> = ({
 
   const tokenAmount = parseUnits(
     amount.toString(),
-    tokens[item.assetAddress].decimals
+    getTokenInfo(item.assetAddress).decimals
   );
 
   useEffect(() => {

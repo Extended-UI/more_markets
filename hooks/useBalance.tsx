@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { useAccount } from "wagmi";
 import { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";

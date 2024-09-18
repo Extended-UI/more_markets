@@ -1,6 +1,6 @@
-import { formatUnits } from "ethers";
-import { IToken, MarketParams } from "@/types";
-import { coingecko_ids, tokens } from "./const";
+import { formatUnits, ZeroAddress } from "ethers";
+import { GraphVault, IToken, MarketParams } from "@/types";
+import { coingecko_ids, tokens, curators } from "./const";
 
 export const getVaule = (param: any): string => {
   return param.result ? param.result.toString() : "";
@@ -91,4 +91,10 @@ export const getPremiumLltv = (params: MarketParams): number | null => {
         18
       )
     : null;
+};
+
+export const formatCurator = (fetchedVault: GraphVault): string => {
+  return fetchedVault.curator && fetchedVault.curator.id != ZeroAddress
+    ? curators[fetchedVault.curator.id.toLowerCase()]
+    : "";
 };

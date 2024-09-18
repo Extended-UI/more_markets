@@ -8,9 +8,9 @@ import PositionMoreTable from "@/components/moreTable/PositionMoreTable";
 import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
-import { fetchMarket } from "@/utils/graph";
+// import { fetchMarket } from "@/utils/graph";
 import { BorrowMarket, Position } from "@/types";
-import { getMarketData, getPosition } from "@/utils/contract";
+import { getMarketData, getPosition, fetchMarket } from "@/utils/contract";
 
 const BorrowDetailPage: React.FC = () => {
   const router = useRouter();

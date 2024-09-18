@@ -35,17 +35,17 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
             {vault.totalDeposits.toLocaleString()} {tokenInfo.symbol}
           </span>
         </InfoDetailGrey>
-        <InfoDetailGrey
+        {/* <InfoDetailGrey
           title="Available Liquidity"
           infoText="The total value available for withdrawal during the current epoch."
           className="flex-1 m-2  min-w-[200px]"
         >
-          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
+          <span className="text-[#888888] font-[600] ">$</span>{" "}
           <span>
             {(vault.totalDeposits - totalBorrow).toLocaleString()}{" "}
             {tokenInfo.symbol}
           </span>{" "}
-        </InfoDetailGrey>
+        </InfoDetailGrey> */}
         <InfoDetailGrey
           title="Total 7D APY"
           infoText=""

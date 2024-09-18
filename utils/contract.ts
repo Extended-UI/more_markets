@@ -22,6 +22,8 @@ import {
   MarketParams,
   VaultData,
   Position,
+  GraphVault,
+  GraphMarket,
 } from "../types";
 import {
   contracts,
@@ -32,6 +34,8 @@ import {
   permit2Instance,
   Uint48Max,
   gasLimit,
+  vaultIds,
+  marketIds,
 } from "./const";
 import {
   getVaule,
@@ -407,50 +411,6 @@ export const getMarketData = async (marketId: string): Promise<Market> => {
       premiumFee: getVauleBigint(infos, 6),
     },
   } as Market;
-};
-
-export const getVaultData = async (
-  vaultAddress: `0x${string}`
-): Promise<VaultData> => {
-  const vaultContract = {
-    address: vaultAddress,
-    abi: VaultsAbi,
-  };
-
-  const [name, curator, asset, supplyQueueLength] = await readContracts(
-    config,
-    {
-      contracts: [
-        {
-          ...vaultContract,
-          functionName: "name",
-        },
-        {
-          ...vaultContract,
-          functionName: "curator",
-        },
-        {
-          ...vaultContract,
-          functionName: "asset",
-        },
-        {
-          ...vaultContract,
-          functionName: "supplyQueueLength",
-        },
-      ],
-    }
-  );
-
-  const supplyQueueLen = getVauleNum(supplyQueueLength);
-  const assetAddress = getVaule(asset);
-  const curatorAddress = getVaule(curator);
-
-  return {
-    vaultName: getVaule(name),
-    assetAddress,
-    curator: curatorAddress == ZeroAddress ? "-" : curators[curatorAddress],
-    supplyQueueLen,
-  };
 };
 
 export const getVaultDetail = async (
@@ -943,3 +903,185 @@ export const addNewToken = async (
     },
   });
 };
+
+// ******************************************
+export const fetchVaults = async (): Promise<GraphVault[]> => {
+  const promises = vaultIds.map(async (vaultId: string) => {
+    const vaultContract = {
+      address: vaultId as `0x${string}`,
+      abi: VaultsAbi,
+    };
+
+    const vaultInfos = await readContracts(config, {
+      contracts: [
+        {
+          ...vaultContract,
+          functionName: "name",
+        },
+        {
+          ...vaultContract,
+          functionName: "curator",
+        },
+        {
+          ...vaultContract,
+          functionName: "asset",
+        },
+        {
+          ...vaultContract,
+          functionName: "guardian",
+        },
+        {
+          ...vaultContract,
+          functionName: "supplyQueueLength",
+        },
+      ],
+    });
+
+    const supplyQueueLen = getVauleNum(vaultInfos[4]);
+    let supplyQueues: any[] = [];
+    for (let ii = 0; ii < supplyQueueLen; ii++) {
+      supplyQueues.push({
+        ...vaultContract,
+        functionName: "supplyQueue",
+        args: [ii],
+      });
+    }
+    const supplyMarketIds = await readContracts(config, {
+      contracts: supplyQueues,
+    });
+    const queueIds = supplyMarketIds.map((supplyMarketId) => {
+      return {
+        market: {
+          id: getVaule(supplyMarketId),
+        },
+      };
+    });
+
+    return {
+      id: vaultId,
+      supplyQueue: queueIds,
+      name: vaultInfos[0].result,
+      curator: {
+        id: vaultInfos[1].result,
+      },
+      asset: {
+        id: vaultInfos[2].result,
+      },
+      lastTotalAssets: "",
+      totalShares: "",
+      guardian: {
+        id: vaultInfos[3].result == ZeroAddress ? "-" : "Guardian",
+      },
+    } as GraphVault;
+  });
+
+  return await Promise.all(promises);
+};
+
+export const fetchVault = async (vaultId: string): Promise<GraphVault> => {
+  const vaultContract = {
+    address: vaultId as `0x${string}`,
+    abi: VaultsAbi,
+  };
+
+  const vaultInfos = await readContracts(config, {
+    contracts: [
+      {
+        ...vaultContract,
+        functionName: "name",
+      },
+      {
+        ...vaultContract,
+        functionName: "curator",
+      },
+      {
+        ...vaultContract,
+        functionName: "asset",
+      },
+      {
+        ...vaultContract,
+        functionName: "guardian",
+      },
+      {
+        ...vaultContract,
+        functionName: "supplyQueueLength",
+      },
+    ],
+  });
+
+  const supplyQueueLen = getVauleNum(vaultInfos[4]);
+  let supplyQueues: any[] = [];
+  for (let ii = 0; ii < supplyQueueLen; ii++) {
+    supplyQueues.push({
+      ...vaultContract,
+      functionName: "supplyQueue",
+      args: [ii],
+    });
+  }
+  const supplyMarketIds = await readContracts(config, {
+    contracts: supplyQueues,
+  });
+  const queueIds = supplyMarketIds.map((supplyMarketId) => {
+    return {
+      market: {
+        id: getVaule(supplyMarketId),
+      },
+    };
+  });
+
+  return {
+    id: vaultId,
+    supplyQueue: queueIds,
+    name: vaultInfos[0].result,
+    curator: {
+      id: vaultInfos[1].result,
+    },
+    asset: {
+      id: vaultInfos[2].result,
+    },
+    lastTotalAssets: "",
+    totalShares: "",
+    guardian: {
+      id: vaultInfos[3].result == ZeroAddress ? "-" : "Guardian",
+    },
+  } as GraphVault;
+};
+
+export const fetchMarkets = async (): Promise<GraphMarket[]> => {
+  const promises = marketIds.map(async (marketId) => {
+    const marketParams = await getMarketParams(marketId);
+
+    return {
+      id: marketId,
+      inputToken: {
+        id: marketParams.collateralToken,
+      },
+      borrowedToken: {
+        id: marketParams.loanToken,
+      },
+      lltv: marketParams.lltv.toString(),
+      totalSupply: "",
+      totalBorrow: "",
+    } as GraphMarket;
+  });
+
+  return await Promise.all(promises);
+};
+
+export const fetchMarket = async (marketId: string): Promise<GraphMarket> => {
+  const marketParams = await getMarketParams(marketId);
+
+  return {
+    id: marketId,
+    inputToken: {
+      id: marketParams.collateralToken,
+    },
+    borrowedToken: {
+      id: marketParams.loanToken,
+    },
+    lltv: marketParams.lltv.toString(),
+    totalSupply: "",
+    totalBorrow: "",
+  } as GraphMarket;
+};
+// ******************************************

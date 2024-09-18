@@ -18,13 +18,13 @@ import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 import { GraphPosition, BorrowPosition, BorrowMarket } from "@/types";
 
 interface Props {
-  positions: GraphPosition[];
+  // positions: GraphPosition[];
   borrowMarkets: BorrowMarket[];
   updateInfo: (marketId: string) => void;
 }
 
 const LoanMoreTable: React.FC<Props> = ({
-  positions,
+  // positions,
   borrowMarkets,
   updateInfo,
 }) => {
