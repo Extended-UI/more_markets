@@ -105,7 +105,7 @@ const LoanMoreTable: React.FC<Props> = ({
         const borrowMarketList = (await Promise.all(promises))
           .filter((item) => item !== undefined)
           .filter(
-            (item) => item.collateral > BigInt(0) && item.loan > BigInt(0)
+            (item) => item.collateral > BigInt(0) || item.loan > BigInt(0)
           );
         setBorrowPositions(borrowMarketList);
       }
