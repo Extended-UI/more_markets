@@ -76,7 +76,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
                 <TableHeaderCell title="Vault Listing" infoText="" />
               </div>
             </th> */}
-            {userAddress && <th style={{ width: "100px" }}></th>}
+              {userAddress && <th style={{ width: "100px" }}></th>}
             </tr>
           </thead>
           <tbody className="bg-transparent ">
@@ -89,7 +89,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
                   <FormatTokenMillion
                     value={formatTokenValue(
                       position.collateral,
-                      item.marketParams.collateralToken
+                      item.inputToken.id
                     )}
                     totalValue={0}
                     token={item.inputToken.id}
@@ -105,7 +105,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
                   <FormatTokenMillion
                     value={formatTokenValue(
                       position.borrowShares,
-                      item.marketParams.loanToken,
+                      item.borrowedToken.id,
                       0,
                       true
                     )}

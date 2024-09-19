@@ -52,23 +52,18 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
     validWithdraw();
   };
 
-  const collateralToken = getTokenInfo(
-    item.marketParams.collateralToken
-  ).symbol;
-  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
+  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
+  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">
       <div className="mb-10 px-4 pt-5  text-xl">Review Transaction</div>
       <div className="flex items-center mb-10 px-8 gap-2">
         <ListIconToken
-          iconNames={[
-            item.marketParams.collateralToken,
-            item.marketParams.loanToken,
-          ]}
+          iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
-        <div className="text-l   flex items-center'">
+        <div className="text-l flex items-center'">
           {" "}
           {collateralToken} / {loanToken}
         </div>

@@ -51,10 +51,10 @@ const VaultRepayPush: React.FC<Props> = ({
   const [permitNonce, setPermitNonce] = useState(0);
 
   const borrowToken = getTokenInfo(item.borrowedToken.id);
-  const collateralToken = getTokenInfo(item.marketParams.collateralToken);
+  const collateralToken = getTokenInfo(item.inputToken.id);
   const loanToken = borrowToken.symbol;
   const repayAmount = parseUnits(amount.toString(), borrowToken.decimals);
-  const loanAmount = formatTokenValue(item.loan, item.borrowedToken.id);
+  // const loanAmount = formatTokenValue(item.loan, item.borrowedToken.id);
 
   useEffect(() => {
     const initApprove = async () => {
@@ -157,10 +157,7 @@ const VaultRepayPush: React.FC<Props> = ({
       <div className="mb-10  pt-5  text-4xl">Review Transaction</div>
       <div className="flex items-center mb-10  gap-2">
         <ListIconToken
-          iconNames={[
-            item.marketParams.collateralToken,
-            item.marketParams.loanToken,
-          ]}
+          iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
         <div className="text-l flex items-center'">
@@ -168,10 +165,10 @@ const VaultRepayPush: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="more-bg-primary px-8 rounded-t-[5px] ">
+      <div className="more-bg-primary px-8 rounded-t-[5px]">
         <TokenAmount
           title="Repay"
-          token={item.marketParams.loanToken}
+          token={item.borrowedToken.id}
           amount={amount}
           ltv={""}
           totalTokenAmount={amount}

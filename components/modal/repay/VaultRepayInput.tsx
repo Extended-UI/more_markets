@@ -28,7 +28,7 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
     const initBalances = async () => {
       setLoanBalance(
         userAddress
-          ? await getTokenBallance(item.marketParams.loanToken, userAddress)
+          ? await getTokenBallance(item.borrowedToken.id, userAddress)
           : null
       );
     };
@@ -50,41 +50,34 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
     }
   };
 
-  const collateralToken = getTokenInfo(
-    item.marketParams.collateralToken
-  ).symbol;
-  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
+  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
+  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
   const lltv2: number | null = getPremiumLltv(item.marketParams);
 
   return (
-    <div className="more-bg-secondary w-full  pt-8 rounded-[20px]">
-      <div className="text-3xl mb-10 px-8  pt-10 ">Repay loan</div>
-      <div className="flex items-center mb-10 px-8 gap-2">
+    <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
+      <div className="text-3xl mb-10 px-5 pt-10">Repay Loan</div>
+      <div className="flex items-center mb-10 px-5 gap-2">
         <ListIconToken
-          iconNames={[
-            item.marketParams.collateralToken,
-            item.marketParams.loanToken,
-          ]}
+          iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
         <div className="text-l flex items-center'">
           {collateralToken} / {loanToken}
         </div>
       </div>
-      <div className="w-full flex flex-col justify-center px-8 gap-4">
-        <div className="text-l pl-2  flex items-center'">Repay {loanToken}</div>
-        <div className="w-full flex justify-center">
-          <InputTokenMax
-            type="number"
-            value={deposit}
-            onChange={handleInputChange}
-            placeholder={`Repay ${loanToken}`}
-            token={item.marketParams.loanToken}
-            balance={Number(loanBalance ? loanBalance.formatted : 0)}
-            setMax={handleSetMax}
-          />
-        </div>
-        <div className="text-right more-text-gray px-4 mt-4">
+      <div className="w-full flex flex-col justify-center px-5 gap-4">
+        <div className="text-l pl-2 flex items-center'">Repay {loanToken}</div>
+        <InputTokenMax
+          type="number"
+          value={deposit}
+          onChange={handleInputChange}
+          placeholder={`Repay ${loanToken}`}
+          token={item.borrowedToken.id}
+          balance={Number(loanBalance ? loanBalance.formatted : 0)}
+          setMax={handleSetMax}
+        />
+        <div className="text-right more-text-gray">
           Balance: {loanBalance?.formatted} {loanToken}
         </div>
       </div>
@@ -129,10 +122,7 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           <div>Collateral {collateralToken} </div>
           <div>
             <span className="more-text-gray">
-              {formatTokenValue(
-                item.collateral,
-                item.marketParams.collateralToken
-              )}
+              {formatTokenValue(item.collateral, item.inputToken.id)}
             </span>
           </div>
         </div>
@@ -140,7 +130,7 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           <div>Loan {loanToken}</div>
           <div>
             <span className="more-text-gray">
-              {formatTokenValue(item.loan, item.marketParams.loanToken)}
+              {formatTokenValue(item.loan, item.borrowedToken.id)}
             </span>
           </div>
         </div>

@@ -35,10 +35,7 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
     const initBalances = async () => {
       setSupplyBalance(
         userAddress
-          ? await getTokenBallance(
-              item.marketParams.collateralToken,
-              userAddress
-            )
+          ? await getTokenBallance(item.inputToken.id, userAddress)
           : null
       );
     };
@@ -50,24 +47,18 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
     setAmount(deposit);
   };
 
-  const collateralToken = getTokenInfo(
-    item.marketParams.collateralToken
-  ).symbol;
-  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
+  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
+  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
     <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
       <div className="text-2xl mb-10 px-4 pt-5 ">Add Collateral</div>
       <div className="flex items-center mb-10 px-8 gap-2">
         <ListIconToken
-          iconNames={[
-            item.marketParams.collateralToken,
-            item.marketParams.loanToken,
-          ]}
+          iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
         <div className="text-l flex items-center'">
-          {" "}
           {collateralToken} / {loanToken}
         </div>
       </div>

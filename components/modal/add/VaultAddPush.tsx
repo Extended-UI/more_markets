@@ -43,8 +43,8 @@ const VaultAddPush: React.FC<Props> = ({
   const [signHash, setSignHash] = useState("");
   const [deadline, setDeadline] = useState(BigInt(0));
 
-  const collateralToken = getTokenInfo(item.marketParams.collateralToken);
-  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
+  const collateralToken = getTokenInfo(item.inputToken.id);
+  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
   const supplyAmount = parseUnits(amount.toString(), collateralToken.decimals);
 
   useEffect(() => {
@@ -147,10 +147,7 @@ const VaultAddPush: React.FC<Props> = ({
       <div className="text-xl mb-10 px-4 pt-5 ">Review Transaction</div>
       <div className="flex items-center mb-10 px-8 gap-2">
         <ListIconToken
-          iconNames={[
-            item.marketParams.collateralToken,
-            item.marketParams.loanToken,
-          ]}
+          iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
         <div className="text-l flex items-center'">
@@ -175,7 +172,7 @@ const VaultAddPush: React.FC<Props> = ({
       <div className="more-bg-primary px-8 rounded-t-[5px] ">
         <TokenAmount
           title="Add"
-          token={item.marketParams.collateralToken}
+          token={item.inputToken.id}
           amount={amount}
           ltv={formatEther(item.marketParams.lltv)}
           totalTokenAmount={amount}

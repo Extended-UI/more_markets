@@ -188,15 +188,15 @@ const LoanMoreTable: React.FC<Props> = ({
                         <div className="flex items-center">
                           <IconToken
                             className="mr-2 w-6 h-6"
-                            tokenName={item.marketParams.collateralToken}
+                            tokenName={item.inputToken.id}
                           />
                         </div>
                         <FormatTokenMillion
                           value={formatTokenValue(
                             item.collateral,
-                            item.marketParams.collateralToken
+                            item.inputToken.id
                           )}
-                          token={item.marketParams.collateralToken}
+                          token={item.inputToken.id}
                           totalValue={0}
                         />
                         <div
@@ -234,16 +234,16 @@ const LoanMoreTable: React.FC<Props> = ({
                       <div className="flex gap-2 items-center">
                         <IconToken
                           className="w-6 h-6"
-                          tokenName={item.marketParams.loanToken}
+                          tokenName={item.borrowedToken.id}
                         />
                         <FormatTokenMillion
                           value={formatTokenValue(
                             item.loan,
-                            item.marketParams.loanToken,
+                            item.borrowedToken.id,
                             0,
                             true
                           )}
-                          token={item.marketParams.loanToken}
+                          token={item.borrowedToken.id}
                           totalValue={0}
                         />
                         <div

@@ -15,9 +15,9 @@ import {
 } from "@/utils/utils";
 
 interface Props {
-  item: BorrowPosition;
   txhash: string;
   amount: number;
+  item: BorrowPosition;
   closeModal: () => void;
   processDone: () => void;
 }
@@ -30,10 +30,8 @@ const VaultAddResult: React.FC<Props> = ({
 }) => {
   const [executed, setExecuted] = useState(false);
 
-  const collateralToken = getTokenInfo(
-    item.marketParams.collateralToken
-  ).symbol;
-  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
+  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
+  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   useEffect(() => {
     const waitTx = async () => {
@@ -62,10 +60,7 @@ const VaultAddResult: React.FC<Props> = ({
       <div className="flex flex-row justify-between mt-4 items-center">
         <div className="flex items-center mb-10  gap-2">
           <ListIconToken
-            iconNames={[
-              item.marketParams.collateralToken,
-              item.marketParams.loanToken,
-            ]}
+            iconNames={[item.inputToken.id, item.borrowedToken.id]}
             className="w-8 h-8"
           />
           <div className="text-2xl   flex items-center'">

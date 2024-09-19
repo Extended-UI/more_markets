@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { formatUnits, ZeroAddress } from "ethers";
-import { GraphVault, IToken, MarketParams } from "@/types";
+import { GraphVault, IToken, MarketInfo, MarketParams } from "@/types";
 import { tokens, curators, errorDecoder, contracts } from "./const";
 
 export const notify = (errMsg: string) => toast(errMsg);
@@ -76,6 +76,16 @@ export const getPremiumLltv = (params: MarketParams): number | null => {
         18
       )
     : null;
+};
+
+export const getAvailableLiquidity = (
+  info: MarketInfo,
+  token: string
+): number => {
+  return formatTokenValue(
+    info.totalSupplyAssets - info.totalBorrowAssets,
+    token
+  );
 };
 
 export const formatCurator = (fetchedVault: GraphVault): string => {

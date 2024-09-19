@@ -7,7 +7,11 @@ import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import { IBorrowMarketProp } from "@/types";
-import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
+import {
+  formatTokenValue,
+  getPremiumLltv,
+  getAvailableLiquidity,
+} from "@/utils/utils";
 
 interface Prop extends IBorrowMarketProp {
   index: number;
@@ -67,9 +71,8 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
             tokenName={item.borrowedToken.id}
           />
           <FormatTokenMillion
-            value={formatTokenValue(
-              item.marketInfo.totalSupplyAssets -
-                item.marketInfo.totalBorrowAssets,
+            value={getAvailableLiquidity(
+              item.marketInfo,
               item.borrowedToken.id
             )}
             token={item.borrowedToken.id}

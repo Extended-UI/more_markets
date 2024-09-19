@@ -43,23 +43,18 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
   const txHashStr =
     txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
-  const collateralToken = getTokenInfo(
-    item.marketParams.collateralToken
-  ).symbol;
-  const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
+  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
+  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
       <div className="text-xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
       <div className="flex items-center mb-10 px-8 gap-2">
         <ListIconToken
-          iconNames={[
-            item.marketParams.collateralToken,
-            item.marketParams.loanToken,
-          ]}
+          iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
-        <div className="text-l   flex items-center'">
+        <div className="text-l flex items-center'">
           {" "}
           {collateralToken} / {loanToken}
         </div>

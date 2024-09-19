@@ -8,7 +8,11 @@ import MoreButton from "../../moreButton/MoreButton";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { BorrowMarket } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
-import { getTokenInfo, formatTokenValue, getPremiumLltv } from "@/utils/utils";
+import {
+  getTokenInfo,
+  getPremiumLltv,
+  getAvailableLiquidity,
+} from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -26,8 +30,6 @@ const VaultBorrowInput: React.FC<Props> = ({
   const [borrow, setBorrow] = useState(0);
   const [deposit, setDeposit] = useState(0);
   const [supplyBalance, setSupplyBalance] =
-    useState<GetBalanceReturnType | null>(null);
-  const [borrowBalance, setBorrowBalance] =
     useState<GetBalanceReturnType | null>(null);
 
   const { address: userAddress } = useAccount();
@@ -63,11 +65,6 @@ const VaultBorrowInput: React.FC<Props> = ({
           ? await getTokenBallance(item.inputToken.id, userAddress)
           : null
       );
-      setBorrowBalance(
-        userAddress
-          ? await getTokenBallance(item.borrowedToken.id, userAddress)
-          : null
-      );
     };
 
     initBalances();
@@ -76,6 +73,10 @@ const VaultBorrowInput: React.FC<Props> = ({
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
   const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
   const lltv2: number | null = getPremiumLltv(item.marketParams);
+  const availableLiquidity = getAvailableLiquidity(
+    item.marketInfo,
+    item.borrowedToken.id
+  );
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
@@ -110,13 +111,12 @@ const VaultBorrowInput: React.FC<Props> = ({
           onChange={handleInputBorrowChange}
           placeholder={`Deposit ${borrowToken}`}
           token={item.borrowedToken.id}
-          balance={borrowBalance ? Number(borrowBalance.formatted) : 0}
+          balance={availableLiquidity}
           setMax={handleSetMaxFlow}
         />
       </div>
       <div className="text-right more-text-gray py-2 px-4">
-        Balance: {borrowBalance ? Number(borrowBalance.formatted) : 0}{" "}
-        {borrowToken}
+        Available Liquidity: {availableLiquidity} {borrowToken}
       </div>
       <div className="flex justify-end mt-7 mb-7 px-4">
         <div className="mr-5">
@@ -156,17 +156,6 @@ const VaultBorrowInput: React.FC<Props> = ({
           </div>
         )}
 
-        <div className="flex justify-between mt-10">
-          <div>Available Liquidity</div>
-          <div>
-            {formatTokenValue(
-              item.marketInfo.totalSupplyAssets -
-                item.marketInfo.totalBorrowAssets,
-              item.borrowedToken.id
-            )}{" "}
-            <span className="more-text-gray">{borrowToken}</span>{" "}
-          </div>
-        </div>
         {/* <div className="flex justify-between mt-10 pb-4 ">
           <div>Your Credora Rating</div>
           <div className="">{0}</div>
