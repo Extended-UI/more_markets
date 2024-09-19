@@ -26,16 +26,16 @@ html {
   background-color: #141414 !important;
   padding: 0;
   margin: 0;
-  font-family: Inter, sans-serif;  
+  font-family: Inter, sans-serif;
   color: #E0DFE3;
   font-size: 11px;
   font-weight: 100;
 }
 
-body{
+body {
   color: #E0DFE3;
   background-color: #141414;
-  padding: 0 5% ;
+  padding: 0 5%;
   height: 100%;
 
 }
@@ -52,7 +52,17 @@ body{
   background: #333;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-wrapper {
+  border: 1px solid #343434;
+  /* Border on the wrapper */
+  border-radius: 16px;
+  overflow: visible;
+  width: 100%;
+  /* Ensures the wrapper takes full width */
+  overflow-x: auto;
 }
 
 tr {
@@ -66,18 +76,22 @@ tbody tr:last-child {
   border-bottom: 0;
 }
 
-.glowing-text-primary{
-  color: #F5841F; 
+.glowing-text-primary {
+  color: #F5841F;
   padding-bottom: 10px;
-  position: relative; /* Position relative to use pseudo-element */
-  display: inline-block; /* Ensures the div does not stretch full width */
+  position: relative;
+  /* Position relative to use pseudo-element */
+  display: inline-block;
+  /* Ensures the div does not stretch full width */
 }
 
-.glowing-text-secondary{
-  color: #F5841F; 
+.glowing-text-secondary {
+  color: #F5841F;
   padding-bottom: 10px;
-  position: relative; /* Position relative to use pseudo-element */
-  display: inline-block; /* Ensures the div does not stretch full width */
+  position: relative;
+  /* Position relative to use pseudo-element */
+  display: inline-block;
+  /* Ensures the div does not stretch full width */
 }
 
 
@@ -87,12 +101,18 @@ tbody tr:last-child {
   bottom: 0;
   left: 50%;
   width: 200%;
-  height: 1px; /* Height of the glowing border */
-  background: linear-gradient(to left, rgba(255, 165, 0, 0), rgba(255, 165, 0, 1), rgba(255, 165, 0, 0)); /* Gradient effect */
-  transform: translateX(-50%); /* Center the pseudo-element */
-  box-shadow: 0 6px 16px 0 rgba(255, 165, 0, 2); /* More intense glowing effect */
-  border-radius: 8px; /* Optional: adds rounded corners to the glow */
-  pointer-events: none; /* Ensures the pseudo-element doesn't interfere with interactions */
+  height: 1px;
+  /* Height of the glowing border */
+  background: linear-gradient(to left, rgba(255, 165, 0, 0), rgba(255, 165, 0, 1), rgba(255, 165, 0, 0));
+  /* Gradient effect */
+  transform: translateX(-50%);
+  /* Center the pseudo-element */
+  box-shadow: 0 6px 16px 0 rgba(255, 165, 0, 2);
+  /* More intense glowing effect */
+  border-radius: 8px;
+  /* Optional: adds rounded corners to the glow */
+  pointer-events: none;
+  /* Ensures the pseudo-element doesn't interfere with interactions */
 }
 
 .glowing-text-secondary::after {
@@ -101,12 +121,18 @@ tbody tr:last-child {
   bottom: 0;
   left: 50%;
   width: 200%;
-  height: 1px; /* Height of the glowing border */
-  background: linear-gradient(to left, rgba(255, 165, 0, 0), rgba(255, 165, 0, 1), rgba(255, 165, 0, 0)); /* Gradient effect */
-  transform: translateX(-50%); /* Center the pseudo-element */
-  box-shadow: 0 6px 16px 0 rgba(255, 165, 0, 2); /* More intense glowing effect */
-  border-radius: 8px; /* Optional: adds rounded corners to the glow */
-  pointer-events: none; /* Ensures the pseudo-element doesn't interfere with interactions */
+  height: 1px;
+  /* Height of the glowing border */
+  background: linear-gradient(to left, rgba(255, 165, 0, 0), rgba(255, 165, 0, 1), rgba(255, 165, 0, 0));
+  /* Gradient effect */
+  transform: translateX(-50%);
+  /* Center the pseudo-element */
+  box-shadow: 0 6px 16px 0 rgba(255, 165, 0, 2);
+  /* More intense glowing effect */
+  border-radius: 8px;
+  /* Optional: adds rounded corners to the glow */
+  pointer-events: none;
+  /* Ensures the pseudo-element doesn't interfere with interactions */
 }
 
 input {
@@ -128,7 +154,7 @@ input {
 }
 
 .more-bg-secondary {
-  background-color: #1e1e1e;  
+  background-color: #1e1e1e;
 }
 
 .more-text-gray {
@@ -144,7 +170,8 @@ input {
 }
 
 .light-font {
-  font-weight: 100 !important; /* Using !important to ensure override, use judiciously */
+  font-weight: 100 !important;
+  /* Using !important to ensure override, use judiciously */
 }
 
 h1 {
@@ -172,4 +199,8 @@ h1 {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-left: none;
+}
+
+.mockup-window::before {
+  box-shadow: unset !important;
 }

@@ -67,7 +67,7 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
   });
 
   return (
-    <div className="more-bg-secondary w-full rounded-[20px]">
+    <div className="more-bg-secondary w-full  rounded-[20px]">
       <div className="text-4xl mb-10 px-4 pt-10">Get Free Testnet Tokens</div>
       <div className="text-xl mb-5 px-4">
         <p className="mb-5 text-xl">

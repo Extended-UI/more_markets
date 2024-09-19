@@ -24,27 +24,24 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
 
   return (
     <div
-      className="overflow-x-auto rounded-[15px] mb-16"
+      className="overflow-x-scroll  rounded-2xl  table-wrapper  mb-16"
       style={{
         overflowX: "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
         position: "relative",
-        overflow: "visible",
       }}
     >
-      <table className="w-full text-sm text-left border border-gray-800">
+      <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll ">
         <thead
-          className="bg-[#212121] h-20 text-xs"
-          style={{
-            boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)",
-          }}
+          className="bg-[#212121] h-20 text-white  text-xs"
+          style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
-          <tr className="rounded-t-lg">
-            <th style={{ width: "200px" }} className="rounded-tl-lg">
+          <tr className="">
+            <th style={{ width: "200px" }} className=" ">
               <TableHeaderCell title="Vault Name" infoText="" />
             </th>
-            <th style={{ width: "200px" }} className="rounded-tl-lg">
+            <th style={{ width: "200px" }} className=" ">
               <TableHeaderCell
                 title="Deposit Token"
                 infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
@@ -109,7 +106,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                     }
                   : undefined
               }
-              className={`last:border-b-0 text-[12px] border border-[#202020] cursor-pointer ${
+              className={`last:border-b-0 text-[14px] border border-[#202020] cursor-pointer ${
                 index % 2 === 0 ? "bg-[#141414]" : "bg-[#191919]"
               }`}
             >
