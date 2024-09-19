@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { parseUnits } from "ethers";
+import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { BorrowMarket } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTimestamp, getTokenInfo } from "@/utils/utils";
+import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -80,8 +80,6 @@ const VaultBorrowPush: React.FC<Props> = ({
           ])
         : [0, BigInt(0), BigInt(0), false];
 
-      console.log(authNonce);
-
       setPermitNonce(nonce);
       setAuthorizeNonce(authNonce);
       setHasAuth(authInfo);
@@ -112,11 +110,9 @@ const VaultBorrowPush: React.FC<Props> = ({
         setHasApprove(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
@@ -136,8 +132,8 @@ const VaultBorrowPush: React.FC<Props> = ({
         setDeadline(authDeadline);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
@@ -162,11 +158,9 @@ const VaultBorrowPush: React.FC<Props> = ({
         setHasPermit(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
@@ -193,15 +187,11 @@ const VaultBorrowPush: React.FC<Props> = ({
         setTxHash(txHash);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("Not allowed before approve and permit");
     }
   };
-
-  console.log(hasAuth, "hasAuth");
 
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full">

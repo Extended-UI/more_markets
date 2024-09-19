@@ -1,17 +1,17 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { type GetBalanceReturnType } from "@wagmi/core";
 import React, { useState, useEffect } from "react";
+import { type GetBalanceReturnType } from "@wagmi/core";
 import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
-import { GraphMarket } from "@/types";
+import { BorrowMarket } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, formatTokenValue, getPremiumLltv } from "@/utils/utils";
 
 interface Props {
-  item: GraphMarket;
+  item: BorrowMarket;
   onlyBorrow?: boolean;
   closeModal: () => void;
   setAmount: (amount: number, borrow: number) => void;
@@ -75,22 +75,21 @@ const VaultBorrowInput: React.FC<Props> = ({
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
   const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
+  const lltv2: number | null = getPremiumLltv(item.marketParams);
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
-      <div className="text-2xl mb-10 px-4 pt-5 ">Borrow</div>
-      <div className="text-l mb-1 px-4">
-        Deposit {collateralToken} Collateral
-      </div>
+      <div className="text-2xl mb-10 px-4 pt-5">Borrow</div>
       {!onlyBorrow && (
         <>
+          <div className="text-l mb-1 px-4">
+            Deposit {collateralToken} Collateral
+          </div>
           <div className=" py-2 px-4">
             <InputTokenMax
               type="number"
               value={deposit}
               onChange={handleInputDepositChange}
-              min="0"
-              max={"100"}
               placeholder={`Deposit ${collateralToken}`}
               token={item.inputToken.id}
               balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
@@ -104,7 +103,7 @@ const VaultBorrowInput: React.FC<Props> = ({
         </>
       )}
       <div className="text-l mb-1 px-4 py-2 mt-3">Borrow {borrowToken}</div>
-      <div className=" px-4">
+      <div className="px-4">
         <InputTokenMax
           type="number"
           value={borrow}
@@ -134,38 +133,46 @@ const VaultBorrowInput: React.FC<Props> = ({
           <MoreButton
             className="text-2xl py-2"
             text="Borrow"
-            onClick={() => handleBorrow()}
-            color="gray"
+            onClick={handleBorrow}
+            color="primary"
           />
         </div>
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-secondary w-full"></div>
       </div>
-      <div className="more-bg-primary px-4 rounded-b-[10px] py-2">
-        <div className="flex justify-between mt-10">
+      <div className="more-bg-primary px-4 rounded-b-[10px] py-2 pb-5">
+        <div className="flex justify-between mt-4">
           <div>1D Borrow APY:</div>
-          <div className="">
-            {"0"}
-            <span className="more-text-gray">%</span>
+          <div>
+            N/A
+            {/* <span className="more-text-gray">%</span> */}
           </div>
         </div>
-        <div className="flex justify-between mt-10 pb-4 ">
-          <div>Your Premium Liquidation LTV</div>
-          <div className="">
-            <FormatPourcentage value={0} />{" "}
+        {lltv2 && (
+          <div className="flex justify-between mt-10 pb-4 ">
+            <div>Your Premium Liquidation LTV</div>
+            <div>
+              <FormatPourcentage value={lltv2.toFixed(2)} />{" "}
+            </div>
           </div>
-        </div>
+        )}
+
         <div className="flex justify-between mt-10">
           <div>Available Liquidity</div>
-          <div className="">
-            {0} <span className="more-text-gray">{borrowToken}</span>{" "}
+          <div>
+            {formatTokenValue(
+              item.marketInfo.totalSupplyAssets -
+                item.marketInfo.totalBorrowAssets,
+              item.borrowedToken.id
+            )}{" "}
+            <span className="more-text-gray">{borrowToken}</span>{" "}
           </div>
         </div>
-        <div className="flex justify-between mt-10 pb-4 ">
+        {/* <div className="flex justify-between mt-10 pb-4 ">
           <div>Your Credora Rating</div>
           <div className="">{0}</div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     try {
       // then mint tokens
       let reqList: IMintRequet[] = [];
-      _.forOwn(tokens, async (value, token) => {
+      _.forOwn(tokens, (value, token) => {
         const amount = parseUnits("1000", value.decimals);
         const mintRequest = encodeFunctionData({
           abi: ERC20Abi,

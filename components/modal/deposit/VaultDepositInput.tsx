@@ -1,15 +1,16 @@
 "use client";
 
+import { isNaN } from "lodash";
 import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
+import InputTokenMax from "../../input/InputTokenMax";
 import FormatTokenMillion from "@/components/tools/formatTokenMillion";
 import { InvestmentData } from "@/types";
-import { getTokenInfo } from "@/utils/utils";
-import { initBalance } from "@/utils/const";
 import { getTokenBallance } from "@/utils/contract";
+import { getTokenInfo, notify } from "@/utils/utils";
+import { initBalance, errMessages } from "@/utils/const";
 
 interface Props {
   item: InvestmentData;
@@ -39,8 +40,7 @@ const VaultDepositInput: React.FC<Props> = ({
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
-    setDeposit(parseFloat(inputValue));
+    setDeposit(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {
@@ -48,8 +48,10 @@ const VaultDepositInput: React.FC<Props> = ({
   };
 
   const handleDeposit = () => {
-    if (deposit > 0) {
+    if (!isNaN(deposit) && deposit > 0) {
       setAmount(deposit);
+    } else {
+      notify(errMessages.invalid_amount);
     }
   };
 
@@ -92,12 +94,13 @@ const VaultDepositInput: React.FC<Props> = ({
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-primary w-full"></div>
       </div>
-      <div className="more-bg-primary px-4 rounded-b-[10px] py-2">
-        <div className="flex justify-between mt-10">
+      <div className="more-bg-primary px-4 rounded-b-[10px] py-2 pb-5">
+        <div className="flex justify-between mt-4">
           <div>APY:</div>
           <div>
-            {item.netAPY}
-            <span className="more-text-gray">%</span>
+            {/* {item.netAPY}
+            <span className="more-text-gray">%</span> */}
+            N/A
           </div>
         </div>
         <div className="flex justify-between mt-10">
@@ -105,8 +108,8 @@ const VaultDepositInput: React.FC<Props> = ({
           <div>
             <FormatTokenMillion
               value={item.totalDeposits}
-              totalValue={item.totalDeposits}
-              token={tokenInfo.symbol}
+              totalValue={0}
+              token={item.assetAddress}
             />
           </div>
         </div>

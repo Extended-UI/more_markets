@@ -10,7 +10,7 @@ import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import IconToken from "@/components/token/IconToken";
 import { InvestmentData } from "@/types";
-import { getTimestamp, getTokenInfo } from "@/utils/utils";
+import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
 import {
   withdrawFromVaults,
   getVaultNonce,
@@ -88,12 +88,14 @@ const VaultWithdrawPush: React.FC<Props> = ({
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
 
   const handleAuthorize = async () => {
     if (userAddress && !hasAuth) {
+      setIsLoading(true);
       try {
         const authDeadline = getTimestamp();
         const authHash = await setMarketsAuthorize(
@@ -105,7 +107,11 @@ const VaultWithdrawPush: React.FC<Props> = ({
         setHasAuth(true);
         setAuthorizeHash(authHash);
         setDeadline(authDeadline);
-      } catch (err) {}
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        notifyError(err);
+      }
     }
   };
 
@@ -127,8 +133,8 @@ const VaultWithdrawPush: React.FC<Props> = ({
         setIsLoading(false);
         validWithdraw();
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };

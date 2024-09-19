@@ -5,25 +5,35 @@ import {
   writeContract,
   getBalance,
   signTypedData,
+  watchAsset,
   type GetBalanceReturnType,
   waitForTransactionReceipt,
 } from "@wagmi/core";
-import { encodeFunctionData, erc20Abi } from "viem";
+import { encodeFunctionData, erc20Abi, formatUnits } from "viem";
 import { config } from "./wagmi";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
-import { Market, MarketInfo, MarketParams, VaultData } from "../types";
+import { OracleAbi } from "@/app/abi/OracleAbi";
+import {
+  Market,
+  MarketInfo,
+  MarketParams,
+  Position,
+  GraphVault,
+  GraphMarket,
+} from "../types";
 import {
   contracts,
   marketsInstance,
-  curators,
   initBalance,
   bundlerInstance,
   permit2Instance,
   Uint48Max,
   gasLimit,
+  vaultIds,
+  marketIds,
 } from "./const";
 import {
   getVaule,
@@ -32,7 +42,37 @@ import {
   getVauleBoolean,
   getVauleString,
   getVauleBigintList,
+  getTokenInfo,
 } from "./utils";
+
+export const getTokenPrice = async (token: string): Promise<number> => {
+  try {
+    const oracleContract = {
+      address: getTokenInfo(token).oracle as `0x${string}`,
+      abi: OracleAbi,
+    };
+
+    const [decimals, latestAnswer] = await readContracts(config, {
+      contracts: [
+        {
+          ...oracleContract,
+          functionName: "decimals",
+        },
+        {
+          ...oracleContract,
+          functionName: "latestAnswer",
+        },
+      ],
+    });
+
+    const decimalVal = Number(decimals.result);
+    const answerVal = latestAnswer.result as bigint;
+
+    return parseFloat(formatUnits(answerVal, decimalVal));
+  } catch {
+    return 0;
+  }
+};
 
 export const getTokenAllowance = async (
   token: string,
@@ -60,6 +100,10 @@ export const setTokenAllowance = async (
   });
 
   await waitForTransactionReceipt(config, { hash: txHash });
+};
+
+export const waitForTransaction = async (txHash: string) => {
+  await waitForTransactionReceipt(config, { hash: txHash as `0x${string}` });
 };
 
 export const getTokenPermit = async (args: any[]): Promise<bigint> => {
@@ -218,6 +262,68 @@ export const getTokenBallance = async (
   return userBalance;
 };
 
+export const getPositions = async (
+  account: string,
+  marketIds: string[]
+): Promise<Position[]> => {
+  const contracts = marketIds.map((marketId) => {
+    return {
+      ...marketsInstance,
+      functionName: "position",
+      args: [marketId, account],
+    };
+  });
+
+  const fetchedPositions = await readContracts(config, {
+    contracts,
+  });
+  const positionDetails = fetchedPositions
+    .map((fetchedPosition, ind) => {
+      return {
+        id: marketIds[ind],
+        supplyShares: getVauleBigint(fetchedPosition, 0),
+        borrowShares: getVauleBigint(fetchedPosition, 1),
+        collateral: getVauleBigint(fetchedPosition, 2),
+        lastMultiplier: getVauleBigint(fetchedPosition, 3),
+        debtTokenMissed: getVauleBigint(fetchedPosition, 4),
+        debtTokenGained: getVauleBigint(fetchedPosition, 5),
+      } as Position;
+    })
+    .filter(
+      (positionItem) =>
+        positionItem.collateral > BigInt(0) ||
+        positionItem.borrowShares > BigInt(0)
+    );
+
+  return positionDetails;
+};
+
+export const getPosition = async (
+  account: string,
+  marketId: string
+): Promise<Position | null> => {
+  const fetchedPosition = await readContract(config, {
+    ...marketsInstance,
+    functionName: "position",
+    args: [marketId, account],
+  });
+
+  const positionItem = {
+    id: marketId,
+    supplyShares: BigInt((fetchedPosition as any[])[0]),
+    borrowShares: BigInt((fetchedPosition as any[])[1]),
+    collateral: BigInt((fetchedPosition as any[])[2]),
+    lastMultiplier: BigInt((fetchedPosition as any[])[3]),
+    debtTokenMissed: BigInt((fetchedPosition as any[])[4]),
+    debtTokenGained: BigInt((fetchedPosition as any[])[5]),
+  } as Position;
+
+  return positionItem.collateral > BigInt(0) ||
+    positionItem.borrowShares > BigInt(0)
+    ? positionItem
+    : null;
+};
+
 export const getMarketParams = async (
   marketId: string
 ): Promise<MarketParams> => {
@@ -307,50 +413,6 @@ export const getMarketData = async (marketId: string): Promise<Market> => {
       premiumFee: getVauleBigint(infos, 6),
     },
   } as Market;
-};
-
-export const getVaultData = async (
-  vaultAddress: `0x${string}`
-): Promise<VaultData> => {
-  const vaultContract = {
-    address: vaultAddress,
-    abi: VaultsAbi,
-  };
-
-  const [name, curator, asset, supplyQueueLength] = await readContracts(
-    config,
-    {
-      contracts: [
-        {
-          ...vaultContract,
-          functionName: "name",
-        },
-        {
-          ...vaultContract,
-          functionName: "curator",
-        },
-        {
-          ...vaultContract,
-          functionName: "asset",
-        },
-        {
-          ...vaultContract,
-          functionName: "supplyQueueLength",
-        },
-      ],
-    }
-  );
-
-  const supplyQueueLen = getVauleNum(supplyQueueLength);
-  const assetAddress = getVaule(asset);
-  const curatorAddress = getVaule(curator);
-
-  return {
-    vaultName: getVaule(name),
-    assetAddress,
-    curator: curatorAddress == ZeroAddress ? "-" : curators[curatorAddress],
-    supplyQueueLen,
-  };
 };
 
 export const getVaultDetail = async (
@@ -657,6 +719,79 @@ export const supplycollateralAndBorrow = async (
   return txHash;
 };
 
+export const repayLoanToMarkets = async (
+  account: string,
+  repayToken: string,
+  repayAmount: bigint,
+  nonce: number,
+  deadline: bigint,
+  signhash: string,
+  marketParams: MarketParams
+): Promise<string> => {
+  let multicallArgs: string[] = [];
+
+  // encode approve2
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "approve2",
+      args: [
+        [
+          [repayToken, repayAmount, Uint48Max, nonce],
+          contracts.MORE_BUNDLER,
+          deadline,
+        ],
+        signhash,
+        false,
+      ],
+    })
+  );
+
+  // encode transferFrom2
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "transferFrom2",
+      args: [repayToken, repayAmount],
+    })
+  );
+
+  // encode morphoRepay
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "morphoRepay",
+      args: [
+        [
+          marketParams.isPremiumMarket,
+          marketParams.loanToken,
+          marketParams.collateralToken,
+          marketParams.oracle,
+          marketParams.irm,
+          marketParams.lltv,
+          marketParams.creditAttestationService,
+          marketParams.irxMaxLltv,
+          marketParams.categoryLltv,
+        ],
+        repayAmount,
+        0,
+        0,
+        account,
+        "",
+      ],
+    })
+  );
+
+  const txHash = await writeContract(config, {
+    ...bundlerInstance,
+    functionName: "multicall",
+    args: [multicallArgs],
+    gas: parseUnits(gasLimit, 6),
+  });
+
+  return txHash;
+};
+
 export const supplycollateral = async (
   supplyAsset: string,
   account: string,
@@ -755,3 +890,200 @@ export const withdrawCollateral = async (
 
   return txHash;
 };
+
+export const addNewToken = async (
+  token: string,
+  symbol: string,
+  decimals: number
+) => {
+  await watchAsset(config, {
+    type: "ERC20",
+    options: {
+      address: token,
+      symbol,
+      decimals,
+    },
+  });
+};
+
+// ******************************************
+export const fetchVaults = async (): Promise<GraphVault[]> => {
+  const promises = vaultIds.map(async (vaultId: string) => {
+    const vaultContract = {
+      address: vaultId as `0x${string}`,
+      abi: VaultsAbi,
+    };
+
+    const vaultInfos = await readContracts(config, {
+      contracts: [
+        {
+          ...vaultContract,
+          functionName: "name",
+        },
+        {
+          ...vaultContract,
+          functionName: "curator",
+        },
+        {
+          ...vaultContract,
+          functionName: "asset",
+        },
+        {
+          ...vaultContract,
+          functionName: "guardian",
+        },
+        {
+          ...vaultContract,
+          functionName: "supplyQueueLength",
+        },
+      ],
+    });
+
+    const supplyQueueLen = getVauleNum(vaultInfos[4]);
+    let supplyQueues: any[] = [];
+    for (let ii = 0; ii < supplyQueueLen; ii++) {
+      supplyQueues.push({
+        ...vaultContract,
+        functionName: "supplyQueue",
+        args: [ii],
+      });
+    }
+    const supplyMarketIds = await readContracts(config, {
+      contracts: supplyQueues,
+    });
+    const queueIds = supplyMarketIds.map((supplyMarketId) => {
+      return {
+        market: {
+          id: getVaule(supplyMarketId),
+        },
+      };
+    });
+
+    return {
+      id: vaultId,
+      supplyQueue: queueIds,
+      name: vaultInfos[0].result,
+      curator: {
+        id: vaultInfos[1].result,
+      },
+      asset: {
+        id: vaultInfos[2].result,
+      },
+      lastTotalAssets: "",
+      totalShares: "",
+      guardian: {
+        id: vaultInfos[3].result == ZeroAddress ? "-" : "Guardian",
+      },
+    } as GraphVault;
+  });
+
+  return await Promise.all(promises);
+};
+
+export const fetchVault = async (vaultId: string): Promise<GraphVault> => {
+  const vaultContract = {
+    address: vaultId as `0x${string}`,
+    abi: VaultsAbi,
+  };
+
+  const vaultInfos = await readContracts(config, {
+    contracts: [
+      {
+        ...vaultContract,
+        functionName: "name",
+      },
+      {
+        ...vaultContract,
+        functionName: "curator",
+      },
+      {
+        ...vaultContract,
+        functionName: "asset",
+      },
+      {
+        ...vaultContract,
+        functionName: "guardian",
+      },
+      {
+        ...vaultContract,
+        functionName: "supplyQueueLength",
+      },
+    ],
+  });
+
+  const supplyQueueLen = getVauleNum(vaultInfos[4]);
+  let supplyQueues: any[] = [];
+  for (let ii = 0; ii < supplyQueueLen; ii++) {
+    supplyQueues.push({
+      ...vaultContract,
+      functionName: "supplyQueue",
+      args: [ii],
+    });
+  }
+  const supplyMarketIds = await readContracts(config, {
+    contracts: supplyQueues,
+  });
+  const queueIds = supplyMarketIds.map((supplyMarketId) => {
+    return {
+      market: {
+        id: getVaule(supplyMarketId),
+      },
+    };
+  });
+
+  return {
+    id: vaultId,
+    supplyQueue: queueIds,
+    name: vaultInfos[0].result,
+    curator: {
+      id: vaultInfos[1].result,
+    },
+    asset: {
+      id: vaultInfos[2].result,
+    },
+    lastTotalAssets: "",
+    totalShares: "",
+    guardian: {
+      id: vaultInfos[3].result == ZeroAddress ? "-" : "Guardian",
+    },
+  } as GraphVault;
+};
+
+export const fetchMarkets = async (): Promise<GraphMarket[]> => {
+  const promises = marketIds.map(async (marketId) => {
+    const marketParams = await getMarketParams(marketId);
+
+    return {
+      id: marketId,
+      inputToken: {
+        id: marketParams.collateralToken,
+      },
+      borrowedToken: {
+        id: marketParams.loanToken,
+      },
+      lltv: marketParams.lltv.toString(),
+      totalSupply: "",
+      totalBorrow: "",
+    } as GraphMarket;
+  });
+
+  return await Promise.all(promises);
+};
+
+export const fetchMarket = async (marketId: string): Promise<GraphMarket> => {
+  const marketParams = await getMarketParams(marketId);
+
+  return {
+    id: marketId,
+    inputToken: {
+      id: marketParams.collateralToken,
+    },
+    borrowedToken: {
+      id: marketParams.loanToken,
+    },
+    lltv: marketParams.lltv.toString(),
+    totalSupply: "",
+    totalBorrow: "",
+  } as GraphMarket;
+};
+// ******************************************

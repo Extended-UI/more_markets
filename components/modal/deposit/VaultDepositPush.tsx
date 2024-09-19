@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { parseUnits, MaxUint256 } from "ethers";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { parseUnits } from "ethers";
+import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
-import TokenAmount from "@/components/token/TokenAmount";
 import IconToken from "@/components/token/IconToken";
+import TokenAmount from "@/components/token/TokenAmount";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { contracts, tokens } from "@/utils/const";
-import { getTimestamp } from "@/utils/utils";
+import { contracts } from "@/utils/const";
+import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -45,7 +45,7 @@ const VaultDepositPush: React.FC<Props> = ({
 
   const tokenAmount = parseUnits(
     amount.toString(),
-    tokens[item.assetAddress].decimals
+    getTokenInfo(item.assetAddress).decimals
   );
 
   useEffect(() => {
@@ -90,17 +90,15 @@ const VaultDepositPush: React.FC<Props> = ({
         await setTokenAllowance(
           item.assetAddress,
           contracts.PERMIT2,
-          MaxUint256
+          tokenAmount
         );
 
         setHasApprove(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
@@ -123,17 +121,16 @@ const VaultDepositPush: React.FC<Props> = ({
         setHasPermit(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
   const handleDeposit = async () => {
     // generate deposit tx
     if (userAddress && hasApprove && hasPermit) {
+      setIsLoading(true);
       try {
         const txHash = await supplyToVaults(
           item.vaultId,
@@ -147,12 +144,11 @@ const VaultDepositPush: React.FC<Props> = ({
 
         validDeposit();
         setTxHash(txHash);
-      } catch (err) {
-        console.log(err);
         setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("Not allowed before approve and permit");
     }
   };
 

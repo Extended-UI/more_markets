@@ -1,15 +1,14 @@
 "use client";
 
-import _ from "lodash";
-import { ZeroAddress } from "ethers";
+import { uniq } from "lodash";
 import React, { useEffect, useState } from "react";
 import EarnMoreTable from "@/components/moreTable/EarnMoreTable";
 import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
 import { InvestmentData } from "@/types";
-import { formatTokenValue } from "@/utils/utils";
-import { getVaultDetail } from "@/utils/contract";
-import { fetchMarkets, fetchVaults } from "@/utils/graph";
-import { curators, blacklistedVaults } from "@/utils/const";
+import { blacklistedVaults } from "@/utils/const";
+import { formatTokenValue, formatCurator } from "@/utils/utils";
+import { getVaultDetail, fetchVaults, fetchMarkets } from "@/utils/contract";
+// import { fetchMarkets, fetchVaults } from "@/utils/graph";
 
 const EarnPage: React.FC = () => {
   const [investments, setInvestments] = useState<InvestmentData[]>([]);
@@ -51,11 +50,8 @@ const EarnPage: React.FC = () => {
             netAPY: 0,
             totalDeposits: formatTokenValue(deposited, vault.asset.id),
             totalValueUSD: 0,
-            curator:
-              vault.curator && vault.curator.id != ZeroAddress
-                ? curators[vault.curator.id]
-                : "",
-            collateral: _.uniq(activeCollaterals),
+            curator: formatCurator(vault),
+            collateral: uniq(activeCollaterals),
             guardian: vault.guardian ? vault.guardian.id : "",
           } as InvestmentData;
         });

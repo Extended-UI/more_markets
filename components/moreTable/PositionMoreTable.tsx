@@ -2,26 +2,21 @@
 
 import React from "react";
 import { useAccount } from "wagmi";
-import { formatUnits } from "ethers";
 import IconToken from "../token/IconToken";
 import TableHeaderCell from "./MoreTableHeader";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import { BorrowMarket } from "@/types";
-import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
+import { Position, IBorrowMarketProp } from "@/types";
+import { getPremiumLltv, formatTokenValue } from "@/utils/utils";
 
-interface Props {
-  item: BorrowMarket;
-  updateInfo: (marketId: string) => void;
+interface Props extends IBorrowMarketProp {
+  position: Position;
 }
 
-const PositionMoreTable: React.FC<Props> = ({ item, updateInfo }) => {
+const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
   const { address: userAddress } = useAccount();
-
-  const collateralToken = getTokenInfo(item.marketParams.collateralToken);
-  const loanToken = getTokenInfo(item.marketParams.loanToken);
 
   return (
     <div
@@ -81,7 +76,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, updateInfo }) => {
                 <TableHeaderCell title="Vault Listing" infoText="" />
               </div>
             </th> */}
-              {userAddress && <th style={{ width: "100px" }}></th>}
+            {userAddress && <th style={{ width: "100px" }}></th>}
             </tr>
           </thead>
           <tbody className="bg-transparent ">
@@ -89,16 +84,15 @@ const PositionMoreTable: React.FC<Props> = ({ item, updateInfo }) => {
               <td className="py-4  items-center h-full ">
                 <div className="flex gap-1 justify-start items-center gap-2 pl-4">
                   <div className="mr-2 w-8 h-8">
-                    <IconToken tokenName={collateralToken.symbol} />
+                    <IconToken tokenName={item.inputToken.id} />
                   </div>
                   <FormatTokenMillion
                     value={formatTokenValue(
-                      BigInt(item.totalSupply),
-                      "",
-                      collateralToken.decimals
+                      position.collateral,
+                      item.marketParams.collateralToken
                     )}
                     totalValue={0}
-                    token={collateralToken.symbol}
+                    token={item.inputToken.id}
                   />
                 </div>
               </td>
@@ -106,16 +100,17 @@ const PositionMoreTable: React.FC<Props> = ({ item, updateInfo }) => {
               <td className="py-4  items-center h-full ">
                 <div className="flex gap-1 justify-start items-center gap-2">
                   <div className="mr-2 w-8 h-8">
-                    <IconToken tokenName={loanToken.symbol} />
+                    <IconToken tokenName={item.borrowedToken.id} />
                   </div>
                   <FormatTokenMillion
                     value={formatTokenValue(
-                      BigInt(item.totalBorrow),
-                      "",
-                      loanToken.decimals
+                      position.borrowShares,
+                      item.marketParams.loanToken,
+                      0,
+                      true
                     )}
                     totalValue={0}
-                    token={loanToken.symbol}
+                    token={item.borrowedToken.id}
                     totalDanger={true}
                   />
                 </div>
@@ -144,13 +139,14 @@ const PositionMoreTable: React.FC<Props> = ({ item, updateInfo }) => {
               </td> */}
 
               {userAddress && (
-                <td className="py-4 px-6  items-center justify-end h-full">
+                <td className="py-4 px-6 items-center justify-end h-full">
                   <div onClick={(event) => event.stopPropagation()}>
-                    <ButtonDialog color="secondary" buttonText="Borrow">
+                    <ButtonDialog color="secondary" buttonText="Borrow More">
                       {(closeModal) => (
-                        <div className=" w-full h-full">
+                        <div className="w-full h-full">
                           <VaultBorrow
                             item={item}
+                            onlyBorrow={true}
                             closeModal={closeModal}
                             updateInfo={updateInfo}
                           />

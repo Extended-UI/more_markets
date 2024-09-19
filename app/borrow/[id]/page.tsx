@@ -1,50 +1,65 @@
 "use client";
 
+import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
-import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
-import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import InfosBorrowDetails from "@/components/details/InfosBorrowDetail";
 import PositionMoreTable from "@/components/moreTable/PositionMoreTable";
-import { BorrowMarket } from "@/types";
-import { fetchMarket } from "@/utils/graph";
-import { getMarketParams } from "@/utils/contract";
+import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
+import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
+import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
+// import { fetchMarket } from "@/utils/graph";
+import { BorrowMarket, Position } from "@/types";
+import { getMarketData, getPosition, fetchMarket } from "@/utils/contract";
 
 const BorrowDetailPage: React.FC = () => {
   const router = useRouter();
   const params = usePathname();
+  const { address: userAddress } = useAccount();
 
+  const [borrowPosition, setBorrowPosition] = useState<Position | null>(null);
   const [borrowMarket, setBorrowMarket] = useState<BorrowMarket | null>(null);
 
   const marketId = params ? params.replace("/borrow/", "") : "";
 
-  useEffect(() => {
-    const initMarket = async () => {
-      try {
-        if (marketId.length > 0) {
-          const [marketInfo, marketParams] = await Promise.all([
-            fetchMarket(marketId),
-            getMarketParams(marketId),
-          ]);
+  const initMarket = async () => {
+    try {
+      if (marketId.length > 0) {
+        const [marketInfo, marketData] = await Promise.all([
+          fetchMarket(marketId),
+          getMarketData(marketId),
+        ]);
 
-          setBorrowMarket({
-            ...marketInfo,
-            marketParams: marketParams,
-          } as BorrowMarket);
-        } else {
-          router.push("/borrow");
+        setBorrowMarket({
+          ...marketInfo,
+          marketParams: marketData.params,
+          marketInfo: marketData.info,
+        } as BorrowMarket);
+
+        if (userAddress) {
+          const positionInfo = await getPosition(userAddress, marketId);
+          setBorrowPosition(positionInfo);
         }
-      } catch (err) {
-        console.log(err);
+      } else {
         router.push("/borrow");
       }
-    };
+    } catch (err) {
+      router.push("/borrow");
+    }
+  };
 
+  useEffect(() => {
     initMarket();
-  }, [params]);
+  }, [userAddress, params]);
 
-  const updateInfo = async (marketId: string) => {};
+  const updateInfo = async (marketId: string) => {
+    const marketData = await getMarketData(marketId);
+    setBorrowMarket({
+      ...borrowMarket,
+      marketParams: marketData.params,
+      marketInfo: marketData.info,
+    } as BorrowMarket);
+  };
 
   return (
     <>
@@ -52,7 +67,14 @@ const BorrowDetailPage: React.FC = () => {
         <div className="mb-8 p-3">
           <HeaderBorrowDetail item={borrowMarket} updateInfo={updateInfo} />
           <InfosBorrowDetails item={borrowMarket} />
-          <PositionMoreTable item={borrowMarket} updateInfo={updateInfo} />
+          {borrowPosition && (
+            <PositionMoreTable
+              item={borrowMarket}
+              position={borrowPosition}
+              updateInfo={updateInfo}
+            />
+          )}
+
           <GraphsBorrowDetails />
           <ActivityBorrowDetail />
         </div>

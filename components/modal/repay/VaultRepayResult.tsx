@@ -9,16 +9,16 @@ import { getTokenInfo, notifyError } from "@/utils/utils";
 import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
-  item: BorrowPosition;
   amount: number;
   txhash: string;
+  item: BorrowPosition;
   processDone: () => void;
 }
 
-const VaultWithdrawBorrowResult: React.FC<Props> = ({
+const VaultRepayResult: React.FC<Props> = ({
   item,
-  txhash,
   amount,
+  txhash,
   processDone,
 }) => {
   const [executed, setExecuted] = useState(false);
@@ -26,6 +26,7 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
   useEffect(() => {
     const waitTx = async () => {
       setExecuted(false);
+
       try {
         if (txhash.length > 0) {
           await waitForTransaction(txhash);
@@ -49,8 +50,8 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
   const loanToken = getTokenInfo(item.marketParams.loanToken).symbol;
 
   return (
-    <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
+    <div className="more-bg-secondary h-full rounded-[20px] py-8">
+      <div className="text-4xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
       <div className="flex items-center mb-10 px-8 gap-2">
         <ListIconToken
           iconNames={[
@@ -66,7 +67,7 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
       </div>
 
       <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5">
-        Withdraw {amount} {collateralToken}
+        Repay {amount} {loanToken}
       </div>
 
       {txhash.length > 0 && (
@@ -109,4 +110,4 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
   );
 };
 
-export default VaultWithdrawBorrowResult;
+export default VaultRepayResult;

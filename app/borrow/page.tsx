@@ -4,21 +4,22 @@ import { useAccount } from "wagmi";
 import React, { useState, useEffect } from "react";
 import LoanMoreTable from "@/components/moreTable/LoanMoreTable";
 import BorrowMoreTable from "@/components/moreTable/BorrowMoreTable";
-import { getMarketData } from "@/utils/contract";
 import { GraphPosition, BorrowMarket } from "@/types";
-import { fetchMarkets, fetchPositions } from "@/utils/graph";
+import { getMarketData, fetchMarkets } from "@/utils/contract";
+// import { fetchMarkets, fetchPositions } from "@/utils/graph";
 
 const BorrowPage: React.FC = () => {
   const { address: userAddress } = useAccount();
 
-  const [positions, setPositions] = useState<GraphPosition[]>([]);
+  // const [positions, setPositions] = useState<GraphPosition[]>([]);
   const [borrowMarkets, setBorrowMarkets] = useState<BorrowMarket[]>([]);
 
   useEffect(() => {
     const initFunc = async () => {
-      const [marketsArr, positionsArr] = await Promise.all([
+      // const [marketsArr, positionsArr] = await Promise.all([
+      const [marketsArr] = await Promise.all([
         fetchMarkets(),
-        fetchPositions(userAddress),
+        // fetchPositions(userAddress),
       ]);
 
       const promises = marketsArr.map(async (marketItem) => {
@@ -33,7 +34,7 @@ const BorrowPage: React.FC = () => {
       const borrowMarketList = await Promise.all(promises);
       setBorrowMarkets(borrowMarketList);
 
-      setPositions(positionsArr);
+      // setPositions(positionsArr);
     };
 
     initFunc();
@@ -41,12 +42,13 @@ const BorrowPage: React.FC = () => {
 
   const updateInfo = async (marketId: string) => {
     if (userAddress) {
-      const [marketInfo, positionsArr] = await Promise.all([
+      // const [marketInfo, positionsArr] = await Promise.all([
+      const [marketInfo] = await Promise.all([
         getMarketData(marketId),
-        fetchPositions(userAddress),
+        // fetchPositions(userAddress),
       ]);
 
-      setPositions(positionsArr);
+      // setPositions(positionsArr);
       setBorrowMarkets((prevItems) =>
         prevItems.map((item) =>
           item.id.toLowerCase() == marketId.toLowerCase()
@@ -65,14 +67,14 @@ const BorrowPage: React.FC = () => {
     <>
       <LoanMoreTable
         updateInfo={updateInfo}
-        positions={positions}
+        // positions={positions}
         borrowMarkets={borrowMarkets}
       />
 
       <h1 className="text-4xl mb-8 mt-28">MORE Markets</h1>
       <BorrowMoreTable
         updateInfo={updateInfo}
-        borrowMarketList={borrowMarkets}
+        borrowMarkets={borrowMarkets}
       />
     </>
   );

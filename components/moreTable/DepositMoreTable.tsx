@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
 import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDeposit from "../modal/deposit/VaultDeposit";
@@ -18,6 +19,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
   investments,
   updateInfo,
 }) => {
+  const router = useRouter();
   const { address: userAddress } = useAccount();
   const [vaults, setVaults] = useState<InvestmentData[]>([]);
 
@@ -60,6 +62,10 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
 
     initVaults();
   }, [userAddress, investments]);
+
+  const goToDetail = (item: InvestmentData) => {
+    router.push("/earn/" + item.vaultId);
+  };
 
   return (
     <>
@@ -126,6 +132,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                 {vaults.map((item, index, arr) => (
                   <tr
                     key={index}
+                    onClick={() => goToDetail(item)}
                     style={
                       index === arr.length - 1
                         ? {
@@ -172,10 +179,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     </td>
                     <td className="py-4 px-6 items-start h-full  ">
                       <div className="flex items-start">
-                        <IconToken
-                          className="mr-2 w-6 h-6"
-                          tokenName={item.assetAddress}
-                        />
+                        <IconToken className="mr-2 w-6 h-6" tokenName="wflow" />
                         {item.curator}
                       </div>
                     </td>
@@ -193,29 +197,31 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                           index % 2 === 0 ? "#141414" : "#191919",
                       }}
                     >
-                      <ButtonDialog color="primary" buttonText="Deposit More">
-                        {(closeModal) => (
-                          <div className=" w-full h-full">
-                            <VaultDeposit
-                              item={item}
-                              closeModal={closeModal}
-                              updateInfo={updateInfo}
-                            />
-                          </div>
-                        )}
-                      </ButtonDialog>
-
-                      <ButtonDialog color="grey" buttonText="Withdraw">
-                        {(closeModal) => (
-                          <div className=" w-full h-full">
-                            <VaultWithdraw
-                              item={item}
-                              updateInfo={updateInfo}
-                              closeModal={closeModal}
-                            />
-                          </div>
-                        )}
-                      </ButtonDialog>
+                      <div className="flex" onClick={(event) => event.stopPropagation()}>
+                        <ButtonDialog color="primary" buttonText="Deposit More">
+                          {(closeModal) => (
+                            <div className=" w-full h-full">
+                              <VaultDeposit
+                                item={item}
+                                closeModal={closeModal}
+                                updateInfo={updateInfo}
+                              />
+                            </div>
+                          )}
+                        </ButtonDialog>
+                        <div className="ml-2" />
+                        <ButtonDialog color="grey" buttonText="Withdraw">
+                          {(closeModal) => (
+                            <div className=" w-full h-full">
+                              <VaultWithdraw
+                                item={item}
+                                updateInfo={updateInfo}
+                                closeModal={closeModal}
+                              />
+                            </div>
+                          )}
+                        </ButtonDialog>
+                      </div>
                     </td>
                   </tr>
                 ))}

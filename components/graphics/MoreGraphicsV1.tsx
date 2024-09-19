@@ -48,8 +48,8 @@ const MoreGraphicsV1: React.FC<Props> = ({
 
   // Écouter les changements de visibilité
   useEffect(() => {
-    console.log("Visibility updated: ", visibility);
-    console.log("Visibility updated: ", datasets);
+    // console.log("Visibility updated: ", visibility);
+    // console.log("Visibility updated: ", datasets);
   }, [visibility, datasets]);
 
   const toggleVisibility = (label: string): void => {
@@ -73,7 +73,7 @@ const MoreGraphicsV1: React.FC<Props> = ({
           msOverflowStyle: "none", // Works in IE and Edge
         }}
       >
-        <div className="p-2 flex justify-center   items-center">
+        <div className="p-2 flex justify-center items-center">
           {datasets.map((dataset) => (
             <div key={dataset.label} className="mr-16">
               <div className="p-2 flex justify-center items-center">
@@ -228,7 +228,7 @@ const MoreGraphicsV1: React.FC<Props> = ({
           ))}
         </div>
         <div>
-          <div className="dropdown  absolute top-[40px] right-[20px] z-1  ">
+          <div className="dropdown absolute top-[40px] right-[20px] z-1">
             <label tabIndex={0} className="btn m-1 btn-neutral">
               1 Week{" "}
               <svg

@@ -7,7 +7,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "../../token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import { BorrowPosition } from "@/types";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, notifyError } from "@/utils/utils";
 import ListIconToken from "@/components/token/ListIconToken";
 import { withdrawCollateral } from "@/utils/contract";
 
@@ -31,6 +31,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleWithdraw = async () => {
+    setIsLoading(true);
     try {
       if (userAddress) {
         const txHash = await withdrawCollateral(
@@ -41,11 +42,13 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
 
         validWithdraw();
         setTxHash(txHash);
+        setIsLoading(false);
       }
     } catch (err) {
-      console.log(err);
       setIsLoading(false);
+      notifyError(err);
     }
+
     validWithdraw();
   };
 
@@ -58,7 +61,13 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
     <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">
       <div className="mb-10 px-4 pt-5  text-xl">Review Transaction</div>
       <div className="flex items-center mb-10 px-8 gap-2">
-        <ListIconToken iconNames={["usdc", "abt"]} className="w-7 h-7" />
+        <ListIconToken
+          iconNames={[
+            item.marketParams.collateralToken,
+            item.marketParams.loanToken,
+          ]}
+          className="w-7 h-7"
+        />
         <div className="text-l   flex items-center'">
           {" "}
           {collateralToken} / {loanToken}

@@ -1,11 +1,7 @@
 export * from "./investmentData";
-export * from "./borrowData";
 export * from "./market";
-export * from "./loandData";
 export * from "./marketInfo";
 export * from "./marketParams";
-export * from "./depositMoreData";
-export * from "./vaultData";
 export * from "./graphMarket";
 export * from "./graphVault";
 export * from "./borrowMarket";
@@ -13,3 +9,4 @@ export * from "./graphPosition";
 export * from "./borrowPosition";
 export * from "./vaultBreakdown";
 export * from "./general";
+export * from "./position";

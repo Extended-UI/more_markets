@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
 import ListIconToken from "../token/ListIconToken";
 import FormatTokenMillion from "../tools/formatTokenMillion";
@@ -13,6 +14,11 @@ interface Props {
 }
 
 const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
+  const router = useRouter();
+  const goToDetail = (item: VaultBreakdown) => {
+    router.push("/borrow/" + item.id);
+  };
+
   return (
     <div
       className="overflow-x-scroll  rounded-2xl  table-wrapper  mb-16"
@@ -94,6 +100,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
           {breakdowns.map((item, index, arr) => (
             <tr
               key={index}
+              onClick={() => goToDetail(item)}
               style={
                 index === arr.length - 1
                   ? {

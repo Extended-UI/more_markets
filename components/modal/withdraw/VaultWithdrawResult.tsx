@@ -1,50 +1,48 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { waitForTransactionReceipt } from "@wagmi/core";
 import MoreButton from "../../moreButton/MoreButton";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { InvestmentData } from "@/types";
-import { config } from "@/utils/wagmi";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, notifyError } from "@/utils/utils";
+import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
   amount: number;
-  hash: string;
+  txhash: string;
   item: InvestmentData;
   processDone: () => void;
-  closeModal: () => void;
 }
 
 const VaultWithdrawResult: React.FC<Props> = ({
   item,
-  hash,
+  txhash,
   amount,
   processDone,
-  closeModal,
 }) => {
   const [executed, setExecuted] = useState(false);
 
   const hashStr =
-    hash.substring(0, 5) + "..." + hash.substring(hash.length - 4);
+    txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
   const tokenInfo = getTokenInfo(item.assetAddress);
 
   useEffect(() => {
     const waitTx = async () => {
       setExecuted(false);
-
-      if (hash.length > 0) {
-        await waitForTransactionReceipt(config, {
-          hash: hash as `0x${string}`,
-        });
-
+      try {
+        if (txhash.length > 0) {
+          await waitForTransaction(txhash);
+          setExecuted(true);
+        }
+      } catch (err) {
         setExecuted(true);
-        processDone();
+        notifyError(err);
       }
     };
+
     waitTx();
-  }, [hash]);
+  }, [txhash]);
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
@@ -53,7 +51,7 @@ const VaultWithdrawResult: React.FC<Props> = ({
         Withdraw {amount} {tokenInfo.symbol} from Vault
       </div>
 
-      {hash.length > 0 && (
+      {txhash.length > 0 && (
         <>
           <div className="flex items-center text-2xl mb-5 px-4">
             <span>
@@ -71,8 +69,8 @@ const VaultWithdrawResult: React.FC<Props> = ({
                 <MoreButton
                   className="text-2xl py-2"
                   text="Done"
-                  onClick={closeModal}
-                  color="secondary"
+                  onClick={processDone}
+                  color="primary"
                 />
               </div>
             </div>

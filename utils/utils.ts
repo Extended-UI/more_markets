@@ -1,6 +1,9 @@
-import { IToken, MarketParams } from "@/types";
-import { formatUnits } from "ethers";
-import { coingecko_ids, tokens } from "./const";
+import { toast } from "react-toastify";
+import { formatUnits, ZeroAddress } from "ethers";
+import { tokens, curators, errorDecoder } from "./const";
+import { GraphVault, IToken, MarketParams } from "@/types";
+
+export const notify = (errMsg: string) => toast(errMsg);
 
 export const getVaule = (param: any): string => {
   return param.result ? param.result.toString() : "";
@@ -31,28 +34,12 @@ export const getTimestamp = (): bigint => {
   return BigInt(Math.floor(Date.now() / 1000)) + BigInt(3600);
 };
 
-export const getTokenPrice = async (token: string): Promise<number> => {
-  try {
-    const tokenId = coingecko_ids[token];
-    const response = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=" +
-        tokenId +
-        "&vs_currencies=usd"
-    );
-    if (response.status != 200) return 0;
-    const data = await response.json();
-    if (!data) return 0;
-    return data[tokenId].usd ? data[tokenId].usd : 0;
-  } catch {
-    return 0;
-  }
-};
-
 export const getTokenInfo = (token: string | undefined): IToken => {
   const initVal = {
     name: "",
     symbol: "",
     decimals: 18,
+    oracle: "",
   };
 
   if (token) {
@@ -69,10 +56,16 @@ export const getTokenInfo = (token: string | undefined): IToken => {
 export const formatTokenValue = (
   amount: bigint,
   token: string,
-  decimals?: number
+  decimals?: number,
+  shares?: boolean
 ): number => {
+  const extraDecimals = shares ? 6 : 0;
   return Number(
-    formatUnits(amount, decimals ? decimals : getTokenInfo(token).decimals)
+    formatUnits(
+      amount,
+      (decimals && decimals > 0 ? decimals : getTokenInfo(token).decimals) +
+        extraDecimals
+    )
   );
 };
 
@@ -84,4 +77,20 @@ export const getPremiumLltv = (params: MarketParams): number | null => {
         18
       )
     : null;
+};
+
+export const formatCurator = (fetchedVault: GraphVault): string => {
+  return fetchedVault.curator && fetchedVault.curator.id != ZeroAddress
+    ? curators[fetchedVault.curator.id.toLowerCase()]
+    : "";
+};
+
+export const notifyError = async (err: unknown) => {
+  const decodedError = await errorDecoder.decode(err);
+  console.log(decodedError);
+  const errMsg = decodedError.reason
+    ? decodedError.reason.split("\n")[0]
+    : "Unknown Error";
+
+  notify(errMsg);
 };

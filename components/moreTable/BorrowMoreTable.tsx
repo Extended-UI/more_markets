@@ -4,17 +4,15 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
 import BorrowMoreTableRow from "./BorrowMoreTableRow";
-import { GraphMarket, BorrowMarket } from "@/types";
+import { BorrowMarket, IBorrowMarketProps } from "@/types";
 
-interface Props {
-  borrowMarketList: BorrowMarket[];
-  updateInfo: (marketId: string) => void;
-}
-
-const BorrowMoreTable: React.FC<Props> = ({ updateInfo, borrowMarketList }) => {
+const BorrowMoreTable: React.FC<IBorrowMarketProps> = ({
+  updateInfo,
+  borrowMarkets,
+}) => {
   const router = useRouter();
 
-  const goToDetail = (item: GraphMarket) => {
+  const goToDetail = (item: BorrowMarket) => {
     router.push("/borrow/" + item.id);
   };
 
@@ -85,7 +83,7 @@ const BorrowMoreTable: React.FC<Props> = ({ updateInfo, borrowMarketList }) => {
           </tr>
         </thead>
         <tbody className="bg-transparent">
-          {borrowMarketList.map((item, index, arr) => (
+          {borrowMarkets.map((item, index, arr) => (
             <tr
               key={index}
               onClick={() => goToDetail(item)}

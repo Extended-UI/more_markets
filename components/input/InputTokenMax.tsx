@@ -1,6 +1,9 @@
 import React from "react";
-import MoreButton from "../moreButton/MoreButton";
+import millify from "millify";
+import { isNaN } from "lodash";
 import IconToken from "../token/IconToken";
+import MoreButton from "../moreButton/MoreButton";
+import usePrice from "@/hooks/usePrice";
 
 interface Props {
   type: string;
@@ -25,6 +28,8 @@ const InputTokenMax: React.FC<Props> = ({
   balance,
   setMax,
 }) => {
+  const { tokenPrice } = usePrice(token);
+
   return (
     <div className="w-full flex  rounded-[8px] more-input-bg-color flex justify-between items-center px-4 py-2 gap-4">
       <div className="flex w-full flex-col items-center gap-2">
@@ -35,9 +40,11 @@ const InputTokenMax: React.FC<Props> = ({
           className="noBorder noArrows input mt-1  text-left text-2xl w-full more-input-text-color more-input-bg-color"
           placeholder={placeholder}
         />
-        <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center ">
-          <span className="text-grey">${value.toFixed(2)}</span>
-        </div>
+        {!isNaN(value) && (
+          <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center ">
+            <span className="text-grey">${millify(tokenPrice * value)}</span>
+          </div>
+        )}
       </div>
       <div className="flex gap-2 items-center">
         <IconToken className="h-8 w-8" tokenName={token} showSymbol={true} />

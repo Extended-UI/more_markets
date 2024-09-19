@@ -14,7 +14,7 @@ const TotalVolumeToken: React.FC<Props> = ({ children, totalDanger }) => {
         color: totalDanger ? "#ae6461" : "#888888",
       }}
     >
-      ${children}M
+      ${children}
     </span>
   );
 };

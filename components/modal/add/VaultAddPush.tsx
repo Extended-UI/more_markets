@@ -10,7 +10,7 @@ import PositionChangeToken from "@/components/token/PositionChangeToken";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTimestamp, getTokenInfo } from "@/utils/utils";
+import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -86,11 +86,9 @@ const VaultAddPush: React.FC<Props> = ({
         setHasApprove(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
@@ -113,17 +111,16 @@ const VaultAddPush: React.FC<Props> = ({
         setHasPermit(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("No supply queue");
     }
   };
 
   const handleSupply = async () => {
     // generate borrow tx
     if (userAddress && hasApprove && hasPermit) {
+      setIsLoading(true);
       try {
         const txHash = await supplycollateral(
           item.inputToken.id,
@@ -137,12 +134,11 @@ const VaultAddPush: React.FC<Props> = ({
 
         validAdd();
         setTxHash(txHash);
-      } catch (err) {
-        console.log(err);
         setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        notifyError(err);
       }
-    } else {
-      alert("Not allowed before approve and permit");
     }
   };
 

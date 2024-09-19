@@ -1,20 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { waitForTransactionReceipt } from "@wagmi/core";
-import { useAccount } from "wagmi";
-import MoreButton from "../../moreButton/MoreButton";
 import Icon from "../../FontAwesomeIcon";
+import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { InvestmentData } from "@/types";
-import { config } from "@/utils/wagmi";
+import { notifyError } from "@/utils/utils";
+import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
   amount: number;
   txhash: string;
   item: InvestmentData;
-  processDone: () => void;
   closeModal: () => void;
+  processDone: () => void;
 }
 
 const VaultDepositResult: React.FC<Props> = ({
@@ -23,7 +22,6 @@ const VaultDepositResult: React.FC<Props> = ({
   txhash,
   processDone,
 }) => {
-  const { address: userAddress } = useAccount();
   const [executed, setExecuted] = useState(false);
 
   const txHashStr =
@@ -32,22 +30,19 @@ const VaultDepositResult: React.FC<Props> = ({
   useEffect(() => {
     const waitTx = async () => {
       setExecuted(false);
-
       try {
-        if (userAddress && txhash.length > 0) {
-          await waitForTransactionReceipt(config, {
-            hash: txhash as `0x${string}`,
-          });
+        if (txhash.length > 0) {
+          await waitForTransaction(txhash);
           setExecuted(true);
         }
       } catch (err) {
-        console.log(err);
         setExecuted(true);
+        notifyError(err);
       }
     };
 
     waitTx();
-  }, [userAddress, txhash]);
+  }, [txhash]);
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">

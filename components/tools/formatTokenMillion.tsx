@@ -1,9 +1,8 @@
-import React from "react";
+import millify from "millify";
+import FormatNumber from "./formatNumber";
+import TotalVolumeToken from "../token/TotalVolumeToken";
 import usePrice from "@/hooks/usePrice";
 import { getTokenInfo } from "@/utils/utils";
-
-import TotalVolumeToken from "../token/TotalVolumeToken";
-import FormatNumber from "./formatNumber";
 
 interface Props {
   token?: string;
@@ -22,9 +21,7 @@ const FormatTokenMillion: React.FC<Props> = ({
   currency,
   align,
 }) => {
-  const { fetchTokenPrice } = usePrice();
-  const tokenPrice = value > 0 ? fetchTokenPrice(token) : 0;
-
+  const { tokenPrice } = usePrice(token);
   const tokenInfo = getTokenInfo(token);
 
   // Vous pouvez ajouter une vérification ici si besoin
@@ -34,14 +31,14 @@ const FormatTokenMillion: React.FC<Props> = ({
         "flex gap-1 items-center gap-2 " + (align ? "" : "justify-center")
       }
     >
-      <div className=" ">
+      <div>
         <span className="text-grey">{currency}</span>
         <FormatNumber value={value} />
       </div>
       <div className="text-grey">{tokenInfo.symbol}</div>
       <TotalVolumeToken totalDanger={totalDanger}>
         {/* {totalValue} */}
-        {(tokenPrice * value).toFixed(2)}
+        {millify(tokenPrice * value)}
       </TotalVolumeToken>
     </div>
   );
