@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { ZeroAddress } from "ethers";
 import { encodeFunctionData } from "viem";
 import { JsonRpcProvider, Wallet, parseUnits } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
@@ -25,17 +26,19 @@ export async function POST(req: NextRequest, res: NextResponse) {
       // then mint tokens
       let reqList: IMintRequet[] = [];
       _.forOwn(tokens, (value, token) => {
-        const amount = parseUnits("1000", value.decimals);
-        const mintRequest = encodeFunctionData({
-          abi: ERC20Abi,
-          functionName: "mint",
-          args: [paramWallet, amount],
-        });
+        if (token != ZeroAddress) {
+          const amount = parseUnits("1000", value.decimals);
+          const mintRequest = encodeFunctionData({
+            abi: ERC20Abi,
+            functionName: "mint",
+            args: [paramWallet, amount],
+          });
 
-        reqList.push({
-          target: token,
-          callData: mintRequest,
-        });
+          reqList.push({
+            target: token,
+            callData: mintRequest,
+          });
+        }
       });
 
       const mintTxRequest = encodeFunctionData({

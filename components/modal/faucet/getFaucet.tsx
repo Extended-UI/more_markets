@@ -1,6 +1,7 @@
 "use client";
 
 import _ from "lodash";
+import { ZeroAddress } from "ethers";
 import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import { tokens } from "@/utils/const";
@@ -60,11 +61,13 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
 
   let tokenList: ITokenItem[] = [];
   _.forOwn(tokens, (value, token) => {
-    tokenList.push({
-      address: token,
-      symbol: value.symbol,
-      decimals: value.decimals,
-    });
+    if (token != ZeroAddress) {
+      tokenList.push({
+        address: token,
+        symbol: value.symbol,
+        decimals: value.decimals,
+      });
+    }
   });
 
   return (
