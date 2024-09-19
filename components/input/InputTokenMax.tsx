@@ -1,9 +1,11 @@
 import React from "react";
 import millify from "millify";
 import { isNaN } from "lodash";
+import { ZeroAddress } from "ethers";
 import IconToken from "../token/IconToken";
 import MoreButton from "../moreButton/MoreButton";
 import usePrice from "@/hooks/usePrice";
+import { contracts } from "@/utils/const";
 
 interface Props {
   type: string;
@@ -11,8 +13,6 @@ interface Props {
   token: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  min?: string;
-  max?: string;
   balance: number;
   setMax: (maxValue: number) => void;
 }
@@ -22,13 +22,12 @@ const InputTokenMax: React.FC<Props> = ({
   value,
   onChange,
   placeholder,
-  min,
-  max,
   token,
   balance,
   setMax,
 }) => {
-  const { tokenPrice } = usePrice(token);
+  const tokenAddr = token == ZeroAddress ? contracts.WNATIVE : token;
+  const { tokenPrice } = usePrice(tokenAddr);
 
   return (
     <div className="w-full flex  rounded-[8px] more-input-bg-color flex justify-between items-center px-4 py-2 gap-4">
@@ -42,7 +41,9 @@ const InputTokenMax: React.FC<Props> = ({
         />
         {!isNaN(value) && (
           <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center ">
-            <span className="text-grey">${millify(tokenPrice * value)}</span>
+            <span className="text-grey">
+              ${millify(tokenPrice * value, { precision: 2 })}
+            </span>
           </div>
         )}
       </div>

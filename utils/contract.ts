@@ -502,37 +502,56 @@ export const supplyToVaults = async (
   signhash: string,
   deadline: bigint,
   amount: bigint,
-  nonce: number
+  nonce: number,
+  useFlow: boolean
 ): Promise<string> => {
-  // encode approve2
-  const approve2 = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "approve2",
-    args: [
-      [[asset, amount, Uint48Max, nonce], contracts.MORE_BUNDLER, deadline],
-      signhash,
-      false,
-    ],
-  });
+  let multicallArgs: string[] = [];
+  if (useFlow) {
+    multicallArgs.push(
+      encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "wrapNative",
+        args: [amount],
+      })
+    );
+  } else {
+    // encode approve2
+    multicallArgs.push(
+      encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "approve2",
+        args: [
+          [[asset, amount, Uint48Max, nonce], contracts.MORE_BUNDLER, deadline],
+          signhash,
+          false,
+        ],
+      })
+    );
 
-  // encode transferFrom2
-  const transferFrom2 = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "transferFrom2",
-    args: [asset, amount],
-  });
+    // encode transferFrom2
+    multicallArgs.push(
+      encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "transferFrom2",
+        args: [asset, amount],
+      })
+    );
+  }
 
   // encode erc4626Deposit
-  const erc4626Deposit = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "erc4626Deposit",
-    args: [vault, amount, 0, account],
-  });
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "erc4626Deposit",
+      args: [vault, amount, 0, account],
+    })
+  );
 
   const txHash = await writeContract(config, {
     ...bundlerInstance,
     functionName: "multicall",
-    args: [[approve2, transferFrom2, erc4626Deposit]],
+    args: [multicallArgs],
+    value: useFlow ? amount : BigInt(0),
     gas: parseUnits(gasLimit, 6),
   });
 

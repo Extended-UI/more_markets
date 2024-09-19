@@ -38,7 +38,7 @@ const FormatTokenMillion: React.FC<Props> = ({
       <div className="text-grey">{tokenInfo.symbol}</div>
       <TotalVolumeToken totalDanger={totalDanger}>
         {/* {totalValue} */}
-        {millify(tokenPrice * value)}
+        {millify(tokenPrice * value, { precision: 2 })}
       </TotalVolumeToken>
     </div>
   );

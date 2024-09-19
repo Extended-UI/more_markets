@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { parseUnits } from "ethers";
+import { parseUnits, ZeroAddress } from "ethers";
 import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import IconToken from "@/components/token/IconToken";
@@ -21,8 +21,9 @@ import {
 } from "@/utils/contract";
 
 interface Props {
-  item: InvestmentData;
   amount: number;
+  useFlow: boolean;
+  item: InvestmentData;
   closeModal: () => void;
   validDeposit: () => void;
   setTxHash: (hash: string) => void;
@@ -31,9 +32,10 @@ interface Props {
 const VaultDepositPush: React.FC<Props> = ({
   item,
   amount,
-  validDeposit,
-  closeModal,
+  useFlow,
   setTxHash,
+  closeModal,
+  validDeposit,
 }) => {
   const { address: userAddress } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
@@ -50,38 +52,43 @@ const VaultDepositPush: React.FC<Props> = ({
 
   useEffect(() => {
     const initApprove = async () => {
-      const nonce = userAddress
-        ? await getPermitNonce([
-            userAddress,
-            item.assetAddress,
-            contracts.MORE_BUNDLER,
-          ])
-        : 0;
-      setPermitNonce(nonce);
+      if (useFlow) {
+        setHasPermit(true);
+        setHasApprove(true);
+      } else {
+        const nonce = userAddress
+          ? await getPermitNonce([
+              userAddress,
+              item.assetAddress,
+              contracts.MORE_BUNDLER,
+            ])
+          : 0;
+        setPermitNonce(nonce);
 
-      const tokenPermit = userAddress
-        ? await getTokenPermit([
-            userAddress,
-            item.assetAddress,
-            contracts.MORE_BUNDLER,
-          ])
-        : BigInt(0);
+        const tokenPermit = userAddress
+          ? await getTokenPermit([
+              userAddress,
+              item.assetAddress,
+              contracts.MORE_BUNDLER,
+            ])
+          : BigInt(0);
+        if (tokenPermit >= tokenAmount) setHasPermit(true);
 
-      const allowance = userAddress
-        ? await getTokenAllowance(
-            item.assetAddress,
-            userAddress,
-            contracts.PERMIT2
-          )
-        : BigInt(0);
+        const allowance = userAddress
+          ? await getTokenAllowance(
+              item.assetAddress,
+              userAddress,
+              contracts.PERMIT2
+            )
+          : BigInt(0);
 
-      if (tokenPermit >= tokenAmount) setHasPermit(true);
-      if (allowance >= tokenAmount) setHasApprove(true);
-      else setHasApprove(false);
+        if (allowance >= tokenAmount) setHasApprove(true);
+        else setHasApprove(false);
+      }
     };
 
     initApprove();
-  }, [userAddress, item, amount, isLoading]);
+  }, [userAddress, item, amount, isLoading, useFlow]);
 
   const handleApprove = async () => {
     if (userAddress) {
@@ -139,7 +146,8 @@ const VaultDepositPush: React.FC<Props> = ({
           signHash,
           deadline,
           tokenAmount,
-          permitNonce
+          permitNonce,
+          useFlow
         );
 
         validDeposit();
@@ -164,48 +172,52 @@ const VaultDepositPush: React.FC<Props> = ({
         </div>
         <div className="flex  gap-2 text-l mb-5 px-4">
           <span className="more-text-gray">Net APY:</span>{" "}
-          <FormatTwoPourcentage value={item.netAPY} />{" "}
+          <FormatTwoPourcentage value={"N/A"} />{" "}
         </div>
       </div>
-      <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">
-        <TokenAmount
-          title="Approve"
-          token={item.assetAddress}
-          amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
-        />
-        {hasApprove && (
-          <CheckCircleIcon
-            className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
-            style={{ position: "absolute", top: "1.5rem", left: "6.5rem" }}
-          />
-        )}
-      </div>
+      {!useFlow && (
+        <>
+          <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">
+            <TokenAmount
+              title="Approve"
+              token={item.assetAddress}
+              amount={amount}
+              ltv={"ltv"}
+              totalTokenAmount={item.totalDeposits}
+            />
+            {hasApprove && (
+              <CheckCircleIcon
+                className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+                style={{ position: "absolute", top: "1.5rem", left: "6.5rem" }}
+              />
+            )}
+          </div>
 
-      <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">
-        <TokenAmount
-          title="Permit"
-          token={item.assetAddress}
-          amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
-        />
-        {hasPermit && (
-          <CheckCircleIcon
-            className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
-            style={{ position: "absolute", top: "1.5rem", left: "6.5rem" }}
-          />
-        )}
-      </div>
+          <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">
+            <TokenAmount
+              title="Permit"
+              token={item.assetAddress}
+              amount={amount}
+              ltv={"ltv"}
+              totalTokenAmount={item.totalDeposits}
+            />
+            {hasPermit && (
+              <CheckCircleIcon
+                className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+                style={{ position: "absolute", top: "1.5rem", left: "6.5rem" }}
+              />
+            )}
+          </div>
+        </>
+      )}
 
       <div className="more-bg-primary rounded-[5px] mx-5 px-4">
         <TokenAmount
           title="Deposit"
-          token={item.assetAddress}
+          token={ZeroAddress}
           amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
+          ltv={""}
+          totalTokenAmount={0}
         />
       </div>
       <div className="py-5 px-5">

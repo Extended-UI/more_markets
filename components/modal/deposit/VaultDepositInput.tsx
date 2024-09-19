@@ -2,42 +2,62 @@
 
 import { isNaN } from "lodash";
 import { useAccount } from "wagmi";
+import { ZeroAddress } from "ethers";
 import React, { useEffect, useState } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import MoreButton from "../../moreButton/MoreButton";
+import MoreToggle from "../../moreToggle/MoreToggle";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatTokenMillion from "@/components/tools/formatTokenMillion";
 import { InvestmentData } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
 import { getTokenInfo, notify } from "@/utils/utils";
-import { initBalance, errMessages } from "@/utils/const";
+import { initBalance, errMessages, contracts } from "@/utils/const";
 
 interface Props {
   item: InvestmentData;
+  useFlow: boolean;
   closeModal: () => void;
   setAmount: (amount: number) => void;
+  setUseFlow: (useFlow: boolean) => void;
 }
 
 const VaultDepositInput: React.FC<Props> = ({
   item,
+  useFlow,
   setAmount,
   closeModal,
+  setUseFlow,
 }) => {
   const { address: userAddress } = useAccount();
   const [deposit, setDeposit] = useState<number>(0);
+  const [flowBalance, setFlowBalance] =
+    useState<GetBalanceReturnType>(initBalance);
   const [balanceString, setBalanceString] =
     useState<GetBalanceReturnType>(initBalance);
 
   useEffect(() => {
     const initBalance = async () => {
       if (userAddress) {
-        const balance = await getTokenBallance(item.assetAddress, userAddress);
-        setBalanceString(balance);
+        const tokenBal = await getTokenBallance(item.assetAddress, userAddress);
+        setBalanceString(tokenBal);
+
+        if (
+          item.assetAddress.toLowerCase() == contracts.WNATIVE.toLowerCase()
+        ) {
+          const flowBal = await getTokenBallance(ZeroAddress, userAddress);
+          setFlowBalance(flowBal);
+        }
       }
     };
 
     initBalance();
   }, [item, userAddress]);
+
+  const toggleFlow = (useWrap: boolean) => {
+    setDeposit(0);
+    setUseFlow(useWrap);
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDeposit(parseFloat(event.target.value));
@@ -62,19 +82,44 @@ const VaultDepositInput: React.FC<Props> = ({
       <div className="text-4xl mb-10 px-4 pt-10 ">{item.vaultName}</div>
       <div className="text-l mb-5 px-4">Deposit {tokenInfo.symbol}</div>
       <div className="px-4">
-        <InputTokenMax
-          type="number"
-          value={deposit}
-          onChange={handleInputChange}
-          placeholder={`Deposit ${tokenInfo.symbol}`}
-          token={item.assetAddress}
-          balance={Number(balanceString.formatted)}
-          setMax={handleSetMax}
-        />
+        <p className="text-xl my-3">
+          <span className="mr-3">Use Flow</span>
+          {item.assetAddress.toLowerCase() ==
+            contracts.WNATIVE.toLowerCase() && (
+            <MoreToggle checked={useFlow} setChecked={toggleFlow} />
+          )}
+        </p>
+        {useFlow ? (
+          <InputTokenMax
+            type="number"
+            value={deposit}
+            onChange={handleInputChange}
+            placeholder={`Deposit Flow`}
+            token={ZeroAddress}
+            balance={Number(flowBalance.formatted)}
+            setMax={handleSetMax}
+          />
+        ) : (
+          <InputTokenMax
+            type="number"
+            value={deposit}
+            onChange={handleInputChange}
+            placeholder={`Deposit ${tokenInfo.symbol}`}
+            token={item.assetAddress}
+            balance={Number(balanceString.formatted)}
+            setMax={handleSetMax}
+          />
+        )}
       </div>
-      <div className="text-right more-text-gray px-4 mt-4">
-        Balance: {balanceString.formatted} {tokenInfo.symbol}
-      </div>
+      {useFlow ? (
+        <div className="text-right more-text-gray px-4 mt-4">
+          Balance: {flowBalance.formatted} Flow
+        </div>
+      ) : (
+        <div className="text-right more-text-gray px-4 mt-4">
+          Balance: {balanceString.formatted} {tokenInfo.symbol}
+        </div>
+      )}
       <div className="flex justify-end mt-7 mb-7 px-4">
         <div className="mr-5 ">
           <MoreButton

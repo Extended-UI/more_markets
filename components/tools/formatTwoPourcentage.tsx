@@ -2,7 +2,7 @@ import React from "react";
 import FormatPourcentage from "./formatPourcentage";
 
 interface Props {
-  value: number;
+  value: number | string;
   value2?: number | null;
 }
 

@@ -1,16 +1,13 @@
-// components/ToggleMore.tsx
-
 import React, { useState } from "react";
 
 interface ToggleMoreProps {
-  defaultChecked?: boolean;
+  checked: boolean;
+  setChecked: (checked: boolean) => void;
 }
 
-const ToggleMore: React.FC<ToggleMoreProps> = ({ defaultChecked = false }) => {
-  const [isChecked, setIsChecked] = useState(defaultChecked);
-
+const MoreToggle: React.FC<ToggleMoreProps> = ({ checked, setChecked }) => {
   const handleToggle = () => {
-    setIsChecked(!isChecked);
+    setChecked(!checked);
   };
 
   return (
@@ -20,8 +17,8 @@ const ToggleMore: React.FC<ToggleMoreProps> = ({ defaultChecked = false }) => {
         name="toggle"
         id="toggle"
         className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-        checked={isChecked}
-        onChange={handleToggle}
+        checked={checked}
+        onChange={() => handleToggle()}
       />
       <label
         htmlFor="toggle"
@@ -69,4 +66,4 @@ const ToggleMore: React.FC<ToggleMoreProps> = ({ defaultChecked = false }) => {
   );
 };
 
-export default ToggleMore;
+export default MoreToggle;
