@@ -51,8 +51,9 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
 
         setIsLoading(false);
       } catch (err) {
-        notifyError(err);
+        // notifyError(err);
         setIsLoading(false);
+        setCompleted(true);
       }
     }
   };
