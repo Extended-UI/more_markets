@@ -96,7 +96,6 @@ export const formatCurator = (fetchedVault: GraphVault): string => {
 
 export const notifyError = async (err: unknown) => {
   const decodedError = await errorDecoder.decode(err);
-  console.log(decodedError);
   const errMsg = decodedError.reason
     ? decodedError.reason.split("\n")[0]
     : "Unknown Error";
