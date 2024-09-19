@@ -7,7 +7,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "../../token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import { BorrowPosition } from "@/types";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, notifyError } from "@/utils/utils";
 import ListIconToken from "@/components/token/ListIconToken";
 import { withdrawCollateral } from "@/utils/contract";
 
@@ -45,9 +45,10 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         setIsLoading(false);
       }
     } catch (err) {
-      console.log(err);
       setIsLoading(false);
+      notifyError(err);
     }
+
     validWithdraw();
   };
 

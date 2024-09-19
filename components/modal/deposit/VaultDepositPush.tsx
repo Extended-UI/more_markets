@@ -10,7 +10,7 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTimestamp, getTokenInfo } from "@/utils/utils";
+import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -96,8 +96,8 @@ const VaultDepositPush: React.FC<Props> = ({
         setHasApprove(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
@@ -121,8 +121,8 @@ const VaultDepositPush: React.FC<Props> = ({
         setHasPermit(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
@@ -146,8 +146,8 @@ const VaultDepositPush: React.FC<Props> = ({
         setTxHash(txHash);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };

@@ -1,6 +1,9 @@
+import { toast } from "react-toastify";
 import { formatUnits, ZeroAddress } from "ethers";
+import { tokens, curators, errorDecoder } from "./const";
 import { GraphVault, IToken, MarketParams } from "@/types";
-import { coingecko_ids, tokens, curators } from "./const";
+
+export const notify = (errMsg: string) => toast(errMsg);
 
 export const getVaule = (param: any): string => {
   return param.result ? param.result.toString() : "";
@@ -29,23 +32,6 @@ export const getVauleBigintList = (param: any, ind: number): bigint[] => {
 export const getTimestamp = (): bigint => {
   // added 1 hour
   return BigInt(Math.floor(Date.now() / 1000)) + BigInt(3600);
-};
-
-export const getCGTokenPrice = async (token: string): Promise<number> => {
-  try {
-    const tokenId = coingecko_ids[token];
-    const response = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=" +
-        tokenId +
-        "&vs_currencies=usd"
-    );
-    if (response.status != 200) return 0;
-    const data = await response.json();
-    if (!data) return 0;
-    return data[tokenId].usd ? data[tokenId].usd : 0;
-  } catch {
-    return 0;
-  }
 };
 
 export const getTokenInfo = (token: string | undefined): IToken => {
@@ -97,4 +83,14 @@ export const formatCurator = (fetchedVault: GraphVault): string => {
   return fetchedVault.curator && fetchedVault.curator.id != ZeroAddress
     ? curators[fetchedVault.curator.id.toLowerCase()]
     : "";
+};
+
+export const notifyError = async (err: unknown) => {
+  const decodedError = await errorDecoder.decode(err);
+  console.log(decodedError);
+  const errMsg = decodedError.reason
+    ? decodedError.reason.split("\n")[0]
+    : "Unknown Error";
+
+  notify(errMsg);
 };

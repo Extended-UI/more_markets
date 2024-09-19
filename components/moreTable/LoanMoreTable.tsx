@@ -15,12 +15,15 @@ import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
 import { getPositions } from "@/utils/contract";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
-import { GraphPosition, BorrowPosition, BorrowMarket } from "@/types";
+import {
+  GraphPosition,
+  BorrowPosition,
+  BorrowMarket,
+  IBorrowMarketProps,
+} from "@/types";
 
-interface Props {
+interface Props extends IBorrowMarketProps {
   // positions: GraphPosition[];
-  borrowMarkets: BorrowMarket[];
-  updateInfo: (marketId: string) => void;
 }
 
 const LoanMoreTable: React.FC<Props> = ({

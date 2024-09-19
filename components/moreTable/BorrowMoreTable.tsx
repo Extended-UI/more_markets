@@ -4,14 +4,12 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import TableHeaderCell from "./MoreTableHeader";
 import BorrowMoreTableRow from "./BorrowMoreTableRow";
-import { BorrowMarket } from "@/types";
+import { BorrowMarket, IBorrowMarketProps } from "@/types";
 
-interface Props {
-  borrowMarketList: BorrowMarket[];
-  updateInfo: (marketId: string) => void;
-}
-
-const BorrowMoreTable: React.FC<Props> = ({ updateInfo, borrowMarketList }) => {
+const BorrowMoreTable: React.FC<IBorrowMarketProps> = ({
+  updateInfo,
+  borrowMarkets,
+}) => {
   const router = useRouter();
 
   const goToDetail = (item: BorrowMarket) => {
@@ -88,7 +86,7 @@ const BorrowMoreTable: React.FC<Props> = ({ updateInfo, borrowMarketList }) => {
           </tr>
         </thead>
         <tbody className="bg-transparent">
-          {borrowMarketList.map((item, index, arr) => (
+          {borrowMarkets.map((item, index, arr) => (
             <tr
               key={index}
               onClick={() => goToDetail(item)}
@@ -104,7 +102,12 @@ const BorrowMoreTable: React.FC<Props> = ({ updateInfo, borrowMarketList }) => {
                 index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
               }`}
             >
-              <BorrowMoreTableRow key={index} updateInfo={updateInfo} item={item} index={index} />
+              <BorrowMoreTableRow
+                key={index}
+                updateInfo={updateInfo}
+                item={item}
+                index={index}
+              />
             </tr>
           ))}
         </tbody>

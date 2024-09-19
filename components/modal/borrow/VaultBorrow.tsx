@@ -4,13 +4,11 @@ import React, { useState } from "react";
 import VaultBorrowPush from "./VaultBorrowPush";
 import VaultBorrowInput from "./VaultBorrowInput";
 import VaultBorrowSummary from "./VaultBorrowResult";
-import { BorrowMarket } from "@/types";
+import { IBorrowMarketProp } from "@/types";
 
-interface Props {
-  item: BorrowMarket;
+interface Props extends IBorrowMarketProp {
   onlyBorrow?: boolean;
   closeModal: () => void;
-  updateInfo: (marketId: string) => void;
 }
 
 const VaultBorrow: React.FC<Props> = ({

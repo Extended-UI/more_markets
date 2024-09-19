@@ -1,17 +1,14 @@
 import { useAccount } from "wagmi";
-import IconToken from "../token/IconToken";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import ListIconToken from "@/components/token/ListIconToken";
-import { BorrowMarket } from "@/types";
+import { IBorrowMarketProp } from "@/types";
 import { getTokenInfo } from "@/utils/utils";
 
-interface Props {
-  item: BorrowMarket;
-  updateInfo: (marketId: string) => void;
-}
-
-const HeaderBorrowDetail: React.FC<Props> = ({ item, updateInfo }) => {
+const HeaderBorrowDetail: React.FC<IBorrowMarketProp> = ({
+  item,
+  updateInfo,
+}) => {
   const { address: userAddress } = useAccount();
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;

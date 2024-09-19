@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import { tokens } from "@/utils/const";
 import { addNewToken } from "@/utils/contract";
+import { notifyError } from "@/utils/utils";
 
 interface Props {
   wallet: string;
@@ -24,7 +25,9 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
   const addToken = async (token: ITokenItem) => {
     try {
       await addNewToken(token.address, token.symbol, token.decimals);
-    } catch (err) {}
+    } catch (err) {
+      notifyError(err);
+    }
   };
 
   const initFaucet = async () => {
@@ -41,15 +44,15 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
         });
 
         if (res.ok) {
-          // console.log("Yeai!");
+          setCompleted(true);
         } else {
-          // console.log("Oops! Something is wrong.");
+          notifyError("Faucet failed, please try again");
         }
 
-        setCompleted(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
+        notifyError(err);
+        setIsLoading(false);
       }
     }
   };

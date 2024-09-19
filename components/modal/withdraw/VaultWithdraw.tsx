@@ -4,12 +4,10 @@ import React, { useState } from "react";
 import VaultWithdrawInput from "./VaultWithdrawInput";
 import VaultWithdrawPush from "./VaultWithdrawPush";
 import VaultWithdrawResult from "./VaultWithdrawResult";
-import { InvestmentData } from "@/types";
+import { IInvestmentProp } from "@/types";
 
-interface Props {
-  item: InvestmentData;
+interface Props extends IInvestmentProp {
   closeModal: () => void;
-  updateInfo: (vaultId: string) => void;
 }
 
 const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
@@ -28,6 +26,7 @@ const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
 
   const handleProcessDone = () => {
     updateInfo(item.vaultId);
+    closeModal();
   };
 
   return (
@@ -49,9 +48,8 @@ const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
       ) : step == 3 ? (
         <VaultWithdrawResult
           item={item}
-          hash={txhash}
+          txhash={txhash}
           amount={amount}
-          closeModal={closeModal}
           processDone={handleProcessDone}
         />
       ) : null}

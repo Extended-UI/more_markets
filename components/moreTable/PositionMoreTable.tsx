@@ -8,20 +8,15 @@ import VaultBorrow from "../modal/borrow/VaultBorrow";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import { BorrowMarket, Position } from "@/types";
-import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
+import { Position, IBorrowMarketProp } from "@/types";
+import { getPremiumLltv, formatTokenValue } from "@/utils/utils";
 
-interface Props {
-  item: BorrowMarket;
+interface Props extends IBorrowMarketProp {
   position: Position;
-  updateInfo: (marketId: string) => void;
 }
 
 const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
   const { address: userAddress } = useAccount();
-
-  const collateralToken = getTokenInfo(item.marketParams.collateralToken);
-  const loanToken = getTokenInfo(item.marketParams.loanToken);
 
   return (
     <div

@@ -113,7 +113,6 @@ const EarnDetailPage: React.FC = () => {
           }
         }
       } catch (err) {
-        console.log(err);
         router.push("/earn");
       }
     };
@@ -141,7 +140,7 @@ const EarnDetailPage: React.FC = () => {
       {vaultInfo && (
         <>
           <div className="mb-8 overflow-visible">
-            <HeaderEarnDetail updateInfo={updateInfo} vault={vaultInfo} />
+            <HeaderEarnDetail updateInfo={updateInfo} item={vaultInfo} />
             <InfosEarnDetails vault={vaultInfo} totalBorrow={totalBorrow} />
           </div>
           <h1 className="text-4xl mt-16 mb-8">Vault Breakdown</h1>

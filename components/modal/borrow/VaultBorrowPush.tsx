@@ -8,7 +8,7 @@ import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { BorrowMarket } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTimestamp, getTokenInfo } from "@/utils/utils";
+import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -110,8 +110,8 @@ const VaultBorrowPush: React.FC<Props> = ({
         setHasApprove(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
@@ -132,8 +132,8 @@ const VaultBorrowPush: React.FC<Props> = ({
         setDeadline(authDeadline);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
@@ -158,8 +158,8 @@ const VaultBorrowPush: React.FC<Props> = ({
         setHasPermit(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
@@ -187,8 +187,8 @@ const VaultBorrowPush: React.FC<Props> = ({
         setTxHash(txHash);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };

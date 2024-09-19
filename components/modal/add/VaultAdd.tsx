@@ -4,15 +4,13 @@ import React, { useState } from "react";
 import VaultAddPush from "./VaultAddPush";
 import VaultAddInput from "./VaultAddInput";
 import VaultAddResult from "./VaultAddResult";
-import { BorrowPosition } from "@/types";
+import { IBorrowPositionProp } from "@/types";
 
-interface Props {
-  item: BorrowPosition;
-  closeModal: () => void;
-  updateInfo: (marketId: string) => void;
-}
-
-const VaultAdd: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
+const VaultAdd: React.FC<IBorrowPositionProp> = ({
+  item,
+  closeModal,
+  updateInfo,
+}) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [txHash, setTxHash] = useState("");

@@ -1,5 +1,6 @@
 "use client";
 
+import { isNaN } from "lodash";
 import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
@@ -7,9 +8,9 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatTokenMillion from "@/components/tools/formatTokenMillion";
 import { InvestmentData } from "@/types";
-import { initBalance } from "@/utils/const";
-import { getTokenInfo } from "@/utils/utils";
 import { getTokenBallance } from "@/utils/contract";
+import { getTokenInfo, notify } from "@/utils/utils";
+import { initBalance, errMessages } from "@/utils/const";
 
 interface Props {
   item: InvestmentData;
@@ -47,8 +48,10 @@ const VaultDepositInput: React.FC<Props> = ({
   };
 
   const handleDeposit = () => {
-    if (deposit > 0) {
+    if (!isNaN(deposit) && deposit > 0) {
       setAmount(deposit);
+    } else {
+      notify(errMessages.invalid_amount);
     }
   };
 

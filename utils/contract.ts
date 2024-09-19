@@ -20,7 +20,6 @@ import {
   Market,
   MarketInfo,
   MarketParams,
-  VaultData,
   Position,
   GraphVault,
   GraphMarket,
@@ -28,7 +27,6 @@ import {
 import {
   contracts,
   marketsInstance,
-  curators,
   initBalance,
   bundlerInstance,
   permit2Instance,
@@ -102,6 +100,10 @@ export const setTokenAllowance = async (
   });
 
   await waitForTransactionReceipt(config, { hash: txHash });
+};
+
+export const waitForTransaction = async (txHash: string) => {
+  await waitForTransactionReceipt(config, { hash: txHash as `0x${string}` });
 };
 
 export const getTokenPermit = async (args: any[]): Promise<bigint> => {

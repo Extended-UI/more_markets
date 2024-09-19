@@ -1,8 +1,9 @@
+import { ErrorDecoder } from "ethers-decode-error";
 import { type GetBalanceReturnType } from "@wagmi/core";
+import { IToken } from "@/types";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
-import { IToken } from "@/types";
 
 export const contracts = {
   MORE_MARKETS: "0x9a9B20fAb58a0fF084e70283E91448bB31d0FAfa",
@@ -89,18 +90,14 @@ export const permit2Instance = {
 
 export const Uint48Max = 281474976710655;
 
-export const coingecko_ids: { [key in string]: string } = {
-  usdc: "usdc",
-  bitcoin: "bitcoin",
-  ethereum: "ethereum",
-  tether: "tether",
-  flow: "flow",
-  "ankr-network": "ankr-network",
-};
-
 export const gasLimit = "0.8";
 
 export const blacklistedVaults = ["0xeabddabfe3d118092a4bbaf3c13bd923bc8f134e"];
+
+export const errorDecoder = ErrorDecoder.create();
+export const errMessages = {
+  invalid_amount: "Invalid amount",
+};
 
 // ******************************************
 export const vaultIds = [

@@ -13,7 +13,12 @@ import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { BorrowPosition } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTokenInfo, getTimestamp, formatTokenValue } from "@/utils/utils";
+import {
+  getTokenInfo,
+  getTimestamp,
+  formatTokenValue,
+  notifyError,
+} from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -90,8 +95,8 @@ const VaultRepayPush: React.FC<Props> = ({
         setHasApprove(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
@@ -116,8 +121,8 @@ const VaultRepayPush: React.FC<Props> = ({
         setHasPermit(true);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };
@@ -141,8 +146,8 @@ const VaultRepayPush: React.FC<Props> = ({
         setTxHash(txHash);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
+        notifyError(err);
       }
     }
   };

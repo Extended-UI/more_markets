@@ -6,20 +6,14 @@ import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import { BorrowMarket } from "@/types";
+import { IBorrowMarketProp } from "@/types";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 
-interface BorrowMoreTableRowProps {
+interface Prop extends IBorrowMarketProp {
   index: number;
-  item: BorrowMarket;
-  updateInfo: (marketId: string) => void;
 }
 
-const BorrowMoreTableRow: React.FC<BorrowMoreTableRowProps> = ({
-  item,
-  index,
-  updateInfo,
-}) => {
+const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
   const { address: userAddress } = useAccount();
 
   const totalSupply = item.marketInfo.totalSupplyAssets;

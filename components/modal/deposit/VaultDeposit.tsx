@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import VaultDepositInput from "./VaultDepositInput";
 import VaultDepositPush from "./VaultDepositPush";
 import VaultDepositResult from "./VaultDepositResult";
-import { InvestmentData } from "@/types";
+import { IInvestmentProp } from "@/types";
 
-interface Props {
-  item: InvestmentData;
+interface Props extends IInvestmentProp {
   closeModal: () => void;
-  updateInfo: (vaultId: string) => void;
 }
 
 const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {

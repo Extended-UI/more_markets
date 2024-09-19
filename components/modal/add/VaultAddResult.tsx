@@ -1,14 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { waitForTransactionReceipt } from "@wagmi/core";
 import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
-import { config } from "@/utils/wagmi";
-import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
+import { waitForTransaction } from "@/utils/contract";
+import {
+  getTokenInfo,
+  getPremiumLltv,
+  formatTokenValue,
+  notifyError,
+} from "@/utils/utils";
 
 interface Props {
   item: BorrowPosition;
@@ -37,14 +41,12 @@ const VaultAddResult: React.FC<Props> = ({
 
       try {
         if (txhash.length > 0) {
-          await waitForTransactionReceipt(config, {
-            hash: txhash as `0x${string}`,
-          });
+          await waitForTransaction(txhash);
           setExecuted(true);
         }
       } catch (err) {
-        console.log(err);
         setExecuted(true);
+        notifyError(err);
       }
     };
 

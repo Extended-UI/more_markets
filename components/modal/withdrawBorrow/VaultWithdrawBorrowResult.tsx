@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { waitForTransactionReceipt } from "@wagmi/core";
 import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
-import { config } from "@/utils/wagmi";
 import { BorrowPosition } from "@/types";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, notifyError } from "@/utils/utils";
+import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
   item: BorrowPosition;
@@ -27,17 +26,14 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
   useEffect(() => {
     const waitTx = async () => {
       setExecuted(false);
-
       try {
         if (txhash.length > 0) {
-          await waitForTransactionReceipt(config, {
-            hash: txhash as `0x${string}`,
-          });
+          await waitForTransaction(txhash);
           setExecuted(true);
         }
       } catch (err) {
-        console.log(err);
         setExecuted(true);
+        notifyError(err);
       }
     };
 
