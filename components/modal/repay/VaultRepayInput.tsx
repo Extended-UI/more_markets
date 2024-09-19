@@ -37,8 +37,7 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
-    setRepay(parseFloat(inputValue));
+    setRepay(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {

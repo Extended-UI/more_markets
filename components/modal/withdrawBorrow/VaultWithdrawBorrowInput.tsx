@@ -43,8 +43,7 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
-    setWithdraw(parseFloat(inputValue));
+    setWithdraw(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {

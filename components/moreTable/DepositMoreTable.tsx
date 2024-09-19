@@ -197,7 +197,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                           index % 2 === 0 ? "#141414" : "#191919",
                       }}
                     >
-                      <div className="flex" onClick={(event) => event.stopPropagation()}>
+                      <div className="flex gap-2" onClick={(event) => event.stopPropagation()}>
                         <ButtonDialog color="primary" buttonText="Deposit More">
                           {(closeModal) => (
                             <div className=" w-full h-full">
@@ -209,7 +209,6 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                             </div>
                           )}
                         </ButtonDialog>
-                        <div className="ml-2" />
                         <ButtonDialog color="grey" buttonText="Withdraw">
                           {(closeModal) => (
                             <div className=" w-full h-full">

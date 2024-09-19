@@ -84,7 +84,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         />
       </div>
 
-      <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
+      {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
         <div className="text-grey pb-4"> Position Change </div>
         <PositionChangeToken
           title="Collateral"
@@ -92,7 +92,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
           token={collateralToken}
           value2={0}
         />
-      </div>
+      </div> */}
 
       <div className="py-5 px-2">
         By confirming this transaction, you agree to the{" "}

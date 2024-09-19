@@ -247,7 +247,7 @@ const LoanMoreTable: React.FC<Props> = ({
                           totalValue={0}
                         />
                         <div
-                          className="ml-8 flex"
+                          className="ml-8 flex gap-2"
                           onClick={(event) => event.stopPropagation()}
                         >
                           <ButtonDialog
@@ -265,7 +265,6 @@ const LoanMoreTable: React.FC<Props> = ({
                               </div>
                             )}
                           </ButtonDialog>
-                          <div className="ml-2" />
                           <ButtonDialog color="grey" buttonText="Repay">
                             {(closeModal) => (
                               <div className=" w-full h-full">

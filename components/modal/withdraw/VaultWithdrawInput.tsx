@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import InputTokenMax from "../../input/InputTokenMax";
-import MoreButton from "../../moreButton/MoreButton";
 import { ArrowLongRightIcon } from "@heroicons/react/20/solid";
+import MoreButton from "../../moreButton/MoreButton";
+import InputTokenMax from "../../input/InputTokenMax";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
 import { getTokenInfo } from "@/utils/utils";
@@ -22,8 +22,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
   const [withdraw, setWithdraw] = useState<number>(0);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value.length > 0 ? event.target.value : "0";
-    setWithdraw(parseFloat(inputValue));
+    setWithdraw(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {

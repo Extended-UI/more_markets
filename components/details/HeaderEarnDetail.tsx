@@ -2,6 +2,7 @@ import { useAccount } from "wagmi";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDetail from "../modal/VaultDetail";
 import VaultDeposit from "../modal/deposit/VaultDeposit";
+import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
 import IconToken from "../token/IconToken";
 import { IInvestmentProp } from "@/types";
 
@@ -30,17 +31,30 @@ const HeaderEarnDetail: React.FC<IInvestmentProp> = ({ item, updateInfo }) => {
       </div>
       <div className="flex gap-2">
         {userAddress && (
-          <ButtonDialog color="primary" buttonText="Deposit">
-            {(closeModal) => (
-              <div className="h-full w-full">
-                <VaultDeposit
-                  updateInfo={updateInfo}
-                  item={item}
-                  closeModal={closeModal}
-                />
-              </div>
-            )}
-          </ButtonDialog>
+          <>
+            <ButtonDialog color="primary" buttonText="Deposit">
+              {(closeModal) => (
+                <div className="h-full w-full">
+                  <VaultDeposit
+                    updateInfo={updateInfo}
+                    item={item}
+                    closeModal={closeModal}
+                  />
+                </div>
+              )}
+            </ButtonDialog>
+            <ButtonDialog color="primary" buttonText="Withdraw">
+              {(closeModal) => (
+                <div className=" w-full h-full">
+                  <VaultWithdraw
+                    item={item}
+                    updateInfo={updateInfo}
+                    closeModal={closeModal}
+                  />
+                </div>
+              )}
+            </ButtonDialog>
+          </>
         )}
 
         <ButtonDialog color="grey" buttonText="Vault Details">
