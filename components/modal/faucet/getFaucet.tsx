@@ -4,9 +4,9 @@ import _ from "lodash";
 import { ZeroAddress } from "ethers";
 import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
-import { tokens } from "@/utils/const";
-import { addNewToken } from "@/utils/contract";
 import { notifyError } from "@/utils/utils";
+import { addNewToken } from "@/utils/contract";
+import { tokens, faucetAmounts } from "@/utils/const";
 
 interface Props {
   wallet: string;
@@ -17,6 +17,7 @@ interface ITokenItem {
   address: string;
   symbol: string;
   decimals: number;
+  amount: string;
 }
 
 const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
@@ -66,6 +67,7 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
         address: token,
         symbol: value.symbol,
         decimals: value.decimals,
+        amount: faucetAmounts[tokenList.length],
       });
     }
   });
@@ -81,7 +83,7 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
         <p className="mb-1 text-xl">* 1 FLOW</p>
         {tokenList.map((tokenItem) => (
           <p className="mb-1 text-xl" key={tokenItem.address}>
-            * 1000 {tokenItem.symbol}
+            * {tokenItem.amount} {tokenItem.symbol}
           </p>
         ))}
         <p className="mt-5 mb-5 text-xl">

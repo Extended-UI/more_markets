@@ -4,9 +4,9 @@ import { encodeFunctionData } from "viem";
 import { JsonRpcProvider, Wallet, parseUnits } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
 
-import { contracts, tokens } from "@/utils/const";
 import { ERC20Abi } from "../../abi/ERC20Abi";
 import { MulticallAbi } from "../../abi/Multicall";
+import { contracts, tokens, faucetAmounts } from "@/utils/const";
 
 const provider = new JsonRpcProvider("https://testnet.evm.nodes.onflow.org/");
 const faucetWallet = new Wallet(process.env.faucet_key as string, provider);
@@ -27,7 +27,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
       let reqList: IMintRequet[] = [];
       _.forOwn(tokens, (value, token) => {
         if (token != ZeroAddress) {
-          const amount = parseUnits("1000", value.decimals);
+          const amount = parseUnits(
+            faucetAmounts[reqList.length],
+            value.decimals
+          );
           const mintRequest = encodeFunctionData({
             abi: ERC20Abi,
             functionName: "mint",

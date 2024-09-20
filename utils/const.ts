@@ -60,6 +60,8 @@ export const tokens: { [key: string]: IToken } = {
   },
 };
 
+export const faucetAmounts = ["1000", "1000", "0.1", "1", "1000", "1000"];
+
 export const curators: { [key: string]: string } = {
   "0x401d24076331c077099dea08fe898ea7ff7254cd": "Lighthouse Labs",
   "0xa1947019f5989c5c417cc6eece404d684b855bb2": "Lighthouse Labs",
