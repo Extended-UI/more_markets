@@ -1,21 +1,21 @@
 "use client";
 
 import { useAccount } from "wagmi";
+import { parseUnits } from "ethers";
 import React, { useState } from "react";
-import { parseEther } from "ethers";
-import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "../../token/TokenAmount";
+import MoreButton from "../../moreButton/MoreButton";
+import ListIconToken from "@/components/token/ListIconToken";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import { BorrowPosition } from "@/types";
-import { getTokenInfo, notifyError } from "@/utils/utils";
-import ListIconToken from "@/components/token/ListIconToken";
 import { withdrawCollateral } from "@/utils/contract";
+import { getTokenInfo, notifyError } from "@/utils/utils";
 
 interface Props {
-  item: BorrowPosition;
   amount: number;
-  validWithdraw: () => void;
+  item: BorrowPosition;
   closeModal: () => void;
+  validWithdraw: () => void;
   setTxHash: (hash: string) => void;
 }
 
@@ -30,13 +30,17 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const collateralToken = getTokenInfo(item.inputToken.id);
+  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
+  const tokenAmount = parseUnits(amount.toString(), collateralToken.decimals);
+
   const handleWithdraw = async () => {
     setIsLoading(true);
     try {
       if (userAddress) {
         const txHash = await withdrawCollateral(
           item.marketParams,
-          parseEther(amount.toString()),
+          tokenAmount,
           userAddress
         );
 
@@ -52,9 +56,6 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
     validWithdraw();
   };
 
-  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
-  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
-
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">
       <div className="mb-10 px-4 pt-5  text-xl">Review Transaction</div>
@@ -65,14 +66,14 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         />
         <div className="text-l flex items-center'">
           {" "}
-          {collateralToken} / {loanToken}
+          {collateralToken.symbol} / {loanToken}
         </div>
       </div>
 
       <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
         <TokenAmount
           title="Withdraw Collateral"
-          token={collateralToken}
+          token={item.inputToken.id}
           amount={amount}
           ltv=""
           totalTokenAmount={amount}
