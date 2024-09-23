@@ -4,18 +4,18 @@ import React from "react";
 import { useAccount } from "wagmi";
 import IconToken from "../token/IconToken";
 import TableHeaderCell from "./MoreTableHeader";
+import VaultRepay from "../modal/repay/VaultRepay";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import { Position, IBorrowMarketProp } from "@/types";
 import { getPremiumLltv, formatTokenValue } from "@/utils/utils";
+import { IBorrowPositionProp } from "@/types";
 
-interface Props extends IBorrowMarketProp {
-  position: Position;
-}
-
-const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
+const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
+  item,
+  updateInfo,
+}) => {
   const { address: userAddress } = useAccount();
 
   return (
@@ -88,7 +88,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
                   </div>
                   <FormatTokenMillion
                     value={formatTokenValue(
-                      position.collateral,
+                      item.collateral,
                       item.inputToken.id
                     )}
                     totalValue={0}
@@ -103,12 +103,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
                     <IconToken tokenName={item.borrowedToken.id} />
                   </div>
                   <FormatTokenMillion
-                    value={formatTokenValue(
-                      position.borrowShares,
-                      item.borrowedToken.id,
-                      0,
-                      true
-                    )}
+                    value={formatTokenValue(item.loan, item.borrowedToken.id)}
                     totalValue={0}
                     token={item.borrowedToken.id}
                     totalDanger={true}
@@ -119,7 +114,7 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
               <td className="py-4 px-6 items-center flex  ">
                 <div className=" flex justify-start w-full py-4 ">
                   <FormatTwoPourcentage
-                    value={formatTokenValue(BigInt(item.lltv), "", 18)}
+                    value={formatTokenValue(item.lltv, "", 18)}
                     value2={getPremiumLltv(item.marketParams)}
                   />
                 </div>
@@ -140,13 +135,27 @@ const PositionMoreTable: React.FC<Props> = ({ item, position, updateInfo }) => {
 
               {userAddress && (
                 <td className="py-4 px-6 items-center justify-end h-full">
-                  <div onClick={(event) => event.stopPropagation()}>
+                  <div
+                    className="flex gap-4"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <ButtonDialog color="secondary" buttonText="Borrow More">
                       {(closeModal) => (
                         <div className="w-full h-full">
                           <VaultBorrow
                             item={item}
                             onlyBorrow={true}
+                            closeModal={closeModal}
+                            updateInfo={updateInfo}
+                          />
+                        </div>
+                      )}
+                    </ButtonDialog>
+                    <ButtonDialog color="secondary" buttonText="Repay">
+                      {(closeModal) => (
+                        <div className=" w-full h-full">
+                          <VaultRepay
+                            item={item}
                             closeModal={closeModal}
                             updateInfo={updateInfo}
                           />

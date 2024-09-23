@@ -38,47 +38,38 @@ const VaultBorrow: React.FC<Props> = ({
     closeModal();
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <VaultBorrowInput
-            item={item}
-            onlyBorrow={onlyBorrow}
-            setAmount={(amount: number, borrow: number) =>
-              handleSetBorrow(amount, borrow)
-            }
-            closeModal={closeModal}
-          />
-        );
-      case 2:
-        return (
-          <VaultBorrowPush
-            item={item}
-            onlyBorrow={onlyBorrow}
-            supplyAmount={amount}
-            borrowAmount={borrow}
-            setTxHash={setTxHash}
-            validDeposit={handleValidDeposit}
-            closeModal={closeModal}
-          />
-        );
-      case 3:
-        return (
-          <VaultBorrowSummary
-            item={item}
-            supplyAmount={amount}
-            borrowAmount={borrow}
-            txhash={txHash}
-            processDone={handleProcessDone}
-          />
-        );
-      default:
-        return null; // ou une vue par défaut
-    }
-  };
-
-  return <div>{renderStep()}</div>;
+  return (
+    <>
+      {step == 1 ? (
+        <VaultBorrowInput
+          item={item}
+          onlyBorrow={onlyBorrow}
+          setAmount={(amount: number, borrow: number) =>
+            handleSetBorrow(amount, borrow)
+          }
+          closeModal={closeModal}
+        />
+      ) : step == 2 ? (
+        <VaultBorrowPush
+          item={item}
+          onlyBorrow={onlyBorrow}
+          supplyAmount={amount}
+          borrowAmount={borrow}
+          setTxHash={setTxHash}
+          validDeposit={handleValidDeposit}
+          closeModal={closeModal}
+        />
+      ) : (
+        <VaultBorrowSummary
+          item={item}
+          supplyAmount={amount}
+          borrowAmount={borrow}
+          txhash={txHash}
+          processDone={handleProcessDone}
+        />
+      )}
+    </>
+  );
 };
 
 export default VaultBorrow;

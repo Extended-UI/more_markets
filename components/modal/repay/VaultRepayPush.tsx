@@ -13,23 +13,20 @@ import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { BorrowPosition } from "@/types";
 import { contracts } from "@/utils/const";
-import {
-  getTokenInfo,
-  getTimestamp,
-  formatTokenValue,
-  notifyError,
-} from "@/utils/utils";
+import { getTokenInfo, getTimestamp, notifyError } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
   setTokenPermit,
   getPermitNonce,
   repayLoanToMarkets,
+  getBorrowedAmount,
 } from "@/utils/contract";
 
 interface Props {
-  item: BorrowPosition;
   amount: number;
+  useMax: boolean;
+  item: BorrowPosition;
   validRepay: () => void;
   closeModal: () => void;
   setTxHash: (hash: string) => void;
@@ -38,6 +35,7 @@ interface Props {
 const VaultRepayPush: React.FC<Props> = ({
   item,
   amount,
+  useMax,
   setTxHash,
   validRepay,
   closeModal,
@@ -46,6 +44,8 @@ const VaultRepayPush: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
+  const [useShare, setUseShare] = useState(false);
+  const [borrowed, setBorrowed] = useState(BigInt(0));
   const [signHash, setSignHash] = useState("");
   const [deadline, setDeadline] = useState(BigInt(0));
   const [permitNonce, setPermitNonce] = useState(0);
@@ -58,7 +58,7 @@ const VaultRepayPush: React.FC<Props> = ({
 
   useEffect(() => {
     const initApprove = async () => {
-      const [nonce, allowance] = userAddress
+      const [nonce, allowance, borrowedAmount] = userAddress
         ? await Promise.all([
             getPermitNonce([
               userAddress,
@@ -70,12 +70,18 @@ const VaultRepayPush: React.FC<Props> = ({
               userAddress,
               contracts.PERMIT2
             ),
+            getBorrowedAmount(item.id, item.lastMultiplier, item.loan),
           ])
-        : [0, BigInt(0), BigInt(0), false];
+        : [0, BigInt(0), BigInt(0)];
 
       setPermitNonce(nonce);
 
-      if (allowance >= repayAmount) setHasApprove(true);
+      const repayEnough = repayAmount >= borrowedAmount;
+      setUseShare(repayEnough);
+      setBorrowed(repayEnough ? borrowed : repayAmount);
+
+      if (allowance >= (repayEnough ? borrowed : repayAmount))
+        setHasApprove(true);
       else setHasApprove(false);
     };
 
@@ -89,7 +95,7 @@ const VaultRepayPush: React.FC<Props> = ({
         await setTokenAllowance(
           item.borrowedToken.id,
           contracts.PERMIT2,
-          repayAmount
+          borrowed
         );
 
         setHasApprove(true);
@@ -102,7 +108,7 @@ const VaultRepayPush: React.FC<Props> = ({
   };
 
   const handlePermit = async () => {
-    if (userAddress && repayAmount > BigInt(0)) {
+    if (userAddress && borrowed > BigInt(0)) {
       setIsLoading(true);
       try {
         const permitDeadline =
@@ -110,7 +116,7 @@ const VaultRepayPush: React.FC<Props> = ({
 
         const signHash = await setTokenPermit(
           item.borrowedToken.id,
-          repayAmount,
+          borrowed,
           permitNonce,
           contracts.MORE_BUNDLER,
           permitDeadline
@@ -134,12 +140,12 @@ const VaultRepayPush: React.FC<Props> = ({
       try {
         const txHash = await repayLoanToMarkets(
           userAddress,
-          item.borrowedToken.id,
-          repayAmount,
+          borrowed,
           permitNonce,
           deadline,
           signHash,
-          item.marketParams
+          useShare,
+          item
         );
 
         validRepay();

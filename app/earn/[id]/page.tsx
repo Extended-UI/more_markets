@@ -66,7 +66,7 @@ const EarnDetailPage: React.FC = () => {
                     ),
                     supplyToken: fetchedVault.asset.id,
                     collateral: marketItem.inputToken.id,
-                    lltv: formatTokenValue(BigInt(marketItem.lltv), "", 18),
+                    lltv: formatTokenValue(marketItem.lltv, "", 18),
                     lltv2: getPremiumLltv(marketData.params),
                     credora: "rating",
                   } as VaultBreakdown;

@@ -23,6 +23,7 @@ import {
   Position,
   GraphVault,
   GraphMarket,
+  BorrowPosition,
 } from "../types";
 import {
   contracts,
@@ -43,6 +44,7 @@ import {
   getVauleString,
   getVauleBigintList,
   getTokenInfo,
+  toAssetsUp,
 } from "./utils";
 
 export const getTokenPrice = async (token: string): Promise<number> => {
@@ -738,16 +740,45 @@ export const supplycollateralAndBorrow = async (
   return txHash;
 };
 
+export const getBorrowedAmount = async (
+  marketId: string,
+  multiplier: bigint,
+  shares: bigint
+): Promise<bigint> => {
+  const [totalBAMultiplier, totalBSMultiplier] = await readContracts(config, {
+    contracts: [
+      {
+        ...marketsInstance,
+        functionName: "totalBorrowAssetsForMultiplier",
+        args: [marketId, multiplier],
+      },
+      {
+        ...marketsInstance,
+        functionName: "totalBorrowSharesForMultiplier",
+        args: [marketId, multiplier],
+      },
+    ],
+  });
+
+  return toAssetsUp(
+    shares,
+    totalBAMultiplier.result as bigint,
+    totalBSMultiplier.result as bigint
+  );
+};
+
 export const repayLoanToMarkets = async (
   account: string,
-  repayToken: string,
   repayAmount: bigint,
   nonce: number,
   deadline: bigint,
   signhash: string,
-  marketParams: MarketParams
+  useShare: boolean,
+  item: BorrowPosition
 ): Promise<string> => {
   let multicallArgs: string[] = [];
+  const marketParams = item.marketParams;
+  const repayToken = item.borrowedToken.id;
 
   // encode approve2
   multicallArgs.push(
@@ -792,8 +823,8 @@ export const repayLoanToMarkets = async (
           marketParams.irxMaxLltv,
           marketParams.categoryLltv,
         ],
-        repayAmount,
-        0,
+        useShare ? 0 : repayAmount,
+        useShare ? item.loan : 0,
         0,
         account,
         "",
@@ -1080,7 +1111,7 @@ export const fetchMarkets = async (): Promise<GraphMarket[]> => {
       borrowedToken: {
         id: marketParams.loanToken,
       },
-      lltv: marketParams.lltv.toString(),
+      lltv: marketParams.lltv,
       totalSupply: "",
       totalBorrow: "",
     } as GraphMarket;
@@ -1100,7 +1131,7 @@ export const fetchMarket = async (marketId: string): Promise<GraphMarket> => {
     borrowedToken: {
       id: marketParams.loanToken,
     },
-    lltv: marketParams.lltv.toString(),
+    lltv: marketParams.lltv,
     totalSupply: "",
     totalBorrow: "",
   } as GraphMarket;

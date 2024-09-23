@@ -29,42 +29,33 @@ const VaultAdd: React.FC<IBorrowPositionProp> = ({
     closeModal();
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <VaultAddInput
-            item={item}
-            closeModal={closeModal}
-            setAmount={(amount: number) => handleSetAdd(amount)}
-          />
-        );
-      case 2:
-        return (
-          <VaultAddPush
-            item={item}
-            amount={amount}
-            setTxHash={setTxHash}
-            closeModal={closeModal}
-            validAdd={handleValidAdd}
-          />
-        );
-      case 3:
-        return (
-          <VaultAddResult
-            item={item}
-            txhash={txHash}
-            amount={amount}
-            closeModal={closeModal}
-            processDone={handleProcessDone}
-          />
-        );
-      default:
-        return null; // ou une vue par défaut
-    }
-  };
-
-  return <div>{renderStep()}</div>;
+  return (
+    <>
+      {step == 1 ? (
+        <VaultAddInput
+          item={item}
+          closeModal={closeModal}
+          setAmount={(amount: number) => handleSetAdd(amount)}
+        />
+      ) : step == 2 ? (
+        <VaultAddPush
+          item={item}
+          amount={amount}
+          setTxHash={setTxHash}
+          closeModal={closeModal}
+          validAdd={handleValidAdd}
+        />
+      ) : (
+        <VaultAddResult
+          item={item}
+          txhash={txHash}
+          amount={amount}
+          closeModal={closeModal}
+          processDone={handleProcessDone}
+        />
+      )}
+    </>
+  );
 };
 
 export default VaultAdd;

@@ -29,41 +29,32 @@ const VaultWithdraw: React.FC<IBorrowPositionProp> = ({
     closeModal();
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <VaultWithdrawBorrowInput
-            item={item}
-            closeModal={closeModal}
-            setAmount={(amount: number) => handleSetWithdraw(amount)}
-          />
-        );
-      case 2:
-        return (
-          <VaultWithdrawBorrowPush
-            item={item}
-            amount={amount}
-            setTxHash={setTxHash}
-            closeModal={closeModal}
-            validWithdraw={handleValidWithdraw}
-          />
-        );
-      case 3:
-        return (
-          <VaultWithdrawConfirm
-            item={item}
-            amount={amount}
-            txhash={txHash}
-            processDone={handleProcessDone}
-          />
-        );
-      default:
-        return null; // ou une vue par défaut
-    }
-  };
-
-  return <div>{renderStep()}</div>;
+  return (
+    <>
+      {step == 1 ? (
+        <VaultWithdrawBorrowInput
+          item={item}
+          closeModal={closeModal}
+          setAmount={(amount: number) => handleSetWithdraw(amount)}
+        />
+      ) : step == 2 ? (
+        <VaultWithdrawBorrowPush
+          item={item}
+          amount={amount}
+          setTxHash={setTxHash}
+          closeModal={closeModal}
+          validWithdraw={handleValidWithdraw}
+        />
+      ) : (
+        <VaultWithdrawConfirm
+          item={item}
+          amount={amount}
+          txhash={txHash}
+          processDone={handleProcessDone}
+        />
+      )}
+    </>
+  );
 };
 
 export default VaultWithdraw;

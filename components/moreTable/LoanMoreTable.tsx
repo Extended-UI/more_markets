@@ -98,6 +98,7 @@ const LoanMoreTable: React.FC<Props> = ({
               ...marketItem,
               loan: selPosition.borrowShares,
               collateral: selPosition.collateral,
+              lastMultiplier: selPosition.lastMultiplier,
             } as BorrowPosition;
           }
         });
@@ -200,7 +201,7 @@ const LoanMoreTable: React.FC<Props> = ({
                           totalValue={0}
                         />
                         <div
-                          className="ml-8 flex"
+                          className="ml-8 flex gap-2"
                           onClick={(event) => event.stopPropagation()}
                         >
                           <ButtonDialog color="secondary" buttonText="Add">
@@ -214,7 +215,6 @@ const LoanMoreTable: React.FC<Props> = ({
                               </div>
                             )}
                           </ButtonDialog>
-                          <div className="ml-2"></div>
                           <ButtonDialog color="grey" buttonText="Withdraw">
                             {(closeModal) => (
                               <div className="w-full h-full">
@@ -239,9 +239,7 @@ const LoanMoreTable: React.FC<Props> = ({
                         <FormatTokenMillion
                           value={formatTokenValue(
                             item.loan,
-                            item.borrowedToken.id,
-                            0,
-                            true
+                            item.borrowedToken.id
                           )}
                           token={item.borrowedToken.id}
                           totalValue={0}
@@ -283,7 +281,7 @@ const LoanMoreTable: React.FC<Props> = ({
                     <td className="py-4 pl-4 items-center h-full ">
                       <div className="flex gap-1 justify-start">
                         <FormatTwoPourcentage
-                          value={formatTokenValue(BigInt(item.lltv), "", 18)}
+                          value={formatTokenValue(item.lltv, "", 18)}
                           value2={getPremiumLltv(item.marketParams)}
                         />
                       </div>

@@ -71,7 +71,7 @@ const VaultAddResult: React.FC<Props> = ({
         <div className="flex gap-2 text-l mb-5 px-4">
           <span className="more-text-gray">Liquidation LTV:</span>{" "}
           <FormatTwoPourcentage
-            value={formatTokenValue(BigInt(item.lltv), "", 18)}
+            value={formatTokenValue(item.lltv, "", 18)}
             value2={getPremiumLltv(item.marketParams)}
           />
         </div>

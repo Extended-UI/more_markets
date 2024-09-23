@@ -165,7 +165,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     </td>
                     <td className="py-4 px-6 items-start h-full   ">
                       <div className="flex justify-start">
-                        <FormatPourcentage value={item.netAPY} />
+                        <FormatPourcentage value={"N/A"} />
                       </div>
                     </td>
                     <td className=" items-start   h-full ">
@@ -197,7 +197,10 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                           index % 2 === 0 ? "#141414" : "#191919",
                       }}
                     >
-                      <div className="flex gap-2" onClick={(event) => event.stopPropagation()}>
+                      <div
+                        className="flex gap-2"
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         <ButtonDialog color="primary" buttonText="Deposit More">
                           {(closeModal) => (
                             <div className=" w-full h-full">

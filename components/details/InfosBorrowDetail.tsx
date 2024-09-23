@@ -1,7 +1,7 @@
 import React from "react";
 import InfoDetailGrey from "./InfoDetailGrey";
 import { BorrowMarket } from "@/types";
-import { formatTokenValue, getTokenInfo } from "@/utils/utils";
+import { formatLocale, getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -38,7 +38,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
         >
           {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
           <span className="">
-            {formatTokenValue(totalSupply, item.borrowedToken.id)}{" "}
+            {formatLocale(totalSupply, item.borrowedToken.id)}{" "}
             {borrowToken.symbol}
           </span>
         </InfoDetailGrey>
@@ -49,7 +49,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
         >
           {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
           <span className="">
-            {formatTokenValue(totalBorrow, item.borrowedToken.id)}{" "}
+            {formatLocale(totalBorrow, item.borrowedToken.id)}{" "}
             {borrowToken.symbol}
           </span>
           <span className="text-secondary text-[14px] ml-4">
@@ -63,7 +63,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
         >
           {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
           <span className="">
-            {formatTokenValue(totalSupply - totalBorrow, item.borrowedToken.id)}{" "}
+            {formatLocale(totalSupply - totalBorrow, item.borrowedToken.id)}{" "}
             {borrowToken.symbol}
           </span>
         </InfoDetailGrey>

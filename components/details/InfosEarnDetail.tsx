@@ -1,7 +1,7 @@
 import React from "react";
 import InfoDetailGrey from "./InfoDetailGrey";
 import { InvestmentData } from "@/types";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, formatNumberLocale } from "@/utils/utils";
 
 interface Props {
   vault: InvestmentData;
@@ -32,7 +32,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
         >
           {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
           <span>
-            {vault.totalDeposits.toLocaleString()} {tokenInfo.symbol}
+            {formatNumberLocale(vault.totalDeposits)} {tokenInfo.symbol}
           </span>
         </InfoDetailGrey>
         {/* <InfoDetailGrey

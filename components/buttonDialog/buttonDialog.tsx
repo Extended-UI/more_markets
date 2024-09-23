@@ -2,7 +2,6 @@
 
 import React, { ReactNode, useState } from "react";
 import MoreButton from "../moreButton/MoreButton";
-import { Market } from "@/types";
 
 interface ButtonDialogProps {
   color: string;
@@ -35,12 +34,12 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({
   };
 
   return (
-    <div>
+    <>
       <MoreButton text={buttonText} color={color} onClick={toggleModal} />
       {isModalVisible && (
         <div
           className="fixed inset-0 z-50 lg:px-[20%] flex items-center justify-center bg-black bg-opacity-75"
-          onClick={closeModal} // Close modal when background is clicked
+          // onClick={closeModal} // Close modal when background is clicked
         >
           <div
             className="modal-box rounded-[20px] max-w-full p-3 bg-[#343434]"
@@ -50,7 +49,7 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

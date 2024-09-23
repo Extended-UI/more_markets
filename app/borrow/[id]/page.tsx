@@ -9,7 +9,8 @@ import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
 // import { fetchMarket } from "@/utils/graph";
-import { BorrowMarket, Position } from "@/types";
+import { getBorrowedAmount } from "@/utils/contract";
+import { BorrowMarket, BorrowPosition } from "@/types";
 import { getMarketData, getPosition, fetchMarket } from "@/utils/contract";
 
 const BorrowDetailPage: React.FC = () => {
@@ -17,8 +18,10 @@ const BorrowDetailPage: React.FC = () => {
   const params = usePathname();
   const { address: userAddress } = useAccount();
 
-  const [borrowPosition, setBorrowPosition] = useState<Position | null>(null);
   const [borrowMarket, setBorrowMarket] = useState<BorrowMarket | null>(null);
+  const [borrowPosition, setBorrowPosition] = useState<BorrowPosition | null>(
+    null
+  );
 
   const marketId = params ? params.replace("/borrow/", "") : "";
 
@@ -38,7 +41,19 @@ const BorrowDetailPage: React.FC = () => {
 
         if (userAddress) {
           const positionInfo = await getPosition(userAddress, marketId);
-          setBorrowPosition(positionInfo);
+          if (positionInfo)
+            setBorrowPosition({
+              ...marketInfo,
+              marketParams: marketData.params,
+              marketInfo: marketData.info,
+              loan: await getBorrowedAmount(
+                marketInfo.id,
+                positionInfo.lastMultiplier,
+                positionInfo.borrowShares
+              ),
+              collateral: positionInfo.collateral,
+              lastMultiplier: positionInfo.lastMultiplier,
+            });
         }
       } else {
         router.push("/borrow");
@@ -61,6 +76,8 @@ const BorrowDetailPage: React.FC = () => {
     } as BorrowMarket);
   };
 
+  const closeModal = () => {};
+
   return (
     <>
       {borrowMarket && (
@@ -69,9 +86,9 @@ const BorrowDetailPage: React.FC = () => {
           <InfosBorrowDetails item={borrowMarket} />
           {borrowPosition && (
             <PositionMoreTable
-              item={borrowMarket}
-              position={borrowPosition}
+              item={borrowPosition}
               updateInfo={updateInfo}
+              closeModal={closeModal}
             />
           )}
 

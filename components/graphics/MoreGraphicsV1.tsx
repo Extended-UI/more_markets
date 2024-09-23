@@ -102,9 +102,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
                           transform="translate(7.017 7.017)"
                           fill="none"
                           stroke="#e0dfe3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                         />
                         <path
                           id="Vector-2"
@@ -113,9 +113,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
                           transform="translate(1.846 3.1)"
                           fill="none"
                           stroke="#e0dfe3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                         />
                         <path
                           id="Vector-3"
@@ -148,9 +148,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
                           transform="translate(7.017 7.017)"
                           fill="none"
                           stroke="#888"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                         />
                         <path
                           id="Vector-2"
@@ -159,9 +159,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
                           transform="translate(1.846 3.108)"
                           fill="none"
                           stroke="#888"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                         />
                         <path
                           id="Vector-3"
@@ -170,9 +170,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
                           transform="translate(7.017 6.608)"
                           fill="none"
                           stroke="#888"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                         />
                         <path
                           id="Vector-4"
@@ -181,9 +181,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
                           transform="translate(10.575 10.583)"
                           fill="none"
                           stroke="#888"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                         />
                         <path
                           id="Vector-5"
@@ -192,9 +192,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
                           transform="translate(1.667 12.108)"
                           fill="none"
                           stroke="#888"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                         />
                         <path
                           id="Vector-6"
@@ -203,9 +203,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
                           transform="translate(12.108 1.667)"
                           fill="none"
                           stroke="#888"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                         />
                         <path
                           id="Vector-7"

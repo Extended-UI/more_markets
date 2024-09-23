@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import ListIconToken from "@/components/token/ListIconToken";
+import FormatTwoPourcentage from "../../tools/formatTwoPourcentage";
 import { BorrowPosition } from "@/types";
 import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
 
@@ -65,7 +66,8 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
         />
       </div>
       <div className="text-right more-text-gray py-2 px-4">
-        Your collateral: {formatTokenValue(item.collateral, item.inputToken.id)}{" "}
+        Available to Withdraw:{" "}
+        {formatTokenValue(item.collateral, item.inputToken.id)}{" "}
         {collateralToken}
       </div>
       <div className="flex justify-end mt-7 mb-7 px-4">
@@ -95,11 +97,13 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
           </div>
         </div>
         <div className="flex w-full justify-between ">
-          <div>LTV / Liquidation LTV</div>
+          <div>Liquidation LTV</div>
           <div>
             <span className="more-text-gray">
-              {formatTokenValue(item.marketParams.lltv, "", 18)}%
-              {lltv2 ? " / " + lltv2.toFixed(2) + "%" : ""}
+              <FormatTwoPourcentage
+                value={formatTokenValue(item.lltv, "", 18)}
+                value2={getPremiumLltv(item.marketParams)}
+              />
             </span>
           </div>
         </div>
@@ -111,14 +115,14 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between">
+        {/* <div className="flex w-full justify-between">
           <div>Loan {loanToken}</div>
           <div>
             <span className="more-text-gray">
               {formatTokenValue(item.loan, item.borrowedToken.id)}
             </span>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

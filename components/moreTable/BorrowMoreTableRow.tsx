@@ -49,7 +49,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
       <td className="py-4  items-center h-full ">
         <div className="flex gap-1 justify-start">
           <FormatTwoPourcentage
-            value={formatTokenValue(BigInt(item.lltv), "", 18)}
+            value={formatTokenValue(item.lltv, "", 18)}
             value2={getPremiumLltv(item.marketParams)}
           />
         </div>

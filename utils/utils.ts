@@ -1,7 +1,14 @@
 import { toast } from "react-toastify";
 import { formatUnits, ZeroAddress } from "ethers";
 import { GraphVault, IToken, MarketInfo, MarketParams } from "@/types";
-import { tokens, curators, errorDecoder, contracts } from "./const";
+import {
+  tokens,
+  curators,
+  errorDecoder,
+  contracts,
+  virtualAssets,
+  virtualShares,
+} from "./const";
 
 export const notify = (errMsg: string) => toast(errMsg);
 
@@ -55,17 +62,32 @@ export const getTokenInfo = (token: string | undefined): IToken => {
 export const formatTokenValue = (
   amount: bigint,
   token: string,
-  decimals?: number,
-  shares?: boolean
+  decimals?: number
 ): number => {
-  const extraDecimals = shares ? 6 : 0;
   return Number(
     formatUnits(
       amount,
-      (decimals && decimals > 0 ? decimals : getTokenInfo(token).decimals) +
-        extraDecimals
+      decimals && decimals > 0 ? decimals : getTokenInfo(token).decimals
     )
   );
+};
+
+export const formatLocale = (
+  amount: bigint,
+  token: string,
+  decimals?: number
+): string => {
+  return formatTokenValue(amount, token, decimals).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+export const formatNumberLocale = (numValue: number): string => {
+  return numValue.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 };
 
 export const getPremiumLltv = (params: MarketParams): number | null => {
@@ -97,8 +119,29 @@ export const formatCurator = (fetchedVault: GraphVault): string => {
 export const notifyError = async (err: unknown) => {
   const decodedError = await errorDecoder.decode(err);
   const errMsg = decodedError.reason
-    ? decodedError.reason.split("\n")[0]
+    ? // ? decodedError.reason.split("\n")[0]
+      decodedError.reason
     : "Unknown Error";
 
   notify(errMsg);
+};
+
+export const toAssetsUp = (
+  shares: bigint,
+  totalAssets: bigint,
+  totalShares: bigint
+): bigint => {
+  return mulDivUp(
+    shares,
+    totalAssets + virtualAssets,
+    totalShares + virtualShares
+  );
+};
+
+export const mulDivUp = (x: bigint, y: bigint, d: bigint): bigint => {
+  return (x * y + (d - BigInt(1))) / d + BigInt(100);
+};
+
+export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {
+  return (x * y) / d;
 };

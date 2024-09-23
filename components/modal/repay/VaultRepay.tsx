@@ -14,6 +14,7 @@ const VaultRepay: React.FC<IBorrowPositionProp> = ({
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [txHash, setTxHash] = useState("");
+  const [useMax, setUseMax] = useState(false);
 
   const handleSetRepay = (amount: number) => {
     setAmount(amount);
@@ -29,41 +30,34 @@ const VaultRepay: React.FC<IBorrowPositionProp> = ({
     closeModal();
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <VaultRepayInput
-            item={item}
-            closeModal={closeModal}
-            setAmount={(amount: number) => handleSetRepay(amount)}
-          />
-        );
-      case 2:
-        return (
-          <VaultRepayPush
-            item={item}
-            amount={amount}
-            setTxHash={setTxHash}
-            closeModal={closeModal}
-            validRepay={handleValidRepay}
-          />
-        );
-      case 3:
-        return (
-          <VaultRepayResult
-            item={item}
-            amount={amount}
-            txhash={txHash}
-            processDone={handleProcessDone}
-          />
-        );
-      default:
-        return null; // ou une vue par défaut
-    }
-  };
-
-  return <div>{renderStep()}</div>;
+  return (
+    <>
+      {step == 1 ? (
+        <VaultRepayInput
+          item={item}
+          setUseMax={setUseMax}
+          closeModal={closeModal}
+          setAmount={(amount: number) => handleSetRepay(amount)}
+        />
+      ) : step == 2 ? (
+        <VaultRepayPush
+          item={item}
+          amount={amount}
+          useMax={useMax}
+          setTxHash={setTxHash}
+          closeModal={closeModal}
+          validRepay={handleValidRepay}
+        />
+      ) : (
+        <VaultRepayResult
+          item={item}
+          amount={amount}
+          txhash={txHash}
+          processDone={handleProcessDone}
+        />
+      )}
+    </>
+  );
 };
 
 export default VaultRepay;
