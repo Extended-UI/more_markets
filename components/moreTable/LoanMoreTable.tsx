@@ -13,8 +13,8 @@ import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
-import { getPositions } from "@/utils/contract";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
+import { getPositions, getBorrowedAmount } from "@/utils/contract";
 import {
   GraphPosition,
   BorrowPosition,
@@ -96,7 +96,11 @@ const LoanMoreTable: React.FC<Props> = ({
           if (selPosition) {
             return {
               ...marketItem,
-              loan: selPosition.borrowShares,
+              loan: await getBorrowedAmount(
+                marketItem.id,
+                selPosition.lastMultiplier,
+                selPosition.borrowShares
+              ),
               collateral: selPosition.collateral,
               lastMultiplier: selPosition.lastMultiplier,
             } as BorrowPosition;

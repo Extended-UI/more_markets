@@ -58,7 +58,7 @@ const VaultRepayPush: React.FC<Props> = ({
 
   useEffect(() => {
     const initApprove = async () => {
-      const [nonce, allowance, borrowedAmount] = userAddress
+      const [nonce, allowance] = userAddress
         ? await Promise.all([
             getPermitNonce([
               userAddress,
@@ -70,15 +70,15 @@ const VaultRepayPush: React.FC<Props> = ({
               userAddress,
               contracts.PERMIT2
             ),
-            getBorrowedAmount(item.id, item.lastMultiplier, item.loan),
+            // getBorrowedAmount(item.id, item.lastMultiplier, item.loan),
           ])
         : [0, BigInt(0), BigInt(0)];
 
       setPermitNonce(nonce);
 
-      const repayEnough = repayAmount >= borrowedAmount;
+      const repayEnough = repayAmount >= item.loan;
       setUseShare(repayEnough);
-      setBorrowed(repayEnough ? borrowed : repayAmount);
+      setBorrowed(repayEnough ? item.loan : repayAmount);
 
       if (allowance >= (repayEnough ? borrowed : repayAmount))
         setHasApprove(true);
@@ -108,6 +108,7 @@ const VaultRepayPush: React.FC<Props> = ({
   };
 
   const handlePermit = async () => {
+    console.log(userAddress, borrowed);
     if (userAddress && borrowed > BigInt(0)) {
       setIsLoading(true);
       try {

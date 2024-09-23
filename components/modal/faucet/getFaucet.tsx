@@ -109,7 +109,13 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
         ))}
       </div>
       <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
-        <div className="flex justify-end mr-5">
+        <div className="flex justify-end mr-5 gap-3">
+          <MoreButton
+            className="text-2xl py-2"
+            text="Close"
+            onClick={closeModal}
+            color="gray"
+          />
           {completed ? (
             <MoreButton
               className="text-2xl py-2"
