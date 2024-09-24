@@ -567,7 +567,9 @@ export const withdrawFromVaults = async (
   deadline: bigint,
   signhash: string,
   authHash: string,
-  authNonce: bigint
+  authNonce: bigint,
+  useShare: boolean,
+  userShares: bigint
 ): Promise<string> => {
   // authorize
   const authorized = authHash.length == 0;
@@ -600,11 +602,17 @@ export const withdrawFromVaults = async (
   });
 
   // encode erc4626Withdraw
-  const erc4626Withdraw = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "erc4626Withdraw",
-    args: [vaultAddress, amount, MaxUint256, account, account],
-  });
+  const erc4626Withdraw = useShare
+    ? encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "erc4626Redeem",
+        args: [vaultAddress, userShares, 0, account, account],
+      })
+    : encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "erc4626Withdraw",
+        args: [vaultAddress, amount, MaxUint256, account, account],
+      });
 
   const txHash = await writeContract(config, {
     ...bundlerInstance,

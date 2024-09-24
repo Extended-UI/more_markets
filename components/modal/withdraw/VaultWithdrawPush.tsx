@@ -4,11 +4,11 @@ import { useAccount } from "wagmi";
 import { parseUnits, MaxUint256 } from "ethers";
 import React, { useState, useEffect } from "react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "../../token/TokenAmount";
+import MoreButton from "../../moreButton/MoreButton";
+import IconToken from "@/components/token/IconToken";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
-import IconToken from "@/components/token/IconToken";
 import { InvestmentData } from "@/types";
 import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
 import {
@@ -21,8 +21,9 @@ import {
 } from "@/utils/contract";
 
 interface Props {
-  item: InvestmentData;
   amount: number;
+  useMax: boolean;
+  item: InvestmentData;
   closeModal: () => void;
   validWithdraw: () => void;
   setTxhash: (hash: string) => void;
@@ -31,6 +32,7 @@ interface Props {
 const VaultWithdrawPush: React.FC<Props> = ({
   item,
   amount,
+  useMax,
   setTxhash,
   closeModal,
   validWithdraw,
@@ -47,6 +49,10 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
   const tokenInfo = getTokenInfo(item.assetAddress);
   const tokenAmount = parseUnits(amount.toString(), tokenInfo.decimals);
+  const userDepositAmount = parseUnits(
+    item.userDeposits.toString(),
+    tokenInfo.decimals
+  );
 
   useEffect(() => {
     const initApprove = async () => {
@@ -126,7 +132,9 @@ const VaultWithdrawPush: React.FC<Props> = ({
           deadline,
           permitHash,
           authorizeHash,
-          authorizeNonce
+          authorizeNonce,
+          useMax || tokenAmount >= userDepositAmount,
+          item.userShares
         );
 
         setTxhash(hash);

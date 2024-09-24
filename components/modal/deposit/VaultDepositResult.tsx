@@ -87,10 +87,7 @@ const VaultDepositResult: React.FC<Props> = ({
         </>
       )}
       <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
-        <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
-          Confirming transaction... Browse MORE vaults while you wait.
-        </div>
-        {executed && (
+        {executed ? (
           <div className="flex justify-end mr-5">
             <MoreButton
               className="text-2xl py-2"
@@ -98,6 +95,10 @@ const VaultDepositResult: React.FC<Props> = ({
               onClick={processDone}
               color="primary"
             />
+          </div>
+        ) : (
+          <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
+            Confirming transaction... Browse MORE vaults while you wait.
           </div>
         )}
       </div>

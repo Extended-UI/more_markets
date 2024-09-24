@@ -106,7 +106,6 @@ const VaultRepayPush: React.FC<Props> = ({
   };
 
   const handlePermit = async () => {
-    console.log(userAddress, borrowed);
     if (userAddress && borrowed > BigInt(0)) {
       setIsLoading(true);
       try {

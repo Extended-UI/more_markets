@@ -10,27 +10,33 @@ import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: InvestmentData;
+  useMax: boolean;
   closeModal: () => void;
+  setUseMax: (useMax: boolean) => void;
   setAmount: (amount: number) => void;
 }
 
 const VaultWithdrawInput: React.FC<Props> = ({
   item,
+  useMax,
   setAmount,
   closeModal,
+  setUseMax,
 }) => {
   const [withdraw, setWithdraw] = useState<number>(0);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUseMax(false);
     setWithdraw(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {
+    setUseMax(true);
     setWithdraw(maxValue);
   };
 
   const handleWithdraw = () => {
-    if (withdraw > 0) {
+    if (useMax || withdraw > 0) {
       setAmount(withdraw);
     }
   };
@@ -49,7 +55,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
             onChange={handleInputChange}
             placeholder={`Withdraw ${tokenInfo.symbol}`}
             token={item.assetAddress}
-            balance={item.totalDeposits}
+            balance={item.userDeposits}
             setMax={handleSetMax}
           />
         </div>

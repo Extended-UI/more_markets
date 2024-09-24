@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { parseUnits, ZeroAddress } from "ethers";
+import { parseUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import IconToken from "@/components/token/IconToken";
@@ -214,7 +214,7 @@ const VaultDepositPush: React.FC<Props> = ({
       <div className="more-bg-primary rounded-[5px] mx-5 px-4">
         <TokenAmount
           title="Deposit"
-          token={ZeroAddress}
+          token={item.assetAddress}
           amount={amount}
           ltv={""}
           totalTokenAmount={0}
