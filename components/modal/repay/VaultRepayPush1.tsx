@@ -13,7 +13,7 @@ import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { BorrowPosition } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTokenInfo, getTimestamp, notifyError } from "@/utils/utils";
+import { getTokenInfo, getTimestamp, notifyError, notify } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -25,6 +25,7 @@ import {
 
 interface Props {
   amount: number;
+  useMax: boolean;
   item: BorrowPosition;
   validRepay: () => void;
   closeModal: () => void;
@@ -34,6 +35,7 @@ interface Props {
 const VaultRepayPush: React.FC<Props> = ({
   item,
   amount,
+  useMax,
   setTxHash,
   validRepay,
   closeModal,
@@ -78,7 +80,7 @@ const VaultRepayPush: React.FC<Props> = ({
       setUseShare(repayEnough);
       setBorrowed(repayEnough ? item.loan : repayAmount);
 
-      if (!repayEnough && allowance >= (repayEnough ? item.loan : repayAmount))
+      if (allowance >= (repayEnough ? borrowed : repayAmount))
         setHasApprove(true);
       else setHasApprove(false);
     };
@@ -86,74 +88,65 @@ const VaultRepayPush: React.FC<Props> = ({
     initApprove();
   }, [userAddress, item, repayAmount]);
 
-  const handleApprove = async () => {
-    if (userAddress) {
-      setIsLoading(true);
-      try {
-        await setTokenAllowance(
-          item.borrowedToken.id,
-          contracts.PERMIT2,
-          borrowed
-        );
+  const doRepay = async (userAddress: string) => {
+    const txHash = await repayLoanToMarkets(
+      userAddress,
+      borrowed,
+      permitNonce,
+      deadline,
+      signHash,
+      useShare,
+      item
+    );
 
-        setHasApprove(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
-    }
+    setTxHash(txHash);
+    validRepay();
   };
 
-  const handlePermit = async () => {
-    console.log(userAddress, borrowed);
-    if (userAddress && borrowed > BigInt(0)) {
-      setIsLoading(true);
-      try {
-        const permitDeadline =
-          deadline == BigInt(0) ? getTimestamp() : deadline;
+  const doPermit = async () => {
+    const permitDeadline = getTimestamp();
+    const signHash = await setTokenPermit(
+      item.borrowedToken.id,
+      borrowed,
+      permitNonce,
+      contracts.MORE_BUNDLER,
+      permitDeadline
+    );
 
-        const signHash = await setTokenPermit(
-          item.borrowedToken.id,
-          borrowed,
-          permitNonce,
-          contracts.MORE_BUNDLER,
-          permitDeadline
-        );
+    setSignHash(signHash);
+    setDeadline(permitDeadline);
+    setHasPermit(true);
+  };
 
-        setSignHash(signHash);
-        setDeadline(permitDeadline);
-        setHasPermit(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
-    }
+  const doApprove = async () => {
+    await setTokenAllowance(item.borrowedToken.id, contracts.PERMIT2, borrowed);
+    setHasApprove(true);
   };
 
   const handleRepay = async () => {
-    // generate borrow tx
-    if (userAddress && hasApprove && hasPermit) {
+    if (userAddress && borrowed > 0) {
       setIsLoading(true);
       try {
-        const txHash = await repayLoanToMarkets(
-          userAddress,
-          borrowed,
-          permitNonce,
-          deadline,
-          signHash,
-          useShare,
-          item
-        );
+        // repay if already approved and permited
+        if (hasPermit && hasApprove) {
+          await doRepay(userAddress);
+        } else if (hasApprove) {
+          // permit then doRepay
+          await doPermit();
+          await doRepay(userAddress);
+        } else {
+          await doApprove();
+          await doPermit();
+          await doRepay(userAddress);
+        }
 
-        validRepay();
-        setTxHash(txHash);
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
         notifyError(err);
       }
+    } else {
+      notifyError("Invalid amount");
     }
   };
 
@@ -227,40 +220,20 @@ const VaultRepayPush: React.FC<Props> = ({
           Terms of Use
         </a>{" "}
       </div>
-      <div className="flex justify-end py-5  rounded-b-[20px] px-4">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="gray"
-          />
-        </div>
-        {hasApprove && hasPermit ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Repay"
-            disabled={isLoading}
-            onClick={handleRepay}
-            color="primary"
-          />
-        ) : hasApprove ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Permit"
-            disabled={isLoading}
-            onClick={handlePermit}
-            color="primary"
-          />
-        ) : (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Approve"
-            disabled={isLoading}
-            onClick={handleApprove}
-            color="primary"
-          />
-        )}
+      <div className="flex justify-end py-5 rounded-b-[20px] px-4 gap-5">
+        <MoreButton
+          className="text-2xl py-2"
+          text="Cancel"
+          onClick={closeModal}
+          color="gray"
+        />
+        <MoreButton
+          className="text-2xl py-2"
+          text="Repay"
+          disabled={isLoading}
+          onClick={handleRepay}
+          color="primary"
+        />
       </div>
     </div>
   );

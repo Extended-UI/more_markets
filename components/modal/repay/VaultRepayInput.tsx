@@ -13,16 +13,10 @@ import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
 interface Props {
   item: BorrowPosition;
   closeModal: () => void;
-  setUseMax: (useMax: boolean) => void;
   setAmount: (amount: number) => void;
 }
 
-const VaultRepayInput: React.FC<Props> = ({
-  item,
-  setUseMax,
-  setAmount,
-  closeModal,
-}) => {
+const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   const { address: userAddress } = useAccount();
 
   const [deposit, setRepay] = useState<number>(0);
@@ -43,12 +37,10 @@ const VaultRepayInput: React.FC<Props> = ({
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUseMax(false);
     setRepay(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {
-    setUseMax(true);
     setRepay(maxValue);
   };
 

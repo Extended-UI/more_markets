@@ -806,6 +806,25 @@ export const repayLoanToMarkets = async (
     })
   );
 
+  console.log([
+    [
+      marketParams.isPremiumMarket,
+      marketParams.loanToken,
+      marketParams.collateralToken,
+      marketParams.oracle,
+      marketParams.irm,
+      marketParams.lltv,
+      marketParams.creditAttestationService,
+      marketParams.irxMaxLltv,
+      marketParams.categoryLltv,
+    ],
+    useShare ? 0 : repayAmount,
+    useShare ? item.borrowShares : 0,
+    0,
+    account,
+    "",
+  ]);
+
   // encode morphoRepay
   multicallArgs.push(
     encodeFunctionData({
@@ -823,10 +842,8 @@ export const repayLoanToMarkets = async (
           marketParams.irxMaxLltv,
           marketParams.categoryLltv,
         ],
-        // useShare ? 0 : repayAmount,
-        // useShare ? item.loan : 0,
-        repayAmount,
-        0,
+        useShare ? 0 : repayAmount,
+        useShare ? item.borrowShares : 0,
         0,
         account,
         "",

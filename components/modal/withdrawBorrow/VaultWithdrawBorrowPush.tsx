@@ -108,7 +108,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         </div>
         <MoreButton
           className="text-2xl py-2"
-          text="Confirm"
+          text="Withdraw Collateral"
           disabled={isLoading}
           onClick={handleWithdraw}
           color="primary"

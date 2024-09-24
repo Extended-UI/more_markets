@@ -101,6 +101,7 @@ const LoanMoreTable: React.FC<Props> = ({
                 selPosition.lastMultiplier,
                 selPosition.borrowShares
               ),
+              borrowShares: selPosition.borrowShares,
               collateral: selPosition.collateral,
               lastMultiplier: selPosition.lastMultiplier,
             } as BorrowPosition;
@@ -150,7 +151,10 @@ const LoanMoreTable: React.FC<Props> = ({
                   </th>
                   <th style={{ width: "400px" }}>
                     <div className="justify-start pr-8">
-                      <TableHeaderCell title="Loan" infoText="" />
+                      <TableHeaderCell
+                        title="Loan"
+                        infoText="The token(s) issued to borrowers as a loan against their collateral in the given market."
+                      />
                     </div>
                   </th>
                   <th>

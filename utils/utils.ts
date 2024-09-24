@@ -139,7 +139,7 @@ export const toAssetsUp = (
 };
 
 export const mulDivUp = (x: bigint, y: bigint, d: bigint): bigint => {
-  return (x * y + (d - BigInt(1))) / d + BigInt(100);
+  return (x * y + (d - BigInt(1))) / d + BigInt(10);
 };
 
 export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {

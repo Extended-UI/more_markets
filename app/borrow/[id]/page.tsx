@@ -51,6 +51,7 @@ const BorrowDetailPage: React.FC = () => {
                 positionInfo.lastMultiplier,
                 positionInfo.borrowShares
               ),
+              borrowShares: positionInfo.borrowShares,
               collateral: positionInfo.collateral,
               lastMultiplier: positionInfo.lastMultiplier,
             });
