@@ -39,7 +39,7 @@ const TableHeaderCell: React.FC<Props> = ({
         {isTooltipVisible && (
           <div
             // style={{ top: "-5px", left: "16px" }}
-            className="absolute w-[400px] bottom-full mb-2 p-2 bg-[#212121] text-white text-s rounded shadow-lg max-w-xs break-words whitespace-normal z-10"
+            className="absolute w-[400px] bottom-full mb-2 p-2 bg-[#212121] text-white text-s rounded shadow-lg max-w-xs break-words whitespace-normal z-10 leading-5"
           >
             {infoText}
           </div>

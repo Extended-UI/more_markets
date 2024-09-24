@@ -70,7 +70,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
+      <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
         <TokenAmount
           title="Withdraw Collateral"
           token={item.inputToken.id}
@@ -80,7 +80,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         />
       </div>
 
-      {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
+      {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
         <div className="text-grey pb-4"> Position Change </div>
         <PositionChangeToken
           title="Collateral"

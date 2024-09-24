@@ -21,7 +21,7 @@ const HeaderBorrowDetail: React.FC<IBorrowMarketProp> = ({
           <ListIconToken
             iconNames={[item.inputToken.id, item.borrowedToken.id]}
           />
-          <div>{collateralToken + " / " + borrowToken}</div>
+          {collateralToken + " / " + borrowToken}
         </div>
       </div>
       {userAddress && (

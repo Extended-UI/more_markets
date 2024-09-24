@@ -191,8 +191,8 @@ const VaultRepayPush: React.FC<Props> = ({
       </div>
 
       {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] px-8 flex flex-col gap-4 py-8">
-        <div className="text-grey ">Position Change</div>
-        <div className="flex flex-row justify-between items-center ">
+        <div className="text-grey">Position Change</div>
+        <div className="flex flex-row justify-between items-center">
           <div className="text-xl">Loan</div>
           <div className="flex  items-center gap-2">
             <FormatPrice value={loanAmount} token={loanToken} />
@@ -206,7 +206,7 @@ const VaultRepayPush: React.FC<Props> = ({
           value2={loanAmount - amount}
         />
 
-        <div className="flex flex-row justify-between items-center ">
+        <div className="flex flex-row justify-between items-center">
           <div className="text-xl">LTV / Liquidation LTV</div>
           <div className="flex  items-center gap-2">
             <FormatPourcentage value={apy} />{" "}

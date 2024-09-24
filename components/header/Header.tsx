@@ -13,9 +13,9 @@ const Header: FC = () => {
   const { address: userAddress } = useAccount();
 
   return (
-    <header className=" pt-2 ">
-      <nav className="  flex sm:flex-row flex-col justify-between items-center">
-        <div className=" w-full flex justify-between items-center">
+    <header className="pt-2">
+      <nav className="flex sm:flex-row flex-col justify-between items-center">
+        <div className="w-full flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <Image src={logo} alt="Logo" width={35} height={35} />
           </div>

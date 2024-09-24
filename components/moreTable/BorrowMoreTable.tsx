@@ -26,7 +26,7 @@ const BorrowMoreTable: React.FC<IBorrowMarketProps> = ({
         position: "relative",
       }}
     >
-      <table className="w-full  rounded-2xl  text-sm text-left table max-w-[1440px] overflow-x-scroll ">
+      <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
         <thead
           className="bg-[#212121] h-20  text-white  text-xs"
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
@@ -45,7 +45,7 @@ const BorrowMoreTable: React.FC<IBorrowMarketProps> = ({
               />
             </th>
             <th style={{ width: "200px" }}>
-              <div className="flex justify-start ">
+              <div className="flex justify-start">
                 <TableHeaderCell
                   title="Liquidation  LTV"
                   infoText="The standard maximum proportion of loan value to collateral value that borrowers must maintain in order to avoid liquidation."

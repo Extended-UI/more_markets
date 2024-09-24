@@ -11,7 +11,7 @@ import SecondTransactionsMoreTable from "../moreTable/SecondTransactionMoreTable
 const ActivityBorrowDetail = () => {
   return (
     <div className="flex w-full flex-col">
-      <h1 className="text-4xl mt-14 ">Activity (Coming Soon)</h1>
+      <h1 className="text-4xl mt-14">Activity (Coming Soon)</h1>
       <div className="flex flex-col w-full">
         <SuppliersMoreTable />
         <BorrowersMoreTable />

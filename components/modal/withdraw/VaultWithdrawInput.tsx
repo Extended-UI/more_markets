@@ -40,7 +40,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
       <div className="px-6">
-        <div className="text-3xl mb-10 pt-5 ">{item.vaultName}</div>
+        <div className="text-3xl mb-10 pt-5">{item.vaultName}</div>
         <div className="text-l mb-5">Withdraw {tokenInfo.symbol}</div>
         <div className="w-full flex justify-center">
           <InputTokenMax
@@ -73,7 +73,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
           <div className="glowing-text-primary w-full"></div>
         </div>
       </div>
-      <div className="flex items-center justify-between more-bg-primary px-4 rounded-b-[10px] py-12 px-8 ">
+      <div className="flex items-center justify-between more-bg-primary px-4 rounded-b-[10px] py-12 px-8">
         <div className="flex items-center gap-2">
           Withdraw <ArrowLongRightIcon className="w-4 h-4" /> Deposit APY /
           Projected Deposit APY

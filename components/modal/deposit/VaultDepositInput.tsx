@@ -79,7 +79,7 @@ const VaultDepositInput: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
-      <div className="text-4xl mb-10 px-4 pt-10 ">{item.vaultName}</div>
+      <div className="text-4xl mb-10 px-4 pt-10">{item.vaultName}</div>
       <div className="text-l mb-5 px-4">Deposit {tokenInfo.symbol}</div>
       <div className="px-4">
         <p className="text-xl my-3">
@@ -121,7 +121,7 @@ const VaultDepositInput: React.FC<Props> = ({
         </div>
       )}
       <div className="flex justify-end mt-7 mb-7 px-4">
-        <div className="mr-5 ">
+        <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
             text="Cancel"

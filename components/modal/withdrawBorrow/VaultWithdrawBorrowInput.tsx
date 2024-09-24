@@ -42,7 +42,7 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
-      <div className="text-2xl mb-10 px-5 pt-5 ">Withdraw collateral</div>
+      <div className="text-2xl mb-10 px-5 pt-5">Withdraw collateral</div>
       <div className="flex items-center mb-10 px-5 gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
@@ -89,14 +89,14 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-primary w-full"></div>
       </div>
-      <div className="flex  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4 ">
-        <div className="flex w-full justify-between ">
+      <div className="flex  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4">
+        <div className="flex w-full justify-between">
           <div>Borrow APY / Projected Borrow APY</div>
           <div>
             <span className="more-text-gray">N/A</span>
           </div>
         </div>
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <div>Liquidation LTV</div>
           <div>
             <span className="more-text-gray">
@@ -107,7 +107,7 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <div>Collateral {collateralToken} </div>
           <div>
             <span className="more-text-gray">

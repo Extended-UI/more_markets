@@ -80,7 +80,7 @@ const BIRGraphBorrowDetail = () => {
 
   return (
     <>
-      <div className="text-2xl mb-5 ">Base Interest Rate Model (Coming Soon)</div>
+      <div className="text-2xl mb-5">Base Interest Rate Model (Coming Soon)</div>
       <div
         className="mockup-window border-[#343434] border p-4"
         style={{ backgroundColor: "#181818" }}

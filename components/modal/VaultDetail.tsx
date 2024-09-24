@@ -43,7 +43,7 @@ const VaultDetail: React.FC<Props> = ({ item }) => {
           <div>Guardian Address</div>
           <div>{item.guardian}</div>
         </div>
-        <div className="flex justify-between mt-5 pb-4 ">
+        <div className="flex justify-between mt-5 pb-4">
           <div>Risk Curator Tumelock</div>
           <div>1 Days</div>
         </div>

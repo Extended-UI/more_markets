@@ -76,7 +76,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
       }}
     >
       <h1 className="text-2xl mt-10 mb-8">Suppliers</h1>
-      <table className="w-full text-sm text-left   border border-gray-800 w-full ">
+      <table className="w-full text-sm text-left   border border-gray-800 w-full">
         <thead
           className="bg-[#212121] h-20  text-xs "
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
@@ -86,7 +86,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
               <TableHeaderCell title="Wallet" infoText="" />
             </th>
             <th style={{ width: "300px" }}>
-              <div className="flex justify-start ">
+              <div className="flex justify-start">
                 <TableHeaderCell
                   title="Supply"
                   infoText="The total amount of tokens currently lent in the given market."
@@ -101,7 +101,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-transparent ">
+        <tbody className="bg-transparent">
           {tableData.map((item, index, arr) => (
             <tr
               key={index}
@@ -117,8 +117,8 @@ const SuppliersMoreTable: React.FC<Props> = () => {
                 index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
               }`}
             >
-              <td className="py-2 px-6  ">
-                <div className=" items-center  h-full flex justify-start">
+              <td className="py-2 px-6">
+                <div className="items-center  h-full flex justify-start">
                   <span
                     style={{ backgroundColor: item.allocationColor }}
                     className={`w-5 h-5  rounded-full mr-2`}
@@ -127,7 +127,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
                 </div>
               </td>
 
-              <td className="py-2  items-center h-full ">
+              <td className="py-2  items-center h-full">
                 <div className="flex gap-1 justify-start items-center gap-2 ml-3">
                   <FormatTokenMillion
                     value={item.supplyAmount}
@@ -137,7 +137,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
                 </div>
               </td>
 
-              <td className="py-2 px-6  items-center justify-end h-full ">
+              <td className="py-2 px-6  items-center justify-end h-full">
                 <div className="flex gap-1 justify-center">
                   <FormatPourcentage
                     value={item.unsecuredAPY}

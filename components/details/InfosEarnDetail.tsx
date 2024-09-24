@@ -30,7 +30,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           infoText="The total amount of tokens that have been deposited into the vault and made available to borrowers for loans."
           className="flex-1 m-2  min-w-[200px]"
         >
-          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
+          {/* <span className="text-[#888888] font-[600]">$</span>{" "} */}
           <span>
             {formatNumberLocale(vault.totalDeposits)} {tokenInfo.symbol}
           </span>
@@ -40,7 +40,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           infoText="The total value available for withdrawal during the current epoch."
           className="flex-1 m-2  min-w-[200px]"
         >
-          <span className="text-[#888888] font-[600] ">$</span>{" "}
+          <span className="text-[#888888] font-[600]">$</span>{" "}
           <span>
             {(vault.totalDeposits - totalBorrow).toLocaleString()}{" "}
             {tokenInfo.symbol}
@@ -52,7 +52,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           className="flex-1 m-2  min-w-[200px]"
         >
           <span>{"N/A"}</span>
-          {/* <span className="text-[#888888] font-[600] ">%</span> */}
+          {/* <span className="text-[#888888] font-[600]">%</span> */}
         </InfoDetailGrey>
         {/* <InfoDetailGrey
           title="Utilization"
@@ -60,7 +60,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           className="flex-1 m-2  min-w-[200px]"
         >
           <span>89.82</span>
-          <span className="text-[#888888] font-[600] ">%</span>
+          <span className="text-[#888888] font-[600]">%</span>
         </InfoDetailGrey> */}
       </div>
       {/* <div
@@ -78,13 +78,13 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           title="Credora Min/Avg"
           className="flex-1 m-2  min-w-[200px]"
         >
-          <span className=" font-[600] ">BBB/AA</span>{" "}
+          <span className="font-[600]">BBB/AA</span>{" "}
         </InfoDetail>
         <InfoDetail
           title="Unsecured Borrow"
           className="flex-1 m-2  min-w-[200px]"
         >
-          <span className="text-[#888888] font-[600] ">$</span>
+          <span className="text-[#888888] font-[600]">$</span>
           <span>194.7k</span>{" "}
         </InfoDetail>
         <InfoDetail
@@ -92,14 +92,14 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           className="flex-1 m-2  min-w-[200px]"
         >
           <span>17.1</span>
-          <span className="text-[#888888] font-[600] ">%</span>
+          <span className="text-[#888888] font-[600]">%</span>
         </InfoDetail>
         <InfoDetail
           title="Performance APY"
           className="flex-1 m-2  min-w-[200px]"
         >
           <span>20</span>
-          <span className="text-[#888888] font-[600] ">%</span>
+          <span className="text-[#888888] font-[600]">%</span>
         </InfoDetail>
       </div> */}
     </div>

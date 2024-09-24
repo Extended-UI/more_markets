@@ -37,7 +37,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           />
         </div>
       </td>
-      <td className="py-4 px-6 items-center h-full  ">
+      <td className="py-4 px-6 items-center h-full">
         <div className="flex items-center">
           <IconToken
             className="mr-2 w-6 h-6"
@@ -46,7 +46,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           />
         </div>
       </td>
-      <td className="py-4  items-center h-full ">
+      <td className="py-4  items-center h-full">
         <div className="flex gap-1 justify-start">
           <FormatTwoPourcentage
             value={formatTokenValue(item.lltv, "", 18)}
@@ -64,7 +64,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           <FormatPourcentage value={utilization / 100} />
         </div>
       </td>
-      <td className="py-4 px-6 items-center   h-full ">
+      <td className="py-4 px-6 items-center h-full">
         <div className="flex justify-start">
           <IconToken
             className="mr-2 mt-1 w-6 h-6"

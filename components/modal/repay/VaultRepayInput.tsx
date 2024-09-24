@@ -106,16 +106,16 @@ const VaultRepayInput: React.FC<Props> = ({
         />
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
-        <div className="glowing-text-primary w-full"></div>
+        <div className="glowing-text-primary w-full" />
       </div>
-      <div className="flex text-xl  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4 ">
+      <div className="flex text-xl w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4">
         <div className="flex w-full justify-between">
           <div>Borrow APY / Projected Borrow APY</div>
           <div>
             <span className="more-text-gray">N/A</span>
           </div>
         </div>
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <div>LTV / Liquidation LTV</div>
           <div>
             <span className="more-text-gray">
@@ -126,7 +126,7 @@ const VaultRepayInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <div>Collateral {collateralToken} </div>
           <div>
             <span className="more-text-gray">
@@ -134,7 +134,7 @@ const VaultRepayInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <div>Loan {loanToken}</div>
           <div>
             <span className="more-text-gray">

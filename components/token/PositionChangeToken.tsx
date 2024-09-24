@@ -18,8 +18,8 @@ const PositionChangeToken: React.FC<Props> = ({
   value2,
 }) => {
   return (
-    <div className="flex flex-col ">
-      <div className="flex flex-row justify-between items-center ">
+    <div className="flex flex-col">
+      <div className="flex flex-row justify-between items-center">
         <div className="text-xl">{title}</div>
         <div className="flex  items-center gap-2">
           {value} <span className="text-grey"> {token} </span>{" "}

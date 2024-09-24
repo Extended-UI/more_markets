@@ -36,7 +36,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           infoText="The total amount of tokens that have been deposited into the vault and made available to borrowers for loans."
           className="flex-1 m-2 min-w-[180px]"
         >
-          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
+          {/* <span className="text-[#888888] font-[600]">$</span>{" "} */}
           <span className="">
             {formatLocale(totalSupply, item.borrowedToken.id)}{" "}
             {borrowToken.symbol}
@@ -47,7 +47,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           infoText="The total amount of tokens currently lent in the given market."
           className="flex-1 m-2 min-w-[220px]"
         >
-          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
+          {/* <span className="text-[#888888] font-[600]">$</span>{" "} */}
           <span className="">
             {formatLocale(totalBorrow, item.borrowedToken.id)}{" "}
             {borrowToken.symbol}
@@ -61,7 +61,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           infoText="The total value available for withdrawal during the current epoch."
           className="flex-1 m-2 min-w-[180px]"
         >
-          {/* <span className="text-[#888888] font-[600] ">$</span>{" "} */}
+          {/* <span className="text-[#888888] font-[600]">$</span>{" "} */}
           <span className="">
             {formatLocale(totalSupply - totalBorrow, item.borrowedToken.id)}{" "}
             {borrowToken.symbol}
@@ -73,7 +73,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           className="flex-1 m-2 min-w-[180px]"
         >
           <span className="">{"N/A"}</span>
-          {/* <span className="text-[#888888] font-[600] ">%</span> */}
+          {/* <span className="text-[#888888] font-[600]">%</span> */}
         </InfoDetailGrey>
       </div>
     </div>

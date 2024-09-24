@@ -116,7 +116,7 @@ const BorrowersMoreTable: React.FC<Props> = () => {
       }}
     >
       <h1 className="text-2xl mt-16 mb-8">Borrowers</h1>
-      <table className="w-full text-sm text-left   border border-gray-800 w-full ">
+      <table className="w-full text-sm text-left border border-gray-800 w-full">
         <thead
           className="bg-[#212121] h-20  text-xs "
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
@@ -151,7 +151,7 @@ const BorrowersMoreTable: React.FC<Props> = () => {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-transparent ">
+        <tbody className="bg-transparent">
           {currentPageData.map((item, index, arr) => (
             <tr
               key={index}
@@ -175,7 +175,7 @@ const BorrowersMoreTable: React.FC<Props> = () => {
                 <span>0x1234...xxyz</span>
               </td>
 
-              <td className="py-4  items-center h-full ">
+              <td className="py-4 items-center h-full">
                 <div className="flex gap-1 justify-start items-center gap-2 ml-3">
                   <FormatPrice
                     value={item.supplyAmount}
@@ -184,7 +184,7 @@ const BorrowersMoreTable: React.FC<Props> = () => {
                 </div>
               </td>
 
-              <td className="py-4  items-center h-full ">
+              <td className="py-4 items-center h-full">
                 <div className="flex gap-1 justify-start items-center gap-2 ml-3">
                   <FormatPrice
                     value={item.supplyAmount}
@@ -193,13 +193,13 @@ const BorrowersMoreTable: React.FC<Props> = () => {
                 </div>
               </td>
 
-              <td className=" items-center justify-start h-full ">
+              <td className="items-center justify-start h-full">
                 <div className="flex gap-1 justify-start ml-3">
                   <div>{item.unsecuredAPY}</div>
                 </div>
               </td>
 
-              <td className=" items-center justify-start h-full ">
+              <td className="items-center justify-start h-full">
                 <div className="flex gap-1 justify-start ml-3">
                   <FormatPourcentage
                     value={item.unsecuredAPY}

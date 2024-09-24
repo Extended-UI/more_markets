@@ -9,10 +9,8 @@ interface Props {
 const FormatPrice: React.FC<Props> = ({ token, value }) => {
   // Vous pouvez ajouter une vérification ici si besoin
   return (
-    <div className="flex gap-1 justify-center items-center gap-2  ">
-      <div className=" ">
-        <FormatNumber value={value} />
-      </div>
+    <div className="flex gap-1 justify-center items-center gap-2">
+      <FormatNumber value={value} />
       <div className="text-grey">{token}</div>
     </div>
   );

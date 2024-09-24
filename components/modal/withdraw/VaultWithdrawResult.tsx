@@ -46,8 +46,8 @@ const VaultWithdrawResult: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-3xl mb-10 px-4 pt-10 ">Transaction Confirmation</div>
-      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5 ">
+      <div className="text-3xl mb-10 px-4 pt-10">Transaction Confirmation</div>
+      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5">
         Withdraw {amount} {tokenInfo.symbol} from Vault
       </div>
 

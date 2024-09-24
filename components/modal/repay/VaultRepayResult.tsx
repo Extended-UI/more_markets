@@ -49,7 +49,7 @@ const VaultRepayResult: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px] py-8">
-      <div className="text-4xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
+      <div className="text-4xl mb-10 px-4 pt-5">Transaction Confirmation</div>
       <div className="flex items-center mb-10 px-8 gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}

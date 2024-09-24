@@ -21,7 +21,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
 
   return (
     <div
-      className="overflow-x-scroll  rounded-2xl  table-wrapper  mb-16"
+      className="overflow-x-scroll rounded-2xl table-wrapper mb-16"
       style={{
         overflowX: "auto",
         scrollbarWidth: "none",
@@ -29,13 +29,13 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
         position: "relative",
       }}
     >
-      <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll ">
+      <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
         <thead
           className="bg-[#212121] h-20 text-white  text-xs"
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
           <tr className="">
-            <th style={{ width: "140px" }} className="rounded-tl-lg  ">
+            <th style={{ width: "140px" }} className="rounded-tl-lg">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Allocation"
@@ -113,12 +113,12 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
               }`}
             >
-              <td className="py-4 px-6 items-center h-full  ">
-                <div className="flex justify-start ">
+              <td className="py-4 px-6 items-center h-full">
+                <div className="flex justify-start">
                   <FormatPourcentage value={item.allowcation / 100} />
                 </div>
               </td>
-              <td className="py-4  items-center h-full ">
+              <td className="py-4 items-center h-full">
                 <div className="flex justify-start">
                   <FormatTokenMillion
                     value={item.supply}
@@ -136,18 +136,18 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 </div>
               </td>
 
-              <td className="py-4 px-6 items-center  ">
-                <div className=" flex justify-start py-4 ">
+              <td className="py-4 px-6 items-center">
+                <div className="flex justify-start py-4">
                   {" "}
                   <FormatTwoPourcentage value={item.lltv} value2={item.lltv2} />
                 </div>
               </td>
 
-              {/* <td className="py-4  items-center h-full ">
+              {/* <td className="py-4  items-center h-full">
                 <div className="py-4 flex justify-start">{item.credora}</div>
               </td>
 
-              <td className="py-4  items-center h-full ">
+              <td className="py-4  items-center h-full">
                 <FormatTokenMillion
                   value={item.unsecuredBorrowAmount}
                   token={item.supplyCurrency}
@@ -155,7 +155,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 ></FormatTokenMillion>
               </td>
 
-              <td className="py-4 px-6 items-center  h-full   ">
+              <td className="py-4 px-6 items-center h-full">
                 <div className="flex justify-start">
                   <FormatPourcentage
                     value={item.unsecuredAPY}

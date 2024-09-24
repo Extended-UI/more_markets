@@ -8,7 +8,7 @@ const FlowButton = () => {
       style={{ backgroundColor: "#212121" }}
     >
       <div className="px-5 flex h-full items-center">
-        <div className="w-5 h-5 bg-[#13EF8B] rounded-full mr-2 "></div>
+        <div className="w-5 h-5 bg-[#13EF8B] rounded-full mr-2"></div>
         <span>Flow</span>
       </div>
       <div className="h-full border-l  flex border-gray-600 items-center justify-center px-2">

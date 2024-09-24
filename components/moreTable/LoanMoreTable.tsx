@@ -134,7 +134,7 @@ const LoanMoreTable: React.FC<Props> = ({
               overflow: "visible",
             }}
           >
-            <table className="w-full text-sm text-left   border border-gray-800 ">
+            <table className="w-full text-sm text-left border border-gray-800">
               <thead
                 className="bg-[#212121] h-20  text-xs "
                 style={{
@@ -149,12 +149,12 @@ const LoanMoreTable: React.FC<Props> = ({
                     />
                   </th>
                   <th style={{ width: "400px" }}>
-                    <div className=" justify-start pr-8 ">
+                    <div className="justify-start pr-8">
                       <TableHeaderCell title="Loan" infoText="" />
                     </div>
                   </th>
                   <th>
-                    <div className="flex justify-start ">
+                    <div className="flex justify-start">
                       <TableHeaderCell
                         title="Liquidation LTV"
                         infoText="The standard maximum proportion of loan value to collateral value that borrowers must maintain in order to avoid liquidation."
@@ -162,7 +162,7 @@ const LoanMoreTable: React.FC<Props> = ({
                     </div>
                   </th>
                   <th>
-                    <div className="flex justify-start ">
+                    <div className="flex justify-start">
                       <TableHeaderCell
                         title="1D Borrow APY"
                         infoText="The average annualized rate that borrowers paid over the trailing 24-hour period."
@@ -188,7 +188,7 @@ const LoanMoreTable: React.FC<Props> = ({
                       index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
                     }`}
                   >
-                    <td className=" py-4 px-6 items-center h-full gap-2">
+                    <td className="py-4 px-6 items-center h-full gap-2">
                       <div className="flex gap-2 items-center">
                         <div className="flex items-center">
                           <IconToken
@@ -234,7 +234,7 @@ const LoanMoreTable: React.FC<Props> = ({
                       </div>
                     </td>
 
-                    <td className=" py-4 px-6 items-center h-full gap-2">
+                    <td className="py-4 px-6 items-center h-full gap-2">
                       <div className="flex gap-2 items-center">
                         <IconToken
                           className="w-6 h-6"
@@ -257,7 +257,7 @@ const LoanMoreTable: React.FC<Props> = ({
                             buttonText="Borrow More"
                           >
                             {(closeModal) => (
-                              <div className=" w-full h-full">
+                              <div className="w-full h-full">
                                 <VaultBorrow
                                   item={item}
                                   onlyBorrow={true}
@@ -269,7 +269,7 @@ const LoanMoreTable: React.FC<Props> = ({
                           </ButtonDialog>
                           <ButtonDialog color="grey" buttonText="Repay">
                             {(closeModal) => (
-                              <div className=" w-full h-full">
+                              <div className="w-full h-full">
                                 <VaultRepay
                                   item={item}
                                   closeModal={closeModal}
@@ -282,7 +282,7 @@ const LoanMoreTable: React.FC<Props> = ({
                       </div>
                     </td>
 
-                    <td className="py-4 pl-4 items-center h-full ">
+                    <td className="py-4 pl-4 items-center h-full">
                       <div className="flex gap-1 justify-start">
                         <FormatTwoPourcentage
                           value={formatTokenValue(item.lltv, "", 18)}
@@ -290,7 +290,7 @@ const LoanMoreTable: React.FC<Props> = ({
                         />
                       </div>
                     </td>
-                    <td className="py-4 items-center h-full   ">
+                    <td className="py-4 items-center h-full">
                       <div className="flex justify-start ml-3">
                         <FormatPourcentage value={"N/A"} />
                       </div>

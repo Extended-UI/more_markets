@@ -23,25 +23,20 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
   };
 
   return (
-    <div
-      className="overflow-x-scroll  rounded-2xl  table-wrapper  mb-16"
-      style={{
-        overflowX: "auto",
-        scrollbarWidth: "none",
-        msOverflowStyle: "none",
-        position: "relative",
-      }}
-    >
-      <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll ">
+    <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
+      <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
         <thead
-          className="bg-[#212121] h-20 text-white  text-xs"
+          className="bg-[#212121] h-20 text-white text-xs"
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
-          <tr className="">
-            <th style={{ width: "200px" }} className=" ">
-              <TableHeaderCell title="Vault Name" infoText="" />
+          <tr>
+            <th style={{ width: "200px" }}>
+              <TableHeaderCell
+                title="Vault Name"
+                infoText="The name given to the vault by the curator."
+              />
             </th>
-            <th style={{ width: "200px" }} className=" ">
+            <th style={{ width: "200px" }}>
               <TableHeaderCell
                 title="Deposit Token"
                 infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
@@ -154,7 +149,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                   iconNames={item.collateral}
                 />
               </td>
-              {/* <td className="py-4 px-6 items-center   h-full ">
+              {/* <td className="py-4 px-6 items-center h-full">
                     <FormatTokenMillion
                       value={item.totalDeposits}
                       token={item.tokenSymbol}

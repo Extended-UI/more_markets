@@ -42,7 +42,6 @@
     "react-query": "^3.39.3",
     "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.5",
-    "react-tooltip": "^5.28.0",
     "viem": "2.x",
     "wagmi": "^2.12.5"
   },

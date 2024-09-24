@@ -49,7 +49,7 @@ const VaultBorrowResult: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
+      <div className="text-xl mb-10 px-4 pt-5">Transaction Confirmation</div>
       <div className="text-l flex mb-5 px-4">
         <span>
           <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />

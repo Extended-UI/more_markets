@@ -144,7 +144,7 @@ const VaultAddPush: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-xl mb-10 px-4 pt-5 ">Review Transaction</div>
+      <div className="text-xl mb-10 px-4 pt-5">Review Transaction</div>
       <div className="flex items-center mb-10 px-8 gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
@@ -169,7 +169,7 @@ const VaultAddPush: React.FC<Props> = ({
         Bundle the following action{" "}
       </div>
 
-      <div className="more-bg-primary px-8 rounded-t-[5px] ">
+      <div className="more-bg-primary px-8 rounded-t-[5px]">
         <TokenAmount
           title="Add"
           token={item.inputToken.id}
@@ -178,7 +178,7 @@ const VaultAddPush: React.FC<Props> = ({
           totalTokenAmount={amount}
         />
       </div>
-      {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
+      {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
         <div className="text-grey pb-4"> Position Change </div>
         <PositionChangeToken
           title="Deposit"

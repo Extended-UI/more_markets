@@ -142,7 +142,7 @@ const RatesGraphDetail = () => {
 
   return (
     <>
-      <div className="text-2xl mb-5 ">Rates (Coming Soon)</div>
+      <div className="text-2xl mb-5">Rates (Coming Soon)</div>
 
       <div
         className="mockup-window border-[#343434] border p-4"

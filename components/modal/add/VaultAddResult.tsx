@@ -77,7 +77,7 @@ const VaultAddResult: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5 ">
+      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5">
         Add {amount} {collateralToken} to Market
       </div>
 

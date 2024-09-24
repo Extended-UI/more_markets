@@ -154,7 +154,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           <FormatTwoPourcentage value={item.netAPY} />{" "}
         </div>
       </div>
-      <div className="relative more-bg-primary px-8 rounded-t-[5px] ">
+      <div className="relative more-bg-primary px-8 rounded-t-[5px]">
         <TokenAmount
           title="Authorize"
           token={item.assetAddress}
@@ -169,7 +169,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           />
         )}
       </div>
-      <div className="relative more-bg-primary px-8 rounded-t-[5px] ">
+      <div className="relative more-bg-primary px-8 rounded-t-[5px]">
         <TokenAmount
           title="Permit"
           token={item.assetAddress}
@@ -184,7 +184,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           />
         )}
       </div>
-      <div className="more-bg-primary px-8 rounded-t-[5px] ">
+      <div className="more-bg-primary px-8 rounded-t-[5px]">
         <TokenAmount
           title="Withdraw"
           token={item.assetAddress}
@@ -193,7 +193,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           totalTokenAmount={item.totalDeposits}
         />
       </div>
-      <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 ">
+      <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
         <div className="text-grey pb-4"> Position Change </div>
         <PositionChangeToken
           title="Withdraw"
@@ -203,7 +203,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
         />
       </div>
 
-      {/* <div className="flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4 ">
+      {/* <div className="flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4
         Unwrap USDC
         <MoreToggle />
       </div> */}

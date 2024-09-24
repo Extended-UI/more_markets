@@ -46,7 +46,7 @@ const VaultDepositResult: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-xl mb-10 px-4 pt-5 ">Transaction Confirmation</div>
+      <div className="text-xl mb-10 px-4 pt-5">Transaction Confirmation</div>
       <div className="text-l mb-5 px-4">
         <span>
           <Icon
@@ -56,7 +56,7 @@ const VaultDepositResult: React.FC<Props> = ({
         </span>
         Execute the following actions
       </div>
-      <div className="more-bg-primary px-4 mx-5 ">
+      <div className="more-bg-primary px-4 mx-5">
         <TokenAmount
           title="Deposit"
           token={item.assetAddress}

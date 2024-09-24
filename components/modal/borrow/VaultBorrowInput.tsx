@@ -86,7 +86,7 @@ const VaultBorrowInput: React.FC<Props> = ({
           <div className="text-l mb-1 px-4">
             Deposit {collateralToken} Collateral
           </div>
-          <div className=" py-2 px-4">
+          <div className="py-2 px-4">
             <InputTokenMax
               type="number"
               value={deposit}
@@ -148,7 +148,7 @@ const VaultBorrowInput: React.FC<Props> = ({
           </div>
         </div>
         {lltv2 && (
-          <div className="flex justify-between mt-10 pb-4 ">
+          <div className="flex justify-between mt-10 pb-4">
             <div>Your Premium Liquidation LTV</div>
             <div>
               <FormatPourcentage value={lltv2.toFixed(2)} />{" "}
@@ -156,7 +156,7 @@ const VaultBorrowInput: React.FC<Props> = ({
           </div>
         )}
 
-        {/* <div className="flex justify-between mt-10 pb-4 ">
+        {/* <div className="flex justify-between mt-10 pb-4">
           <div>Your Credora Rating</div>
           <div className="">{0}</div>
         </div> */}

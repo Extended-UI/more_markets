@@ -24,7 +24,7 @@ const HeaderEarnDetail: React.FC<IInvestmentProp> = ({ item, updateInfo }) => {
           />
         </div>
         <div className="flex gap-2 items-center text-[14px] pt-2 leading-normal">
-          {/* <IconToken tokenName={vault.tokenSymbol} className="w-6 h-6 " /> */}
+          {/* <IconToken tokenName={vault.tokenSymbol} className="w-6 h-6" /> */}
           <IconToken tokenName="wflow" className="w-6 h-6" />
           <div>{item.curator}</div>
         </div>
@@ -45,7 +45,7 @@ const HeaderEarnDetail: React.FC<IInvestmentProp> = ({ item, updateInfo }) => {
             </ButtonDialog>
             <ButtonDialog color="primary" buttonText="Withdraw">
               {(closeModal) => (
-                <div className=" w-full h-full">
+                <div className="w-full h-full">
                   <VaultWithdraw
                     item={item}
                     updateInfo={updateInfo}

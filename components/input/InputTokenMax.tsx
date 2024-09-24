@@ -40,7 +40,7 @@ const InputTokenMax: React.FC<Props> = ({
           placeholder={placeholder}
         />
         {!isNaN(value) && (
-          <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center ">
+          <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center">
             <span className="text-grey">
               ${millify(tokenPrice * value, { precision: 2 })}
             </span>
@@ -53,7 +53,7 @@ const InputTokenMax: React.FC<Props> = ({
           text="Max"
           onClick={() => setMax(balance)}
           color="gray"
-          className=" py-2 w-20 text-xl"
+          className="py-2 w-20 text-xl"
         />
       </div>
 
