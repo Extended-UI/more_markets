@@ -4,7 +4,6 @@ import "../styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import MainLayout from "@/layouts/MainLayout";
 import { Providers } from "./providers";
-import "react-tooltip/dist/react-tooltip.css";
 
 interface LayoutProps {
   children: ReactNode;
