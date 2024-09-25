@@ -250,13 +250,13 @@ const MoreGraphicsV1: React.FC<Props> = ({
               className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52"
             >
               <li className="bg-neutral">
-                <a>Item 1</a>
+                <a>2 weeks</a>
               </li>
               <li className="bg-neutral">
-                <a>Item 2</a>
+                <a>3 weeks</a>
               </li>
               <li className="bg-neutral">
-                <a>Item 3</a>
+                <a>1 month</a>
               </li>
             </ul>
           </div>

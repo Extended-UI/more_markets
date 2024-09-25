@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import HeaderEarnDetail from "@/components/details/HeaderEarnDetail";
@@ -14,12 +15,14 @@ import {
   getMarketData,
   fetchMarkets,
   fetchVault,
+  getTokenBallance,
 } from "@/utils/contract";
 import leftArrow from "@/public/assets/icons/left-arrow.png";
 
 const EarnDetailPage: React.FC = () => {
   const router = useRouter();
   const params = usePathname();
+  const { address: userAddress } = useAccount();
 
   const [totalBorrow, setTotalBorrow] = useState(0);
   const [breakdowns, setBreakdowns] = useState<VaultBreakdown[]>([]);
@@ -37,12 +40,6 @@ const EarnDetailPage: React.FC = () => {
             fetchVault(vaultId),
             fetchMarkets(),
           ]);
-
-          const deposited = (await getVaultDetail(
-            vaultId,
-            "totalAssets",
-            []
-          )) as bigint;
 
           if (fetchedVault) {
             const breakdownList = fetchedVault.supplyQueue.map(
@@ -99,15 +96,31 @@ const EarnDetailPage: React.FC = () => {
             });
             setBreakdowns(updated);
 
+            const [vaultShares, deposited] = await Promise.all([
+              getTokenBallance(fetchedVault.id, userAddress),
+              getVaultDetail(vaultId, "totalAssets", []),
+            ]);
+
+            let userAssets = BigInt(0);
+            if (vaultShares.value > 0) {
+              userAssets = (await getVaultDetail(
+                fetchedVault.id,
+                "convertToAssets",
+                [vaultShares.value]
+              )) as bigint;
+            }
+
             setVaultInfo({
               vaultId: fetchedVault.id,
               vaultName: fetchedVault.name,
               assetAddress: fetchedVault.asset.id,
               netAPY: 0,
-              userDeposits: 0,
-              userShares: BigInt(0),
-              totalDeposits: formatTokenValue(deposited, fetchedVault.asset.id),
-              totalValueUSD: 0,
+              userDeposits: formatTokenValue(userAssets, fetchedVault.asset.id),
+              userShares: vaultShares.value,
+              totalDeposits: formatTokenValue(
+                deposited as bigint,
+                fetchedVault.asset.id
+              ),
               curator: formatCurator(fetchedVault),
               collateral: [],
               guardian: fetchedVault.guardian ? fetchedVault.guardian.id : "",

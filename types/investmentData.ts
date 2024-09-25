@@ -8,7 +8,6 @@ export interface InvestmentData {
   userDeposits: number;
   userShares: bigint;
   totalDeposits: number;
-  totalValueUSD: number;
   curator: string;
   collateral: string[];
   guardian: string;

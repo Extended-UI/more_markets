@@ -60,7 +60,7 @@ const HeaderEarnDetail: React.FC<IInvestmentProp> = ({ item, updateInfo }) => {
         <ButtonDialog color="grey" buttonText="Vault Details">
           {(closeModal) => (
             <div className="h-full w-full">
-              <VaultDetail item={item} />
+              <VaultDetail item={item} closeModal={closeModal} />
             </div>
           )}
         </ButtonDialog>

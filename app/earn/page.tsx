@@ -49,7 +49,6 @@ const EarnPage: React.FC = () => {
             assetAddress: vault.asset.id,
             netAPY: 0,
             totalDeposits: formatTokenValue(deposited, vault.asset.id),
-            totalValueUSD: 0,
             curator: formatCurator(vault),
             collateral: uniq(activeCollaterals),
             guardian: vault.guardian ? vault.guardian.id : "",

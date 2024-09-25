@@ -2,13 +2,15 @@
 
 import React from "react";
 import IconToken from "../token/IconToken";
+import MoreButton from "../moreButton/MoreButton";
 import { InvestmentData } from "@/types";
 
 interface Props {
   item: InvestmentData;
+  closeModal: () => void;
 }
 
-const VaultDetail: React.FC<Props> = ({ item }) => {
+const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
   return (
     <div className="more-bg-secondary rounded-[20px] h-full w-full">
       <div className="mb-7 px-4 pt-5  text-xl">{item.vaultName}</div>
@@ -48,6 +50,16 @@ const VaultDetail: React.FC<Props> = ({ item }) => {
           <div>1 Days</div>
         </div>
       </div>
+      <div className="flex justify-end mt-7 pb-5">
+          <div className="mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text="Close"
+              onClick={closeModal}
+              color="gray"
+            />
+          </div>
+        </div>
     </div>
   );
 };
