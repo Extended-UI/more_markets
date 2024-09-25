@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import MoreButton from "../../moreButton/MoreButton";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import Icon from "../../FontAwesomeIcon";
 import { InvestmentData } from "@/types";
 import { getTokenInfo, notifyError } from "@/utils/utils";
 import { waitForTransaction } from "@/utils/contract";
@@ -22,7 +22,7 @@ const VaultWithdrawResult: React.FC<Props> = ({
 }) => {
   const [executed, setExecuted] = useState(false);
 
-  const hashStr =
+  const txHashStr =
     txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
   const tokenInfo = getTokenInfo(item.assetAddress);
@@ -52,35 +52,40 @@ const VaultWithdrawResult: React.FC<Props> = ({
       </div>
 
       {txhash.length > 0 && (
-        <>
-          <div className="flex items-center text-2xl mb-5 px-4">
-            <span>
-              <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-10 h-10 mr-5" />
-            </span>
+        <div className="text-l my-5 px-4">
+          <span>
             {executed ? (
-              <>Transaction {hashStr} has been successfully executed.</>
+              <Icon
+                icon="circle-check"
+                className="text-secondary text-xl cursor-pointer mr-5"
+              />
             ) : (
-              <>Transaction {hashStr} has been sent.</>
+              <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
             )}
-          </div>
-          <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
-            {executed ? (
-              <div className="flex justify-end mr-5">
-                <MoreButton
-                  className="text-2xl py-2"
-                  text="Done"
-                  onClick={processDone}
-                  color="primary"
-                />
-              </div>
-            ) : (
-              <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
-                Confirming transaction... Browse MORE vaults while you wait.
-              </div>
-            )}
-          </div>
-        </>
+          </span>
+          {executed ? (
+            <>Transaction {txHashStr} has been successfully executed.</>
+          ) : (
+            <>Transaction {txHashStr} has been sent.</>
+          )}
+        </div>
       )}
+      <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
+        {executed ? (
+          <div className="flex justify-end mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text="Done"
+              onClick={processDone}
+              color="primary"
+            />
+          </div>
+        ) : (
+          <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
+            Confirming transaction... Browse MORE vaults while you wait.
+          </div>
+        )}
+      </div>
     </div>
   );
 };

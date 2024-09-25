@@ -64,31 +64,26 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
       </div>
 
       {txhash.length > 0 && (
-        <>
-          <div className="text-l my-5 px-4">
-            <span>
-              {executed ? (
-                <Icon
-                  icon="circle-check"
-                  className="text-secondary text-xl cursor-pointer mr-5"
-                />
-              ) : (
-                <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
-              )}
-            </span>
+        <div className="text-l my-5 px-4">
+          <span>
             {executed ? (
-              <>Transaction {txHashStr} has been successfully executed.</>
+              <Icon
+                icon="circle-check"
+                className="text-secondary text-xl cursor-pointer mr-5"
+              />
             ) : (
-              <>Transaction {txHashStr} has been sent.</>
+              <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
             )}
-          </div>
-        </>
+          </span>
+          {executed ? (
+            <>Transaction {txHashStr} has been successfully executed.</>
+          ) : (
+            <>Transaction {txHashStr} has been sent.</>
+          )}
+        </div>
       )}
       <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
-        <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
-          Confirming transaction... Browse MORE vaults while you wait.
-        </div>
-        {executed && (
+        {executed ? (
           <div className="flex justify-end mr-5">
             <MoreButton
               className="text-2xl py-2"
@@ -96,6 +91,10 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
               onClick={processDone}
               color="primary"
             />
+          </div>
+        ) : (
+          <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
+            Confirming transaction... Browse MORE vaults while you wait.
           </div>
         )}
       </div>

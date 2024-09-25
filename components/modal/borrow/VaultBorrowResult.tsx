@@ -77,25 +77,23 @@ const VaultBorrowResult: React.FC<Props> = ({
         />
       </div>
       {txhash.length > 0 && (
-        <>
-          <div className="text-l my-5 px-4">
-            <span>
-              {executed ? (
-                <Icon
-                  icon="circle-check"
-                  className="text-secondary text-xl cursor-pointer mr-5"
-                />
-              ) : (
-                <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
-              )}
-            </span>
+        <div className="text-l my-5 px-4">
+          <span>
             {executed ? (
-              <>Transaction {txHashStr} has been successfully executed.</>
+              <Icon
+                icon="circle-check"
+                className="text-secondary text-xl cursor-pointer mr-5"
+              />
             ) : (
-              <>Transaction {txHashStr} has been sent.</>
+              <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
             )}
-          </div>
-        </>
+          </span>
+          {executed ? (
+            <>Transaction {txHashStr} has been successfully executed.</>
+          ) : (
+            <>Transaction {txHashStr} has been sent.</>
+          )}
+        </div>
       )}
       <div className="more-bg-primary px-4  py-2  rounded-b-[20px]">
         {executed ? (
