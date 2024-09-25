@@ -68,7 +68,7 @@ const MoreGraphicsV3 = ({
           </button>
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn m-1 btn-neutral">
-              3M{" "}
+              3M
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

@@ -149,9 +149,8 @@ const TransactionsMoreTable: React.FC<Props> = () => {
               </div>
             </th>
             <th style={{ width: "200px" }}>
-              {" "}
               <div className="flex justify-start">
-                <TableHeaderCell title="Amount" infoText="" />{" "}
+                <TableHeaderCell title="Amount" infoText="" />
               </div>
             </th>
           </tr>

@@ -89,21 +89,18 @@ const SecondTransactionsMoreTable: React.FC<Props> = () => {
               </div>
             </th>
             <th style={{ width: "200px" }}>
-              {" "}
               <div className="flex justify-start">
-                <TableHeaderCell title="Collateral Sized" infoText="" />{" "}
+                <TableHeaderCell title="Collateral Sized" infoText="" />
               </div>
             </th>
             <th style={{ width: "200px" }}>
-              {" "}
               <div className="flex justify-start">
-                <TableHeaderCell title="Loan Repaid" infoText="" />{" "}
+                <TableHeaderCell title="Loan Repaid" infoText="" />
               </div>
             </th>
             <th style={{ width: "200px" }}>
-              {" "}
               <div className="flex justify-start">
-                <TableHeaderCell title="Realized Bad Dept" infoText="" />{" "}
+                <TableHeaderCell title="Realized Bad Dept" infoText="" />
               </div>
             </th>
           </tr>

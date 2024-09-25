@@ -51,7 +51,6 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
           className="w-7 h-7"
         />
         <div className="text-l flex items-center'">
-          {" "}
           {collateralToken} / {loanToken}
         </div>
       </div>
@@ -68,8 +67,8 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
         />
       </div>
       <div className="text-right more-text-gray py-2 px-4">
-        Available to Withdraw:{" "}
-        {formatTokenValue(item.collateral, item.inputToken.id)}{" "}
+        Available to Withdraw:
+        {formatTokenValue(item.collateral, item.inputToken.id)}
         {collateralToken}
       </div>
       <div className="flex justify-end mt-7 mb-7 px-4">

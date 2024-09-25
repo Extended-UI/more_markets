@@ -24,7 +24,7 @@ const LiquidationInfo = () => {
           className="flex-1 m-2 min-w-[220px]"
         >
           <span className="text-[#888888] font-[600]">$</span>
-          <span className="">9,46K</span>{" "}
+          <span className="">9,46K</span>
         </InfoDetailGrey>
         <InfoDetailGrey
           infoText=""
@@ -32,7 +32,7 @@ const LiquidationInfo = () => {
           className="flex-1 m-2 min-w-[220px]"
         >
           <span className="text-[#888888] font-[600]">$</span>
-          <span className="">194.7k</span>{" "}
+          <span className="">194.7k</span>
         </InfoDetailGrey>
         <InfoDetailGrey
           infoText=""
@@ -40,7 +40,6 @@ const LiquidationInfo = () => {
           className="flex-1 m-2 min-w-[240px]"
         >
           <div className="flex">
-            {" "}
             <span className="">171,554.01</span>
             <div className="text-[18px] flex items-center">
               <TotalVolumeToken>1.66M</TotalVolumeToken>

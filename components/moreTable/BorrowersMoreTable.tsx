@@ -143,9 +143,8 @@ const BorrowersMoreTable: React.FC<Props> = () => {
               </div>
             </th>
             <th style={{ width: "100px" }}>
-              {" "}
               <div className="flex justify-start">
-                <TableHeaderCell title="Share" infoText="" />{" "}
+                <TableHeaderCell title="Share" infoText="" />
               </div>
             </th>
           </tr>

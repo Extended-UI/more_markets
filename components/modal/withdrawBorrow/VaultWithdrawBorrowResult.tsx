@@ -55,7 +55,6 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
           className="w-7 h-7"
         />
         <div className="text-l flex items-center">
-          {" "}
           {collateralToken} / {loanToken}
         </div>
       </div>

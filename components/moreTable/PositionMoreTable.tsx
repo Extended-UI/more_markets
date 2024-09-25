@@ -57,18 +57,16 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
                 </div>
               </th>
               <th style={{ width: "200px" }}>
-                {" "}
                 <div className="flex justify-start">
                   <TableHeaderCell
                     title="Liquidation LTV"
                     infoText="The standard maximum proportion of loan value to collateral value that borrowers must maintain in order to avoid liquidation."
-                  />{" "}
+                  />
                 </div>
               </th>
               {/* <th style={{ width: "200px" }}>
-              {" "}
               <div className="flex justify-start">
-                <TableHeaderCell title="1D Interest" infoText="" />{" "}
+                <TableHeaderCell title="1D Interest" infoText="" />
               </div>
             </th> */}
               {/* <th style={{ width: "200px" }}>
@@ -124,8 +122,7 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
 
               {/* <td className="py-4 px-6 items-center justify-start h-full">
                 <div className="flex gap-1 justify-start">
-                  {" "}
-                  <FormatPourcentage value={item.unsecuredAPY} />{" "}
+                  <FormatPourcentage value={item.unsecuredAPY} />
                 </div>
               </td> */}
 

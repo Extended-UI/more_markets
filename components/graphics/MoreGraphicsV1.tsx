@@ -230,7 +230,7 @@ const MoreGraphicsV1: React.FC<Props> = ({
         <div>
           <div className="dropdown absolute top-[40px] right-[20px] z-1">
             <label tabIndex={0} className="btn m-1 btn-neutral">
-              1 Week{" "}
+              1 Week
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

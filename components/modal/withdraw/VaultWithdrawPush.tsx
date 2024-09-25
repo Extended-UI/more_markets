@@ -152,14 +152,13 @@ const VaultWithdrawPush: React.FC<Props> = ({
       <div className="mb-10 px-4 pt-10  text-3xl">Review Transaction</div>
       <div className="flex flex-row justify-between mt-4 items-center">
         <div className="flex gap-2 text-l mb-5  px-4 items-center">
-          {" "}
           <span className="more-text-gray">Curator:</span>
-          <IconToken className="w-6 h-6" tokenName="wflow" />{" "}
+          <IconToken className="w-6 h-6" tokenName="wflow" />
           <span>{"curator"}</span>
         </div>
         <div className="flex gap-2 text-l mb-5 px-4">
-          <span className="more-text-gray">Net APY:</span>{" "}
-          <FormatTwoPourcentage value={item.netAPY} />{" "}
+          <span className="more-text-gray">Net APY:</span>
+          <FormatTwoPourcentage value={item.netAPY} />
         </div>
       </div>
       <div className="relative more-bg-primary px-8 rounded-t-[5px]">
@@ -202,7 +201,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
         />
       </div>
       <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
-        <div className="text-grey pb-4"> Position Change </div>
+        <div className="text-grey pb-4">Position Change </div>
         <PositionChangeToken
           title="Withdraw"
           value={item.userDeposits}

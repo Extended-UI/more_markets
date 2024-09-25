@@ -63,13 +63,12 @@ const VaultAddResult: React.FC<Props> = ({
             iconNames={[item.inputToken.id, item.borrowedToken.id]}
             className="w-8 h-8"
           />
-          <div className="text-2xl   flex items-center'">
-            {" "}
+          <div className="text-2xl flex items-center'">
             {collateralToken} / {loanToken}
           </div>
         </div>
         <div className="flex gap-2 text-l mb-5 px-4">
-          <span className="more-text-gray">Liquidation LTV:</span>{" "}
+          <span className="more-text-gray">Liquidation LTV:</span>
           <FormatTwoPourcentage
             value={formatTokenValue(item.lltv, "", 18)}
             value2={getPremiumLltv(item.marketParams)}

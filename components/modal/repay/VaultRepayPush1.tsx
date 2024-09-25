@@ -197,8 +197,8 @@ const VaultRepayPush: React.FC<Props> = ({
         <div className="flex flex-row justify-between items-center">
           <div className="text-xl">LTV / Liquidation LTV</div>
           <div className="flex  items-center gap-2">
-            <FormatPourcentage value={apy} />{" "}
-            <ArrowLongRightIcon className="w-4 h-4 text-grey" />{" "}
+            <FormatPourcentage value={apy} />
+            <ArrowLongRightIcon className="w-4 h-4 text-grey" />
             <FormatTwoPourcentage value={apy} />
           </div>
         </div>

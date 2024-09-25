@@ -133,7 +133,7 @@ const VaultBorrowInput: React.FC<Props> = ({
             />
           </div>
           <div className="text-right more-text-gray py-2 px-4">
-            Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}{" "}
+            Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}
             {collateralToken.symbol}
           </div>
         </>
@@ -188,7 +188,7 @@ const VaultBorrowInput: React.FC<Props> = ({
           <div className="flex justify-between mt-10 pb-4">
             <div>Your Premium Liquidation LTV</div>
             <div>
-              <FormatPourcentage value={lltv2.toFixed(2)} />{" "}
+              <FormatPourcentage value={lltv2.toFixed(2)} />
             </div>
           </div>
         )}

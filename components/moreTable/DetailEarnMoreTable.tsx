@@ -44,7 +44,6 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
               </div>
             </th>
             <th style={{ width: "200px" }}>
-              {" "}
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Deposits"
@@ -61,21 +60,19 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
               </div>
             </th>
             <th style={{ width: "200px" }}>
-              {" "}
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Liquidation LTV"
                   infoText="The standard maximum proportion of loan value to collateral value that borrowers must maintain in order to avoid liquidation."
-                />{" "}
+                />
               </div>
             </th>
             {/* <th style={{ width: "200px" }}>
-              {" "}
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Credora Rating"
                   infoText="The weighted average and minimum S&P equivalent rating, issued by Credora for all premium borrowers across all markets in a vault. The rating represents the aggregate solvency of premium borrowers based on their holdings outside of MORE Markets."
-                />{" "}
+                />
               </div>
             </th>
             <th style={{ width: "200px" }}>
@@ -139,7 +136,6 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
 
               <td className="py-4 px-6 items-center">
                 <div className="flex justify-start py-4">
-                  {" "}
                   <FormatTwoPourcentage value={item.lltv} value2={item.lltv2} />
                 </div>
               </td>

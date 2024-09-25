@@ -159,7 +159,7 @@ const VaultAddPush: React.FC<Props> = ({
           <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />
         </span>
         Approve the bundler to spend {amount} {collateralToken.symbol} (via
-        permit){" "}
+        permit)
       </div>
       <div className="flex items-center text-l mb-5 px-4">
         <span>

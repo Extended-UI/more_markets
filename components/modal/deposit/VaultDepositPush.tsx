@@ -174,9 +174,9 @@ const VaultDepositPush: React.FC<Props> = ({
           <IconToken className="w-6 h-6" tokenName="wflow" />
           <span>{item.curator}</span>
         </div>
-        <div className="flex  gap-2 text-l mb-5 px-4">
-          <span className="more-text-gray">Net APY:</span>{" "}
-          <FormatTwoPourcentage value={"N/A"} />{" "}
+        <div className="flex gap-2 text-l mb-5 px-4">
+          <span className="more-text-gray">Net APY:</span>
+          <FormatTwoPourcentage value={"N/A"} />
         </div>
       </div>
       {!flowVault && (
