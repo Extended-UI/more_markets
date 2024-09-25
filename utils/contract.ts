@@ -24,6 +24,7 @@ import {
   GraphVault,
   GraphMarket,
   BorrowPosition,
+  InvestmentData,
 } from "../types";
 import {
   contracts,
@@ -578,7 +579,6 @@ export const supplyToVaults = async (
 };
 
 export const withdrawFromVaults = async (
-  vaultAddress: string,
   account: string,
   amount: bigint,
   deadline: bigint,
@@ -586,25 +586,30 @@ export const withdrawFromVaults = async (
   authHash: string,
   authNonce: bigint,
   useShare: boolean,
-  userShares: bigint
+  item: InvestmentData
 ): Promise<string> => {
+  let multicallArgs: string[] = [];
+
+  const { vaultId: vaultAddress, userShares, assetAddress } = item;
+
   // authorize
   const authorized = authHash.length == 0;
-  let authorize;
   if (!authorized) {
     const r1 = authHash.slice(0, 66);
     const s1 = "0x" + authHash.slice(66, 130);
     const v1 = "0x" + authHash.slice(130, 132);
 
-    authorize = encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "morphoSetAuthorizationWithSig",
-      args: [
-        [account, contracts.MORE_BUNDLER, true, authNonce, deadline],
-        [v1, r1, s1],
-        false,
-      ],
-    });
+    multicallArgs.push(
+      encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "morphoSetAuthorizationWithSig",
+        args: [
+          [account, contracts.MORE_BUNDLER, true, authNonce, deadline],
+          [v1, r1, s1],
+          false,
+        ],
+      })
+    );
   }
 
   const r = signhash.slice(0, 66);
@@ -612,33 +617,56 @@ export const withdrawFromVaults = async (
   const v = "0x" + signhash.slice(130, 132);
 
   // encode permit
-  const permit = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "permit",
-    args: [vaultAddress, MaxUint256, deadline, v, r, s, false],
-  });
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "permit",
+      args: [vaultAddress, MaxUint256, deadline, v, r, s, false],
+    })
+  );
+
+  const flowVault =
+    assetAddress.toLowerCase() == contracts.WNATIVE.toLowerCase();
+  const receiverAddr = flowVault ? contracts.MORE_BUNDLER : account;
 
   // encode erc4626Withdraw
-  const erc4626Withdraw = useShare
-    ? encodeFunctionData({
+  multicallArgs.push(
+    useShare
+      ? encodeFunctionData({
+          abi: BundlerAbi,
+          functionName: "erc4626Redeem",
+          args: [vaultAddress, userShares, 0, receiverAddr, account],
+        })
+      : encodeFunctionData({
+          abi: BundlerAbi,
+          functionName: "erc4626Withdraw",
+          args: [vaultAddress, amount, MaxUint256, receiverAddr, account],
+        })
+  );
+
+  // unwrap and transfer if wflow
+  if (flowVault) {
+    multicallArgs.push(
+      encodeFunctionData({
         abi: BundlerAbi,
-        functionName: "erc4626Redeem",
-        args: [vaultAddress, userShares, 0, account, account],
+        functionName: "unwrapNative",
+        args: [MaxUint256],
       })
-    : encodeFunctionData({
+    );
+
+    multicallArgs.push(
+      encodeFunctionData({
         abi: BundlerAbi,
-        functionName: "erc4626Withdraw",
-        args: [vaultAddress, amount, MaxUint256, account, account],
-      });
+        functionName: "nativeTransfer",
+        args: [account, MaxUint256],
+      })
+    );
+  }
 
   const txHash = await writeContract(config, {
     ...bundlerInstance,
     functionName: "multicall",
-    args: [
-      authorized
-        ? [permit, erc4626Withdraw]
-        : [authorize, permit, erc4626Withdraw],
-    ],
+    args: [multicallArgs],
     gas: parseUnits(gasLimit, 6),
   });
 

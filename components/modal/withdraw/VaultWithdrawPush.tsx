@@ -126,7 +126,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
       setIsLoading(true);
       try {
         const hash = await withdrawFromVaults(
-          item.vaultId,
           userAddress,
           tokenAmount,
           deadline,
@@ -134,7 +133,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           authorizeHash,
           authorizeNonce,
           useMax || tokenAmount >= userDepositAmount,
-          item.userShares
+          item
         );
 
         setTxhash(hash);
@@ -148,8 +147,9 @@ const VaultWithdrawPush: React.FC<Props> = ({
   };
 
   return (
-    <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">
-      <div className="mb-10 px-4 pt-10  text-3xl">Review Transaction</div>
+    <div className="more-bg-secondary rounded-[20px] h-full w-full">
+      <div className="mb-5 px-4 pt-10 text-3xl">Review Transaction</div>
+      <div className="text-3xl mb-5 pt-5 px-4">{item.vaultName}</div>
       <div className="flex flex-row justify-between mt-4 items-center">
         <div className="flex gap-2 text-l mb-5  px-4 items-center">
           <span className="more-text-gray">Curator:</span>
@@ -161,7 +161,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           <FormatTwoPourcentage value={item.netAPY} />
         </div>
       </div>
-      <div className="relative more-bg-primary px-8 rounded-t-[5px]">
+      <div className="relative more-bg-primary px-8 rounded-t-[5px] mx-4">
         <TokenAmount
           title="Authorize"
           token={item.assetAddress}
@@ -176,7 +176,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           />
         )}
       </div>
-      <div className="relative more-bg-primary px-8 rounded-t-[5px]">
+      <div className="relative more-bg-primary px-8 rounded-t-[5px] mx-4">
         <TokenAmount
           title="Permit"
           token={item.assetAddress}
@@ -191,7 +191,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           />
         )}
       </div>
-      <div className="more-bg-primary px-8 rounded-t-[5px]">
+      <div className="more-bg-primary px-8 rounded-t-[5px] mx-4">
         <TokenAmount
           title="Withdraw"
           token={item.assetAddress}
@@ -200,8 +200,8 @@ const VaultWithdrawPush: React.FC<Props> = ({
           totalTokenAmount={item.totalDeposits}
         />
       </div>
-      <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
-        <div className="text-grey pb-4">Position Change </div>
+      <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 mx-4">
+        <div className="text-grey pb-4">Position Change</div>
         <PositionChangeToken
           title="Withdraw"
           value={item.userDeposits}
@@ -215,7 +215,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
         <MoreToggle />
       </div> */}
 
-      <div className="py-5 px-2">
+      <div className="py-5 px-2 px-4">
         By confirming this transaction, you agree to the{" "}
         <a className="underline" href="#goto">
           Terms of Use
