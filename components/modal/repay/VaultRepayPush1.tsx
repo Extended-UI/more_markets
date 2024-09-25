@@ -13,7 +13,7 @@ import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { BorrowPosition } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTokenInfo, getTimestamp, notifyError, notify } from "@/utils/utils";
+import { getTokenInfo, getTimestamp, notifyError } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -44,7 +44,6 @@ const VaultRepayPush: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
-  const [useShare, setUseShare] = useState(false);
   const [borrowed, setBorrowed] = useState(BigInt(0));
   const [signHash, setSignHash] = useState("");
   const [deadline, setDeadline] = useState(BigInt(0));
@@ -77,10 +76,9 @@ const VaultRepayPush: React.FC<Props> = ({
       setPermitNonce(nonce);
 
       const repayEnough = repayAmount >= item.loan;
-      setUseShare(repayEnough);
       setBorrowed(repayEnough ? item.loan : repayAmount);
 
-      if (allowance >= (repayEnough ? borrowed : repayAmount))
+      if (!repayEnough && allowance >= (repayEnough ? item.loan : repayAmount))
         setHasApprove(true);
       else setHasApprove(false);
     };
@@ -88,72 +86,80 @@ const VaultRepayPush: React.FC<Props> = ({
     initApprove();
   }, [userAddress, item, repayAmount]);
 
-  const doRepay = async (userAddress: string) => {
-    const txHash = await repayLoanToMarkets(
-      userAddress,
-      borrowed,
-      permitNonce,
-      deadline,
-      signHash,
-      useShare,
-      item
-    );
-
-    setTxHash(txHash);
-    validRepay();
-  };
-
-  const doPermit = async () => {
-    const permitDeadline = getTimestamp();
-    const signHash = await setTokenPermit(
-      item.borrowedToken.id,
-      borrowed,
-      permitNonce,
-      contracts.MORE_BUNDLER,
-      permitDeadline
-    );
-
-    setSignHash(signHash);
-    setDeadline(permitDeadline);
-    setHasPermit(true);
-  };
-
-  const doApprove = async () => {
-    await setTokenAllowance(item.borrowedToken.id, contracts.PERMIT2, borrowed);
-    setHasApprove(true);
-  };
-
-  const handleRepay = async () => {
-    if (userAddress && borrowed > 0) {
+  const handleApprove = async () => {
+    if (userAddress) {
       setIsLoading(true);
       try {
-        // repay if already approved and permited
-        if (hasPermit && hasApprove) {
-          await doRepay(userAddress);
-        } else if (hasApprove) {
-          // permit then doRepay
-          await doPermit();
-          await doRepay(userAddress);
-        } else {
-          await doApprove();
-          await doPermit();
-          await doRepay(userAddress);
-        }
+        await setTokenAllowance(
+          item.borrowedToken.id,
+          contracts.PERMIT2,
+          borrowed
+        );
 
+        setHasApprove(true);
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
         notifyError(err);
       }
-    } else {
-      notifyError("Invalid amount");
+    }
+  };
+
+  const handlePermit = async () => {
+    if (userAddress && borrowed > BigInt(0)) {
+      setIsLoading(true);
+      try {
+        const permitDeadline =
+          deadline == BigInt(0) ? getTimestamp() : deadline;
+
+        const signHash = await setTokenPermit(
+          item.borrowedToken.id,
+          borrowed,
+          permitNonce,
+          contracts.MORE_BUNDLER,
+          permitDeadline
+        );
+
+        setSignHash(signHash);
+        setDeadline(permitDeadline);
+        setHasPermit(true);
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        notifyError(err);
+      }
+    }
+  };
+
+  const handleRepay = async () => {
+    // generate borrow tx
+    if (userAddress && hasApprove && hasPermit) {
+      setIsLoading(true);
+      try {
+        const txHash = await repayLoanToMarkets(
+          userAddress,
+          borrowed,
+          permitNonce,
+          deadline,
+          signHash,
+          useMax,
+          item
+        );
+
+        validRepay();
+        setTxHash(txHash);
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        notifyError(err);
+      }
     }
   };
 
   return (
-    <div className="more-bg-secondary rounded-[20px] h-full w-full px-8 py-4">
-      <div className="mb-10  pt-5  text-4xl">Review Transaction</div>
-      <div className="flex items-center mb-10  gap-2">
+    <div className="more-bg-secondary rounded-[20px] h-full w-full">
+      <div className="mb-10 pt-5 text-4xl px-4">Review Transaction</div>
+      <div className="flex items-center mb-5 gap-2 px-4">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
@@ -162,8 +168,7 @@ const VaultRepayPush: React.FC<Props> = ({
           {collateralToken.symbol} / {loanToken}
         </div>
       </div>
-
-      <div className="more-bg-primary px-8 rounded-t-[5px]">
+      <div className="more-bg-primary px-8 rounded-t-[5px] mx-4">
         <TokenAmount
           title="Repay"
           token={item.borrowedToken.id}
@@ -171,14 +176,6 @@ const VaultRepayPush: React.FC<Props> = ({
           ltv={""}
           totalTokenAmount={amount}
         />
-        <div className="flex flex-row justify-between items-center h-20">
-          <div className="text-xl">Projeted rate</div>
-          <div className="flex  items-center gap-2">
-            <FormatPourcentage value={"N/A"} />{" "}
-            <ArrowLongRightIcon className="w-4 h-4 text-grey" />{" "}
-            <FormatPourcentage value={"N/A"} />
-          </div>
-        </div>
       </div>
 
       {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] px-8 flex flex-col gap-4 py-8">
@@ -214,26 +211,47 @@ const VaultRepayPush: React.FC<Props> = ({
         /> 
       </div> */}
 
-      <div className="py-8 px-2">
+      <div className="py-5 px-5">
         By confirming this transaction, you agree to the{" "}
         <a className="underline" href="#goto">
           Terms of Use
         </a>{" "}
+        and the services provisions relating to the MORE Protocol Vault.
       </div>
-      <div className="flex justify-end py-5 rounded-b-[20px] px-4 gap-5">
-        <MoreButton
-          className="text-2xl py-2"
-          text="Cancel"
-          onClick={closeModal}
-          color="gray"
-        />
-        <MoreButton
-          className="text-2xl py-2"
-          text="Repay"
-          disabled={isLoading}
-          onClick={handleRepay}
-          color="primary"
-        />
+      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4">
+        <div className="mr-5">
+          <MoreButton
+            className="text-2xl py-2"
+            text="Cancel"
+            onClick={closeModal}
+            color="gray"
+          />
+        </div>
+        {hasApprove && hasPermit ? (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Repay"
+            disabled={isLoading}
+            onClick={handleRepay}
+            color="primary"
+          />
+        ) : hasApprove ? (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Permit"
+            disabled={isLoading}
+            onClick={handlePermit}
+            color="primary"
+          />
+        ) : (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Approve"
+            disabled={isLoading}
+            onClick={handleApprove}
+            color="primary"
+          />
+        )}
       </div>
     </div>
   );

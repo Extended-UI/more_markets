@@ -14,6 +14,7 @@ const VaultRepay: React.FC<IBorrowPositionProp> = ({
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(0);
   const [txHash, setTxHash] = useState("");
+  const [useMax, setUseMax] = useState(false);
 
   const handleSetRepay = (amount: number) => {
     setAmount(amount);
@@ -34,6 +35,8 @@ const VaultRepay: React.FC<IBorrowPositionProp> = ({
       {step == 1 ? (
         <VaultRepayInput
           item={item}
+          useMax={useMax}
+          setUseMax={setUseMax}
           closeModal={closeModal}
           setAmount={(amount: number) => handleSetRepay(amount)}
         />
@@ -41,6 +44,7 @@ const VaultRepay: React.FC<IBorrowPositionProp> = ({
         <VaultRepayPush
           item={item}
           amount={amount}
+          useMax={useMax}
           setTxHash={setTxHash}
           closeModal={closeModal}
           validRepay={handleValidRepay}

@@ -9,6 +9,7 @@ import {
   virtualAssets,
   virtualShares,
   WAD,
+  moreTolerance,
 } from "./const";
 
 export const notify = (errMsg: string) => toast(errMsg);
@@ -143,7 +144,7 @@ export const toAssetsUp = (
 };
 
 export const mulDivUp = (x: bigint, y: bigint, d: bigint): bigint => {
-  return (x * y + (d - BigInt(1))) / d + BigInt(10);
+  return (x * y + (d - BigInt(1))) / d + moreTolerance;
 };
 
 export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {
@@ -152,5 +153,5 @@ export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {
 
 export const wMulDown = (x: bigint, y: bigint) => {
   const returnVal = mulDivDown(x, y, WAD);
-  return returnVal > BigInt(10) ? returnVal - BigInt(10) : BigInt(0);
+  return returnVal > moreTolerance ? returnVal - moreTolerance : BigInt(0);
 };

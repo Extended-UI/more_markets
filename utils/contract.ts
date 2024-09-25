@@ -791,6 +791,39 @@ export const getBorrowedAmount = async (
   );
 };
 
+export const repayLoanViaMarkets = async (
+  account: string,
+  repayAmount: bigint,
+  useShare: boolean,
+  item: BorrowPosition
+): Promise<string> => {
+  const marketParams = item.marketParams;
+  const txHash = await writeContract(config, {
+    ...marketsInstance,
+    functionName: "repay",
+    args: [
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+      useShare ? 0 : repayAmount,
+      useShare ? item.borrowShares : 0,
+      account,
+      "",
+    ],
+    gas: parseUnits(gasLimit, 6),
+  });
+
+  return txHash;
+};
+
 export const repayLoanToMarkets = async (
   account: string,
   repayAmount: bigint,
@@ -829,25 +862,6 @@ export const repayLoanToMarkets = async (
       args: [repayToken, repayAmount],
     })
   );
-
-  console.log([
-    [
-      marketParams.isPremiumMarket,
-      marketParams.loanToken,
-      marketParams.collateralToken,
-      marketParams.oracle,
-      marketParams.irm,
-      marketParams.lltv,
-      marketParams.creditAttestationService,
-      marketParams.irxMaxLltv,
-      marketParams.categoryLltv,
-    ],
-    useShare ? 0 : repayAmount,
-    useShare ? item.borrowShares : 0,
-    0,
-    account,
-    "",
-  ]);
 
   // encode morphoRepay
   multicallArgs.push(

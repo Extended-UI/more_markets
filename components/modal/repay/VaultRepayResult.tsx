@@ -48,20 +48,19 @@ const VaultRepayResult: React.FC<Props> = ({
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
-    <div className="more-bg-secondary h-full rounded-[20px] py-8">
+    <div className="more-bg-secondary rounded-[20px] h-full w-full">
       <div className="text-4xl mb-10 px-4 pt-5">Transaction Confirmation</div>
-      <div className="flex items-center mb-10 px-8 gap-2">
+      <div className="flex items-center mb-10 px-4 gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
-        <div className="text-l   flex items-center'">
-          {" "}
+        <div className="text-l flex items-center'">
           {collateralToken} / {loanToken}
         </div>
       </div>
 
-      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5">
+      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-4">
         Repay {amount} {loanToken}
       </div>
 
@@ -86,11 +85,8 @@ const VaultRepayResult: React.FC<Props> = ({
           </div>
         </>
       )}
-      <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
-        <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
-          Confirming transaction... Browse MORE vaults while you wait.
-        </div>
-        {executed && (
+      <div className="more-bg-primary px-4 py-2 rounded-b-[20px]">
+        {executed ? (
           <div className="flex justify-end mr-5">
             <MoreButton
               className="text-2xl py-2"
@@ -98,6 +94,10 @@ const VaultRepayResult: React.FC<Props> = ({
               onClick={processDone}
               color="primary"
             />
+          </div>
+        ) : (
+          <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
+            Confirming transaction... Browse MORE vaults while you wait.
           </div>
         )}
       </div>

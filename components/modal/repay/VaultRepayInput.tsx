@@ -1,5 +1,6 @@
 "use client";
 
+import { isNaN } from "lodash";
 import { useAccount } from "wagmi";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
@@ -9,20 +10,33 @@ import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
 import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
+import { formatUnits } from "ethers";
 
 interface Props {
+  useMax: boolean;
   item: BorrowPosition;
   closeModal: () => void;
   setAmount: (amount: number) => void;
+  setUseMax: (useMax: boolean) => void;
 }
 
-const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
+const VaultRepayInput: React.FC<Props> = ({
+  item,
+  useMax,
+  setUseMax,
+  setAmount,
+  closeModal,
+}) => {
   const { address: userAddress } = useAccount();
 
   const [deposit, setRepay] = useState<number>(0);
   const [loanBalance, setLoanBalance] = useState<GetBalanceReturnType | null>(
     null
   );
+
+  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
+  const loanToken = getTokenInfo(item.borrowedToken.id);
+  const lltv2: number | null = getPremiumLltv(item.marketParams);
 
   useEffect(() => {
     const initBalances = async () => {
@@ -37,22 +51,24 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUseMax(false);
     setRepay(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {
-    setRepay(maxValue);
-  };
-
-  const handleRepay = () => {
-    if (deposit > 0) {
-      setAmount(deposit);
+    if (loanBalance) {
+      const maxAmount =
+        loanBalance.value >= item.loan ? item.loan : loanBalance.value;
+      setRepay(Number(formatUnits(maxAmount, loanToken.decimals)));
+      setUseMax(true);
     }
   };
 
-  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
-  const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
-  const lltv2: number | null = getPremiumLltv(item.marketParams);
+  const handleRepay = () => {
+    if (useMax || (!isNaN(deposit) && deposit > 0)) {
+      setAmount(deposit);
+    }
+  };
 
   return (
     <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
@@ -63,22 +79,24 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           className="w-7 h-7"
         />
         <div className="text-l flex items-center'">
-          {collateralToken} / {loanToken}
+          {collateralToken} / {loanToken.symbol}
         </div>
       </div>
       <div className="w-full flex flex-col justify-center px-5 gap-4">
-        <div className="text-l pl-2 flex items-center'">Repay {loanToken}</div>
+        <div className="text-l pl-2 flex items-center'">
+          Repay {loanToken.symbol}
+        </div>
         <InputTokenMax
           type="number"
           value={deposit}
           onChange={handleInputChange}
-          placeholder={`Repay ${loanToken}`}
+          placeholder={`Repay ${loanToken.symbol}`}
           token={item.borrowedToken.id}
           balance={Number(loanBalance ? loanBalance.formatted : 0)}
           setMax={handleSetMax}
         />
         <div className="text-right more-text-gray">
-          Balance: {loanBalance?.formatted} {loanToken}
+          Balance: {loanBalance?.formatted} {loanToken.symbol}
         </div>
       </div>
       <div className="flex justify-end mt-7 mb-7 px-8">
@@ -127,7 +145,7 @@ const VaultRepayInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           </div>
         </div>
         <div className="flex w-full justify-between">
-          <div>Loan {loanToken}</div>
+          <div>Loan {loanToken.symbol}</div>
           <div>
             <span className="more-text-gray">
               {formatTokenValue(item.loan, item.borrowedToken.id)}

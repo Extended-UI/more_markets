@@ -6,6 +6,7 @@ import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
 
+export const moreTolerance = BigInt(10);
 export const virtualAssets = BigInt(1);
 export const virtualShares = BigInt(1e6);
 export const oraclePriceScale = BigInt(1e36);
