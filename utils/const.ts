@@ -6,8 +6,11 @@ import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
 
-export const virtualShares = BigInt(1e6);
 export const virtualAssets = BigInt(1);
+export const virtualShares = BigInt(1e6);
+export const oraclePriceScale = BigInt(1e36);
+export const WAD = BigInt(1e18);
+
 export const contracts = {
   MORE_MARKETS: "0x9a9B20fAb58a0fF084e70283E91448bB31d0FAfa",
   MORE_BUNDLER: "0x34596c09bd484e315c9915a2a1aa6b50bc99428a",

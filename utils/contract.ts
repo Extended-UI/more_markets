@@ -47,6 +47,22 @@ import {
   toAssetsUp,
 } from "./utils";
 
+export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
+  try {
+    if (oracle == ZeroAddress) return BigInt(0);
+
+    const pairPrice = await readContract(config, {
+      address: oracle as `0x${string}`,
+      abi: OracleAbi,
+      functionName: "price",
+    });
+
+    return pairPrice as bigint;
+  } catch {
+    return BigInt(0);
+  }
+};
+
 export const getTokenPrice = async (token: string): Promise<number> => {
   try {
     const oracleContract = {

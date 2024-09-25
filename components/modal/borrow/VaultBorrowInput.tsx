@@ -1,17 +1,22 @@
 "use client";
 
+import { isNaN } from "lodash";
 import { useAccount } from "wagmi";
+import { formatUnits, parseUnits } from "ethers";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
+import InputTokenMax from "../../input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { BorrowMarket } from "@/types";
-import { getTokenBallance } from "@/utils/contract";
+import { oraclePriceScale } from "@/utils/const";
+import { getTokenBallance, getTokenPairPrice } from "@/utils/contract";
 import {
   getTokenInfo,
   getPremiumLltv,
   getAvailableLiquidity,
+  mulDivDown,
+  wMulDown,
 } from "@/utils/utils";
 
 interface Props {
@@ -29,10 +34,19 @@ const VaultBorrowInput: React.FC<Props> = ({
 }) => {
   const [borrow, setBorrow] = useState(0);
   const [deposit, setDeposit] = useState(0);
+  const [pairPrice, setPairPrice] = useState(BigInt(0));
   const [supplyBalance, setSupplyBalance] =
     useState<GetBalanceReturnType | null>(null);
 
   const { address: userAddress } = useAccount();
+
+  const collateralToken = getTokenInfo(item.inputToken.id);
+  const borrowToken = getTokenInfo(item.borrowedToken.id);
+  const lltv2: number | null = getPremiumLltv(item.marketParams);
+  const availableLiquidity = getAvailableLiquidity(
+    item.marketInfo,
+    item.borrowedToken.id
+  );
 
   const handleInputDepositChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -51,32 +65,38 @@ const VaultBorrowInput: React.FC<Props> = ({
   };
 
   const handleSetMaxFlow = (maxValue: number) => {
-    setBorrow(maxValue);
+    if (isNaN(deposit)) setBorrow(0);
+    else {
+      const depositAmount = parseUnits(
+        deposit.toString(),
+        collateralToken.decimals
+      );
+      let maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
+      maxBorrow = wMulDown(maxBorrow, item.lltv);
+
+      setBorrow(Number(formatUnits(maxBorrow, borrowToken.decimals)));
+    }
   };
 
   const handleBorrow = () => {
-    setAmount(deposit, borrow);
+    if (!isNaN(deposit) && !isNaN(borrow)) {
+      setAmount(deposit, borrow);
+    }
   };
 
   useEffect(() => {
     const initBalances = async () => {
-      setSupplyBalance(
-        userAddress
-          ? await getTokenBallance(item.inputToken.id, userAddress)
-          : null
-      );
+      const [userSupplyBalance, tokenPairPrice] = await Promise.all([
+        getTokenBallance(item.inputToken.id, userAddress),
+        getTokenPairPrice(item.marketParams.oracle),
+      ]);
+
+      setSupplyBalance(userAddress ? userSupplyBalance : null);
+      setPairPrice(tokenPairPrice);
     };
 
     initBalances();
   }, [item, userAddress]);
-
-  const collateralToken = getTokenInfo(item.inputToken.id).symbol;
-  const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
-  const lltv2: number | null = getPremiumLltv(item.marketParams);
-  const availableLiquidity = getAvailableLiquidity(
-    item.marketInfo,
-    item.borrowedToken.id
-  );
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
@@ -84,14 +104,14 @@ const VaultBorrowInput: React.FC<Props> = ({
       {!onlyBorrow && (
         <>
           <div className="text-l mb-1 px-4">
-            Deposit {collateralToken} Collateral
+            Deposit {collateralToken.symbol} Collateral
           </div>
           <div className="py-2 px-4">
             <InputTokenMax
               type="number"
               value={deposit}
               onChange={handleInputDepositChange}
-              placeholder={`Deposit ${collateralToken}`}
+              placeholder={`Deposit ${collateralToken.symbol}`}
               token={item.inputToken.id}
               balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
               setMax={handleSetMaxToken}
@@ -99,24 +119,26 @@ const VaultBorrowInput: React.FC<Props> = ({
           </div>
           <div className="text-right more-text-gray py-2 px-4">
             Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}{" "}
-            {collateralToken}
+            {collateralToken.symbol}
           </div>
         </>
       )}
-      <div className="text-l mb-1 px-4 py-2 mt-3">Borrow {borrowToken}</div>
+      <div className="text-l mb-1 px-4 py-2 mt-3">
+        Borrow {borrowToken.symbol}
+      </div>
       <div className="px-4">
         <InputTokenMax
           type="number"
           value={borrow}
           onChange={handleInputBorrowChange}
-          placeholder={`Deposit ${borrowToken}`}
+          placeholder={`Deposit ${borrowToken.symbol}`}
           token={item.borrowedToken.id}
           balance={availableLiquidity}
           setMax={handleSetMaxFlow}
         />
       </div>
       <div className="text-right more-text-gray py-2 px-4">
-        Maximum Available to Borrow: {availableLiquidity} {borrowToken}
+        Maximum Available to Borrow: {availableLiquidity} {borrowToken.symbol}
       </div>
       <div className="flex justify-end mt-7 mb-7 px-4">
         <div className="mr-5">

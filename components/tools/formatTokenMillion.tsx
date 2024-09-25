@@ -1,8 +1,7 @@
 import millify from "millify";
-import FormatNumber from "./formatNumber";
 import TotalVolumeToken from "../token/TotalVolumeToken";
 import usePrice from "@/hooks/usePrice";
-import { getTokenInfo } from "@/utils/utils";
+import { formatNumberLocale, getTokenInfo } from "@/utils/utils";
 
 interface Props {
   token?: string;
@@ -33,7 +32,7 @@ const FormatTokenMillion: React.FC<Props> = ({
     >
       <div>
         <span className="text-grey">{currency}</span>
-        <FormatNumber value={value} />
+        {formatNumberLocale(value, tokenInfo.decimals)}
       </div>
       <div className="text-grey">{tokenInfo.symbol}</div>
       <TotalVolumeToken totalDanger={totalDanger}>

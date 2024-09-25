@@ -5,7 +5,6 @@ import { DetailEarnData } from "@/types/detailEarnData";
 import TableHeaderCell from "./MoreTableHeader";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "../pagination/Pagination";
-import FormatNumber from "../tools/formatNumber";
 import FormatPrice from "../tools/formatPrice";
 import FormatPourcentage from "../tools/formatPourcentage";
 

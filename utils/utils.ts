@@ -8,6 +8,7 @@ import {
   contracts,
   virtualAssets,
   virtualShares,
+  WAD,
 } from "./const";
 
 export const notify = (errMsg: string) => toast(errMsg);
@@ -83,10 +84,13 @@ export const formatLocale = (
   });
 };
 
-export const formatNumberLocale = (numValue: number): string => {
+export const formatNumberLocale = (
+  numValue: number,
+  maxFranction: number = 2
+): string => {
   return numValue.toLocaleString(undefined, {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: maxFranction,
   });
 };
 
@@ -144,4 +148,9 @@ export const mulDivUp = (x: bigint, y: bigint, d: bigint): bigint => {
 
 export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {
   return (x * y) / d;
+};
+
+export const wMulDown = (x: bigint, y: bigint) => {
+  const returnVal = mulDivDown(x, y, WAD);
+  return returnVal > BigInt(10) ? returnVal - BigInt(10) : BigInt(0);
 };
