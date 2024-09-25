@@ -63,7 +63,7 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
         </div>
       </div>
       <div className="text-l mb-5 px-4">
-        Deposit {collateralToken} Collateral
+        Add {collateralToken} Collateral
       </div>
 
       <div className="w-full flex flex-col justify-center mt-10">
@@ -73,7 +73,7 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
             value={deposit}
             onChange={handleInputChange}
             placeholder={`Add ${collateralToken}`}
-            token={collateralToken}
+            token={item.inputToken.id}
             balance={Number(supplyBalance ? supplyBalance.formatted : 0)}
             setMax={handleSetMax}
           />
@@ -94,7 +94,7 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
         <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
-            text="Confirm"
+            text="Add"
             onClick={() => handleAdd()}
             color="primary"
           />

@@ -5,13 +5,13 @@ import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { BorrowMarket } from "@/types";
-import { waitForTransaction } from "@/utils/contract";
+import { BorrowPosition } from "@/types";
 import { notifyError } from "@/utils/utils";
+import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
   txhash: string;
-  item: BorrowMarket;
+  item: BorrowPosition;
   supplyAmount: number;
   borrowAmount: number;
   processDone: () => void;

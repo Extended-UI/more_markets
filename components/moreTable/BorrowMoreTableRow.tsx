@@ -6,7 +6,7 @@ import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
-import { IBorrowMarketProp } from "@/types";
+import { BorrowPosition, IBorrowMarketProp } from "@/types";
 import {
   formatTokenValue,
   getPremiumLltv,
@@ -94,7 +94,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
               {(closeModal) => (
                 <div className="w-full h-full">
                   <VaultBorrow
-                    item={item}
+                    item={item as BorrowPosition}
                     updateInfo={updateInfo}
                     closeModal={closeModal}
                   />

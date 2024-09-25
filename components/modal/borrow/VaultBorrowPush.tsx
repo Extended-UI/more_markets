@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { BorrowMarket } from "@/types";
+import { BorrowPosition } from "@/types";
 import { contracts } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
 import {
@@ -21,7 +21,7 @@ import {
 } from "@/utils/contract";
 
 interface Props {
-  item: BorrowMarket;
+  item: BorrowPosition;
   supplyAmount: number;
   borrowAmount: number;
   onlyBorrow?: boolean;

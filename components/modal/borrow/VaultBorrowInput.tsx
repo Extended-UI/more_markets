@@ -8,7 +8,7 @@ import { type GetBalanceReturnType } from "@wagmi/core";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
-import { BorrowMarket } from "@/types";
+import { BorrowPosition } from "@/types";
 import { oraclePriceScale } from "@/utils/const";
 import { getTokenBallance, getTokenPairPrice } from "@/utils/contract";
 import {
@@ -20,7 +20,7 @@ import {
 } from "@/utils/utils";
 
 interface Props {
-  item: BorrowMarket;
+  item: BorrowPosition;
   onlyBorrow?: boolean;
   closeModal: () => void;
   setAmount: (amount: number, borrow: number) => void;
@@ -67,19 +67,26 @@ const VaultBorrowInput: React.FC<Props> = ({
   const handleSetMaxFlow = (maxValue: number) => {
     if (isNaN(deposit)) setBorrow(0);
     else {
-      const depositAmount = parseUnits(
-        deposit.toString(),
-        collateralToken.decimals
-      );
-      let maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(maxBorrow, item.lltv);
+      let maxBorrow = BigInt(0);
+      if (onlyBorrow) {
+        maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
+        maxBorrow = wMulDown(maxBorrow, item.lltv);
+        maxBorrow = maxBorrow >= item.loan ? maxBorrow - item.loan : BigInt(0);
+      } else {
+        const depositAmount = parseUnits(
+          deposit.toString(),
+          collateralToken.decimals
+        );
+        maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
+        maxBorrow = wMulDown(maxBorrow, item.lltv);
+      }
 
       setBorrow(Number(formatUnits(maxBorrow, borrowToken.decimals)));
     }
   };
 
   const handleBorrow = () => {
-    if (!isNaN(deposit) && !isNaN(borrow)) {
+    if (!isNaN(deposit) && !isNaN(borrow) && borrow > 0) {
       setAmount(deposit, borrow);
     }
   };

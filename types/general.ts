@@ -29,8 +29,11 @@ export interface IBorrowMarketProps {
   updateInfo: (marketId: string) => void;
 }
 
-export interface IBorrowPositionProp {
+export interface IBorrowPosition {
   item: BorrowPosition;
   closeModal: () => void;
+}
+
+export interface IBorrowPositionProp extends IBorrowPosition {
   updateInfo: (marketId: string) => void;
 }

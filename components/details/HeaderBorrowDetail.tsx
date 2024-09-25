@@ -2,7 +2,7 @@ import { useAccount } from "wagmi";
 import VaultBorrow from "../modal/borrow/VaultBorrow";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import ListIconToken from "@/components/token/ListIconToken";
-import { IBorrowMarketProp } from "@/types";
+import { BorrowPosition, IBorrowMarketProp } from "@/types";
 import { getTokenInfo } from "@/utils/utils";
 
 const HeaderBorrowDetail: React.FC<IBorrowMarketProp> = ({
@@ -30,7 +30,7 @@ const HeaderBorrowDetail: React.FC<IBorrowMarketProp> = ({
             {(closeModal) => (
               <div className="h-full w-full">
                 <VaultBorrow
-                  item={item}
+                  item={item as BorrowPosition}
                   updateInfo={updateInfo}
                   closeModal={closeModal}
                 />

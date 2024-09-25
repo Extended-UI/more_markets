@@ -55,9 +55,9 @@ const VaultAddResult: React.FC<Props> = ({
     txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
   return (
-    <div className="more-bg-secondary rounded-[20px] h-full w-full px-4">
-      <div className="mb-10 pt-10 text-4xl">Transaction Confirmation</div>
-      <div className="flex flex-row justify-between mt-4 items-center">
+    <div className="more-bg-secondary rounded-[20px] h-full w-full">
+      <div className="mb-10 pt-10 text-4xl px-4">Transaction Confirmation</div>
+      <div className="flex flex-row justify-between mt-4 items-center px-4">
         <div className="flex items-center mb-10  gap-2">
           <ListIconToken
             iconNames={[item.inputToken.id, item.borrowedToken.id]}
@@ -77,7 +77,7 @@ const VaultAddResult: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5">
+      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-4">
         Add {amount} {collateralToken} to Market
       </div>
 
@@ -103,10 +103,7 @@ const VaultAddResult: React.FC<Props> = ({
         </>
       )}
       <div className="more-bg-primary px-4  py-2  rounded-b-[20px]">
-        <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
-          Confirming transaction... Browse MORE vaults while you wait.
-        </div>
-        {executed && (
+        {executed ? (
           <div className="flex justify-end mr-5">
             <MoreButton
               className="text-2xl py-2"
@@ -114,6 +111,10 @@ const VaultAddResult: React.FC<Props> = ({
               onClick={processDone}
               color="primary"
             />
+          </div>
+        ) : (
+          <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
+            Confirming transaction... Browse MORE vaults while you wait.
           </div>
         )}
       </div>

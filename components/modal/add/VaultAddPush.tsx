@@ -207,7 +207,7 @@ const VaultAddPush: React.FC<Props> = ({
         {hasApprove && hasPermit ? (
           <MoreButton
             className="text-2xl py-2"
-            text="Confirm"
+            text="Add Collateral"
             disabled={isLoading}
             onClick={handleSupply}
             color="primary"
