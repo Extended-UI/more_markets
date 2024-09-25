@@ -71,7 +71,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
     <>
       {vaults.length > 0 && (
         <>
-          <h1 className="text-4xl mb-8 mt-28">My Deposits</h1>
+          <h1 className="text-4xl mb-4 mt-14">My Deposits</h1>
           <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
             <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
               <thead
@@ -169,7 +169,6 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                           value={item.userDeposits}
                           token={item.assetAddress}
                           totalValue={0}
-                          inTable={true}
                         />
                       </div>
                     </td>

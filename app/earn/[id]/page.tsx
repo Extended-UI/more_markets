@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import HeaderEarnDetail from "@/components/details/HeaderEarnDetail";
@@ -14,6 +15,7 @@ import {
   fetchMarkets,
   fetchVault,
 } from "@/utils/contract";
+import leftArrow from "@/public/assets/icons/left-arrow.png";
 
 const EarnDetailPage: React.FC = () => {
   const router = useRouter();
@@ -139,7 +141,15 @@ const EarnDetailPage: React.FC = () => {
     <>
       {vaultInfo && (
         <>
-          <div className="mb-8 overflow-visible mt-28">
+          <Image
+            onClick={() => router.push("/earn")}
+            className="mt-5 cursor-pointer"
+            src={leftArrow}
+            alt="left-arrow"
+            width={35}
+            height={35}
+          />
+          <div className="mb-8 overflow-visible mt-14">
             <HeaderEarnDetail updateInfo={updateInfo} item={vaultInfo} />
             <InfosEarnDetails vault={vaultInfo} totalBorrow={totalBorrow} />
           </div>

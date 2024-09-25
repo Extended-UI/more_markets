@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -12,6 +13,7 @@ import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
 import { getBorrowedAmount } from "@/utils/contract";
 import { BorrowMarket, BorrowPosition } from "@/types";
 import { getMarketData, getPosition, fetchMarket } from "@/utils/contract";
+import leftArrow from "@/public/assets/icons/left-arrow.png";
 
 const BorrowDetailPage: React.FC = () => {
   const router = useRouter();
@@ -83,6 +85,14 @@ const BorrowDetailPage: React.FC = () => {
     <>
       {borrowMarket && (
         <div className="mb-8 p-3">
+          <Image
+            onClick={() => router.push("/borrow")}
+            className="my-5 cursor-pointer"
+            src={leftArrow}
+            alt="left-arrow"
+            width={35}
+            height={35}
+          />
           <HeaderBorrowDetail item={borrowMarket} updateInfo={updateInfo} />
           <InfosBorrowDetails item={borrowMarket} />
           {borrowPosition && (

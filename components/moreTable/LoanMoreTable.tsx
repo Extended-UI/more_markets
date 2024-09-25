@@ -124,7 +124,7 @@ const LoanMoreTable: React.FC<Props> = ({
     <>
       {borrowPositions.length > 0 && (
         <>
-          <h1 className="text-4xl mb-4">My Loans</h1>
+          <h1 className="text-4xl mb-4 mt-14">My Loans</h1>
           <div
             className="overflow-x-auto relative rounded-[15px] mb-16"
             style={{
