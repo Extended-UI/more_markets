@@ -23,11 +23,15 @@ const VaultWithdrawInput: React.FC<Props> = ({
   closeModal,
   setUseMax,
 }) => {
-  const [withdraw, setWithdraw] = useState<number>(0);
+  const [withdraw, setWithdraw] = useState<number>();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputVal =
+      event.target.value.length > 0
+        ? parseFloat(event.target.value)
+        : undefined;
+    setWithdraw(inputVal);
     setUseMax(false);
-    setWithdraw(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {
@@ -36,7 +40,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
   };
 
   const handleWithdraw = () => {
-    if (useMax || withdraw > 0) {
+    if (withdraw && (useMax || withdraw > 0)) {
       setAmount(withdraw);
     }
   };
@@ -53,11 +57,14 @@ const VaultWithdrawInput: React.FC<Props> = ({
             type="number"
             value={withdraw}
             onChange={handleInputChange}
-            placeholder={`Withdraw ${tokenInfo.symbol}`}
+            placeholder="0"
             token={item.assetAddress}
             balance={item.userDeposits}
             setMax={handleSetMax}
           />
+        </div>
+        <div className="text-right more-text-gray px-4 mt-4">
+          Your Deposits: {item.userDeposits} {tokenInfo.symbol}
         </div>
         <div className="flex justify-end mt-7 mb-7">
           <div className="mr-5">
@@ -76,7 +83,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
           />
         </div>
         <div className="w-[50%] mx-15 flex justify-center mx-auto">
-          <div className="glowing-text-primary w-full"></div>
+          <div className="glowing-text-primary w-full" />
         </div>
       </div>
       <div className="flex items-center justify-between more-bg-primary px-4 rounded-b-[10px] py-12 px-8">

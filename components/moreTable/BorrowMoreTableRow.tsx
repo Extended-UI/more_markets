@@ -77,6 +77,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
             )}
             token={item.borrowedToken.id}
             totalValue={0}
+            inTable={true}
           />
         </div>
       </td>

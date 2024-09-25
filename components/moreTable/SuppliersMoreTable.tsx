@@ -133,7 +133,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
                     value={item.supplyAmount}
                     token={item.supplyCurrency}
                     totalValue={item.supplyValue}
-                  ></FormatTokenMillion>
+                  />
                 </div>
               </td>
 

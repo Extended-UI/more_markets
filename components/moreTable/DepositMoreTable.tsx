@@ -169,6 +169,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                           value={item.userDeposits}
                           token={item.assetAddress}
                           totalValue={0}
+                          inTable={true}
                         />
                       </div>
                     </td>

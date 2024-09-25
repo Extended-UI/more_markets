@@ -10,6 +10,7 @@ interface Props {
   totalDanger?: boolean;
   currency?: string;
   align?: boolean;
+  inTable?: boolean;
 }
 
 const FormatTokenMillion: React.FC<Props> = ({
@@ -19,9 +20,11 @@ const FormatTokenMillion: React.FC<Props> = ({
   totalDanger,
   currency,
   align,
+  inTable,
 }) => {
   const { tokenPrice } = usePrice(token);
   const tokenInfo = getTokenInfo(token);
+  const decimalsLimit = Math.min(tokenInfo.decimals, 8);
 
   // Vous pouvez ajouter une vérification ici si besoin
   return (
@@ -32,7 +35,7 @@ const FormatTokenMillion: React.FC<Props> = ({
     >
       <div>
         <span className="text-grey">{currency}</span>
-        {formatNumberLocale(value, tokenInfo.decimals)}
+        {formatNumberLocale(value, inTable ? 2 : decimalsLimit)}
       </div>
       <div className="text-grey">{tokenInfo.symbol}</div>
       <TotalVolumeToken totalDanger={totalDanger}>

@@ -1,6 +1,5 @@
 "use client";
 
-import { isNaN } from "lodash";
 import { useAccount } from "wagmi";
 import { formatUnits, parseUnits } from "ethers";
 import React, { useState, useEffect } from "react";
@@ -32,8 +31,8 @@ const VaultBorrowInput: React.FC<Props> = ({
   setAmount,
   closeModal,
 }) => {
-  const [borrow, setBorrow] = useState(0);
-  const [deposit, setDeposit] = useState(0);
+  const [borrow, setBorrow] = useState<number>();
+  const [deposit, setDeposit] = useState<number>();
   const [pairPrice, setPairPrice] = useState(BigInt(0));
   const [supplyBalance, setSupplyBalance] =
     useState<GetBalanceReturnType | null>(null);
@@ -51,13 +50,21 @@ const VaultBorrowInput: React.FC<Props> = ({
   const handleInputDepositChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setDeposit(parseFloat(event.target.value));
+    const inputVal =
+      event.target.value.length > 0
+        ? parseFloat(event.target.value)
+        : undefined;
+    setDeposit(inputVal);
   };
 
   const handleInputBorrowChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setBorrow(parseFloat(event.target.value));
+    const inputVal =
+      event.target.value.length > 0
+        ? parseFloat(event.target.value)
+        : undefined;
+    setBorrow(inputVal);
   };
 
   const handleSetMaxToken = (maxValue: number) => {
@@ -65,29 +72,30 @@ const VaultBorrowInput: React.FC<Props> = ({
   };
 
   const handleSetMaxFlow = (maxValue: number) => {
-    if (isNaN(deposit)) setBorrow(0);
-    else {
-      let maxBorrow = BigInt(0);
-      if (onlyBorrow) {
-        maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
-        maxBorrow = wMulDown(maxBorrow, item.lltv);
-        maxBorrow = maxBorrow >= item.loan ? maxBorrow - item.loan : BigInt(0);
-      } else {
-        const depositAmount = parseUnits(
-          deposit.toString(),
-          collateralToken.decimals
-        );
-        maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
-        maxBorrow = wMulDown(maxBorrow, item.lltv);
-      }
-
-      setBorrow(Number(formatUnits(maxBorrow, borrowToken.decimals)));
+    let maxBorrow = BigInt(0);
+    if (onlyBorrow) {
+      maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
+      maxBorrow = wMulDown(maxBorrow, item.lltv);
+      maxBorrow = maxBorrow >= item.loan ? maxBorrow - item.loan : BigInt(0);
+    } else if (deposit) {
+      const depositAmount = parseUnits(
+        deposit.toString(),
+        collateralToken.decimals
+      );
+      maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
+      maxBorrow = wMulDown(maxBorrow, item.lltv);
     }
+
+    setBorrow(Number(formatUnits(maxBorrow, borrowToken.decimals)));
   };
 
   const handleBorrow = () => {
-    if (!isNaN(deposit) && !isNaN(borrow) && borrow > 0) {
-      setAmount(deposit, borrow);
+    if (borrow && borrow > 0) {
+      if (onlyBorrow) {
+        setAmount(0, borrow);
+      } else if (deposit && deposit > 0) {
+        setAmount(deposit, borrow);
+      }
     }
   };
 
@@ -118,7 +126,7 @@ const VaultBorrowInput: React.FC<Props> = ({
               type="number"
               value={deposit}
               onChange={handleInputDepositChange}
-              placeholder={`Deposit ${collateralToken.symbol}`}
+              placeholder="0"
               token={item.inputToken.id}
               balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
               setMax={handleSetMaxToken}
@@ -138,7 +146,7 @@ const VaultBorrowInput: React.FC<Props> = ({
           type="number"
           value={borrow}
           onChange={handleInputBorrowChange}
-          placeholder={`Deposit ${borrowToken.symbol}`}
+          placeholder="0"
           token={item.borrowedToken.id}
           balance={availableLiquidity}
           setMax={handleSetMaxFlow}
@@ -159,7 +167,7 @@ const VaultBorrowInput: React.FC<Props> = ({
         <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
-            text="Borrow"
+            text={onlyBorrow ? "Borrow More" : "Borrow"}
             onClick={handleBorrow}
             color="primary"
           />

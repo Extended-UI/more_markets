@@ -23,7 +23,7 @@ const MoreToggle: React.FC<ToggleMoreProps> = ({ checked, setChecked }) => {
       <label
         htmlFor="toggle"
         className="toggle-label block overflow-hidden h-8 rounded-full bg-gray-300 cursor-pointer"
-      ></label>
+      />
       <style jsx>{`
         .toggle-checkbox {
           z-index: 1;

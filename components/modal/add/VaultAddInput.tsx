@@ -17,14 +17,18 @@ interface Props {
 }
 
 const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
-  const [deposit, setAdd] = useState<number>(0);
+  const [deposit, setAdd] = useState<number>();
   const [supplyBalance, setSupplyBalance] =
     useState<GetBalanceReturnType | null>(null);
 
   const { address: userAddress } = useAccount();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAdd(parseFloat(event.target.value));
+    const inputVal =
+      event.target.value.length > 0
+        ? parseFloat(event.target.value)
+        : undefined;
+    setAdd(inputVal);
   };
 
   const handleSetMax = (maxValue: number) => {
@@ -44,16 +48,16 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   }, [item, userAddress]);
 
   const handleAdd = () => {
-    setAmount(deposit);
+    if (deposit && deposit > 0) setAmount(deposit);
   };
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
-    <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
-      <div className="text-2xl mb-10 px-4 pt-5">Add Collateral</div>
-      <div className="flex items-center mb-10 px-8 gap-2">
+    <div className="more-bg-secondary w-full rounded-[20px]">
+      <div className="text-4xl mb-10 px-4 pt-10">Add Collateral</div>
+      <div className="flex items-center mb-5 px-4 gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
@@ -62,17 +66,15 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           {collateralToken} / {loanToken}
         </div>
       </div>
-      <div className="text-l mb-5 px-4">
-        Add {collateralToken} Collateral
-      </div>
+      <div className="text-l mb-5 px-4">Add {collateralToken} Collateral</div>
 
-      <div className="w-full flex flex-col justify-center mt-10">
+      <div className="w-full flex flex-col justify-center mt-5">
         <div className="mx-4 flex justify-center">
           <InputTokenMax
             type="number"
             value={deposit}
             onChange={handleInputChange}
-            placeholder={`Add ${collateralToken}`}
+            placeholder="0"
             token={item.inputToken.id}
             balance={Number(supplyBalance ? supplyBalance.formatted : 0)}
             setMax={handleSetMax}
@@ -82,23 +84,19 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
           Balance: {supplyBalance?.formatted} {collateralToken}
         </div>
       </div>
-      <div className="flex justify-end mt-7 mb-7 px-4 pb-5">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="gray"
-          />
-        </div>
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Add"
-            onClick={() => handleAdd()}
-            color="primary"
-          />
-        </div>
+      <div className="flex justify-end mt-5 px-4 py-5 gap-3 more-bg-primary rounded-b-[20px]">
+        <MoreButton
+          className="text-2xl py-2"
+          text="Cancel"
+          onClick={closeModal}
+          color="gray"
+        />
+        <MoreButton
+          className="text-2xl py-2"
+          text="Add Collateral"
+          onClick={() => handleAdd()}
+          color="primary"
+        />
       </div>
     </div>
   );

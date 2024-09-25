@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { parseUnits } from "ethers";
+import { parseUnits, ZeroAddress } from "ethers";
 import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import IconToken from "@/components/token/IconToken";
@@ -50,9 +50,13 @@ const VaultDepositPush: React.FC<Props> = ({
     getTokenInfo(item.assetAddress).decimals
   );
 
+  const flowVault =
+    useFlow &&
+    item.assetAddress.toLowerCase() == contracts.WNATIVE.toLowerCase();
+
   useEffect(() => {
     const initApprove = async () => {
-      if (useFlow) {
+      if (flowVault) {
         setHasPermit(true);
         setHasApprove(true);
       } else {
@@ -88,7 +92,7 @@ const VaultDepositPush: React.FC<Props> = ({
     };
 
     initApprove();
-  }, [userAddress, item, amount, isLoading, useFlow]);
+  }, [userAddress, item, amount, isLoading, flowVault]);
 
   const handleApprove = async () => {
     if (userAddress) {
@@ -147,7 +151,7 @@ const VaultDepositPush: React.FC<Props> = ({
           deadline,
           tokenAmount,
           permitNonce,
-          useFlow
+          flowVault
         );
 
         validDeposit();
@@ -175,7 +179,7 @@ const VaultDepositPush: React.FC<Props> = ({
           <FormatTwoPourcentage value={"N/A"} />{" "}
         </div>
       </div>
-      {!useFlow && (
+      {!flowVault && (
         <>
           <div className="relative more-bg-primary rounded-[5px] mx-5 px-4 mb-3">
             <TokenAmount
@@ -214,7 +218,7 @@ const VaultDepositPush: React.FC<Props> = ({
       <div className="more-bg-primary rounded-[5px] mx-5 px-4">
         <TokenAmount
           title="Deposit"
-          token={item.assetAddress}
+          token={flowVault ? ZeroAddress : item.assetAddress}
           amount={amount}
           ltv={""}
           totalTokenAmount={0}

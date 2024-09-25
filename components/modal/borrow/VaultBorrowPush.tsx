@@ -219,7 +219,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         Execute the following actions
       </div>
       {supplyAmount > 0 && (
-        <div className="more-bg-primary px-4 mx-5">
+        <div className="more-bg-primary px-4 mx-5 rounded-t-[5px]">
           <TokenAmount
             title="Supply"
             token={item.inputToken.id}

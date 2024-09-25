@@ -43,10 +43,8 @@ const VaultBorrow: React.FC<Props> = ({
         <VaultBorrowInput
           item={item}
           onlyBorrow={onlyBorrow}
-          setAmount={(amount: number, borrow: number) =>
-            handleSetBorrow(amount, borrow)
-          }
           closeModal={closeModal}
+          setAmount={handleSetBorrow}
         />
       ) : step == 2 ? (
         <VaultBorrowPush

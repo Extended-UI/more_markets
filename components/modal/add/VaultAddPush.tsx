@@ -143,15 +143,14 @@ const VaultAddPush: React.FC<Props> = ({
   };
 
   return (
-    <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-xl mb-10 px-4 pt-5">Review Transaction</div>
-      <div className="flex items-center mb-10 px-8 gap-2">
+    <div className="more-bg-secondary w-full rounded-[20px]">
+      <div className="text-4xl mb-10 px-4 pt-10">Review Transaction</div>
+      <div className="flex items-center mb-10 px-4 gap-3">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
         <div className="text-l flex items-center'">
-          {" "}
           {collateralToken.symbol} / {loanToken}
         </div>
       </div>
@@ -166,12 +165,12 @@ const VaultAddPush: React.FC<Props> = ({
         <span>
           <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />
         </span>
-        Bundle the following action{" "}
+        Bundle the following actions
       </div>
 
-      <div className="more-bg-primary px-8 rounded-t-[5px]">
+      <div className="more-bg-primary px-4 mx-5 rounded-t-[5px]">
         <TokenAmount
-          title="Add"
+          title="Add Collateral"
           token={item.inputToken.id}
           amount={amount}
           ltv={formatEther(item.marketParams.lltv)}
@@ -188,7 +187,7 @@ const VaultAddPush: React.FC<Props> = ({
         />
       </div> */}
 
-      <div className="py-5 px-2">
+      <div className="py-5 px-5">
         By confirming this transaction, you agree to the{" "}
         <a className="underline" href="#goto">
           Terms of Use

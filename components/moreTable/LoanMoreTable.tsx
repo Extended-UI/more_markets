@@ -207,6 +207,7 @@ const LoanMoreTable: React.FC<Props> = ({
                           )}
                           token={item.inputToken.id}
                           totalValue={0}
+                          inTable={true}
                         />
                         <div
                           className="ml-8 flex gap-2"

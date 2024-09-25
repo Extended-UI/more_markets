@@ -37,8 +37,8 @@ const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
           item={item}
           useMax={useMax}
           setUseMax={setUseMax}
-          setAmount={(amount: number) => handleSetWithdraw(amount)}
           closeModal={closeModal}
+          setAmount={handleSetWithdraw}
         />
       ) : step == 2 ? (
         <VaultWithdrawPush

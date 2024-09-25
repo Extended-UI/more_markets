@@ -1,7 +1,7 @@
 "use client";
 
-import { isNaN } from "lodash";
 import { useAccount } from "wagmi";
+import { formatUnits } from "ethers";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import MoreButton from "../../moreButton/MoreButton";
@@ -10,7 +10,6 @@ import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
 import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
-import { formatUnits } from "ethers";
 
 interface Props {
   useMax: boolean;
@@ -29,7 +28,7 @@ const VaultRepayInput: React.FC<Props> = ({
 }) => {
   const { address: userAddress } = useAccount();
 
-  const [deposit, setRepay] = useState<number>(0);
+  const [repayAmount, setRepayAmount] = useState<number>();
   const [loanBalance, setLoanBalance] = useState<GetBalanceReturnType | null>(
     null
   );
@@ -51,23 +50,25 @@ const VaultRepayInput: React.FC<Props> = ({
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputVal =
+      event.target.value.length > 0
+        ? parseFloat(event.target.value)
+        : undefined;
+    setRepayAmount(inputVal);
     setUseMax(false);
-    setRepay(parseFloat(event.target.value));
   };
 
   const handleSetMax = (maxValue: number) => {
     if (loanBalance) {
       const maxAmount =
         loanBalance.value >= item.loan ? item.loan : loanBalance.value;
-      setRepay(Number(formatUnits(maxAmount, loanToken.decimals)));
+      setRepayAmount(Number(formatUnits(maxAmount, loanToken.decimals)));
       setUseMax(true);
     }
   };
 
   const handleRepay = () => {
-    if (useMax || (!isNaN(deposit) && deposit > 0)) {
-      setAmount(deposit);
-    }
+    if (repayAmount && repayAmount) setAmount(repayAmount);
   };
 
   return (
@@ -88,9 +89,9 @@ const VaultRepayInput: React.FC<Props> = ({
         </div>
         <InputTokenMax
           type="number"
-          value={deposit}
+          value={repayAmount}
           onChange={handleInputChange}
-          placeholder={`Repay ${loanToken.symbol}`}
+          placeholder="0"
           token={item.borrowedToken.id}
           balance={Number(loanBalance ? loanBalance.formatted : 0)}
           setMax={handleSetMax}

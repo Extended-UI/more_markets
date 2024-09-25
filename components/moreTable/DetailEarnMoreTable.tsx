@@ -124,6 +124,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                     value={item.supply}
                     token={item.supplyToken}
                     totalValue={0}
+                    inTable={true}
                   />
                 </div>
               </td>
@@ -152,7 +153,8 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                   value={item.unsecuredBorrowAmount}
                   token={item.supplyCurrency}
                   totalValue={item.unsecuredBorrowValue}
-                ></FormatTokenMillion>
+                  inTable={true}
+                />
               </td>
 
               <td className="py-4 px-6 items-center h-full">

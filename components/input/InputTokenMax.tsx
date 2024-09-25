@@ -1,6 +1,6 @@
 import React from "react";
 import millify from "millify";
-import { isNaN } from "lodash";
+import { isUndefined } from "lodash";
 import { ZeroAddress } from "ethers";
 import IconToken from "../token/IconToken";
 import MoreButton from "../moreButton/MoreButton";
@@ -9,7 +9,7 @@ import { contracts } from "@/utils/const";
 
 interface Props {
   type: string;
-  value: number;
+  value: number | undefined;
   token: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
@@ -34,12 +34,12 @@ const InputTokenMax: React.FC<Props> = ({
       <div className="flex w-full flex-col items-center gap-2">
         <input
           type={type}
-          value={value}
+          value={!isUndefined(value) ? value : ""}
           onChange={onChange}
-          className="noBorder noArrows input mt-1  text-left text-2xl w-full more-input-text-color more-input-bg-color"
+          className="noBorder noArrows input mt-1 text-left text-2xl w-full more-input-text-color more-input-bg-color"
           placeholder={placeholder}
         />
-        {!isNaN(value) && (
+        {!isUndefined(value) && value > 0 && (
           <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center">
             <span className="text-grey">
               ${millify(tokenPrice * value, { precision: 2 })}

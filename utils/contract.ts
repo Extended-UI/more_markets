@@ -65,8 +65,9 @@ export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
 
 export const getTokenPrice = async (token: string): Promise<number> => {
   try {
+    const actualToken = token == ZeroAddress ? contracts.WNATIVE : token;
     const oracleContract = {
-      address: getTokenInfo(token).oracle as `0x${string}`,
+      address: getTokenInfo(actualToken).oracle as `0x${string}`,
       abi: OracleAbi,
     };
 
@@ -769,26 +770,30 @@ export const getBorrowedAmount = async (
   multiplier: bigint,
   shares: bigint
 ): Promise<bigint> => {
-  const [totalBAMultiplier, totalBSMultiplier] = await readContracts(config, {
-    contracts: [
-      {
-        ...marketsInstance,
-        functionName: "totalBorrowAssetsForMultiplier",
-        args: [marketId, multiplier],
-      },
-      {
-        ...marketsInstance,
-        functionName: "totalBorrowSharesForMultiplier",
-        args: [marketId, multiplier],
-      },
-    ],
-  });
+  if (shares > BigInt(0)) {
+    const [totalBAMultiplier, totalBSMultiplier] = await readContracts(config, {
+      contracts: [
+        {
+          ...marketsInstance,
+          functionName: "totalBorrowAssetsForMultiplier",
+          args: [marketId, multiplier],
+        },
+        {
+          ...marketsInstance,
+          functionName: "totalBorrowSharesForMultiplier",
+          args: [marketId, multiplier],
+        },
+      ],
+    });
 
-  return toAssetsUp(
-    shares,
-    totalBAMultiplier.result as bigint,
-    totalBSMultiplier.result as bigint
-  );
+    return toAssetsUp(
+      shares,
+      totalBAMultiplier.result as bigint,
+      totalBSMultiplier.result as bigint
+    );
+  } else {
+    return BigInt(0);
+  }
 };
 
 export const repayLoanViaMarkets = async (

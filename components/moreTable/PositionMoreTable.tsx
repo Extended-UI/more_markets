@@ -93,6 +93,7 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
                     )}
                     totalValue={0}
                     token={item.inputToken.id}
+                    inTable={true}
                   />
                 </div>
               </td>
@@ -107,6 +108,7 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
                     totalValue={0}
                     token={item.borrowedToken.id}
                     totalDanger={true}
+                    inTable={true}
                   />
                 </div>
               </td>

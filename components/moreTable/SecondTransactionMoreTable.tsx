@@ -149,7 +149,7 @@ const SecondTransactionsMoreTable: React.FC<Props> = () => {
                   value={item.supplyAmount}
                   token={item.supplyCurrency}
                   totalValue={item.supplyValue}
-                ></FormatTokenMillion>
+                />
               </td>
 
               <td className="py-4 items-center h-full">
@@ -157,7 +157,7 @@ const SecondTransactionsMoreTable: React.FC<Props> = () => {
                   value={item.supplyAmount}
                   token={item.supplyCurrency}
                   totalValue={item.supplyValue}
-                ></FormatTokenMillion>
+                />
               </td>
 
               <td className="py-4 items-center h-full">
@@ -166,7 +166,7 @@ const SecondTransactionsMoreTable: React.FC<Props> = () => {
                     value={item.supplyAmount}
                     totalValue={item.supplyValue}
                     currency="$"
-                  ></FormatTokenMillion>
+                  />
                 </div>
               </td>
             </tr>

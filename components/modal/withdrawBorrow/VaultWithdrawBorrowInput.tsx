@@ -19,25 +19,27 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
   setAmount,
   closeModal,
 }) => {
-  const [deposit, setWithdraw] = useState<number>(0);
+  const [withdrawCollateral, setWithdrawCollateral] = useState<number>();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setWithdraw(parseFloat(event.target.value));
+    const inputVal =
+      event.target.value.length > 0
+        ? parseFloat(event.target.value)
+        : undefined;
+    setWithdrawCollateral(inputVal);
   };
 
   const handleSetMax = (maxValue: number) => {
-    setWithdraw(maxValue);
+    setWithdrawCollateral(maxValue);
   };
 
   const handleWithdraw = () => {
-    if (deposit > 0) {
-      setAmount(deposit);
-    }
+    if (withdrawCollateral && withdrawCollateral > 0)
+      setAmount(withdrawCollateral);
   };
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
-  const lltv2: number | null = getPremiumLltv(item.marketParams);
   const userCollateral = formatTokenValue(item.collateral, item.inputToken.id);
 
   return (
@@ -57,9 +59,9 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
       <div className="w-full flex justify-center px-5">
         <InputTokenMax
           type="number"
-          value={deposit}
+          value={withdrawCollateral}
           onChange={handleInputChange}
-          placeholder={`Withdraw ${collateralToken}`}
+          placeholder="0"
           token={item.inputToken.id}
           balance={userCollateral}
           setMax={handleSetMax}

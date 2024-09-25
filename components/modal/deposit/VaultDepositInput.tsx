@@ -1,6 +1,5 @@
 "use client";
 
-import { isNaN } from "lodash";
 import { useAccount } from "wagmi";
 import { ZeroAddress } from "ethers";
 import React, { useEffect, useState } from "react";
@@ -30,7 +29,7 @@ const VaultDepositInput: React.FC<Props> = ({
   setUseFlow,
 }) => {
   const { address: userAddress } = useAccount();
-  const [deposit, setDeposit] = useState<number>(0);
+  const [deposit, setDeposit] = useState<number>();
   const [flowBalance, setFlowBalance] =
     useState<GetBalanceReturnType>(initBalance);
   const [balanceString, setBalanceString] =
@@ -54,13 +53,17 @@ const VaultDepositInput: React.FC<Props> = ({
     initBalance();
   }, [item, userAddress]);
 
-  const toggleFlow = (useWrap: boolean) => {
-    setDeposit(0);
-    setUseFlow(useWrap);
-  };
+  // const toggleFlow = (useWrap: boolean) => {
+  //   setDeposit(0);
+  //   setUseFlow(useWrap);
+  // };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeposit(parseFloat(event.target.value));
+    const inputVal =
+      event.target.value.length > 0
+        ? parseFloat(event.target.value)
+        : undefined;
+    setDeposit(inputVal);
   };
 
   const handleSetMax = (maxValue: number) => {
@@ -68,7 +71,7 @@ const VaultDepositInput: React.FC<Props> = ({
   };
 
   const handleDeposit = () => {
-    if (!isNaN(deposit) && deposit > 0) {
+    if (deposit && deposit > 0) {
       setAmount(deposit);
     } else {
       notify(errMessages.invalid_amount);
@@ -76,25 +79,29 @@ const VaultDepositInput: React.FC<Props> = ({
   };
 
   const tokenInfo = getTokenInfo(item.assetAddress);
+  const flowVault =
+    useFlow &&
+    item.assetAddress.toLowerCase() == contracts.WNATIVE.toLowerCase();
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px]">
       <div className="text-4xl mb-10 px-4 pt-10">{item.vaultName}</div>
-      <div className="text-l mb-5 px-4">Deposit {tokenInfo.symbol}</div>
+      <div className="text-l mb-5 px-4">
+        Deposit {flowVault ? "Flow" : tokenInfo.symbol}
+      </div>
       <div className="px-4">
-        <p className="text-xl my-3">
+        {/* <div className="text-xl my-3">
           <span className="mr-3">Use Flow</span>
-          {item.assetAddress.toLowerCase() ==
-            contracts.WNATIVE.toLowerCase() && (
+          {flowVault && (
             <MoreToggle checked={useFlow} setChecked={toggleFlow} />
           )}
-        </p>
-        {useFlow ? (
+        </div> */}
+        {flowVault ? (
           <InputTokenMax
             type="number"
             value={deposit}
             onChange={handleInputChange}
-            placeholder={`Deposit Flow`}
+            placeholder="0"
             token={ZeroAddress}
             balance={Number(flowBalance.formatted)}
             setMax={handleSetMax}
@@ -104,14 +111,14 @@ const VaultDepositInput: React.FC<Props> = ({
             type="number"
             value={deposit}
             onChange={handleInputChange}
-            placeholder={`Deposit ${tokenInfo.symbol}`}
+            placeholder="0"
             token={item.assetAddress}
             balance={Number(balanceString.formatted)}
             setMax={handleSetMax}
           />
         )}
       </div>
-      {useFlow ? (
+      {flowVault ? (
         <div className="text-right more-text-gray px-4 mt-4">
           Balance: {flowBalance.formatted} Flow
         </div>
@@ -136,9 +143,6 @@ const VaultDepositInput: React.FC<Props> = ({
           color="primary"
         />
       </div>
-      <div className="w-[50%] mx-15 flex justify-center mx-auto">
-        <div className="glowing-text-primary w-full"></div>
-      </div>
       <div className="more-bg-primary px-4 rounded-b-[10px] py-2 pb-5">
         <div className="flex justify-between mt-4">
           <div>APY:</div>
@@ -155,6 +159,7 @@ const VaultDepositInput: React.FC<Props> = ({
               value={item.totalDeposits}
               totalValue={0}
               token={item.assetAddress}
+              inTable={true}
             />
           </div>
         </div>

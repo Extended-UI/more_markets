@@ -133,6 +133,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                   value={item.totalDeposits}
                   token={item.assetAddress}
                   totalValue={0}
+                  inTable={true}
                 />
               </td>
               <td className="py-4 px-6 items-center h-full">
