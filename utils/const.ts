@@ -116,6 +116,8 @@ export const errMessages = {
 };
 
 export const sactionedCountries = ["KP", "IR", "MM"];
+export const CHAINALYSIS_KEY =
+  "39c46c2bd4bf2ef6e1489954b4aa55685a67ec9f8d641d5769f6aeb0c6fbeb57";
 
 // ******************************************
 export const vaultIds = [

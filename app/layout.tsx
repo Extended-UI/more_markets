@@ -26,7 +26,7 @@ const RootLayout = ({ children }: LayoutProps) => {
         }
       }
     } catch (err) {
-      console.log(err, "can not detect the location");
+      console.log("Can not detect the location");
     }
   };
 

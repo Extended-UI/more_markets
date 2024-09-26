@@ -1,9 +1,11 @@
 "use client";
 
-import { config } from "@/utils/wagmi";
+import { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { config } from "@/utils/wagmi";
+import { CHAINALYSIS_KEY } from "@/utils/const";
 
 export const WalletConnect = () => {
   return (
@@ -16,7 +18,40 @@ export const WalletConnect = () => {
         openConnectModal,
         mounted,
       }) => {
-        const connected = mounted && account && chain;
+        const [unsafe, setUnsafe] = useState(false);
+
+        const checkWalletAddress = async () => {
+          if (account) {
+            try {
+              const resp = await fetch(
+                "https://public.chainalysis.com/api/v1/address/" +
+                  account.address,
+                {
+                  headers: {
+                    Accept: "application/json",
+                    "X-API-Key": CHAINALYSIS_KEY,
+                  },
+                }
+              );
+
+              const respData = await resp.json();
+              if (
+                respData.identifications &&
+                respData.identifications.length == 0
+              ) {
+                setUnsafe(false);
+              } else {
+                setUnsafe(true);
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }
+        };
+
+        useEffect(() => {
+          checkWalletAddress();
+        }, [account]);
 
         return (
           <div
@@ -30,7 +65,19 @@ export const WalletConnect = () => {
             })}
           >
             {(() => {
-              if (!connected) {
+              if (unsafe) {
+                return (
+                  <button
+                    onClick={openConnectModal}
+                    type="button"
+                    className="text-lg px-5 py-2 wallet-networks ml-3"
+                  >
+                    Sactioned Address
+                  </button>
+                );
+              }
+
+              if (!(account && chain && mounted)) {
                 return (
                   <button
                     onClick={openConnectModal}
