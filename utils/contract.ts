@@ -28,10 +28,11 @@ import {
 } from "../types";
 import {
   contracts,
-  marketsInstance,
   initBalance,
+  marketsInstance,
   bundlerInstance,
   permit2Instance,
+  apyfeedInstance,
   Uint48Max,
   gasLimit,
   vaultIds,
@@ -1045,6 +1046,10 @@ export const addNewToken = async (
     },
   });
 };
+
+export const getVaultSupplyRate = async (vaultAddress: string) => {
+  
+}
 
 // ******************************************
 export const fetchVaults = async (): Promise<GraphVault[]> => {

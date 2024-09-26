@@ -5,6 +5,7 @@ import { IToken } from "@/types";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
+import { ApyFeedAbi } from "@/app/abi/ApyFeedAbi";
 
 export const moreTolerance = BigInt(10);
 export const virtualAssets = BigInt(1);
@@ -103,6 +104,11 @@ export const bundlerInstance = {
 export const permit2Instance = {
   address: contracts.PERMIT2 as `0x${string}`,
   abi: Permit2Abi,
+};
+
+export const apyfeedInstance = {
+  address: contracts.APY_FEED as `0x${string}`,
+  abi: ApyFeedAbi,
 };
 
 export const Uint48Max = 281474976710655;
