@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
@@ -10,7 +9,7 @@ import { CHAINALYSIS_KEY } from "@/utils/const";
 export const WalletConnect = () => {
   return (
     <ConnectButton.Custom>
-      {({
+      {async ({
         account,
         chain,
         openAccountModal,
@@ -18,40 +17,31 @@ export const WalletConnect = () => {
         openConnectModal,
         mounted,
       }) => {
-        const [unsafe, setUnsafe] = useState(false);
-
-        const checkWalletAddress = async () => {
-          if (account) {
-            try {
-              const resp = await fetch(
-                "https://public.chainalysis.com/api/v1/address/" +
-                  account.address,
-                {
-                  headers: {
-                    Accept: "application/json",
-                    "X-API-Key": CHAINALYSIS_KEY,
-                  },
-                }
-              );
-
-              const respData = await resp.json();
-              if (
-                respData.identifications &&
-                respData.identifications.length == 0
-              ) {
-                setUnsafe(false);
-              } else {
-                setUnsafe(true);
+        let unsafe = false;
+        if (account) {
+          try {
+            const resp = await fetch(
+              "https://public.chainalysis.com/api/v1/address/" +
+                account.address,
+              {
+                headers: {
+                  Accept: "application/json",
+                  "X-API-Key": CHAINALYSIS_KEY,
+                },
               }
-            } catch (err) {
-              console.log(err);
-            }
-          }
-        };
+            );
 
-        useEffect(() => {
-          checkWalletAddress();
-        }, [account]);
+            const respData = await resp.json();
+            if (
+              !(
+                respData.identifications && respData.identifications.length == 0
+              )
+            )
+              unsafe = true;
+          } catch (err) {
+            console.log(err);
+          }
+        }
 
         return (
           <div
