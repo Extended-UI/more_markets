@@ -5,13 +5,7 @@ export const MarketsAbi: Abi = [
     type: "function",
     name: "DOMAIN_SEPARATOR",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "bytes32",
-        internalType: "bytes32",
-      },
-    ],
+    outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
     stateMutability: "view",
   },
   {
@@ -38,21 +32,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -78,13 +60,14 @@ export const MarketsAbi: Abi = [
     type: "function",
     name: "arrayOfMarkets",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "bytes32[]",
-        internalType: "Id[]",
-      },
-    ],
+    outputs: [{ name: "", type: "bytes32[]", internalType: "Id[]" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "availableMultipliers",
+    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
+    outputs: [{ name: "", type: "uint256[]", internalType: "uint256[]" }],
     stateMutability: "view",
   },
   {
@@ -111,21 +94,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -143,38 +114,14 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "assets",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "shares",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "onBehalf",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "receiver",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "assets", type: "uint256", internalType: "uint256" },
+      { name: "shares", type: "uint256", internalType: "uint256" },
+      { name: "onBehalf", type: "address", internalType: "address" },
+      { name: "receiver", type: "address", internalType: "address" },
     ],
     outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "", type: "uint256", internalType: "uint256" },
+      { name: "", type: "uint256", internalType: "uint256" },
     ],
     stateMutability: "nonpayable",
   },
@@ -202,21 +149,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -241,80 +176,38 @@ export const MarketsAbi: Abi = [
   {
     type: "function",
     name: "enableIrm",
-    inputs: [
-      {
-        name: "irm",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    inputs: [{ name: "irm", type: "address", internalType: "address" }],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "enableLltv",
-    inputs: [
-      {
-        name: "lltv",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    inputs: [{ name: "lltv", type: "uint256", internalType: "uint256" }],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "extSloads",
-    inputs: [
-      {
-        name: "slots",
-        type: "bytes32[]",
-        internalType: "bytes32[]",
-      },
-    ],
-    outputs: [
-      {
-        name: "res",
-        type: "bytes32[]",
-        internalType: "bytes32[]",
-      },
-    ],
+    inputs: [{ name: "slots", type: "bytes32[]", internalType: "bytes32[]" }],
+    outputs: [{ name: "res", type: "bytes32[]", internalType: "bytes32[]" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "feeRecipient",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "flashLoan",
     inputs: [
-      {
-        name: "token",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "assets",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "data",
-        type: "bytes",
-        internalType: "bytes",
-      },
+      { name: "token", type: "address", internalType: "address" },
+      { name: "assets", type: "uint256", internalType: "uint256" },
+      { name: "data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -322,59 +215,17 @@ export const MarketsAbi: Abi = [
   {
     type: "function",
     name: "idToMarketParams",
-    inputs: [
-      {
-        name: "id",
-        type: "bytes32",
-        internalType: "Id",
-      },
-    ],
+    inputs: [{ name: "id", type: "bytes32", internalType: "Id" }],
     outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "",
-        type: "uint96",
-        internalType: "uint96",
-      },
-      {
-        name: "",
-        type: "uint256[]",
-        internalType: "uint256[]",
-      },
+      { name: "", type: "bool", internalType: "bool" },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "uint256", internalType: "uint256" },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "uint96", internalType: "uint96" },
+      { name: "", type: "uint256[]", internalType: "uint256[]" },
     ],
     stateMutability: "view",
   },
@@ -382,11 +233,7 @@ export const MarketsAbi: Abi = [
     type: "function",
     name: "initialize",
     inputs: [
-      {
-        name: "newOwner",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "newOwner", type: "address", internalType: "address" },
       {
         name: "_debtTokenFactory",
         type: "address",
@@ -400,75 +247,31 @@ export const MarketsAbi: Abi = [
     type: "function",
     name: "irxMaxAvailable",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "isAuthorized",
     inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "address", internalType: "address" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "isIrmEnabled",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "isLltvEnabled",
-    inputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
+    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
@@ -495,21 +298,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -527,11 +318,7 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "borrower",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "borrower", type: "address", internalType: "address" },
       {
         name: "seizedAssets",
         type: "uint256",
@@ -542,36 +329,18 @@ export const MarketsAbi: Abi = [
         type: "uint256",
         internalType: "uint256",
       },
-      {
-        name: "data",
-        type: "bytes",
-        internalType: "bytes",
-      },
+      { name: "data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "", type: "uint256", internalType: "uint256" },
+      { name: "", type: "uint256", internalType: "uint256" },
     ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "market",
-    inputs: [
-      {
-        name: "",
-        type: "bytes32",
-        internalType: "Id",
-      },
-    ],
+    inputs: [{ name: "", type: "bytes32", internalType: "Id" }],
     outputs: [
       {
         name: "totalSupplyAssets",
@@ -593,21 +362,9 @@ export const MarketsAbi: Abi = [
         type: "uint128",
         internalType: "uint128",
       },
-      {
-        name: "lastUpdate",
-        type: "uint128",
-        internalType: "uint128",
-      },
-      {
-        name: "fee",
-        type: "uint128",
-        internalType: "uint128",
-      },
-      {
-        name: "premiumFee",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "lastUpdate", type: "uint128", internalType: "uint128" },
+      { name: "fee", type: "uint128", internalType: "uint128" },
+      { name: "premiumFee", type: "uint256", internalType: "uint256" },
     ],
     stateMutability: "view",
   },
@@ -615,61 +372,29 @@ export const MarketsAbi: Abi = [
     type: "function",
     name: "maxLltvForCategory",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "nonce",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "owner",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "position",
     inputs: [
-      {
-        name: "",
-        type: "bytes32",
-        internalType: "Id",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "", type: "bytes32", internalType: "Id" },
+      { name: "", type: "address", internalType: "address" },
     ],
     outputs: [
       {
@@ -682,11 +407,7 @@ export const MarketsAbi: Abi = [
         type: "uint128",
         internalType: "uint128",
       },
-      {
-        name: "collateral",
-        type: "uint128",
-        internalType: "uint128",
-      },
+      { name: "collateral", type: "uint128", internalType: "uint128" },
       {
         name: "lastMultiplier",
         type: "uint64",
@@ -709,13 +430,7 @@ export const MarketsAbi: Abi = [
     type: "function",
     name: "proxiableUUID",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "bytes32",
-        internalType: "bytes32",
-      },
-    ],
+    outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
     stateMutability: "view",
   },
   {
@@ -742,21 +457,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -774,38 +477,14 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "assets",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "shares",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "onBehalf",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "data",
-        type: "bytes",
-        internalType: "bytes",
-      },
+      { name: "assets", type: "uint256", internalType: "uint256" },
+      { name: "shares", type: "uint256", internalType: "uint256" },
+      { name: "onBehalf", type: "address", internalType: "address" },
+      { name: "data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "", type: "uint256", internalType: "uint256" },
+      { name: "", type: "uint256", internalType: "uint256" },
     ],
     stateMutability: "nonpayable",
   },
@@ -813,16 +492,8 @@ export const MarketsAbi: Abi = [
     type: "function",
     name: "setAuthorization",
     inputs: [
-      {
-        name: "authorized",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "newIsAuthorized",
-        type: "bool",
-        internalType: "bool",
-      },
+      { name: "authorized", type: "address", internalType: "address" },
+      { name: "newIsAuthorized", type: "bool", internalType: "bool" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -846,21 +517,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "isAuthorized",
-            type: "bool",
-            internalType: "bool",
-          },
-          {
-            name: "nonce",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "deadline",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "isAuthorized", type: "bool", internalType: "bool" },
+          { name: "nonce", type: "uint256", internalType: "uint256" },
+          { name: "deadline", type: "uint256", internalType: "uint256" },
         ],
       },
       {
@@ -868,21 +527,9 @@ export const MarketsAbi: Abi = [
         type: "tuple",
         internalType: "struct Signature",
         components: [
-          {
-            name: "v",
-            type: "uint8",
-            internalType: "uint8",
-          },
-          {
-            name: "r",
-            type: "bytes32",
-            internalType: "bytes32",
-          },
-          {
-            name: "s",
-            type: "bytes32",
-            internalType: "bytes32",
-          },
+          { name: "v", type: "uint8", internalType: "uint8" },
+          { name: "r", type: "bytes32", internalType: "bytes32" },
+          { name: "s", type: "bytes32", internalType: "bytes32" },
         ],
       },
     ],
@@ -913,21 +560,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -945,11 +580,7 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "newFee",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "newFee", type: "uint256", internalType: "uint256" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -996,13 +627,7 @@ export const MarketsAbi: Abi = [
   {
     type: "function",
     name: "setOwner",
-    inputs: [
-      {
-        name: "newOwner",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    inputs: [{ name: "newOwner", type: "address", internalType: "address" }],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -1030,21 +655,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -1095,21 +708,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -1127,38 +728,14 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "assets",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "shares",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "onBehalf",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "data",
-        type: "bytes",
-        internalType: "bytes",
-      },
+      { name: "assets", type: "uint256", internalType: "uint256" },
+      { name: "shares", type: "uint256", internalType: "uint256" },
+      { name: "onBehalf", type: "address", internalType: "address" },
+      { name: "data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "", type: "uint256", internalType: "uint256" },
+      { name: "", type: "uint256", internalType: "uint256" },
     ],
     stateMutability: "nonpayable",
   },
@@ -1186,21 +763,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -1218,21 +783,9 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "assets",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "onBehalf",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "data",
-        type: "bytes",
-        internalType: "bytes",
-      },
+      { name: "assets", type: "uint256", internalType: "uint256" },
+      { name: "onBehalf", type: "address", internalType: "address" },
+      { name: "data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -1241,48 +794,20 @@ export const MarketsAbi: Abi = [
     type: "function",
     name: "totalBorrowAssetsForMultiplier",
     inputs: [
-      {
-        name: "",
-        type: "bytes32",
-        internalType: "Id",
-      },
-      {
-        name: "",
-        type: "uint64",
-        internalType: "uint64",
-      },
+      { name: "", type: "bytes32", internalType: "Id" },
+      { name: "", type: "uint64", internalType: "uint64" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "totalBorrowSharesForMultiplier",
     inputs: [
-      {
-        name: "",
-        type: "bytes32",
-        internalType: "Id",
-      },
-      {
-        name: "",
-        type: "uint64",
-        internalType: "uint64",
-      },
+      { name: "", type: "bytes32", internalType: "Id" },
+      { name: "", type: "uint64", internalType: "uint64" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
@@ -1309,21 +834,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -1341,11 +854,7 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "borrower",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "borrower", type: "address", internalType: "address" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -1372,11 +881,7 @@ export const MarketsAbi: Abi = [
         type: "address",
         internalType: "address",
       },
-      {
-        name: "data",
-        type: "bytes",
-        internalType: "bytes",
-      },
+      { name: "data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -1405,21 +910,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -1437,38 +930,14 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "assets",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "shares",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "onBehalf",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "receiver",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "assets", type: "uint256", internalType: "uint256" },
+      { name: "shares", type: "uint256", internalType: "uint256" },
+      { name: "onBehalf", type: "address", internalType: "address" },
+      { name: "receiver", type: "address", internalType: "address" },
     ],
     outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "", type: "uint256", internalType: "uint256" },
+      { name: "", type: "uint256", internalType: "uint256" },
     ],
     stateMutability: "nonpayable",
   },
@@ -1496,21 +965,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -1528,21 +985,9 @@ export const MarketsAbi: Abi = [
           },
         ],
       },
-      {
-        name: "assets",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "onBehalf",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "receiver",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "assets", type: "uint256", internalType: "uint256" },
+      { name: "onBehalf", type: "address", internalType: "address" },
+      { name: "receiver", type: "address", internalType: "address" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -1684,21 +1129,9 @@ export const MarketsAbi: Abi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "oracle",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "irm",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "lltv",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "oracle", type: "address", internalType: "address" },
+          { name: "irm", type: "address", internalType: "address" },
+          { name: "lltv", type: "uint256", internalType: "uint256" },
           {
             name: "creditAttestationService",
             type: "address",
@@ -2182,15 +1615,13 @@ export const MarketsAbi: Abi = [
     ],
     anonymous: false,
   },
+  { type: "error", name: "AlreadySet", inputs: [] },
+  { type: "error", name: "InsufficientCollateral", inputs: [] },
   {
     type: "error",
     name: "InvalidCategoryLltvValue",
     inputs: [
-      {
-        name: "numberInArray",
-        type: "uint8",
-        internalType: "uint8",
-      },
+      { name: "numberInArray", type: "uint8", internalType: "uint8" },
       {
         name: "maxAvailableValue",
         type: "uint256",
@@ -2245,4 +1676,7 @@ export const MarketsAbi: Abi = [
       },
     ],
   },
+  { type: "error", name: "MarketNotCreated", inputs: [] },
+  { type: "error", name: "NotOwner", inputs: [] },
+  { type: "error", name: "ZeroAddress", inputs: [] },
 ] as const;

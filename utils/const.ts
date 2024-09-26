@@ -19,6 +19,7 @@ export const contracts = {
   WNATIVE: "0xe0fd0a2a4c2e59a479aab0cf44244e355c508766", // wflow
   MULTICALL3: "0xF7d11c74B5706155d7C6DBe931d590611a371a8a",
   PERMIT2: "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+  APY_FEED: "0x2e201ACF426D45949bF685312f99CBf4f4ceEeC5",
 };
 
 export const tokens: { [key: string]: IToken } = {
