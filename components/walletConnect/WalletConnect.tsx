@@ -76,7 +76,7 @@ export const WalletConnect = () => {
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="text-lg px-5 py-2 wallet-networks ml-3"
+                    className="text-lg px-5 py-2 wallet-networks ml-3 hover:bg-[#434343]"
                   >
                     Connect Wallet
                   </button>
@@ -98,53 +98,53 @@ export const WalletConnect = () => {
               return (
                 <div className="flex">
                   <Menu as="div" className="relative inline-block">
-                    <MenuButton className="flex" type="button">
-                      <div className="flex items-center text-[16px] text-lg px-5 py-2 wallet-networks wallet-menu">
+                    <MenuButton className="flex wallet-connected" type="button">
+                      <div className="flex items-center text-[16px] px-5 py-3 wallet-networks wallet-menu bg-[#212121] hover:bg-[#171717]">
                         {chain.hasIcon && (
                           <div
                             style={{
                               background: chain.iconBackground,
-                              width: 12,
-                              height: 12,
+                              width: 22,
+                              height: 25,
                               borderRadius: 999,
                               overflow: "hidden",
-                              marginRight: 4,
+                              marginRight: 8,
                             }}
                           >
                             {chain.iconUrl && (
                               <img
                                 alt={chain.name ?? "Chain icon"}
                                 src={chain.iconUrl}
-                                style={{ width: 12, height: 12 }}
+                                style={{ width: 22, height: 22 }}
                               />
                             )}
                           </div>
                         )}
                         {chain.name}
                       </div>
-                      <div className="pl-2 pr-3 py-2 wallet-networks wallet-chevron">
+                      <div className="pl-2 pr-3 py-4 wallet-networks wallet-chevron bg-[#212121]">
                         <ChevronDownIcon
                           aria-hidden="true"
-                          className="-mr-1 h-7 w-8 text-gray-400"
+                          className="-mr-1 h-7 w-8 text-[#888888]"
                         />
                       </div>
                     </MenuButton>
 
                     <MenuItems
                       transition
-                      className="absolute mt-1 right-0 z-10 w-56 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                      className="absolute mt-3 right-0 z-10 w-56 origin-top-right divide-y bg-[#343434] shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in rounded-xl "
                     >
                       {config.chains.map((network) => (
-                        <div className="py-1" key={network.id}>
-                          <MenuItem>
+                        <div className="py-2" key={network.id}>
+                          <MenuItem> 
                             <div
                               onClick={openChainModal}
-                              className="flex cursor-pointer text-[16px] px-4 py-2 text-md text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                              className="flex cursor-pointer text-[16px] px-4 py-2 text-md text-white data-[focus]:bg-[#171717] data-[focus]:text-white"
                             >
                               <img
                                 alt={network.name ?? "Chain icon"}
                                 src={network.iconUrl}
-                                style={{ width: 12, height: 12 }}
+                                style={{ width: 22, height: 22 }}
                                 className="mr-3 mt-1"
                               />
                               {network.name}
@@ -158,7 +158,7 @@ export const WalletConnect = () => {
                   <button
                     onClick={openAccountModal}
                     type="button"
-                    className="text-lg px-5 py-2 wallet-networks ml-3"
+                    className="text-lg !text-[16px] px-5 py-2 wallet-networks ml-3 hover:bg-[#434343]"
                   >
                     {account.displayName}
                   </button>

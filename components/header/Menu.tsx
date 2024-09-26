@@ -8,11 +8,11 @@ const Menu: FC = () => {
   const pathNamed = pathname ? pathname : "";
 
   return (
-    <div className="flex space-x-16 text-[16px] h-11 mt-4">
+    <div className="flex space-x-16 text-[16px] mt-5">
       <Link
         href="/earn"
         className={`${
-          pathNamed.includes("/earn") ? "glowing-text-primary" : ""
+          pathNamed.includes("/earn") ? "glowing-text-primary !pb-5" : ""
         } hover:text-primary`}
       >
         Earn
@@ -20,7 +20,7 @@ const Menu: FC = () => {
       <Link
         href="/borrow"
         className={`${
-          pathNamed.includes("/borrow") ? "glowing-text-secondary" : ""
+          pathNamed.includes("/borrow") ? "glowing-text-secondary !pb-5" : ""
         } hover:text-secondary`}
       >
         Borrow

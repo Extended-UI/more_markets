@@ -30,7 +30,7 @@ const FormatTokenMillion: React.FC<Props> = ({
   return (
     <div
       className={
-        "flex gap-1 items-center gap-2 " + (align ? "" : "justify-center")
+        "flex  items-center gap-2 " + (align ? "" : "justify-center")
       }
     >
       <div>

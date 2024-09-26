@@ -17,9 +17,9 @@ const TableHeaderCell: React.FC<Props> = ({
 
   return (
     <div
-      className={`relative px-3 flex flex-row items-center gap-3 text-[10px] ${additionalClasses}`}
+      className={`relative flex flex-row items-center justify-start gap-3 text-[12px] font-medium ${additionalClasses}`}
     >
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mr-2">
         <Icon
           icon="caret-up"
           className="text-[#545454] text-m cursor-pointer"
@@ -39,7 +39,7 @@ const TableHeaderCell: React.FC<Props> = ({
         {isTooltipVisible && (
           <div
             // style={{ top: "-5px", left: "16px" }}
-            className="absolute w-[400px] bottom-full mb-2 p-2 bg-[#212121] text-white text-s rounded shadow-lg max-w-xs break-words whitespace-normal z-10 leading-5"
+            className="absolute w-[400px] bottom-full mb-2 bg-[#212121] text-[#E0DFE3] text-s rounded-xl shadow-lg max-w-xs break-words whitespace-normal z-[999] leading-5 p-4 font-medium"
           >
             {infoText}
           </div>

@@ -13,7 +13,7 @@ const Header: FC = () => {
   const { address: userAddress } = useAccount();
 
   return (
-    <header className="pt-2">
+    <header className="pt-3">
       <nav className="flex sm:flex-row flex-col justify-between items-center">
         <div className="w-full flex justify-between items-center">
           <div className="flex items-center space-x-4">
@@ -22,7 +22,7 @@ const Header: FC = () => {
           <Menu />
         </div>
 
-        <div className="w-full flex justify-end space-x-4 mt-10 sm:mt-0">
+        <div className="w-full flex justify-end space-x-4 mt-10 sm:mt-0 text-[16px]">
           {userAddress && (
             <ButtonDialog color="primary" buttonText="Get Testnet Tokens">
               {(closeModal) => (

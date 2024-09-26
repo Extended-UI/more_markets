@@ -26,29 +26,29 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
     <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
       <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
         <thead
-          className="bg-[#212121] h-20 text-white text-xs"
+          className="bg-[#212121] h-20 text-white text-sm"
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
           <tr>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "400px" }} className="p-6">
               <TableHeaderCell
                 title="Vault Name"
                 infoText="The name given to the vault by the curator."
               />
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6">
               <TableHeaderCell
                 title="Deposit Token"
                 infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
               />
             </th>
-            <th style={{ width: "150px" }}>
+            <th style={{ width: "150px" }} className="p-6">
               <TableHeaderCell
                 title="Net APY"
                 infoText="The annualized return you earn on your deposited amount after all fees. This rate fluctuates in real-time based on supply and demand in the underlying markets."
               />
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Total Deposits"
@@ -56,13 +56,13 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                 />
               </div>
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6">
               <TableHeaderCell
                 title="Curator"
                 infoText="The organization that manages the vault parameters such as included markets, allocations, caps and performance fees."
               />
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6">
               <TableHeaderCell
                 title="Collateral"
                 infoText="The token(s) that borrowers must lock in order to borrow funds."
@@ -105,29 +105,29 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                 index % 2 === 0 ? "bg-[#141414]" : "bg-[#191919]"
               }`}
             >
-              <td className="py-4 px-6 items-center h-full">
+              <td className="p-6 items-center h-full">
                 <div className="flex items-center">
-                  <div className="mr-2 w-6 h-6">
+                  <div className="mr-3 w-8 h-8">
                     <IconToken tokenName={item.assetAddress} />
                   </div>
                   {item.vaultName}
                 </div>
               </td>
-              <td className="py-4 px-6 items-center h-full">
+              <td className="p-6 items-center h-full">
                 <div className="flex items-center">
                   <IconToken
-                    className="mr-2 w-6 h-6"
+                    className="mr-3 w-8 h-8"
                     tokenName={item.assetAddress}
                     showSymbol={true}
                   />
                 </div>
               </td>
-              <td className="py-4 px-6 items-center h-full">
+              <td className="p-6 items-center h-full">
                 <div className="flex gap-1 justify-start">
                   <FormatPourcentage value="N/A" />
                 </div>
               </td>
-              <td className="py-4 items-left h-full">
+              <td className="p-6 items-left h-full">
                 <FormatTokenMillion
                   align={true}
                   value={item.totalDeposits}
@@ -136,17 +136,17 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                   inTable={true}
                 />
               </td>
-              <td className="py-4 px-6 items-center h-full">
-                <div className="flex">
-                  <div className="mr-2 w-5 h-5">
+              <td className="p-6 items-center h-full">
+                <div className="items-center flex">
+                  <div className="mr-3 w-8 h-8">
                     <IconToken tokenName="wflow" />
                   </div>
                   {item.curator}
                 </div>
               </td>
-              <td className="py-4 items-center h-full">
+              <td className="p-6 items-center h-full">
                 <ListIconToken
-                  className="w-6 h-6"
+                  className="w-8 h-8"
                   iconNames={item.collateral}
                 />
               </td>
