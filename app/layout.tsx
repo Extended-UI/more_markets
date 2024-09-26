@@ -1,15 +1,40 @@
-import "@rainbow-me/rainbowkit/styles.css";
-import { ReactNode } from "react";
-import "../styles/globals.css";
-import "@fortawesome/fontawesome-svg-core/styles.css";
+"use client";
+
+import React, { ReactNode, useEffect } from "react";
 import MainLayout from "@/layouts/MainLayout";
 import { Providers } from "./providers";
+
+import "@rainbow-me/rainbowkit/styles.css";
+import "../styles/globals.css";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const RootLayout = ({ children }: LayoutProps) => {
+  const checkRegion = async () => {
+    try {
+      const res = await fetch("https://get.geojs.io/v1/ip.json", {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+
+      if (res.ok) {
+        const respData = await res.json();
+        console.log(respData.ip);
+      }
+    } catch (err) {
+      console.log("can not detect the location");
+    }
+  };
+
+  useEffect(() => {
+    checkRegion();
+  }, []);
+
   return (
     <html lang="en">
       <head>
