@@ -115,6 +115,8 @@ export const errMessages = {
   invalid_amount: "Invalid amount",
 };
 
+export const sactionedCountries = ["KP", "IR", "MM"];
+
 // ******************************************
 export const vaultIds = [
   "0x8C1CEc925beB7944941b612B70aE280C984FA633",
