@@ -200,3 +200,6 @@ export const fetchMarketAprs = async (
 export const convertAprToApy = (apr: number, aprInterval: number): number => {
   return Math.pow(1 + apr / aprInterval, aprInterval) - 1;
 };
+
+export const delay = (seconds: number) =>
+  new Promise((res) => setTimeout(res, seconds * 1000));

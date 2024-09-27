@@ -10,12 +10,11 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
+import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
   setTokenPermit,
-  getTokenPermit,
   getPermitNonce,
   supplyToVaults,
 } from "@/utils/contract";
@@ -41,8 +40,6 @@ const VaultDepositPush: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
-  const [signHash, setSignHash] = useState("");
-  const [deadline, setDeadline] = useState(BigInt(0));
   const [permitNonce, setPermitNonce] = useState(0);
 
   const tokenAmount = parseUnits(
@@ -60,107 +57,83 @@ const VaultDepositPush: React.FC<Props> = ({
         setHasPermit(true);
         setHasApprove(true);
       } else {
-        const nonce = userAddress
-          ? await getPermitNonce([
-              userAddress,
-              item.assetAddress,
-              contracts.MORE_BUNDLER,
+        const [nonce, allowance] = userAddress
+          ? await Promise.all([
+              getPermitNonce([
+                userAddress,
+                item.assetAddress,
+                contracts.MORE_BUNDLER,
+              ]),
+              getTokenAllowance(
+                item.assetAddress,
+                userAddress,
+                contracts.PERMIT2
+              ),
             ])
-          : 0;
+          : [0, BigInt(0)];
+
         setPermitNonce(nonce);
-
-        const tokenPermit = userAddress
-          ? await getTokenPermit([
-              userAddress,
-              item.assetAddress,
-              contracts.MORE_BUNDLER,
-            ])
-          : BigInt(0);
-        if (tokenPermit >= tokenAmount) setHasPermit(true);
-
-        const allowance = userAddress
-          ? await getTokenAllowance(
-              item.assetAddress,
-              userAddress,
-              contracts.PERMIT2
-            )
-          : BigInt(0);
-
         if (allowance >= tokenAmount) setHasApprove(true);
         else setHasApprove(false);
       }
     };
 
     initApprove();
-  }, [userAddress, item, amount, isLoading, flowVault]);
+  }, [userAddress, item, tokenAmount, flowVault]);
 
-  const handleApprove = async () => {
-    if (userAddress) {
-      setIsLoading(true);
-      try {
-        await setTokenAllowance(
-          item.assetAddress,
-          contracts.PERMIT2,
-          tokenAmount
-        );
-
-        setHasApprove(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
-    }
+  const doApprove = async () => {
+    await setTokenAllowance(item.assetAddress, contracts.PERMIT2, tokenAmount);
+    setHasApprove(true);
   };
 
-  const handlePermit = async () => {
+  const doPermit = async (deadline: bigint): Promise<string> => {
+    const signHash = await setTokenPermit(
+      item.assetAddress,
+      tokenAmount,
+      permitNonce,
+      contracts.MORE_BUNDLER,
+      deadline
+    );
+
+    setHasPermit(true);
+
+    // sleep 1 sec
+    await delay(2);
+    return signHash;
+  };
+
+  const doDeposit = async (deadline: bigint, signHash: string) => {
     if (userAddress) {
-      setIsLoading(true);
-      try {
-        const deadline = getTimestamp();
-        const signHash = await setTokenPermit(
-          item.assetAddress,
-          tokenAmount,
-          permitNonce,
-          contracts.MORE_BUNDLER,
-          deadline
-        );
+      const txHash = await supplyToVaults(
+        item.vaultId,
+        item.assetAddress,
+        userAddress,
+        signHash,
+        deadline,
+        tokenAmount,
+        permitNonce,
+        flowVault
+      );
 
-        setSignHash(signHash);
-        setDeadline(deadline);
-
-        setHasPermit(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      await delay(2);
+      validDeposit();
+      setTxHash(txHash);
     }
   };
 
   const handleDeposit = async () => {
     // generate deposit tx
-    if (userAddress && hasApprove && hasPermit) {
-      setIsLoading(true);
-      try {
-        const txHash = await supplyToVaults(
-          item.vaultId,
-          item.assetAddress,
-          userAddress,
-          signHash,
-          deadline,
-          tokenAmount,
-          permitNonce,
-          flowVault
-        );
+    setIsLoading(true);
+    try {
+      const deadline = getTimestamp();
+      if (!hasApprove) await doApprove();
+      const signHash = hasPermit ? "" : await doPermit(deadline);
+      await doDeposit(deadline, signHash);
 
-        validDeposit();
-        setTxHash(txHash);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      notifyError(err);
     }
   };
 
@@ -231,40 +204,20 @@ const VaultDepositPush: React.FC<Props> = ({
         </a>{" "}
         and the services provisions relating to the MORE Protocol Vault.
       </div>
-      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="gray"
-          />
-        </div>
-        {hasApprove && hasPermit ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Deposit"
-            disabled={isLoading}
-            onClick={() => handleDeposit()}
-            color="primary"
-          />
-        ) : hasApprove ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Permit"
-            disabled={isLoading}
-            onClick={() => handlePermit()}
-            color="primary"
-          />
-        ) : (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Approve"
-            disabled={isLoading}
-            onClick={() => handleApprove()}
-            color="primary"
-          />
-        )}
+      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4 gap-2">
+        <MoreButton
+          className="text-2xl py-2"
+          text="Cancel"
+          onClick={closeModal}
+          color="gray"
+        />
+        <MoreButton
+          className="text-2xl py-2"
+          text="Deposit"
+          disabled={isLoading}
+          onClick={handleDeposit}
+          color="primary"
+        />
       </div>
     </div>
   );

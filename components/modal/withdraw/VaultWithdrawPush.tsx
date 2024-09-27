@@ -10,7 +10,7 @@ import IconToken from "@/components/token/IconToken";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
+import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   withdrawFromVaults,
   getVaultNonce,
@@ -41,9 +41,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
   const [hasAuth, setHasAuth] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [permitHash, setPermitHash] = useState("");
-  const [deadline, setDeadline] = useState(BigInt(0));
-  const [authorizeHash, setAuthorizeHash] = useState("");
   const [vaultNonce, setVaultNonce] = useState(BigInt(0));
   const [authorizeNonce, setAuthorizeNonce] = useState(BigInt(0));
 
@@ -72,73 +69,79 @@ const VaultWithdrawPush: React.FC<Props> = ({
     initApprove();
   }, [userAddress, item]);
 
-  const handlePermit = async () => {
+  const doPermit = async (permitDeadline: bigint): Promise<string> => {
     if (userAddress) {
-      setIsLoading(true);
-      try {
-        const permitDeadline =
-          deadline == BigInt(0) ? getTimestamp() : deadline;
+      const signHash = await setVaultPermit(
+        item.vaultName,
+        userAddress,
+        item.vaultId,
+        MaxUint256,
+        vaultNonce,
+        permitDeadline
+      );
 
-        const signHash = await setVaultPermit(
-          item.vaultName,
-          userAddress,
-          item.vaultId,
-          MaxUint256,
-          vaultNonce,
-          permitDeadline
-        );
+      setHasPermit(true);
+      await delay(2);
 
-        setPermitHash(signHash);
-        setHasPermit(true);
-        setDeadline(permitDeadline);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      return signHash;
     }
+
+    return "";
   };
 
-  const handleAuthorize = async () => {
-    if (userAddress && !hasAuth) {
-      setIsLoading(true);
-      try {
-        const authDeadline = getTimestamp();
-        const authHash = await setMarketsAuthorize(
-          userAddress,
-          authorizeNonce,
-          authDeadline
-        );
+  const doAuthorize = async (authDeadline: bigint): Promise<string> => {
+    if (userAddress) {
+      const authHash = await setMarketsAuthorize(
+        userAddress,
+        authorizeNonce,
+        authDeadline
+      );
 
-        setHasAuth(true);
-        setAuthorizeHash(authHash);
-        setDeadline(authDeadline);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      setHasAuth(true);
+      await delay(2);
+
+      return authHash;
+    }
+
+    return "";
+  };
+
+  const doWithdraw = async (
+    deadline: bigint,
+    permitHash: string,
+    authorizeHash: string
+  ) => {
+    if (userAddress) {
+      const hash = await withdrawFromVaults(
+        userAddress,
+        tokenAmount,
+        deadline,
+        permitHash,
+        authorizeHash,
+        authorizeNonce,
+        useMax || tokenAmount >= userDepositAmount,
+        item
+      );
+
+      await delay(2);
+
+      setTxhash(hash);
+      validWithdraw();
     }
   };
 
   const handleWithdraw = async () => {
-    if (userAddress && hasPermit) {
+    if (userAddress) {
       setIsLoading(true);
       try {
-        const hash = await withdrawFromVaults(
-          userAddress,
-          tokenAmount,
-          deadline,
-          permitHash,
-          authorizeHash,
-          authorizeNonce,
-          useMax || tokenAmount >= userDepositAmount,
-          item
-        );
+        const deadline = getTimestamp();
 
-        setTxhash(hash);
+        const authorizeHash = hasAuth ? "" : await doAuthorize(deadline);
+        const permitHash = hasPermit ? "" : await doPermit(deadline);
+
+        await doWithdraw(deadline, permitHash, authorizeHash);
+
         setIsLoading(false);
-        validWithdraw();
       } catch (err) {
         setIsLoading(false);
         notifyError(err);
@@ -222,40 +225,20 @@ const VaultWithdrawPush: React.FC<Props> = ({
         </a>{" "}
         and the services provisions relating to the MORE Protocol Vault.
       </div>
-      <div className="flex justify-end py-5  rounded-b-[20px] px-4">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="gray"
-          />
-        </div>
-        {!hasAuth ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Authorize"
-            disabled={isLoading}
-            onClick={handleAuthorize}
-            color="primary"
-          />
-        ) : hasPermit ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Withdraw"
-            disabled={isLoading}
-            onClick={handleWithdraw}
-            color="primary"
-          />
-        ) : (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Permit"
-            disabled={isLoading}
-            onClick={handlePermit}
-            color="primary"
-          />
-        )}
+      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4 gap-2">
+        <MoreButton
+          className="text-2xl py-2"
+          text="Cancel"
+          onClick={closeModal}
+          color="gray"
+        />
+        <MoreButton
+          className="text-2xl py-2"
+          text="Withdraw"
+          disabled={isLoading}
+          onClick={handleWithdraw}
+          color="primary"
+        />
       </div>
     </div>
   );

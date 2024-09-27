@@ -120,7 +120,7 @@ export const setTokenAllowance = async (
     args: [spender as `0x${string}`, amount],
   });
 
-  await waitForTransactionReceipt(config, { hash: txHash });
+  await waitForTransaction(txHash);
 };
 
 export const waitForTransaction = async (txHash: string) => {
@@ -537,17 +537,22 @@ export const supplyToVaults = async (
     );
   } else {
     // encode approve2
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "approve2",
-        args: [
-          [[asset, amount, Uint48Max, nonce], contracts.MORE_BUNDLER, deadline],
-          signhash,
-          false,
-        ],
-      })
-    );
+    if (signhash.length > 0)
+      multicallArgs.push(
+        encodeFunctionData({
+          abi: BundlerAbi,
+          functionName: "approve2",
+          args: [
+            [
+              [asset, amount, Uint48Max, nonce],
+              contracts.MORE_BUNDLER,
+              deadline,
+            ],
+            signhash,
+            false,
+          ],
+        })
+      );
 
     // encode transferFrom2
     multicallArgs.push(
@@ -594,8 +599,7 @@ export const withdrawFromVaults = async (
   const { vaultId: vaultAddress, userShares, assetAddress } = item;
 
   // authorize
-  const authorized = authHash.length == 0;
-  if (!authorized) {
+  if (authHash.length > 0) {
     const r1 = authHash.slice(0, 66);
     const s1 = "0x" + authHash.slice(66, 130);
     const v1 = "0x" + authHash.slice(130, 132);
@@ -613,18 +617,20 @@ export const withdrawFromVaults = async (
     );
   }
 
-  const r = signhash.slice(0, 66);
-  const s = "0x" + signhash.slice(66, 130);
-  const v = "0x" + signhash.slice(130, 132);
+  if (signhash.length > 0) {
+    const r = signhash.slice(0, 66);
+    const s = "0x" + signhash.slice(66, 130);
+    const v = "0x" + signhash.slice(130, 132);
 
-  // encode permit
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "permit",
-      args: [vaultAddress, MaxUint256, deadline, v, r, s, false],
-    })
-  );
+    // encode permit
+    multicallArgs.push(
+      encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "permit",
+        args: [vaultAddress, MaxUint256, deadline, v, r, s, false],
+      })
+    );
+  }
 
   const flowVault =
     assetAddress.toLowerCase() == contracts.WNATIVE.toLowerCase();
@@ -709,21 +715,22 @@ export const supplycollateralAndBorrow = async (
 
   if (!onlyBorrow) {
     // encode approve2
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "approve2",
-        args: [
-          [
-            [supplyAsset, supplyAmount, Uint48Max, nonce],
-            contracts.MORE_BUNDLER,
-            deadline,
+    if (signhash.length > 0)
+      multicallArgs.push(
+        encodeFunctionData({
+          abi: BundlerAbi,
+          functionName: "approve2",
+          args: [
+            [
+              [supplyAsset, supplyAmount, Uint48Max, nonce],
+              contracts.MORE_BUNDLER,
+              deadline,
+            ],
+            signhash,
+            false,
           ],
-          signhash,
-          false,
-        ],
-      })
-    );
+        })
+      );
 
     // encode transferFrom2
     multicallArgs.push(

@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import Icon from "../../FontAwesomeIcon";
 import { InvestmentData } from "@/types";
-import { getTokenInfo, notifyError } from "@/utils/utils";
 import { waitForTransaction } from "@/utils/contract";
+import { getTokenInfo, notifyError } from "@/utils/utils";
 
 interface Props {
   amount: number;
