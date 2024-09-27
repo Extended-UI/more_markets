@@ -21,6 +21,7 @@ const MoreButton: React.FC<ButtonProps> = ({
 }) => {
   // Use state to store the color dynamically
   const [myColor, setMyColor] = useState("#737373");
+  const [isHovered, setIsHovered] = useState(false);
 
   const isFaucet = text == "Get Testnet Tokens";
 
@@ -46,16 +47,25 @@ const MoreButton: React.FC<ButtonProps> = ({
     borderColor: myColor,
     backgroundColor: `${myColor}1A`,
     color: myColor,
-    opacity: 0.9,
+    opacity: 1,
     width: "auto",
     whiteSpace: "nowrap",
+    transition: "all 0.3s ease",
   };
+
   if (isFaucet) {
     defaultStyle.paddingTop = "7px";
     defaultStyle.paddingBottom = "7px";
   }
+
+  const hoverStyle: CSSProperties = {
+    borderColor: `${myColor}`, 
+    backgroundColor: `${myColor}`, 
+    color: "#141414",
+  };
+
   // Combining default class with any additional classes provided
-  const classes = ` min-h-10 border px-4 rounded-[5px] ${className || ""}`;
+  const classes = ` min-h-10 border rounded-[8px] py-3 px-5 ${className || ""}`;
 
   return (
     <>
@@ -71,7 +81,9 @@ const MoreButton: React.FC<ButtonProps> = ({
           type="submit"
           onClick={onClick}
           className={classes}
-          style={defaultStyle}
+          style={isHovered ? { ...defaultStyle, ...hoverStyle } : defaultStyle}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
           {text}
         </button>
