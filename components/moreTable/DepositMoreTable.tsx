@@ -160,7 +160,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     </td>
                     <td className="py-4 px-6 items-start h-full">
                       <div className="flex justify-start">
-                        <FormatPourcentage value={"N/A"} />
+                        <FormatPourcentage value={item.netAPY} />
                       </div>
                     </td>
                     <td className="items-start h-full">

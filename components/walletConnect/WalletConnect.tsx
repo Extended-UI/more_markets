@@ -19,33 +19,33 @@ export const WalletConnect = () => {
         mounted,
       }) => {
         let unsafe = false;
-        if (account) {
-          axios
-            .get(
-              "https://public.chainalysis.com/api/v1/address/" +
-                account.address,
-              {
-                headers: {
-                  Accept: "application/json",
-                  "X-API-Key": CHAINALYSIS_KEY,
-                },
-              }
-            )
-            .then((resp) => {
-              const respData = resp.data;
-              console.log(respData, resp);
-              if (
-                !(
-                  respData.identifications &&
-                  respData.identifications.length == 0
-                )
-              )
-                unsafe = true;
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
+        // if (account) {
+        //   axios
+        //     .get(
+        //       "https://public.chainalysis.com/api/v1/address/" +
+        //         account.address,
+        //       {
+        //         headers: {
+        //           Accept: "application/json",
+        //           "X-API-Key": CHAINALYSIS_KEY,
+        //         },
+        //       }
+        //     )
+        //     .then((resp) => {
+        //       const respData = resp.data;
+        //       console.log(respData, resp);
+        //       if (
+        //         !(
+        //           respData.identifications &&
+        //           respData.identifications.length == 0
+        //         )
+        //       )
+        //         unsafe = true;
+        //     })
+        //     .catch((err) => {
+        //       console.log(err);
+        //     });
+        // }
 
         return (
           <div

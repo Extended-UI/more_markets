@@ -124,7 +124,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
               </td>
               <td className="p-6 items-center h-full">
                 <div className="flex gap-1 justify-start">
-                  <FormatPourcentage value="N/A" />
+                  <FormatPourcentage value={item.netAPY} />
                 </div>
               </td>
               <td className="p-6 items-left h-full">

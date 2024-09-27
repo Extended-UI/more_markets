@@ -176,7 +176,7 @@ const VaultDepositPush: React.FC<Props> = ({
         </div>
         <div className="flex gap-2 text-l mb-5 px-4">
           <span className="more-text-gray">Net APY:</span>
-          <FormatTwoPourcentage value={"N/A"} />
+          <FormatTwoPourcentage value={item.netAPY} />
         </div>
       </div>
       {!flowVault && (

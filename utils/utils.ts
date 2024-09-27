@@ -1,6 +1,13 @@
 import { toast } from "react-toastify";
 import { formatUnits, ZeroAddress } from "ethers";
-import { GraphVault, IToken, MarketInfo, MarketParams } from "@/types";
+import {
+  GraphVault,
+  IToken,
+  MarketInfo,
+  MarketParams,
+  IVaultApr,
+  IMarketApr,
+} from "@/types";
 import {
   tokens,
   curators,
@@ -154,4 +161,42 @@ export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {
 export const wMulDown = (x: bigint, y: bigint) => {
   const returnVal = mulDivDown(x, y, WAD);
   return returnVal > moreTolerance ? returnVal - moreTolerance : BigInt(0);
+};
+
+export const fetchVaultAprs = async (
+  targetDate: number,
+  vaultAddress: string = ""
+): Promise<IVaultApr[]> => {
+  const fetchResult = await fetch(
+    "/api/vaultapr?targetDate=" + targetDate + "&vaultid=" + vaultAddress,
+    {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+      },
+    }
+  );
+  const vaultAprList = await fetchResult.json();
+  return vaultAprList.vaultaprs;
+};
+
+export const fetchMarketAprs = async (
+  targetDate: number,
+  marketid: string = ""
+): Promise<IMarketApr[]> => {
+  const fetchResult = await fetch(
+    "/api/marketapr?targetDate=" + targetDate + "&marketid=" + marketid,
+    {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+      },
+    }
+  );
+  const marketAprList = await fetchResult.json();
+  return marketAprList.marketaprs;
+};
+
+export const convertAprToApy = (apr: number, aprInterval: number): number => {
+  return (Math.pow(1 + apr / aprInterval, aprInterval) - 1) * 100;
 };

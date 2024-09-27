@@ -10,9 +10,14 @@ import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
 // import { fetchMarket } from "@/utils/graph";
-import { getBorrowedAmount } from "@/utils/contract";
 import { BorrowMarket, BorrowPosition } from "@/types";
-import { getMarketData, getPosition, fetchMarket } from "@/utils/contract";
+import { fetchMarketAprs, convertAprToApy } from "@/utils/utils";
+import {
+  getMarketData,
+  getPosition,
+  fetchMarket,
+  getBorrowedAmount,
+} from "@/utils/contract";
 import leftArrow from "@/public/assets/icons/left-arrow.png";
 
 const BorrowDetailPage: React.FC = () => {
@@ -25,24 +30,41 @@ const BorrowDetailPage: React.FC = () => {
     null
   );
 
+  const aprDate = 1;
   const marketId = params ? params.replace("/borrow/", "") : "";
 
   const initMarket = async () => {
     try {
       if (marketId.length > 0) {
-        const [marketInfo, marketData] = await Promise.all([
+        const [marketInfo, marketData, marketAprs] = await Promise.all([
           fetchMarket(marketId),
           getMarketData(marketId),
+          fetchMarketAprs(aprDate, marketId),
         ]);
+
+        const aprItem = marketAprs.find(
+          (marketApr) =>
+            marketApr.marketid.toLowerCase() == marketId.toLowerCase()
+        );
 
         setBorrowMarket({
           ...marketInfo,
           marketParams: marketData.params,
           marketInfo: marketData.info,
+          borrow_apr: aprItem
+            ? convertAprToApy(aprItem.borrow_apr, aprDate)
+            : 0,
+          supply_usual_apr: aprItem
+            ? convertAprToApy(aprItem.supply_usual_apr, aprDate)
+            : 0,
+          supply_prem_apr: aprItem
+            ? convertAprToApy(aprItem.supply_prem_apr, aprDate)
+            : 0,
         } as BorrowMarket);
 
         if (userAddress) {
           const positionInfo = await getPosition(userAddress, marketId);
+
           if (positionInfo)
             setBorrowPosition({
               ...marketInfo,
@@ -56,6 +78,9 @@ const BorrowDetailPage: React.FC = () => {
               borrowShares: positionInfo.borrowShares,
               collateral: positionInfo.collateral,
               lastMultiplier: positionInfo.lastMultiplier,
+              borrow_apr: 0,
+              supply_usual_apr: 0,
+              supply_prem_apr: 0,
             });
         }
       } else {

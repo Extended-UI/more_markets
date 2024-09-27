@@ -147,9 +147,9 @@ const VaultDepositInput: React.FC<Props> = ({
         <div className="flex justify-between mt-4">
           <div>APY:</div>
           <div>
-            {/* {item.netAPY}
-            <span className="more-text-gray">%</span> */}
-            N/A
+            <span className="more-text-gray">
+              {(item.netAPY * 100).toFixed(2)} %
+            </span>
           </div>
         </div>
         <div className="flex justify-between mt-10">

@@ -50,7 +50,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           infoText=""
           className="flex-1 m-2  min-w-[200px]"
         >
-          <span>{"N/A"}</span>
+          {(vault.netAPY * 100).toFixed(2)} %
           {/* <span className="text-[#888888] font-[600]">%</span> */}
         </InfoDetailGrey>
         {/* <InfoDetailGrey
