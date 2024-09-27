@@ -198,5 +198,5 @@ export const fetchMarketAprs = async (
 };
 
 export const convertAprToApy = (apr: number, aprInterval: number): number => {
-  return (Math.pow(1 + apr / aprInterval, aprInterval) - 1) * 100;
+  return Math.pow(1 + apr / aprInterval, aprInterval) - 1;
 };
