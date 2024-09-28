@@ -65,27 +65,29 @@ const SuppliersMoreTable: React.FC<Props> = () => {
   ];
 
   return (
+    <div>
+      <h1 className="text-[20px] font-semibold mb-8">Suppliers</h1>
+    
     <div
-      className="overflow-x-auto relative rounded-[15px] mb-16 w-full"
+      className="rounded-2xl table-wrapper more-table"
       style={{
-        overflowX: "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
         position: "relative",
-        overflow: "visible",
+        
       }}
     >
-      <h1 className="text-2xl mt-10 mb-8">Suppliers</h1>
-      <table className="w-full text-sm text-left   border border-gray-800 w-full">
+      
+      <table className="w-full rounded-2xl text-sm text-left table overflow-x-scroll">
         <thead
-          className="bg-[#212121] h-20  text-xs "
+          className="bg-[#212121] h-20  text-white text-sm "
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
-          <tr className="rounded-t-lg">
-            <th style={{ width: "300px" }} className="rounded-tl-lg">
+          <tr className="">
+            <th style={{ width: "300px" }} className="p-6">
               <TableHeaderCell title="Wallet" infoText="" />
             </th>
-            <th style={{ width: "300px" }}>
+            <th style={{ width: "300px" }} className="p-6">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Supply"
@@ -93,7 +95,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
                 />
               </div>
             </th>
-            <th style={{ width: "100px" }}>
+            <th style={{ width: "100px" }} className="p-6">
               <div className="flex justify-center">
                 <TableHeaderCell title="Share" infoText="" />
               </div>
@@ -112,22 +114,22 @@ const SuppliersMoreTable: React.FC<Props> = () => {
                     }
                   : undefined
               }
-              className={`last:border-b-0 text-[12px]  cursor-pointer ${
+              className={`last:border-b-0 text-[14px]  cursor-pointer ${
                 index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
               }`}
             >
-              <td className="py-2 px-6">
+              <td className="p-6">
                 <div className="items-center  h-full flex justify-start">
                   <span
                     style={{ backgroundColor: item.allocationColor }}
-                    className={`w-5 h-5  rounded-full mr-2`}
+                    className={`w-[20px] h-[20px]  rounded-full mr-3`}
                   ></span>
                   <span>0x1234...xxyz</span>
                 </div>
               </td>
 
-              <td className="py-2  items-center h-full">
-                <div className="flex gap-1 justify-start items-center gap-2 ml-3">
+              <td className="p-6">
+                <div className="flex justify-start items-center gap-2 ml-3">
                   <FormatTokenMillion
                     value={item.supplyAmount}
                     token={item.supplyCurrency}
@@ -136,7 +138,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
                 </div>
               </td>
 
-              <td className="py-2 px-6  items-center justify-end h-full">
+              <td className="p-6">
                 <div className="flex gap-1 justify-center">
                   <FormatPourcentage
                     value={item.unsecuredAPY}
@@ -147,6 +149,7 @@ const SuppliersMoreTable: React.FC<Props> = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

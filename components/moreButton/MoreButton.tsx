@@ -65,7 +65,7 @@ const MoreButton: React.FC<ButtonProps> = ({
   };
 
   // Combining default class with any additional classes provided
-  const classes = ` min-h-10 border rounded-[8px] py-3 px-5 ${className || ""}`;
+  const classes = ` min-h-10 border rounded-[8px] py-3 px-7 ${className || ""}`;
 
   return (
     <>

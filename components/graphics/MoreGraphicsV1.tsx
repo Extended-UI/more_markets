@@ -66,23 +66,23 @@ const MoreGraphicsV1: React.FC<Props> = ({
   return (
     <>
       <div
-        className="p-2 flex justify-between items-center overflow-x-auto overflow-y-hidden"
+        className="flex justify-between items-center overflow-x-auto overflow-y-hidden"
         style={{
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none", // Works in Firefox
           msOverflowStyle: "none", // Works in IE and Edge
         }}
       >
-        <div className="p-2 flex justify-center items-center">
+        <div className="pb-14 flex justify-center items-center">
           {datasets.map((dataset) => (
             <div key={dataset.label} className="mr-16">
               <div className="p-2 flex justify-center items-center">
                 <Icon
                   icon="circle"
-                  className="text-xl cursor-pointer mr-2"
+                  className="text-xl cursor-pointer mr-3"
                   style={{ color: dataset.borderColor }}
                 />
-                <div className="text-xl mb-0 mr-2">{dataset.label}</div>
+                <div className="text-[16px] font-semibold  text-[#888888] mb-0 mr-3">{dataset.label}</div>
                 {visibility[dataset.label] ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -220,7 +220,7 @@ const MoreGraphicsV1: React.FC<Props> = ({
                   </svg>
                 )}
               </div>
-              <div className="text-3xl text-center">
+              <div className="text-[24px] font-semibold ml-10">
                 {dataset.percentage}
                 <span className="text-gray-500 ml-2">%</span>
               </div>
@@ -228,7 +228,7 @@ const MoreGraphicsV1: React.FC<Props> = ({
           ))}
         </div>
         <div>
-          <div className="dropdown absolute top-[40px] right-[20px] z-1">
+          <div className="dropdown absolute top-[30px] right-[30px] z-1">
             <label tabIndex={0} className="btn m-1 btn-neutral">
               1 Week
               <svg
@@ -247,7 +247,7 @@ const MoreGraphicsV1: React.FC<Props> = ({
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52"
+              className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 right-0"
             >
               <li className="bg-neutral">
                 <a>2 weeks</a>

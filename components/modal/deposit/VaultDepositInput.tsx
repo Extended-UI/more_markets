@@ -84,12 +84,13 @@ const VaultDepositInput: React.FC<Props> = ({
     item.assetAddress.toLowerCase() == contracts.WNATIVE.toLowerCase();
 
   return (
-    <div className="more-bg-secondary w-full rounded-[20px]">
-      <div className="text-4xl mb-10 px-4 pt-10">{item.vaultName}</div>
-      <div className="text-l mb-5 px-4">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">{item.vaultName}</div>
+      <div className="text-l text-[16px] mb-5">
         Deposit {flowVault ? "Flow" : tokenInfo.symbol}
       </div>
-      <div className="px-4">
+      <div>
         {/* <div className="text-xl my-3">
           <span className="mr-3">Use Flow</span>
           {flowVault && (
@@ -119,32 +120,34 @@ const VaultDepositInput: React.FC<Props> = ({
         )}
       </div>
       {flowVault ? (
-        <div className="text-right more-text-gray px-4 mt-4">
+        <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
           Balance: {flowBalance.formatted} Flow
         </div>
       ) : (
-        <div className="text-right more-text-gray px-4 mt-4">
+        <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
           Balance: {balanceString.formatted} {tokenInfo.symbol}
         </div>
       )}
-      <div className="flex justify-end mt-7 mb-7 px-4">
+      <div className="flex justify-end mt-[40px]">
         <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
             text="Cancel"
             onClick={closeModal}
-            color="gray"
+            color="grey"
           />
         </div>
         <MoreButton
-          className="text-2xl py-2"
+          className="text-2xl py-2 "
           text="Deposit"
           onClick={() => handleDeposit()}
           color="primary"
         />
       </div>
-      <div className="more-bg-primary px-4 rounded-b-[10px] py-2 pb-5">
-        <div className="flex justify-between mt-4">
+      </div>
+      <div className=""></div>
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] pb-[40px] pt-[30px] text-[16px] font-normal">
+        <div className="flex justify-between mb-4">
           <div>APY:</div>
           <div>
             {/* {item.netAPY}
@@ -152,8 +155,8 @@ const VaultDepositInput: React.FC<Props> = ({
             N/A
           </div>
         </div>
-        <div className="flex justify-between mt-10">
-          <div>Total Deposits</div>
+        <div className="flex justify-between mt-12">
+          <div className="">Total Deposits</div>
           <div>
             <FormatTokenMillion
               value={item.totalDeposits}

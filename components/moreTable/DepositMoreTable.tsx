@@ -71,7 +71,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
     <>
       {vaults.length > 0 && (
         <>
-          <h1 className="text-4xl mb-4 mt-14">My Deposits</h1>
+          <h1 className="text-[30px] mb-8 mt-28 font-semibold">My Deposits</h1>
           <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
             <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
               <thead
@@ -79,36 +79,36 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                 style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
               >
                 <tr>
-                  <th style={{ width: "200px" }}>
+                  <th style={{ width: "400px" }} className="p-6">
                     <TableHeaderCell
                       title="Vault Name"
                       infoText="The name given to the vault by the curator."
                     />
                   </th>
-                  <th style={{ width: "200px" }}>
+                  <th style={{ width: "200px" }} className="p-6">
                     <TableHeaderCell
                       title="Deposit Token"
                       infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
                     />
                   </th>
-                  <th style={{ width: "200px" }}>
+                  <th style={{ width: "200px" }} className="p-6">
                     <TableHeaderCell
                       title="Net APY"
                       infoText="The annualized return you earn on your deposited amount after all fees. This rate fluctuates in real-time based on supply and demand in the underlying markets."
                     />
                   </th>
-                  <th style={{ width: "300px" }}>
+                  <th style={{ width: "300px" }} className="p-6">
                     <div className="flex justify-start">
                       <TableHeaderCell title="My Deposit" infoText="" />
                     </div>
                   </th>
-                  <th style={{ width: "200px" }}>
+                  <th style={{ width: "200px" }} className="p-6">
                     <TableHeaderCell
                       title="Curator"
                       infoText="The organization that manages the vault parameters such as included markets, allocations, caps and performance fees."
                     />
                   </th>
-                  <th style={{ width: "200px" }}>
+                  <th style={{ width: "200px" }} className="p-6">
                     <TableHeaderCell
                       title="Collateral"
                       infoText="The token(s) that borrowers must lock in order to borrow funds."
@@ -136,35 +136,35 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                           }
                         : undefined
                     }
-                    className={`last:border-b-0 text-[14px] border border-[#202020]  cursor-pointer  ${
+                    className={`last:border-b-0 text-[14px] border border-[#202020] cursor-pointer last:rouded-[20px]  ${
                       index % 2 === 0 ? "bg-[#141414]" : "bg-[#191919]"
                     }`}
                   >
-                    <td className="py-4 px-6 items-start h-full">
-                      <div className="flex items-start">
+                    <td className="p-6">
+                      <div className="flex justify-start items-center">
                         <IconToken
-                          className="mr-2 w-6 h-6"
+                          className="mr-3 w-8 h-8"
                           tokenName={item.assetAddress}
                         />
                         {item.vaultName}
                       </div>
                     </td>
-                    <td className="py-4 px-6 items-start h-full">
-                      <div className="flex items-start">
+                    <td className="p-6">
+                      <div className="flex justify-start items-center">
                         <IconToken
-                          className="mr-2 w-6 h-6"
+                          className="mr-3 w-8 h-8"
                           tokenName={item.assetAddress}
                           showSymbol={true}
                         />
                       </div>
                     </td>
-                    <td className="py-4 px-6 items-start h-full">
-                      <div className="flex justify-start">
+                    <td className="p-6">
+                      <div className="flex justify-start items-center">
                         <FormatPourcentage value={"N/A"} />
                       </div>
                     </td>
-                    <td className="items-start h-full">
-                      <div className="flex justify-start">
+                    <td className="p-6">
+                      <div className="flex justify-start items-center">
                         <FormatTokenMillion
                           value={item.userDeposits}
                           token={item.assetAddress}
@@ -172,15 +172,17 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                         />
                       </div>
                     </td>
-                    <td className="py-4 px-6 items-start h-full">
-                      <div className="flex items-start">
-                        <IconToken className="mr-2 w-6 h-6" tokenName="wflow" />
+                    <td className="p-6">
+                      <div className="flex justify-start items-center">
+                        <IconToken 
+                          className="mr-3 w-8 h-8"
+                          tokenName="wflow" />
                         {item.curator}
                       </div>
                     </td>
-                    <td className="py-4 items-start h-full">
+                    <td className="p-6">
                       <ListIconToken
-                        className="w-6 h-6"
+                        className="w-8 h-8"
                         iconNames={item.collateral}
                       />
                     </td>

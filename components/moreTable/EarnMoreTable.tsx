@@ -83,6 +83,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                   backgroundColor: "#212121",
                   position: "static",
                   boxShadow: "inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)",
+                  padding: '1.5rem'
                 }}
               />
             )}
