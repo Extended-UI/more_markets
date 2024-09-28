@@ -27,7 +27,7 @@ const InfoDetailGrey: React.FC<InfoDetailGreyProps> = ({ title, children, classN
           )}
         </div>
       </div>
-      <div className='text-[40px] font-semibold mt-2 truncate'>
+      <div className='text-[30px] font-semibold mt-2 truncate'>
         {children}
       </div>
     </div>

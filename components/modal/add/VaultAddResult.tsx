@@ -55,19 +55,20 @@ const VaultAddResult: React.FC<Props> = ({
     txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
   return (
-    <div className="more-bg-secondary rounded-[20px] h-full w-full">
-      <div className="mb-10 pt-10 text-4xl px-4">Transaction Confirmation</div>
-      <div className="flex flex-row justify-between mt-4 items-center px-4">
-        <div className="flex items-center mb-10  gap-2">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
+      <div className="text-[24px] mb-[40px] font-semibold flex justify-between">
+        <div className="flex items-center font-semibold text-[20px] gap-2">
           <ListIconToken
             iconNames={[item.inputToken.id, item.borrowedToken.id]}
-            className="w-8 h-8"
+            className="w-[24px] h-[24px]"
           />
-          <div className="text-2xl flex items-center'">
+          <div className="ml-3 flex items-center">
             {collateralToken} / {loanToken}
           </div>
         </div>
-        <div className="flex gap-2 text-l mb-5 px-4">
+        <div className="flex gap-2 text-[16px]">
           <span className="more-text-gray">Liquidation LTV:</span>
           <FormatTwoPourcentage
             value={formatTokenValue(item.lltv, "", 18)}
@@ -76,20 +77,20 @@ const VaultAddResult: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-4">
+      <div className="relative more-bg-primary rounded-[12px] text-[16px] p-[20px] mb-6">
         Add {amount} {collateralToken} to Market
       </div>
 
       {txhash.length > 0 && (
-        <div className="text-l my-5 px-4">
+        <div className="text-[20px] flex items-center font-medium mb-6 mt-[40px]">
           <span>
             {executed ? (
               <Icon
                 icon="circle-check"
-                className="text-secondary text-xl cursor-pointer mr-5"
+                className="text-secondary text-xl cursor-pointer  w-[30px] !h-[30px] mr-5"
               />
             ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
+              <Icon icon="circle" className="text-xl cursor-pointer  w-[30px] !h-[30px] mr-5" />
             )}
           </span>
           {executed ? (
@@ -99,7 +100,8 @@ const VaultAddResult: React.FC<Props> = ({
           )}
         </div>
       )}
-      <div className="more-bg-primary px-4  py-2  rounded-b-[20px]">
+      </div>
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (
           <div className="flex justify-end mr-5">
             <MoreButton

@@ -98,7 +98,7 @@ const VaultDepositResult: React.FC<Props> = ({
             />
           </div>
         ) : (
-          <div className=" text-secondary border border-secondary border-dashed border-1 rounded-[12px]">
+          <div className=" text-secondary p-5 border border-secondary border-dashed border-1 rounded-[12px]">
             Confirming transaction... Browse MORE vaults while you wait.
           </div>
         )}

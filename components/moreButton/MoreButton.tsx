@@ -71,7 +71,7 @@ const MoreButton: React.FC<ButtonProps> = ({
     <>
       {disabled ? (
         <button
-          className="text-lg px-5 py-1 wallet-networks"
+          className="text-md px-5 py-1 wallet-networks"
           color="primary"
         >
           <SyncLoader color={myColor} />

@@ -55,21 +55,21 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
-    <div className="more-bg-secondary w-full rounded-[20px]">
-      <div className="text-4xl mb-10 px-4 pt-10">Add Collateral</div>
-      <div className="flex items-center mb-5 px-4 gap-2">
-        <ListIconToken
-          iconNames={[item.inputToken.id, item.borrowedToken.id]}
-          className="w-7 h-7"
-        />
-        <div className="text-l flex items-center'">
-          {collateralToken} / {loanToken}
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] text-[16px]">
+        <div className="text-[24px] mb-[40px] font-semibold">Add Collateral</div>
+        <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
+          <ListIconToken
+            iconNames={[item.inputToken.id, item.borrowedToken.id]}
+            className="w-[24px] h-[24px] "
+          />
+          <div className="ml-3 flex items-center">
+            {collateralToken} / {loanToken}
+          </div>
         </div>
-      </div>
-      <div className="text-l mb-5 px-4">Add {collateralToken} Collateral</div>
-
-      <div className="w-full flex flex-col justify-center mt-5">
-        <div className="mx-4 flex justify-center">
+        <div className="text-[16px] mb-5">Add {collateralToken} Collateral</div>
+        <div className="w-full flex flex-col justify-center">
+        <div className="flex justify-center">
           <InputTokenMax
             type="number"
             value={deposit}
@@ -79,24 +79,27 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
             balance={Number(supplyBalance ? supplyBalance.formatted : 0)}
             setMax={handleSetMax}
           />
-        </div>
-        <div className="text-right more-text-gray px-4 mt-4">
-          Balance: {supplyBalance?.formatted} {collateralToken}
-        </div>
+          </div>
+          <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
+            Balance: {supplyBalance?.formatted} {collateralToken}
+          </div>
+          </div>
       </div>
-      <div className="flex justify-end mt-5 px-4 py-5 gap-3 more-bg-primary rounded-b-[20px]">
-        <MoreButton
-          className="text-2xl py-2"
-          text="Cancel"
-          onClick={closeModal}
-          color="gray"
-        />
-        <MoreButton
-          className="text-2xl py-2"
-          text="Add Collateral"
-          onClick={() => handleAdd()}
-          color="primary"
-        />
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+        <div className="mr-5">
+          <MoreButton
+            className="text-2xl py-2"
+            text="Cancel"
+            onClick={closeModal}
+            color="grey"
+          />
+          </div>
+          <MoreButton
+            className="text-2xl py-2"
+            text="Add Collateral"
+            onClick={() => handleAdd()}
+            color="primary"
+          />
       </div>
     </div>
   );

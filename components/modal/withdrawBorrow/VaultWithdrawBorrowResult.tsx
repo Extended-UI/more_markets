@@ -47,32 +47,33 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
-    <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-xl mb-10 px-4 pt-5">Transaction Confirmation</div>
-      <div className="flex items-center mb-10 px-8 gap-2">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
+      <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
-        <div className="text-l flex items-center">
+        <div className="flex items-center">
           {collateralToken} / {loanToken}
         </div>
       </div>
 
-      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5">
+      <div className="relative more-bg-primary text-[16px] rounded-[12px] p-[20px] mb-6">
         Withdraw {amount} {collateralToken}
       </div>
 
       {txhash.length > 0 && (
-        <div className="text-l my-5 px-4">
+        <div className="text-[20px] font-medium mb-6 mt-[40px]">
           <span>
             {executed ? (
               <Icon
                 icon="circle-check"
-                className="text-secondary text-xl cursor-pointer mr-5"
+                className="text-secondary  cursor-pointer w-[30px] h-[30px] mr-5"
               />
             ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
+              <Icon icon="circle" className=" cursor-pointer w-[30px] h-[30px] mr-5" />
             )}
           </span>
           {executed ? (
@@ -82,9 +83,10 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
           )}
         </div>
       )}
-      <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
+      </div>
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (
-          <div className="flex justify-end mr-5">
+          <div className="flex justify-end ">
             <MoreButton
               className="text-2xl py-2"
               text="Done"

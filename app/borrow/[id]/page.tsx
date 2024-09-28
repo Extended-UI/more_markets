@@ -85,18 +85,19 @@ const BorrowDetailPage: React.FC = () => {
     <>
       {borrowMarket && (
         <div className="mb-8">
-          <div className="flex items-center mr-10 cursor-pointer mb-14 mt-14">
-            <Image
-              onClick={() => router.push("/borrow")}
-              className="mr-4"
-              src={leftArrow}
-              alt="left-arrow"
-              width={24}
-              height={24}
-            />
-            <div className="text-[16px] text-white font-medium">
-              Back
-            </div>
+          <div className=" mr-10 mb-14">
+          <div className="flex items-center w-[80px] cursor-pointer" onClick={() => router.push("/borrow")}>
+                <Image
+                  className="mr-4"
+                  src={leftArrow}
+                  alt="left-arrow"
+                  width={24}
+                  height={24}
+                />
+                <div className="text-[16px] text-white font-medium">
+                  Back
+                </div>
+              </div>
           </div>
           <HeaderBorrowDetail item={borrowMarket} updateInfo={updateInfo} />
           <InfosBorrowDetails item={borrowMarket} />
