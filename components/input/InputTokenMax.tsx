@@ -30,30 +30,30 @@ const InputTokenMax: React.FC<Props> = ({
   const { tokenPrice } = usePrice(tokenAddr);
 
   return (
-    <div className="w-full flex  rounded-[8px] more-input-bg-color flex justify-between items-center px-4 py-2 gap-4">
+    <div className="w-full flex  rounded-[12px] more-input-bg-color justify-between items-center p-[16px] gap-4">
       <div className="flex w-full flex-col items-center gap-2">
         <input
           type={type}
           value={!isUndefined(value) ? value : ""}
           onChange={onChange}
-          className="noBorder noArrows input mt-1 text-left text-2xl w-full more-input-text-color more-input-bg-color"
+          className="noBorder noArrows input mt-0 text-left text-[20px] w-full more-input-text-color more-input-bg-color"
           placeholder={placeholder}
         />
         {!isUndefined(value) && value > 0 && (
-          <div className="flex -mt-5 pl-3 pb-4 justify-start w-full items-center">
+          <div className="flex mt-0 pl-3 text-[16px] justify-start w-full items-center">
             <span className="text-grey">
               ${millify(tokenPrice * value, { precision: 2 })}
             </span>
           </div>
         )}
       </div>
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-3 items-center">
         <IconToken className="h-8 w-8" tokenName={token} showSymbol={true} />
         <MoreButton
           text="Max"
           onClick={() => setMax(balance)}
-          color="gray"
-          className="py-2 w-20 text-xl"
+          color="grey"
+          className="py-2 w-20 text-xl ml-3"
         />
       </div>
 

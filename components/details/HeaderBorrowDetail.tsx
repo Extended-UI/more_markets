@@ -15,17 +15,18 @@ const HeaderBorrowDetail: React.FC<IBorrowMarketProp> = ({
   const borrowToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
-    <div className="flex w-full items-center justify-between my-4">
+    <div className="flex w-full items-center justify-between mb-10">
       <div className="flex items-center gap-10">
-        <div className="flex gap-2 items-center sm:text-[25px] text-[16px] items-start">
+        <div className="flex gap-8 items-center text-[30px] font-semibold">
           <ListIconToken
             iconNames={[item.inputToken.id, item.borrowedToken.id]}
+            className={'w-14 h-14'}
           />
           {collateralToken + " / " + borrowToken}
         </div>
       </div>
       {userAddress && (
-        <div className="flex gap-2">
+        <div className="flex gap-2 text-[16px]">
           <ButtonDialog color="secondary" buttonText="Borrow">
             {(closeModal) => (
               <div className="h-full w-full">

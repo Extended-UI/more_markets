@@ -108,7 +108,7 @@ const ExploreGraphBorrowDetail = () => {
 
   return (
     <>
-      <div className="text-2xl mb-5">Explore Market (Coming Soon)</div>
+      <div className="text-[20px] font-semibold mt-16 mb-8">Explore Market (Coming Soon)</div>
 
       <div
         className="mockup-window border-[#343434] border p-4"

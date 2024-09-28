@@ -20,7 +20,8 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none", // Works in Firefox
           msOverflowStyle: "none", // Works in IE and Edge
-          width: "calc(100% + 2rem)",
+          // width: "calc(100% + 2rem)",
+          width: "100%",
           position: "relative",
           overflow: "visible",
           left: "0",
@@ -29,7 +30,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
         <InfoDetailGrey
           title="Total Deposit"
           infoText="The total amount of tokens that have been deposited into the vault and made available to borrowers for loans."
-          className="flex-1 m-2  min-w-[200px]"
+          className="flex-1 m-2 ml-0 min-w-[200px]"
         >
           {/* <span className="text-[#888888] font-[600]">$</span> */}
           {millify(vault.totalDeposits, { precision: 1 })} {tokenInfo.symbol}
@@ -48,7 +49,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
         <InfoDetailGrey
           title="Total 7D APY"
           infoText=""
-          className="flex-1 m-2  min-w-[200px]"
+          className="flex-1 m-2 mr-0 min-w-[200px]"
         >
           {(vault.netAPY * 100).toFixed(2)} %
           {/* <span className="text-[#888888] font-[600]">%</span> */}

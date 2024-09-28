@@ -11,6 +11,7 @@ import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
 // import { fetchMarket } from "@/utils/graph";
 import { BorrowMarket, BorrowPosition } from "@/types";
+
 import { fetchMarketAprs, convertAprToApy } from "@/utils/utils";
 import {
   getMarketData,
@@ -18,7 +19,8 @@ import {
   fetchMarket,
   getBorrowedAmount,
 } from "@/utils/contract";
-import leftArrow from "@/public/assets/icons/left-arrow.png";
+
+import leftArrow from "@/public/assets/icons/left-arrow.svg";
 
 const BorrowDetailPage: React.FC = () => {
   const router = useRouter();
@@ -109,15 +111,20 @@ const BorrowDetailPage: React.FC = () => {
   return (
     <>
       {borrowMarket && (
-        <div className="mb-8 p-3">
-          <Image
-            onClick={() => router.push("/borrow")}
-            className="my-5 cursor-pointer"
-            src={leftArrow}
-            alt="left-arrow"
-            width={35}
-            height={35}
-          />
+        <div className="mb-8">
+          <div className="flex items-center mr-10 cursor-pointer mb-14 mt-14">
+            <Image
+              onClick={() => router.push("/borrow")}
+              className="mr-4"
+              src={leftArrow}
+              alt="left-arrow"
+              width={24}
+              height={24}
+            />
+            <div className="text-[16px] text-white font-medium">
+              Back
+            </div>
+          </div>
           <HeaderBorrowDetail item={borrowMarket} updateInfo={updateInfo} />
           <InfosBorrowDetails item={borrowMarket} />
           {borrowPosition && (

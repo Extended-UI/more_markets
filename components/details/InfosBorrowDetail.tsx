@@ -25,7 +25,8 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none", // Works in Firefox
           msOverflowStyle: "none", // Works in IE and Edge
-          width: "calc(100% + 2rem)",
+          //width: "calc(100% + 2rem)",
+          width: '100%',
           position: "relative",
           left: "0",
           overflow: "visible",
@@ -34,7 +35,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
         <InfoDetailGrey
           title="Total Deposit"
           infoText="The total amount of tokens that have been deposited into the vault and made available to borrowers for loans."
-          className="flex-1 m-2 min-w-[180px]"
+          className="flex-1 m-2 ml-0 min-w-[180px]"
         >
           {/* <span className="text-[#888888] font-[600]">$</span> */}
           {millify(formatTokenValue(totalSupply, item.borrowedToken.id), {
@@ -76,7 +77,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
         <InfoDetailGrey
           title="1D Borrow APY"
           infoText="The average annualized rate that borrowers paid over the trailing 24-hour period."
-          className="flex-1 m-2 min-w-[180px]"
+          className="flex-1 m-2 mr-0 min-w-[180px]"
         >
           {(item.borrow_apr * 100).toFixed(2)} %
           {/* <span className="text-[#888888] font-[600]">%</span> */}

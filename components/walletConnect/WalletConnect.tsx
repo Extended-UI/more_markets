@@ -76,7 +76,7 @@ export const WalletConnect = () => {
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="text-lg px-5 py-2 wallet-networks ml-3 hover:bg-[#434343]"
+                    className="text-lg !text-[16px] px-5 py-4 wallet-networks ml-3 hover:bg-[#434343]"
                   >
                     Connect Wallet
                   </button>
@@ -98,8 +98,8 @@ export const WalletConnect = () => {
               return (
                 <div className="flex">
                   <Menu as="div" className="relative inline-block">
-                    <MenuButton className="flex wallet-connected" type="button">
-                      <div className="flex items-center text-[16px] px-5 py-3 wallet-networks wallet-menu bg-[#212121] hover:bg-[#171717]">
+                    <MenuButton className="flex wallet-connected" type="button" onClick={openChainModal}>
+                      <div className="flex items-center !rounded-[8px] text-[16px] px-5 py-3 wallet-networks wallet-menu bg-[#212121] hover:bg-[#171717]">
                         {chain.hasIcon && (
                           <div
                             style={{
@@ -122,14 +122,14 @@ export const WalletConnect = () => {
                         )}
                         {chain.name}
                       </div>
-                      <div className="pl-2 pr-3 py-4 wallet-networks wallet-chevron bg-[#212121]">
+                      {/* <div className="pl-2 pr-3 py-4 wallet-networks wallet-chevron bg-[#212121]">
                         <ChevronDownIcon
                           aria-hidden="true"
                           className="-mr-1 h-7 w-8 text-[#888888]"
                         />
-                      </div>
+                      </div> */}
                     </MenuButton>
-
+{/* 
                     <MenuItems
                       transition
                       className="absolute mt-3 right-0 z-10 w-56 origin-top-right divide-y bg-[#343434] shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in rounded-xl "
@@ -152,7 +152,7 @@ export const WalletConnect = () => {
                           </MenuItem>
                         </div>
                       ))}
-                    </MenuItems>
+                    </MenuItems> */}
                   </Menu>
 
                   <button

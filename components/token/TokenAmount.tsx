@@ -18,8 +18,8 @@ const TokenAmount: React.FC<Props> = ({
   amount,
 }) => {
   return (
-    <div className="flex flex-row justify-between items-center h-20">
-      <div className="text-xl">{title}</div>
+    <div className="flex flex-row justify-between items-center text-[16px]">
+      <div className="text-[20px] font-normal">{title}</div>
       <div className="flex flex-row items-center">
         <IconToken tokenName={token} className="mr-4 w-6" />
         <FormatTokenMillion

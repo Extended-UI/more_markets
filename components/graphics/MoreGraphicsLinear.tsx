@@ -157,7 +157,8 @@ const [chartAnnotations, setAnnotations] = useState<any[]>([]);
               color: 'white',             // Couleur du texte du label
               font: {
                 weight: 'normal', // Correct use of fontWeight
-                size: 12,   
+                size: 14,   
+                color:'#ffffff'
               },
               xAdjust: 0,
               yAdjust: y += 20
@@ -190,19 +191,32 @@ const [chartAnnotations, setAnnotations] = useState<any[]>([]);
         ticks: {   
           stepSize: 1,  // Chaque unité sur l'axe aura un tick
           autoSkip: true,
-          autoSkipPadding: 50,          
+          autoSkipPadding: 50, 
+          color: '#E0DFE3',   
+          font: {         
+            size: 14,      
+            weight: 400
+          },        
           // Ajout de l'unité "€" après chaque valeur
           callback: function(value: any) {
             return  beforeSignY +  `${value}` + afterSignY;
           }
-        }                              
+        } ,
+        grid: {
+          color: '#343434',
+        }                       
       },
       x: {
         ticks: {
             maxRotation: 0, // Empêche la rotation des étiquettes
             minRotation: 0,  // Fixe les étiquettes à l'horizontal
             autoSkip: true,
-            autoSkipPadding: 50 
+            autoSkipPadding: 50,
+            color: '#E0DFE3',
+            font: {         
+              size: 14,      
+              weight: 400
+            }, 
         }
       }      
     },

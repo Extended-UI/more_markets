@@ -21,21 +21,20 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
 
   return (
     <div
-      className="overflow-x-scroll rounded-2xl table-wrapper mb-16"
+      className="!overflow-x-visible rounded-2xl table-wrapper mb-16 more-table"
       style={{
-        overflowX: "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
         position: "relative",
       }}
     >
-      <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
+      <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px]">
         <thead
           className="bg-[#212121] h-20 text-white  text-xs"
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
           <tr className="">
-            <th style={{ width: "140px" }} className="rounded-tl-lg">
+            <th style={{ width: "140px" }} className="p-6 rounded-tl-lg">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Allocation"
@@ -43,7 +42,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 />
               </div>
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6 ">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Deposits"
@@ -51,7 +50,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 />
               </div>
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6 ">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Collateral"
@@ -59,7 +58,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                 />
               </div>
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6 ">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Liquidation LTV"
@@ -106,16 +105,16 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                     }
                   : undefined
               }
-              className={`last:border-b-0 text-[12px]  cursor-pointer ${
-                index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
+              className={`last:border-b-0 text-[14px] border border-[#202020] cursor-pointer ${
+                index % 2 === 0 ? "bg-[#141414]" : "bg-[#191919]"
               }`}
             >
-              <td className="py-4 px-6 items-center h-full">
+              <td className="p-6 items-center">
                 <div className="flex justify-start">
                   <FormatPourcentage value={item.allowcation / 100} />
                 </div>
               </td>
-              <td className="py-4 items-center h-full">
+              <td className="p-6 items-center">
                 <div className="flex justify-start">
                   <FormatTokenMillion
                     value={item.supply}
@@ -125,17 +124,17 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
                   />
                 </div>
               </td>
-              <td className="py-4  items-center h-full">
+              <td className="p-6 items-center">
                 <div className="flex justify-start">
                   <ListIconToken
-                    className="w-6 h-6 "
+                    className="w-8 h-8 "
                     iconNames={[item.collateral]}
                   />
                 </div>
               </td>
 
-              <td className="py-4 px-6 items-center">
-                <div className="flex justify-start py-4">
+              <td className="p-6 items-center">
+                <div className="flex justify-start">
                   <FormatTwoPourcentage value={item.lltv} value2={item.lltv2} />
                 </div>
               </td>
