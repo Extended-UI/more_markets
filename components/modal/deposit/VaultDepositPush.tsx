@@ -140,107 +140,90 @@ const VaultDepositPush: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base">
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Review Transaction</div>
-      <div className="text-[20px] font-medium mb-[30px]">{item.vaultName}</div>
-      <div className="flex flex-row justify-between items-center mb-[30px]">
-        <div className="text-[20px] font-semibold flex items-center gap-3">
-          <span className="more-text-gray text-[16px]">Curator:</span>
-          <IconToken className="w-[24px] h-[24px]" tokenName="wflow" />
-          <span>{item.curator}</span>
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Review Transaction
         </div>
-        <div className="flex gap-2 mb-5 text-[16px]">
-          <span className="more-text-gray">Net APY:</span>
-          <FormatTwoPourcentage value={item.netAPY} />
+        <div className="text-[20px] font-medium mb-[30px]">
+          {item.vaultName}
         </div>
-      </div>
-      {!flowVault && (
-        <>
-          <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-            <TokenAmount
-              title="Approve"
-              token={item.assetAddress}
-              amount={amount}
-              ltv={"ltv"}
-              totalTokenAmount={item.totalDeposits}
-            />
-            {hasApprove && (
-              <CheckCircleIcon
-                className="text-secondary text-xl cursor-pointer w-[20px] !h-[20px] mr-5"
-                style={{ position: "absolute", top: "2rem", left: "10.5rem" }}
-              />
-            )}
+        <div className="flex flex-row justify-between items-center mb-[30px]">
+          <div className="text-[20px] font-semibold flex items-center gap-3">
+            <span className="more-text-gray text-[16px]">Curator:</span>
+            <IconToken className="w-[24px] h-[24px]" tokenName="wflow" />
+            <span>{item.curator}</span>
           </div>
-
-          <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-            <TokenAmount
-              title="Permit"
-              token={item.assetAddress}
-              amount={amount}
-              ltv={"ltv"}
-              totalTokenAmount={item.totalDeposits}
-            />
-            {hasPermit && (
-              <CheckCircleIcon
-                className="text-secondary text-xl cursor-pointer w-[20px] !h-[20px] mr-5"
-                style={{ position: "absolute", top: "2rem", left: "10.5rem" }}
-              />
-            )}
+          <div className="flex gap-2 mb-5 text-[16px]">
+            <span className="more-text-gray">Net APY:</span>
+            <FormatTwoPourcentage value={item.netAPY} />
           </div>
-        </>
-      )}
-
-      <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <TokenAmount
-          title="Deposit"
-          token={flowVault ? ZeroAddress : item.assetAddress}
-          amount={amount}
-          ltv={""}
-          totalTokenAmount={0}
-        />
-      </div>
-      <div className="pt-5 px-5 text-[16px] leading-10">
-        By confirming this transaction, you agree to the{" "}
-        <a className="underline" href="#goto">
-          Terms of Use
-        </a>{" "}
-        and the services provisions relating to the MORE Protocol Vault.
-      </div>
-    </div>
-    <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="grey"
-          />
         </div>
-        {hasApprove && hasPermit ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Deposit"
-            disabled={isLoading}
-            onClick={() => handleDeposit()}
-            color="primary"
-          />
-        ) : hasApprove ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Permit"
-            disabled={isLoading}
-            onClick={() => handlePermit()}
-            color="primary"
-          />
-        ) : (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Approve"
-            disabled={isLoading}
-            onClick={() => handleApprove()}
-            color="primary"
-          />
+        {!flowVault && (
+          <>
+            <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+              <TokenAmount
+                title="Approve"
+                token={item.assetAddress}
+                amount={amount}
+                ltv={"ltv"}
+                totalTokenAmount={item.totalDeposits}
+              />
+              {hasApprove && (
+                <CheckCircleIcon
+                  className="text-secondary text-xl cursor-pointer w-[20px] !h-[20px] mr-5"
+                  style={{ position: "absolute", top: "2rem", left: "10.5rem" }}
+                />
+              )}
+            </div>
+
+            <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+              <TokenAmount
+                title="Permit"
+                token={item.assetAddress}
+                amount={amount}
+                ltv={"ltv"}
+                totalTokenAmount={item.totalDeposits}
+              />
+              {hasPermit && (
+                <CheckCircleIcon
+                  className="text-secondary text-xl cursor-pointer w-[20px] !h-[20px] mr-5"
+                  style={{ position: "absolute", top: "2rem", left: "10.5rem" }}
+                />
+              )}
+            </div>
+          </>
         )}
 
+        <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
+          <TokenAmount
+            title="Deposit"
+            token={flowVault ? ZeroAddress : item.assetAddress}
+            amount={amount}
+            ltv={""}
+            totalTokenAmount={0}
+          />
+        </div>
+        <div className="pt-5 px-5 text-[16px] leading-10">
+          By confirming this transaction, you agree to the{" "}
+          <a className="underline" href="#goto">
+            Terms of Use
+          </a>{" "}
+          and the services provisions relating to the MORE Protocol Vault.
+        </div>
+      </div>
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px] gap-2">
+        <MoreButton
+          className="text-2xl py-2"
+          text="Cancel"
+          onClick={closeModal}
+          color="gray"
+        />
+        <MoreButton
+          className="text-2xl py-2"
+          text="Deposit"
+          disabled={isLoading}
+          onClick={handleDeposit}
+          color="primary"
+        />
       </div>
     </div>
   );
