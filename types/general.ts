@@ -37,3 +37,15 @@ export interface IBorrowPosition {
 export interface IBorrowPositionProp extends IBorrowPosition {
   updateInfo: (marketId: string) => void;
 }
+
+export interface IVaultApr {
+  vaultid: string;
+  apr: number;
+}
+
+export interface IMarketApr {
+  marketid: string;
+  supply_usual_apr: number;
+  supply_prem_apr: number;
+  borrow_apr: number;
+}

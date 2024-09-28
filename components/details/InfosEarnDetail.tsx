@@ -1,7 +1,8 @@
 import React from "react";
+import millify from "millify";
 import InfoDetailGrey from "./InfoDetailGrey";
 import { InvestmentData } from "@/types";
-import { getTokenInfo, formatNumberLocale } from "@/utils/utils";
+import { getTokenInfo } from "@/utils/utils";
 
 interface Props {
   vault: InvestmentData;
@@ -32,9 +33,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           className="flex-1 m-2 ml-0 min-w-[200px]"
         >
           {/* <span className="text-[#888888] font-[600]">$</span> */}
-          <span>
-            {formatNumberLocale(vault.totalDeposits)} {tokenInfo.symbol}
-          </span>
+          {millify(vault.totalDeposits, { precision: 1 })} {tokenInfo.symbol}
         </InfoDetailGrey>
         {/* <InfoDetailGrey
           title="Available Liquidity"
@@ -52,7 +51,7 @@ const InfosEarnDetails: React.FC<Props> = ({ vault, totalBorrow }) => {
           infoText=""
           className="flex-1 m-2 mr-0 min-w-[200px]"
         >
-          <span>{"N/A"}</span>
+          {(vault.netAPY * 100).toFixed(2)} %
           {/* <span className="text-[#888888] font-[600]">%</span> */}
         </InfoDetailGrey>
         {/* <InfoDetailGrey

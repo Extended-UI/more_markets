@@ -1,7 +1,7 @@
-import React from "react";
+import millify from "millify";
 import InfoDetailGrey from "./InfoDetailGrey";
 import { BorrowMarket } from "@/types";
-import { formatLocale, getTokenInfo } from "@/utils/utils";
+import { formatTokenValue, getTokenInfo } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -38,10 +38,11 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           className="flex-1 m-2 ml-0 min-w-[180px]"
         >
           {/* <span className="text-[#888888] font-[600]">$</span> */}
-          <span className="">
-            {formatLocale(totalSupply, item.borrowedToken.id)}
-            {borrowToken.symbol}
-          </span>
+          {millify(formatTokenValue(totalSupply, item.borrowedToken.id), {
+            precision: 1,
+          }) +
+            " " +
+            borrowToken.symbol}
         </InfoDetailGrey>
         <InfoDetailGrey
           title="Total Borrow"
@@ -49,10 +50,11 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           className="flex-1 m-2 min-w-[220px]"
         >
           {/* <span className="text-[#888888] font-[600]">$</span> */}
-          <span className="">
-            {formatLocale(totalBorrow, item.borrowedToken.id)}
-            {borrowToken.symbol}
-          </span>
+          {millify(formatTokenValue(totalBorrow, item.borrowedToken.id), {
+            precision: 1,
+          }) +
+            " " +
+            borrowToken.symbol}
           <span className="text-secondary text-[14px] ml-4">
             ({utilization}%)
           </span>
@@ -63,17 +65,21 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           className="flex-1 m-2 min-w-[180px]"
         >
           {/* <span className="text-[#888888] font-[600]">$</span> */}
-          <span className="">
-            {formatLocale(totalSupply - totalBorrow, item.borrowedToken.id)}
-            {borrowToken.symbol}
-          </span>
+          {millify(
+            formatTokenValue(totalSupply - totalBorrow, item.borrowedToken.id),
+            {
+              precision: 1,
+            }
+          ) +
+            " " +
+            borrowToken.symbol}
         </InfoDetailGrey>
         <InfoDetailGrey
           title="1D Borrow APY"
           infoText="The average annualized rate that borrowers paid over the trailing 24-hour period."
           className="flex-1 m-2 mr-0 min-w-[180px]"
         >
-          <span className="">{"N/A"}</span>
+          {(item.borrow_apr * 100).toFixed(2)} %
           {/* <span className="text-[#888888] font-[600]">%</span> */}
         </InfoDetailGrey>
       </div>
