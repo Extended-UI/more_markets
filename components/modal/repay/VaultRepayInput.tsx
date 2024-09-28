@@ -125,7 +125,11 @@ const VaultRepayInput: React.FC<Props> = ({
         <div className="flex w-full justify-between mb-[20px]">
           <div>Borrow APY / Projected Borrow APY</div>
           <div>
-            <span className="more-text-gray font-medium">N/A</span>
+
+            <span className="more-text-gray font-medium">
+              {(item.borrow_apr * 100).toFixed(2)} %
+            </span>
+
           </div>
         </div>
         <div className="flex w-full justify-between mb-[20px]">

@@ -1,9 +1,6 @@
-"use client";
-
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import MainLayout from "@/layouts/MainLayout";
 import { Providers } from "./providers";
-import { sactionedCountries } from "@/utils/const";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import "../styles/globals.css";
@@ -14,26 +11,6 @@ interface LayoutProps {
 }
 
 const RootLayout = ({ children }: LayoutProps) => {
-  const checkRegion = async () => {
-    try {
-      const res = await fetch("https://get.geojs.io/v1/ip/country.json");
-
-      if (res.ok) {
-        const respData = await res.json();
-        const countryInfo = respData.country;
-        if (sactionedCountries.indexOf(countryInfo) >= 0) {
-          console.log("You are in sactioned country");
-        }
-      }
-    } catch (err) {
-      console.log("Can not detect the location");
-    }
-  };
-
-  useEffect(() => {
-    checkRegion();
-  }, []);
-
   return (
     <html lang="en">
       <head>

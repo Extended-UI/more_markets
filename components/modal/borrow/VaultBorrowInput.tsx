@@ -182,8 +182,9 @@ const VaultBorrowInput: React.FC<Props> = ({
         <div className="flex justify-between">
           <div>1D Borrow APY:</div>
           <div>
-            N/A
-            {/* <span className="more-text-gray">%</span> */}
+            <span className="more-text-gray">
+              {(item.borrow_apr * 100).toFixed(2)} %
+            </span>
           </div>
         </div>
         {lltv2 && (

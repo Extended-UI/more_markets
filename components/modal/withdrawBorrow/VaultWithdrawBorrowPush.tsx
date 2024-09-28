@@ -35,9 +35,9 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
   const tokenAmount = parseUnits(amount.toString(), collateralToken.decimals);
 
   const handleWithdraw = async () => {
-    setIsLoading(true);
-    try {
-      if (userAddress) {
+    if (userAddress) {
+      setIsLoading(true);
+      try {
         const txHash = await withdrawCollateral(
           item.marketParams,
           tokenAmount,
@@ -47,13 +47,11 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         validWithdraw();
         setTxHash(txHash);
         setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        notifyError(err);
       }
-    } catch (err) {
-      setIsLoading(false);
-      notifyError(err);
     }
-
-    validWithdraw();
   };
 
   return (

@@ -13,7 +13,7 @@ import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { BorrowPosition } from "@/types";
 import { contracts } from "@/utils/const";
-import { getTokenInfo, notifyError } from "@/utils/utils";
+import { getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -64,44 +64,43 @@ const VaultRepayPush: React.FC<Props> = ({
     initApprove();
   }, [userAddress, item, repayAmount]);
 
-  const handleApprove = async () => {
-    if (userAddress) {
-      setIsLoading(true);
-      try {
-        await setTokenAllowance(
-          item.borrowedToken.id,
-          contracts.MORE_MARKETS,
-          useMax ? MaxUint256 : repayAmount
-        );
+  const doApprove = async () => {
+    await setTokenAllowance(
+      item.borrowedToken.id,
+      contracts.MORE_MARKETS,
+      useMax ? MaxUint256 : repayAmount
+    );
 
-        setHasApprove(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+    setHasApprove(true);
+    await delay(2);
+  };
+
+  const doRepay = async () => {
+    if (userAddress) {
+      const txHash = await repayLoanViaMarkets(
+        userAddress,
+        repayAmount,
+        useMax,
+        item
+      );
+
+      await delay(2);
+      validRepay();
+      setTxHash(txHash);
     }
   };
 
   const handleRepay = async () => {
     // generate borrow tx
-    if (userAddress && hasApprove) {
-      setIsLoading(true);
-      try {
-        const txHash = await repayLoanViaMarkets(
-          userAddress,
-          repayAmount,
-          useMax,
-          item
-        );
+    setIsLoading(true);
+    try {
+      if (!hasApprove) await doApprove();
+      await doRepay();
 
-        validRepay();
-        setTxHash(txHash);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      notifyError(err);
     }
   };
 
@@ -195,6 +194,7 @@ const VaultRepayPush: React.FC<Props> = ({
             color="primary"
           />
         )}
+
       </div>
     </div>
   );

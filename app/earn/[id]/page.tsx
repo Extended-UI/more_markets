@@ -9,7 +9,13 @@ import InfosEarnDetails from "@/components/details/InfosEarnDetail";
 import DetailEarnMoreTable from "@/components/moreTable/DetailEarnMoreTable";
 // import { fetchVault, fetchMarkets } from "@/utils/graph";
 import { InvestmentData, VaultBreakdown } from "@/types";
-import { formatTokenValue, getPremiumLltv, formatCurator } from "@/utils/utils";
+import {
+  formatTokenValue,
+  getPremiumLltv,
+  formatCurator,
+  fetchVaultAprs,
+  convertAprToApy,
+} from "@/utils/utils";
 import {
   getVaultDetail,
   getMarketData,
@@ -36,9 +42,11 @@ const EarnDetailPage: React.FC = () => {
         if (vaultId.length == 0) {
           router.push("/earn");
         } else {
-          const [fetchedVault, marketsArr] = await Promise.all([
+          const aprDate = 7;
+          const [fetchedVault, marketsArr, vaultAprs] = await Promise.all([
             fetchVault(vaultId),
             fetchMarkets(),
+            fetchVaultAprs(aprDate, vaultId),
           ]);
 
           if (fetchedVault) {
@@ -110,11 +118,16 @@ const EarnDetailPage: React.FC = () => {
               )) as bigint;
             }
 
+            const aprItem = vaultAprs.find(
+              (aprItem) =>
+                aprItem.vaultid.toLowerCase() == vaultId.toLowerCase()
+            );
+
             setVaultInfo({
               vaultId: fetchedVault.id,
               vaultName: fetchedVault.name,
               assetAddress: fetchedVault.asset.id,
-              netAPY: 0,
+              netAPY: aprItem ? convertAprToApy(aprItem.apr, aprDate) : 0,
               userDeposits: formatTokenValue(userAssets, fetchedVault.asset.id),
               userShares: vaultShares.value,
               totalDeposits: formatTokenValue(
