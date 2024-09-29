@@ -9,7 +9,7 @@ import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { contracts } from "@/utils/const";
+import { contracts, MoreAction } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -133,7 +133,7 @@ const VaultDepositPush: React.FC<Props> = ({
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      notifyError(err);
+      notifyError(err, MoreAction.DEPOSIT);
     }
   };
 

@@ -1,5 +1,7 @@
 import { toast } from "react-toastify";
 import { formatUnits, ZeroAddress } from "ethers";
+import { ErrorDecoder } from "ethers-decode-error";
+import { MoreErrors } from "@/utils/errors";
 import {
   GraphVault,
   IToken,
@@ -11,15 +13,18 @@ import {
 import {
   tokens,
   curators,
-  errorDecoder,
   contracts,
   virtualAssets,
   virtualShares,
   WAD,
   moreTolerance,
+  MoreAction,
 } from "./const";
+import { MenuItem } from "@headlessui/react";
 
-export const notify = (errMsg: string) => toast(errMsg);
+const errorDecoder = ErrorDecoder.create();
+
+export const notify = (errMsg: string) => errMsg.length > 0 && toast(errMsg);
 
 export const getVaule = (param: any): string => {
   return param.result ? param.result.toString() : "";
@@ -128,12 +133,31 @@ export const formatCurator = (fetchedVault: GraphVault): string => {
     : "";
 };
 
-export const notifyError = async (err: unknown) => {
+export const notifyError = async (
+  err: unknown,
+  moreAction: MoreAction = MoreAction.GENERAL
+) => {
   const decodedError = await errorDecoder.decode(err);
-  const errMsg = decodedError.reason
+  const parsedError = decodedError.reason
     ? // ? decodedError.reason.split("\n")[0]
       decodedError.reason
-    : "Unknown Error";
+    : "";
+  const filteredIndex =
+    parsedError.length > 0
+      ? MoreErrors.findIndex((item) =>
+          parsedError.includes(item.error.toLowerCase())
+        )
+      : -1;
+
+  let errMsg = "";
+  if (filteredIndex >= 0) {
+    errMsg = MoreErrors[filteredIndex].message;
+  } else {
+    const filteredError = MoreErrors.find(
+      (moreError) => moreError.action == moreAction
+    );
+    errMsg = filteredError ? filteredError.message : "";
+  }
 
   notify(errMsg);
 };

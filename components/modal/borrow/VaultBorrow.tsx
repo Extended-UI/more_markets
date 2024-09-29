@@ -62,6 +62,7 @@ const VaultBorrow: React.FC<Props> = ({
           supplyAmount={amount}
           borrowAmount={borrow}
           txhash={txHash}
+          onlyBorrow={onlyBorrow}
           processDone={handleProcessDone}
         />
       )}

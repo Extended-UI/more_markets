@@ -7,7 +7,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { BorrowPosition } from "@/types";
-import { contracts } from "@/utils/const";
+import { contracts, MoreAction } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -177,7 +177,7 @@ const VaultBorrowPush: React.FC<Props> = ({
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      notifyError(err);
+      notifyError(err, onlyBorrow ? MoreAction.BORROW_MORE : MoreAction.BORROW);
     }
   };
 

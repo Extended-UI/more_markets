@@ -9,7 +9,7 @@ import TokenAmount from "@/components/token/TokenAmount";
 // import PositionChangeToken from "@/components/token/PositionChangeToken";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
-import { contracts } from "@/utils/const";
+import { contracts, MoreAction } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -131,7 +131,7 @@ const VaultAddPush: React.FC<Props> = ({
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      notifyError(err);
+      notifyError(err, MoreAction.ADD_COLLATERAL);
     }
   };
 

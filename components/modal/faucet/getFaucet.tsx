@@ -4,7 +4,7 @@ import _ from "lodash";
 import { ZeroAddress } from "ethers";
 import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
-import { notifyError } from "@/utils/utils";
+import { notify } from "@/utils/utils";
 import { addNewToken } from "@/utils/contract";
 import { tokens, faucetAmounts } from "@/utils/const";
 
@@ -28,7 +28,7 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
     try {
       await addNewToken(token.address, token.symbol, token.decimals);
     } catch (err) {
-      notifyError(err);
+      notify("User rejected request");
     }
   };
 
@@ -48,7 +48,7 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
         if (res.ok) {
           setCompleted(true);
         } else {
-          notifyError("Faucet failed, please try again");
+          notify("Faucet failed, please try again");
         }
 
         setIsLoading(false);

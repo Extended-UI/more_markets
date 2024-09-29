@@ -1,6 +1,7 @@
 import { BorrowMarket } from "./borrowMarket";
 import { BorrowPosition } from "./borrowPosition";
 import { InvestmentData } from "./investmentData";
+import { MoreAction } from "@/utils/const";
 
 export interface IToken {
   name: string;
@@ -48,4 +49,10 @@ export interface IMarketApr {
   supply_usual_apr: number;
   supply_prem_apr: number;
   borrow_apr: number;
+}
+
+export interface IMoreError {
+  action: MoreAction;
+  error: string;
+  message: string;
 }

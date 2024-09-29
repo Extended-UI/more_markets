@@ -22,12 +22,8 @@ const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
         </div>
       </div>
       <div className="px-4 my-4 text-gray">
-        This is a blurb that describes the strategy of the vault and any
-        specific information that the curator might want to communicate to
-        depositors. It can include things like the rationale, the risk
-        tolerance, any calculations or other information that is helpful to the
-        user. This text should be limited to 4 lines (however many characters
-        that makes since this is about that.
+        This vault manages liquidity allocations of Flow-indexed tokens based on
+        supply and demand for liquid staked FLOW and FLOW
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-primary w-full"></div>
@@ -51,15 +47,15 @@ const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
         </div>
       </div>
       <div className="flex justify-end mt-7 pb-5">
-          <div className="mr-5">
-            <MoreButton
-              className="text-2xl py-2"
-              text="Close"
-              onClick={closeModal}
-              color="gray"
-            />
-          </div>
+        <div className="mr-5">
+          <MoreButton
+            className="text-2xl py-2"
+            text="Close"
+            onClick={closeModal}
+            color="gray"
+          />
         </div>
+      </div>
     </div>
   );
 };
