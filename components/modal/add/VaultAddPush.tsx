@@ -200,6 +200,16 @@ const VaultAddPush: React.FC<Props> = ({
             color="grey"
           />
         </div>
+        {/* block A - if enable block B remove this */}
+        <MoreButton
+            className="text-2xl py-2"
+            text="Add Collateral"
+            disabled={isLoading}
+            onClick={handleSupply}
+            color="primary"
+        />
+        {/* block B - enable if this is reqired
+        
         {hasApprove && hasPermit ? (
           <MoreButton
             className="text-2xl py-2"
@@ -224,7 +234,7 @@ const VaultAddPush: React.FC<Props> = ({
             onClick={() => handleApprove()}
             color="primary"
           />
-        )}
+        )} */}
 
       </div>
     </div>

@@ -48,24 +48,14 @@ const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
           <div>{formatEther(item.timelock)} Days</div>
         </div>
       </div>
-<<<<<<< HEAD
       <div className="px-[28px] py-[30px] flex justify-end">
-=======
-      <div className="flex justify-end mt-7 pb-5">
-        <div className="mr-5">
->>>>>>> graph-integration
           <MoreButton
             className="text-2xl py-2"
             text="Close"
             onClick={closeModal}
-<<<<<<< HEAD
             color="grey"
           />
-=======
-            color="gray"
-          />
-        </div>
->>>>>>> graph-integration
+      </div>
       </div>
     </div>
   );
