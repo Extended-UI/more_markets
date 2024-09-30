@@ -20,7 +20,6 @@ import {
   moreTolerance,
   MoreAction,
 } from "./const";
-import { MenuItem } from "@headlessui/react";
 
 const errorDecoder = ErrorDecoder.create();
 
@@ -145,7 +144,7 @@ export const notifyError = async (
   const filteredIndex =
     parsedError.length > 0
       ? MoreErrors.findIndex((item) =>
-          parsedError.includes(item.error.toLowerCase())
+          parsedError.toLowerCase().includes(item.error.toLowerCase())
         )
       : -1;
 

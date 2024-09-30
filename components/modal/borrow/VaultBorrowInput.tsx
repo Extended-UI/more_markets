@@ -16,6 +16,7 @@ import {
   getAvailableLiquidity,
   mulDivDown,
   wMulDown,
+  formatTokenValue,
 } from "@/utils/utils";
 
 interface Props {
@@ -46,6 +47,8 @@ const VaultBorrowInput: React.FC<Props> = ({
     item.marketInfo,
     item.borrowedToken.id
   );
+
+  const isPremiumUser = item.lastMultiplier != BigInt(1e18);
 
   const handleInputDepositChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -185,11 +188,17 @@ const VaultBorrowInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        {lltv2 && (
+        <div className="flex justify-between mt-10 pb-4">
+          <div>LLTV:</div>
+          <div>
+            <FormatPourcentage value={formatTokenValue(item.lltv, "", 18)} />
+          </div>
+        </div>
+        {lltv2 && isPremiumUser && (
           <div className="flex justify-between mt-10 pb-4">
-            <div>Your Premium Liquidation LTV</div>
+            <div>Your Premium Liquidation LTV:</div>
             <div>
-              <FormatPourcentage value={lltv2.toFixed(2)} />
+              <FormatPourcentage value={lltv2} />
             </div>
           </div>
         )}

@@ -4,6 +4,11 @@ import { IMoreError } from "@/types";
 export const MoreErrors: IMoreError[] = [
   {
     action: MoreAction.GENERAL,
+    error: "User rejected the request",
+    message: "User rejected the request.",
+  },
+  {
+    action: MoreAction.GENERAL,
     error: "token balance is not sufficient",
     message: "You do not have enough token_name to execute this transaction.",
   },
@@ -37,7 +42,7 @@ export const MoreErrors: IMoreError[] = [
   {
     action: MoreAction.BORROW,
     error: "insufficient collateral",
-    message: "You do not have enough collateral to increase borrow more.",
+    message: "You do not supply enough collateral to borrow.",
   },
   {
     action: MoreAction.BORROW_MORE,

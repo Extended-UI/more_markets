@@ -16,7 +16,7 @@ import {
   setTokenAllowance,
   setTokenPermit,
   getPermitNonce,
-  supplyToVaults,
+  depositToVaults,
 } from "@/utils/contract";
 
 interface Props {
@@ -104,7 +104,7 @@ const VaultDepositPush: React.FC<Props> = ({
 
   const doDeposit = async (deadline: bigint, signHash: string) => {
     if (userAddress) {
-      const txHash = await supplyToVaults(
+      const txHash = await depositToVaults(
         item.vaultId,
         item.assetAddress,
         userAddress,
