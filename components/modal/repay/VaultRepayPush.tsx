@@ -105,9 +105,10 @@ const VaultRepayPush: React.FC<Props> = ({
   };
 
   return (
-    <div className="more-bg-secondary rounded-[20px] h-full w-full">
-      <div className="mb-10 pt-5 text-4xl px-4">Review Transaction</div>
-      <div className="flex items-center mb-5 gap-2 px-4">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">Review Transaction</div>
+      <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
@@ -116,7 +117,7 @@ const VaultRepayPush: React.FC<Props> = ({
           {collateralToken.symbol} / {loanToken}
         </div>
       </div>
-      <div className="more-bg-primary px-8 rounded-t-[5px] mx-4">
+      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
         <TokenAmount
           title="Repay"
           token={item.borrowedToken.id}
@@ -159,13 +160,14 @@ const VaultRepayPush: React.FC<Props> = ({
         /> 
       </div> */}
 
-      <div className="py-5 px-5">
+      <div className="pt-5 px-5 text-[16px] leading-10">
         By confirming this transaction, you agree to the{" "}
         <a className="underline" href="#goto">
           Terms of Use
         </a>{" "}
         and the services provisions relating to the MORE Protocol Vault.
       </div>
+<<<<<<< HEAD
       <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4 gap-2">
         <MoreButton
           className="text-2xl py-2"
@@ -180,6 +182,35 @@ const VaultRepayPush: React.FC<Props> = ({
           onClick={handleRepay}
           color="primary"
         />
+=======
+      </div>
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+        <div className="mr-5">
+          <MoreButton
+            className="text-2xl py-2"
+            text="Cancel"
+            onClick={closeModal}
+            color="grey"
+          />
+        </div>
+        {hasApprove ? (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Repay"
+            disabled={isLoading}
+            onClick={handleRepay}
+            color="primary"
+          />
+        ) : (
+          <MoreButton
+            className="text-2xl py-2"
+            text="Approve"
+            disabled={isLoading}
+            onClick={handleApprove}
+            color="primary"
+          />
+        )}
+>>>>>>> styles-fix
       </div>
     </div>
   );

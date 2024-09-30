@@ -151,21 +151,22 @@ const VaultWithdrawPush: React.FC<Props> = ({
   };
 
   return (
-    <div className="more-bg-secondary rounded-[20px] h-full w-full">
-      <div className="mb-5 px-4 pt-10 text-3xl">Review Transaction</div>
-      <div className="text-3xl mb-5 pt-5 px-4">{item.vaultName}</div>
-      <div className="flex flex-row justify-between mt-4 items-center">
-        <div className="flex gap-2 text-l mb-5  px-4 items-center">
-          <span className="more-text-gray">Curator:</span>
-          <IconToken className="w-6 h-6" tokenName="wflow" />
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">Review Transaction</div>
+      <div className="text-[20px] font-medium mb-[30px]">{item.vaultName}</div>
+      <div className="flex flex-row justify-between items-center mb-[30px]">
+        <div className="text-[20px] font-semibold flex items-center gap-3">
+          <span className="more-text-gray text-[16px]">Curator:</span>
+          <IconToken className="w-[24px] h-[24px]" tokenName="wflow" />
           <span>{"curator"}</span>
         </div>
-        <div className="flex gap-2 text-l mb-5 px-4">
+        <div className="flex gap-2 mb-5 text-[16px]">
           <span className="more-text-gray">Net APY:</span>
           <FormatTwoPourcentage value={item.netAPY} />
         </div>
       </div>
-      <div className="relative more-bg-primary px-8 rounded-t-[5px] mx-4">
+      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
         <TokenAmount
           title="Authorize"
           token={item.assetAddress}
@@ -176,11 +177,11 @@ const VaultWithdrawPush: React.FC<Props> = ({
         {hasAuth && (
           <CheckCircleIcon
             className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
-            style={{ position: "absolute", top: "1.5rem", left: "8.5rem" }}
+            style={{ position: "absolute", top: "2rem", left: "12rem"  }}
           />
         )}
       </div>
-      <div className="relative more-bg-primary px-8 rounded-t-[5px] mx-4">
+      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
         <TokenAmount
           title="Permit"
           token={item.assetAddress}
@@ -191,11 +192,11 @@ const VaultWithdrawPush: React.FC<Props> = ({
         {hasPermit && (
           <CheckCircleIcon
             className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
-            style={{ position: "absolute", top: "1.5rem", left: "6.5rem" }}
+            style={{ position: "absolute", top: "2rem", left: "12rem"  }}
           />
         )}
       </div>
-      <div className="more-bg-primary px-8 rounded-t-[5px] mx-4">
+      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
         <TokenAmount
           title="Withdraw"
           token={item.assetAddress}
@@ -204,8 +205,8 @@ const VaultWithdrawPush: React.FC<Props> = ({
           totalTokenAmount={item.totalDeposits}
         />
       </div>
-      <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8 mx-4">
-        <div className="text-grey pb-4">Position Change</div>
+      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+        <div className="text-grey text-[16px] pb-7">Position Change</div>
         <PositionChangeToken
           title="Withdraw"
           value={item.userDeposits}
@@ -219,20 +220,22 @@ const VaultWithdrawPush: React.FC<Props> = ({
         <MoreToggle />
       </div> */}
 
-      <div className="py-5 px-2 px-4">
+      <div className="pt-5 px-5 text-[16px] leading-10">
         By confirming this transaction, you agree to the{" "}
         <a className="underline" href="#goto">
           Terms of Use
         </a>{" "}
         and the services provisions relating to the MORE Protocol Vault.
       </div>
-      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4 gap-2">
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+        <div className="mr-5">
         <MoreButton
           className="text-2xl py-2"
           text="Cancel"
           onClick={closeModal}
           color="gray"
         />
+        </div>
         <MoreButton
           className="text-2xl py-2"
           text="Withdraw"
@@ -240,6 +243,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           onClick={handleWithdraw}
           color="primary"
         />
+      </div>
       </div>
     </div>
   );

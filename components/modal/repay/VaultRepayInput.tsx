@@ -72,19 +72,20 @@ const VaultRepayInput: React.FC<Props> = ({
   };
 
   return (
-    <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
-      <div className="text-3xl mb-10 px-5 pt-10">Repay Loan</div>
-      <div className="flex items-center mb-10 px-5 gap-2">
+    <div className="more-bg-secondary w-full modal-base">
+       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">Repay Loan</div>
+      <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
-          className="w-7 h-7"
+          className="w-[24px] h-[24px] "
         />
-        <div className="text-l flex items-center'">
+        <div className="ml-3  flex items-center'">
           {collateralToken} / {loanToken.symbol}
         </div>
       </div>
-      <div className="w-full flex flex-col justify-center px-5 gap-4">
-        <div className="text-l pl-2 flex items-center'">
+      <div className="w-full flex flex-col justify-center">
+        <div className="text-[16px] mb-5">
           Repay {loanToken.symbol}
         </div>
         <InputTokenMax
@@ -96,17 +97,17 @@ const VaultRepayInput: React.FC<Props> = ({
           balance={Number(loanBalance ? loanBalance.formatted : 0)}
           setMax={handleSetMax}
         />
-        <div className="text-right more-text-gray">
+        <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
           Balance: {loanBalance?.formatted} {loanToken.symbol}
         </div>
       </div>
-      <div className="flex justify-end mt-7 mb-7 px-8">
+      <div className="flex justify-end mt-[40px] ">
         <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
             text="Cancel"
             onClick={closeModal}
-            color="gray"
+            color="grey"
           />
         </div>
         <MoreButton
@@ -116,22 +117,23 @@ const VaultRepayInput: React.FC<Props> = ({
           color="primary"
         />
       </div>
+      </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-primary w-full" />
       </div>
-      <div className="flex text-xl w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4">
-        <div className="flex w-full justify-between">
+      <div className="flex  flex-col items-center justify-start more-bg-primary rounded-b-[20px] px-[28px] pb-[40px] pt-[30px] text-[16px] font-normal">
+        <div className="flex w-full justify-between mb-[20px]">
           <div>Borrow APY / Projected Borrow APY</div>
           <div>
-            <span className="more-text-gray">
+            <span className="more-text-gray font-medium">
               {(item.borrow_apr * 100).toFixed(2)} %
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-between mb-[20px]">
           <div>LTV / Liquidation LTV</div>
           <div>
-            <span className="more-text-gray">
+            <span className="more-text-gray font-medium">
               {(formatTokenValue(item.marketParams.lltv, "", 18) * 100).toFixed(
                 2
               )}
@@ -139,10 +141,10 @@ const VaultRepayInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-between mb-[20px]">
           <div>Collateral {collateralToken} </div>
           <div>
-            <span className="more-text-gray">
+            <span className="more-text-gray font-medium">
               {formatTokenValue(item.collateral, item.inputToken.id)}
             </span>
           </div>
@@ -150,7 +152,7 @@ const VaultRepayInput: React.FC<Props> = ({
         <div className="flex w-full justify-between">
           <div>Loan {loanToken.symbol}</div>
           <div>
-            <span className="more-text-gray">
+            <span className="more-text-gray font-medium">
               {formatTokenValue(item.loan, item.borrowedToken.id)}
             </span>
           </div>

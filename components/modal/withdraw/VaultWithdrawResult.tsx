@@ -46,22 +46,23 @@ const VaultWithdrawResult: React.FC<Props> = ({
   }, [txhash]);
 
   return (
-    <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-3xl mb-10 px-4 pt-10">Transaction Confirmation</div>
-      <div className="more-bg-primary rounded-[5px] mb-5 py-8 px-4 mx-5">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
+      <div className="more-bg-primary text-[#888] rounded-[12px] p-[20px] text-[20px] font-normal">
         Withdraw {amount} {tokenInfo.symbol} from Vault
       </div>
 
       {txhash.length > 0 && (
-        <div className="text-l my-5 px-4">
+        <div className="text-[20px] font-medium mb-6 mt-[40px]">
           <span>
             {executed ? (
               <Icon
                 icon="circle-check"
-                className="text-secondary text-xl cursor-pointer mr-5"
+                className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
               />
             ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
+              <Icon icon="circle" className="text-xl cursor-pointer mr-5  w-[20px] !h-[20px]" />
             )}
           </span>
           {executed ? (
@@ -71,7 +72,8 @@ const VaultWithdrawResult: React.FC<Props> = ({
           )}
         </div>
       )}
-      <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
+      </div>
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (
           <div className="flex justify-end mr-5">
             <MoreButton

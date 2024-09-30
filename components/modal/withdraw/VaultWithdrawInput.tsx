@@ -48,10 +48,10 @@ const VaultWithdrawInput: React.FC<Props> = ({
   const tokenInfo = getTokenInfo(item.assetAddress);
 
   return (
-    <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
-      <div className="px-6">
-        <div className="text-3xl mb-10 pt-5">{item.vaultName}</div>
-        <div className="text-l mb-5">Withdraw {tokenInfo.symbol}</div>
+    <div className="more-bg-secondary w-full modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+        <div className="text-[24px] mb-[40px] font-semibold">{item.vaultName}</div>
+        <div className="text-[16px] mb-5">Withdraw {tokenInfo.symbol}</div>
         <div className="w-full flex justify-center">
           <InputTokenMax
             type="number"
@@ -63,16 +63,16 @@ const VaultWithdrawInput: React.FC<Props> = ({
             setMax={handleSetMax}
           />
         </div>
-        <div className="text-right more-text-gray px-4 mt-4">
+        <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
           Your Deposits: {item.userDeposits} {tokenInfo.symbol}
         </div>
-        <div className="flex justify-end mt-7 mb-7">
+        <div className="flex justify-end mt-[40px]">
           <div className="mr-5">
             <MoreButton
               className="text-2xl py-2"
               text="Cancel"
               onClick={closeModal}
-              color="gray"
+              color="grey"
             />
           </div>
           <MoreButton
@@ -82,11 +82,11 @@ const VaultWithdrawInput: React.FC<Props> = ({
             color="primary"
           />
         </div>
-        <div className="w-[50%] mx-15 flex justify-center mx-auto">
-          <div className="glowing-text-primary w-full" />
-        </div>
       </div>
-      <div className="flex items-center justify-between more-bg-primary px-4 rounded-b-[10px] py-12 px-8">
+      <div className="w-[50%] mx-15 flex justify-center mx-auto">
+          <div className="glowing-text-primary !pb-0 w-full" />
+        </div>
+      <div className="flex items-center justify-between more-bg-primary rounded-b-[20px] px-[28px] pb-[40px] pt-[30px] text-[16px] font-normal">
         <div className="flex items-center gap-2">
           Withdraw <ArrowLongRightIcon className="w-4 h-4" /> Deposit APY /
           Projected Deposit APY

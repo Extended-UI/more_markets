@@ -73,34 +73,35 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
   });
 
   return (
-    <div className="more-bg-secondary w-full  rounded-[20px]">
-      <div className="text-4xl mb-10 px-4 pt-10">Get Free Testnet Tokens</div>
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[30px] font-semibold">Get Free Testnet Tokens</div>
       <div className="text-xl mb-5 px-4">
-        <p className="mb-5 text-xl">
+        <p className="mb-[30px] text-[16px]">
           When you click the Request button, the protocol will transfer you the
           following tokens:
         </p>
-        <p className="mb-1 text-xl">* 1 FLOW</p>
+        <p className="mb-[12px] text-[14px]">* 1 FLOW</p>
         {tokenList.map((tokenItem) => (
-          <p className="mb-1 text-xl" key={tokenItem.address}>
+          <p className="mb-[12px] text-[14px]" key={tokenItem.address}>
             * {tokenItem.amount} {tokenItem.symbol}
           </p>
         ))}
-        <p className="mt-5 mb-5 text-xl">
+        <p className="mt-[30px] mb-[20px] text-[16px]">
           When you access vaults and markets you will see these tokens in your
           available balance, but they will not show in MetaMask by default.
         </p>
         <p />
-        <p className="mb-5 text-xl">
+        <p className="mb-[30px] text-[16px]">
           To add these tokens to MetaMask, in MetaMask, you can click on click
           Import tokens and add the following token contract addresses:
         </p>
         <p />
         {tokenList.map((tokenItem) => (
-          <p className="mb-1" key={tokenItem.address}>
+          <p className="mb-[12px] text-[14px]" key={tokenItem.address}>
             For {tokenItem.symbol}, {tokenItem.address}
             <span
-              className="cursor-pointer ml-5 text-blue-600"
+              className="cursor-pointer ml-5 text-primary"
               onClick={() => addToken(tokenItem)}
             >
               Import this token
@@ -108,13 +109,14 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
           </p>
         ))}
       </div>
-      <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
+      </div>
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         <div className="flex justify-end mr-5 gap-3">
           <MoreButton
             className="text-2xl py-2"
             text="Close"
             onClick={closeModal}
-            color="gray"
+            color="grey"
           />
           {completed ? (
             <MoreButton
