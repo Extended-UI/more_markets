@@ -7,10 +7,12 @@ import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { BorrowPosition } from "@/types";
 import { notifyError } from "@/utils/utils";
+import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
   txhash: string;
+  onlyBorrow?: boolean;
   item: BorrowPosition;
   supplyAmount: number;
   borrowAmount: number;
@@ -19,6 +21,7 @@ interface Props {
 
 const VaultBorrowResult: React.FC<Props> = ({
   item,
+  onlyBorrow,
   supplyAmount,
   borrowAmount,
   txhash,
@@ -37,7 +40,10 @@ const VaultBorrowResult: React.FC<Props> = ({
         }
       } catch (err) {
         setExecuted(true);
-        notifyError(err);
+        notifyError(
+          err,
+          onlyBorrow ? MoreAction.BORROW_MORE : MoreAction.BORROW
+        );
       }
     };
 

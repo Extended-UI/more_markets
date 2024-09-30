@@ -162,7 +162,11 @@ input {
 }
 
 .more-bg-secondary {
-  background-color: #1e1e1e;
+  background-color: #212121; /*#1e1e1e*/
+}
+
+.modal-base{
+  @apply rounded-[20px] font-sans;
 }
 
 .more-text-gray {
@@ -218,7 +222,6 @@ h1 {
   /*overflow-y: visible;
   overflow-x: auto;*/
   overflow: visible;
-  z-index: 0;
 }
 
 .more-table th:first-child{

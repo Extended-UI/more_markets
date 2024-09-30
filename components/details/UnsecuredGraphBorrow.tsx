@@ -33,9 +33,9 @@ const UnsecuredGraphBorrowDetail = () => {
 
   return (
     <>
-      <div className="text-2xl mb-5">Unsecured Borrower - Specific LLTV (Coming Soon)</div>
+      <div className="text-[20px] font-semibold mt-16 mb-8">Unsecured Borrower - Specific LLTV (Coming Soon)</div>
       <div
-        className="mockup-window border-[#343434] border p-4"
+        className="mockup-window border-[#343434] border  border p-10"
         style={{ backgroundColor: "#181818" }}
       >
         <MoreGraphicsV2

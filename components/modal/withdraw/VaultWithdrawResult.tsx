@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import Icon from "../../FontAwesomeIcon";
 import { InvestmentData } from "@/types";
-import { getTokenInfo, notifyError } from "@/utils/utils";
+import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
+import { getTokenInfo, notifyError } from "@/utils/utils";
 
 interface Props {
   amount: number;
@@ -37,7 +38,7 @@ const VaultWithdrawResult: React.FC<Props> = ({
         }
       } catch (err) {
         setExecuted(true);
-        notifyError(err);
+        notifyError(err, MoreAction.WITHDRAW);
       }
     };
 

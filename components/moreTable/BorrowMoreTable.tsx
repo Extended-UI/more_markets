@@ -24,19 +24,19 @@ const BorrowMoreTable: React.FC<IBorrowMarketProps> = ({
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
           <tr className="">
-            <th style={{ width: "200px" }} className="rounded-tl-lg">
+            <th style={{ width: "200px" }} className="p-6">
               <TableHeaderCell
                 title="Collateral Token"
                 infoText="The token(s) that borrowers must lock in order to borrow funds in the given market."
               />
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6">
               <TableHeaderCell
                 title="Loan Token"
                 infoText="The token(s) issued to borrowers as a loan against their collateral in the given market."
               />
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Liquidation  LTV"
@@ -44,19 +44,19 @@ const BorrowMoreTable: React.FC<IBorrowMarketProps> = ({
                 />
               </div>
             </th>
-            <th style={{ width: "200px" }}>
+            <th style={{ width: "200px" }} className="p-6">
               <TableHeaderCell
                 title="1D Borrow APY"
                 infoText="The average annualized rate that borrowers paid over the trailing 24-hour period."
               />
             </th>
-            <th style={{ width: "300px" }}>
+            <th style={{ width: "300px" }} className="p-6">
               <TableHeaderCell
                 title="Utilization"
                 infoText="The percentage of total deposits that are currently being lent to all borrowers in the given market."
               />
             </th>
-            <th style={{ width: "300px" }}>
+            <th style={{ width: "300px" }} className="p-6">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Available Liquidity"
@@ -70,6 +70,7 @@ const BorrowMoreTable: React.FC<IBorrowMarketProps> = ({
                 right: 0,
                 backgroundColor: "#212121",
                 boxShadow: "inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)",
+                padding: '1.5rem'
               }}
             />
           </tr>
@@ -87,8 +88,8 @@ const BorrowMoreTable: React.FC<IBorrowMarketProps> = ({
                     }
                   : undefined
               }
-              className={`last:border-b-0 text-[12px] cursor-pointer  ${
-                index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
+              className={`last:border-b-0 text-[14px] border border-[#202020] cursor-pointer ${
+                index % 2 === 0 ? "bg-[#141414]" : "bg-[#191919]"
               }`}
             >
               <BorrowMoreTableRow

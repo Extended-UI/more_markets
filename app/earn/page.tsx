@@ -6,8 +6,13 @@ import EarnMoreTable from "@/components/moreTable/EarnMoreTable";
 import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
 import { InvestmentData } from "@/types";
 import { blacklistedVaults } from "@/utils/const";
-import { formatTokenValue, formatCurator } from "@/utils/utils";
 import { getVaultDetail, fetchVaults, fetchMarkets } from "@/utils/contract";
+import {
+  formatTokenValue,
+  formatCurator,
+  fetchVaultAprs,
+  convertAprToApy,
+} from "@/utils/utils";
 // import { fetchMarkets, fetchVaults } from "@/utils/graph";
 
 const EarnPage: React.FC = () => {
@@ -15,12 +20,14 @@ const EarnPage: React.FC = () => {
 
   useEffect(() => {
     const initFunc = async () => {
-      const [vaultsArr, marketsArr] = await Promise.all([
+      const aprDates = 30;
+      const [vaultsArr, marketsArr, aprsArr] = await Promise.all([
         fetchVaults(),
         fetchMarkets(),
+        fetchVaultAprs(aprDates),
       ]);
 
-      if (marketsArr && vaultsArr) {
+      if (marketsArr && vaultsArr && aprsArr) {
         const promises = vaultsArr.map(async (vault) => {
           if (blacklistedVaults.includes(vault.id)) return null;
 
@@ -37,6 +44,10 @@ const EarnPage: React.FC = () => {
             (item) => item.length > 0
           );
 
+          const aprItem = aprsArr.find(
+            (aprItem) => aprItem.vaultid.toLowerCase() == vault.id.toLowerCase()
+          );
+
           const deposited = (await getVaultDetail(
             vault.id,
             "totalAssets",
@@ -47,11 +58,12 @@ const EarnPage: React.FC = () => {
             vaultId: vault.id,
             vaultName: vault.name,
             assetAddress: vault.asset.id,
-            netAPY: 0,
+            netAPY: aprItem ? convertAprToApy(aprItem.apr, aprDates) : 0,
             totalDeposits: formatTokenValue(deposited, vault.asset.id),
             curator: formatCurator(vault),
             collateral: uniq(activeCollaterals),
             guardian: vault.guardian ? vault.guardian.id : "",
+            timelock: vault.timelock,
           } as InvestmentData;
         });
 

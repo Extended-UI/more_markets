@@ -1,13 +1,13 @@
 "use client";
 
 import { FC } from "react";
-import { useAccount } from "wagmi";
 import Image from "next/image";
-import logo from "@/public/assets/icons/logo.png";
+import { useAccount } from "wagmi";
 import Menu from "./Menu";
 import ButtonDialog from "../buttonDialog/buttonDialog";
-import { WalletConnect } from "../walletConnect/WalletConnect";
 import GetFaucet from "@/components/modal/faucet/getFaucet";
+import { WalletConnect } from "../walletConnect/WalletConnect";
+import logo from "@/public/assets/icons/logo.png";
 
 const Header: FC = () => {
   const { address: userAddress } = useAccount();

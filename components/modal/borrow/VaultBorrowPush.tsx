@@ -7,8 +7,8 @@ import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { BorrowPosition } from "@/types";
-import { contracts } from "@/utils/const";
-import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
+import { contracts, MoreAction } from "@/utils/const";
+import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -44,9 +44,6 @@ const VaultBorrowPush: React.FC<Props> = ({
   const [hasAuth, setHasAuth] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
-  const [signHash, setSignHash] = useState("");
-  const [authorizeHash, setAuthorizeHash] = useState("");
-  const [deadline, setDeadline] = useState(BigInt(0));
   const [permitNonce, setPermitNonce] = useState(0);
   const [authorizeNonce, setAuthorizeNonce] = useState(BigInt(0));
 
@@ -97,99 +94,90 @@ const VaultBorrowPush: React.FC<Props> = ({
     initApprove();
   }, [userAddress, item, supplyAmount, onlyBorrow]);
 
-  const handleApprove = async () => {
+  const doApprove = async () => {
+    await setTokenAllowance(
+      item.inputToken.id,
+      contracts.PERMIT2,
+      supplyTokenAmount
+    );
+
+    setHasApprove(true);
+    await delay(2);
+  };
+
+  const doAuthorize = async (authDeadline: bigint): Promise<string> => {
     if (userAddress) {
-      setIsLoading(true);
-      try {
-        await setTokenAllowance(
-          item.inputToken.id,
-          contracts.PERMIT2,
-          supplyTokenAmount
-        );
+      const authHash = await setMarketsAuthorize(
+        userAddress,
+        authorizeNonce,
+        authDeadline
+      );
 
-        setHasApprove(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      setHasAuth(true);
+      await delay(2);
+
+      return authHash;
     }
+
+    return "";
   };
 
-  const handleAuthorize = async () => {
-    if (userAddress && !hasAuth) {
-      setIsLoading(true);
-      try {
-        const authDeadline = getTimestamp();
-        const authHash = await setMarketsAuthorize(
-          userAddress,
-          authorizeNonce,
-          authDeadline
-        );
+  const doPermit = async (permitDeadline: bigint): Promise<string> => {
+    const signHash = await setTokenPermit(
+      item.inputToken.id,
+      supplyTokenAmount,
+      permitNonce,
+      contracts.MORE_BUNDLER,
+      permitDeadline
+    );
 
-        setHasAuth(true);
-        setAuthorizeHash(authHash);
-        setDeadline(authDeadline);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
-    }
+    setHasPermit(true);
+    await delay(2);
+
+    return signHash;
   };
 
-  const handlePermit = async () => {
-    if (userAddress && supplyAmount > 0) {
-      setIsLoading(true);
-      try {
-        const permitDeadline =
-          deadline == BigInt(0) ? getTimestamp() : deadline;
+  const doBorrow = async (
+    deadline: bigint,
+    authorizeHash: string,
+    signHash: string
+  ) => {
+    if (userAddress) {
+      const txHash = await supplycollateralAndBorrow(
+        authorizeHash,
+        authorizeNonce,
+        item.inputToken.id,
+        userAddress,
+        signHash,
+        deadline,
+        supplyTokenAmount,
+        borrowTokenAmount,
+        permitNonce,
+        item.marketParams,
+        onlyBorrow ? true : false
+      );
 
-        const signHash = await setTokenPermit(
-          item.inputToken.id,
-          supplyTokenAmount,
-          permitNonce,
-          contracts.MORE_BUNDLER,
-          permitDeadline
-        );
-
-        setSignHash(signHash);
-        setDeadline(permitDeadline);
-        setHasPermit(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      await delay(2);
+      validDeposit();
+      setTxHash(txHash);
     }
   };
 
   const handleBorrow = async () => {
     // generate borrow tx
-    if (userAddress && hasApprove && hasPermit) {
-      setIsLoading(true);
-      try {
-        const txHash = await supplycollateralAndBorrow(
-          authorizeHash,
-          authorizeNonce,
-          item.inputToken.id,
-          userAddress,
-          signHash,
-          deadline,
-          supplyTokenAmount,
-          borrowTokenAmount,
-          permitNonce,
-          item.marketParams,
-          onlyBorrow ? true : false
-        );
+    setIsLoading(true);
+    try {
+      const deadline = getTimestamp();
 
-        validDeposit();
-        setTxHash(txHash);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      if (!hasApprove) await doApprove();
+      const authorizeHash = hasAuth ? "" : await doAuthorize(deadline);
+      const permitHash = hasPermit ? "" : await doPermit(deadline);
+      await doBorrow(deadline, authorizeHash, permitHash);
+
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      notifyError(err, onlyBorrow ? MoreAction.BORROW_MORE : MoreAction.BORROW);
     }
   };
 
@@ -246,48 +234,20 @@ const VaultBorrowPush: React.FC<Props> = ({
         </a>{" "}
         and the services provisions relating to the MORE Protocol Vault.
       </div>
-      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="gray"
-          />
-        </div>
-        {hasAuth && hasApprove && hasPermit ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Borrow"
-            disabled={isLoading}
-            onClick={handleBorrow}
-            color="primary"
-          />
-        ) : !hasAuth ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Authorize"
-            disabled={isLoading}
-            onClick={handleAuthorize}
-            color="primary"
-          />
-        ) : hasApprove ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Permit"
-            disabled={isLoading}
-            onClick={handlePermit}
-            color="primary"
-          />
-        ) : (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Approve"
-            disabled={isLoading}
-            onClick={handleApprove}
-            color="primary"
-          />
-        )}
+      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4 gap-2">
+        <MoreButton
+          className="text-2xl py-2"
+          text="Cancel"
+          onClick={closeModal}
+          color="gray"
+        />
+        <MoreButton
+          className="text-2xl py-2"
+          text="Borrow"
+          disabled={isLoading}
+          onClick={handleBorrow}
+          color="primary"
+        />
       </div>
     </div>
   );

@@ -9,7 +9,13 @@ import InfosEarnDetails from "@/components/details/InfosEarnDetail";
 import DetailEarnMoreTable from "@/components/moreTable/DetailEarnMoreTable";
 // import { fetchVault, fetchMarkets } from "@/utils/graph";
 import { InvestmentData, VaultBreakdown } from "@/types";
-import { formatTokenValue, getPremiumLltv, formatCurator } from "@/utils/utils";
+import {
+  formatTokenValue,
+  getPremiumLltv,
+  formatCurator,
+  fetchVaultAprs,
+  convertAprToApy,
+} from "@/utils/utils";
 import {
   getVaultDetail,
   getMarketData,
@@ -17,7 +23,7 @@ import {
   fetchVault,
   getTokenBallance,
 } from "@/utils/contract";
-import leftArrow from "@/public/assets/icons/left-arrow.png";
+import leftArrow from "@/public/assets/icons/left-arrow.svg";
 
 const EarnDetailPage: React.FC = () => {
   const router = useRouter();
@@ -36,9 +42,11 @@ const EarnDetailPage: React.FC = () => {
         if (vaultId.length == 0) {
           router.push("/earn");
         } else {
-          const [fetchedVault, marketsArr] = await Promise.all([
+          const aprDate = 7;
+          const [fetchedVault, marketsArr, vaultAprs] = await Promise.all([
             fetchVault(vaultId),
             fetchMarkets(),
+            fetchVaultAprs(aprDate, vaultId),
           ]);
 
           if (fetchedVault) {
@@ -110,11 +118,16 @@ const EarnDetailPage: React.FC = () => {
               )) as bigint;
             }
 
+            const aprItem = vaultAprs.find(
+              (aprItem) =>
+                aprItem.vaultid.toLowerCase() == vaultId.toLowerCase()
+            );
+
             setVaultInfo({
               vaultId: fetchedVault.id,
               vaultName: fetchedVault.name,
               assetAddress: fetchedVault.asset.id,
-              netAPY: 0,
+              netAPY: aprItem ? convertAprToApy(aprItem.apr, aprDate) : 0,
               userDeposits: formatTokenValue(userAssets, fetchedVault.asset.id),
               userShares: vaultShares.value,
               totalDeposits: formatTokenValue(
@@ -124,6 +137,7 @@ const EarnDetailPage: React.FC = () => {
               curator: formatCurator(fetchedVault),
               collateral: [],
               guardian: fetchedVault.guardian ? fetchedVault.guardian.id : "",
+              timelock: fetchedVault.timelock,
             } as InvestmentData);
           }
         }
@@ -154,19 +168,24 @@ const EarnDetailPage: React.FC = () => {
     <>
       {vaultInfo && (
         <>
-          <Image
-            onClick={() => router.push("/earn")}
-            className="mt-5 cursor-pointer"
-            src={leftArrow}
-            alt="left-arrow"
-            width={35}
-            height={35}
-          />
           <div className="mb-8 overflow-visible mt-14">
+            <div className="flex items-center mr-10 cursor-pointer mb-14">
+              <Image
+                onClick={() => router.push("/earn")}
+                className="mr-4"
+                src={leftArrow}
+                alt="left-arrow"
+                width={24}
+                height={24}
+              />
+              <div className="text-[16px] text-white font-medium">Back</div>
+            </div>
             <HeaderEarnDetail updateInfo={updateInfo} item={vaultInfo} />
             <InfosEarnDetails vault={vaultInfo} totalBorrow={totalBorrow} />
           </div>
-          <h1 className="text-4xl mt-16 mb-8">Vault Breakdown</h1>
+          <h1 className="text-4xl !text-[30px] mt-[60px] mb-10 font-semibold">
+            Vault Breakdown
+          </h1>
           <DetailEarnMoreTable breakdowns={breakdowns} />
         </>
       )}

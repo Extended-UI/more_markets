@@ -1,5 +1,4 @@
 import { ZeroAddress } from "ethers";
-import { ErrorDecoder } from "ethers-decode-error";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import { IToken } from "@/types";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
@@ -7,11 +6,11 @@ import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
 import { ApyFeedAbi } from "@/app/abi/ApyFeedAbi";
 
-export const moreTolerance = BigInt(10);
+export const WAD = BigInt(1e18);
 export const virtualAssets = BigInt(1);
+export const moreTolerance = BigInt(10);
 export const virtualShares = BigInt(1e6);
 export const oraclePriceScale = BigInt(1e36);
-export const WAD = BigInt(1e18);
 
 export const contracts = {
   MORE_MARKETS: "0x9a9B20fAb58a0fF084e70283E91448bB31d0FAfa",
@@ -117,15 +116,26 @@ export const gasLimit = "0.8";
 
 export const blacklistedVaults = ["0xeabddabfe3d118092a4bbaf3c13bd923bc8f134e"];
 
-export const errorDecoder = ErrorDecoder.create();
 export const errMessages = {
   invalid_amount: "Invalid amount",
 };
+export const enum MoreAction {
+  GENERAL = "general",
+  DEPOSIT = "deposit",
+  WITHDRAW = "withdraw",
+  BORROW = "borrow",
+  BORROW_MORE = "borrow_more",
+  ADD_COLLATERAL = "add_collateral",
+  WITHDRAW_COLLATERAL = "withdraw_collateral",
+  REPAY = "repay",
+}
 
 export const sactionedCountries = ["KP", "IR", "MM"];
 export const CHAINALYSIS_KEY =
   "39c46c2bd4bf2ef6e1489954b4aa55685a67ec9f8d641d5769f6aeb0c6fbeb57";
 
+// ******************************************
+// for testnet purpose only
 // ******************************************
 export const vaultIds = [
   "0x8C1CEc925beB7944941b612B70aE280C984FA633",
@@ -148,4 +158,6 @@ export const marketIds = [
   "0x65e3819781cfb3d6865688fe41757484af047fc1aeaca1752b0bf4cacaae555c",
   "0xaccc9ce078cc2228bc0a0328b0f207311a9dcdfd96d7e34ac829a38e8af953d1",
 ];
+// ******************************************
+// for testnet purpose only
 // ******************************************

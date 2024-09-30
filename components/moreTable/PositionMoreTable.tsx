@@ -20,20 +20,20 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
 
   return (
     <div
-      className="overflow-x-auto relative rounded-[15px] mb-16"
+      className="relative rounded-[16px]"
       style={{
-        overflowX: "auto",
+        //overflowX: "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
         position: "relative",
-        overflow: "visible",
+        //overflow: "visible",
       }}
     >
-      <h1 className="text-2xl mt-16 mb-8">Open a position</h1>
+      <h1 className="text-[20px] font-semibold mt-16 mb-8">Open a position</h1>
       <div
-        className="overflow-x-scroll  rounded-2xl  table-wrapper  mb-16"
+        className="rounded-2xl table-wrapper more-table"
         style={{
-          overflowX: "auto",
+          //overflowX: "auto",
           scrollbarWidth: "none",
           msOverflowStyle: "none",
           position: "relative",
@@ -41,22 +41,22 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
       >
         <table className="w-full rounded-2xl text-sm text-left table overflow-x-scroll">
           <thead
-            className="bg-[#212121] h-20  text-white text-xs"
+            className="bg-[#212121] h-20  text-white text-sm"
             style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
           >
             <tr className="">
-              <th style={{ width: "200px" }} className="rounded-tl-lg">
+              <th style={{ width: "200px" }} className="p-6">
                 <TableHeaderCell
                   title="Collateral"
                   infoText="The token(s) that borrowers must lock in order to borrow funds."
                 />
               </th>
-              <th style={{ width: "200px" }}>
+              <th style={{ width: "200px" }} className="p-6">
                 <div className="flex justify-start">
                   <TableHeaderCell title="Loan" infoText="" />
                 </div>
               </th>
-              <th style={{ width: "200px" }}>
+              <th style={{ width: "200px" }} className="p-6">
                 <div className="flex justify-start">
                   <TableHeaderCell
                     title="Liquidation LTV"
@@ -78,9 +78,9 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
             </tr>
           </thead>
           <tbody className="bg-transparent">
-            <tr className="last:border-b-0 text-[12px] dark:bg-[#191919] cursor-pointer">
-              <td className="py-4  items-center h-full">
-                <div className="flex gap-1 justify-start items-center gap-2 pl-4">
+            <tr className="last:border-b-0 text-[14px] dark:bg-[#191919] cursor-pointer">
+              <td className="p-6">
+                <div className="flex justify-start items-center gap-2 pl-4">
                   <div className="mr-2 w-8 h-8">
                     <IconToken tokenName={item.inputToken.id} />
                   </div>
@@ -95,8 +95,8 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
                 </div>
               </td>
 
-              <td className="py-4 items-center h-full">
-                <div className="flex gap-1 justify-start items-center gap-2">
+              <td className="p-6">
+                <div className="flex justify-start items-center gap-2">
                   <div className="mr-2 w-8 h-8">
                     <IconToken tokenName={item.borrowedToken.id} />
                   </div>
@@ -109,8 +109,8 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
                 </div>
               </td>
 
-              <td className="py-4 px-6 items-center flex">
-                <div className="flex justify-start w-full py-4">
+              <td className="p-6">
+                <div className="flex justify-start w-full">
                   <FormatTwoPourcentage
                     value={formatTokenValue(item.lltv, "", 18)}
                     value2={getPremiumLltv(item.marketParams)}
@@ -131,7 +131,7 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
               </td> */}
 
               {userAddress && (
-                <td className="py-4 px-6 items-center justify-end h-full">
+                <td className="px-6 py-4">
                   <div
                     className="flex gap-4"
                     onClick={(event) => event.stopPropagation()}

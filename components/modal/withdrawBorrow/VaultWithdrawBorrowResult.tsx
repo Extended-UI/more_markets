@@ -6,6 +6,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
 import { getTokenInfo, notifyError } from "@/utils/utils";
+import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
@@ -33,7 +34,7 @@ const VaultWithdrawBorrowResult: React.FC<Props> = ({
         }
       } catch (err) {
         setExecuted(true);
-        notifyError(err);
+        notifyError(err, MoreAction.WITHDRAW_COLLATERAL);
       }
     };
 

@@ -28,25 +28,25 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
 
   return (
     <>
-      <td className="py-4 px-6 items-center h-full">
+      <td className="p-6">
         <div className="flex items-center">
           <IconToken
-            className="mr-2 w-6 h-6"
+            className="mr-3 w-8 h-8"
             tokenName={item.inputToken.id}
             showSymbol={true}
           />
         </div>
       </td>
-      <td className="py-4 px-6 items-center h-full">
+      <td className="p-6">
         <div className="flex items-center">
           <IconToken
-            className="mr-2 w-6 h-6"
+            className="mr-3 w-8 h-8"
             tokenName={item.borrowedToken.id}
             showSymbol={true}
           />
         </div>
       </td>
-      <td className="py-4  items-center h-full">
+      <td className="p-6">
         <div className="flex gap-1 justify-start">
           <FormatTwoPourcentage
             value={formatTokenValue(item.lltv, "", 18)}
@@ -54,20 +54,20 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           />
         </div>
       </td>
-      <td className="py-4 px-6 items-center h-full">
+      <td className="p-6">
         <div className="flex justify-start">
-          <FormatPourcentage value={"N/A"} />
+          <FormatPourcentage value={item.borrow_apr} />
         </div>
       </td>
-      <td className="py-4 px-6 items-center h-full">
+      <td className="p-6">
         <div className="flex">
           <FormatPourcentage value={utilization / 100} />
         </div>
       </td>
-      <td className="py-4 px-6 items-center h-full">
+      <td className="p-6">
         <div className="flex justify-start">
           <IconToken
-            className="mr-2 mt-1 w-6 h-6"
+            className="mr-3 w-8 h-8"
             tokenName={item.borrowedToken.id}
           />
           <FormatTokenMillion
@@ -83,7 +83,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
       </td>
       {userAddress && (
         <td
-          className="py-4 px-6 items-center justify-end h-full"
+          className="px-6 py-4 items-center justify-end"
           style={{
             paddingRight: 10,
             right: 0,
@@ -93,7 +93,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           <div onClick={(event) => event.stopPropagation()}>
             <ButtonDialog color="secondary" buttonText="Borrow">
               {(closeModal) => (
-                <div className="w-full h-full">
+                <div className="w-full">
                   <VaultBorrow
                     item={item as BorrowPosition}
                     updateInfo={updateInfo}

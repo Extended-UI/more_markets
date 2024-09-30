@@ -1,18 +1,29 @@
 import { toast } from "react-toastify";
 import { formatUnits, ZeroAddress } from "ethers";
-import { GraphVault, IToken, MarketInfo, MarketParams } from "@/types";
+import { ErrorDecoder } from "ethers-decode-error";
+import { MoreErrors } from "@/utils/errors";
+import {
+  GraphVault,
+  IToken,
+  MarketInfo,
+  MarketParams,
+  IVaultApr,
+  IMarketApr,
+} from "@/types";
 import {
   tokens,
   curators,
-  errorDecoder,
   contracts,
   virtualAssets,
   virtualShares,
   WAD,
   moreTolerance,
+  MoreAction,
 } from "./const";
 
-export const notify = (errMsg: string) => toast(errMsg);
+const errorDecoder = ErrorDecoder.create();
+
+export const notify = (errMsg: string) => errMsg.length > 0 && toast(errMsg);
 
 export const getVaule = (param: any): string => {
   return param.result ? param.result.toString() : "";
@@ -121,12 +132,31 @@ export const formatCurator = (fetchedVault: GraphVault): string => {
     : "";
 };
 
-export const notifyError = async (err: unknown) => {
+export const notifyError = async (
+  err: unknown,
+  moreAction: MoreAction = MoreAction.GENERAL
+) => {
   const decodedError = await errorDecoder.decode(err);
-  const errMsg = decodedError.reason
+  const parsedError = decodedError.reason
     ? // ? decodedError.reason.split("\n")[0]
       decodedError.reason
-    : "Unknown Error";
+    : "";
+  const filteredIndex =
+    parsedError.length > 0
+      ? MoreErrors.findIndex((item) =>
+          parsedError.toLowerCase().includes(item.error.toLowerCase())
+        )
+      : -1;
+
+  let errMsg = "";
+  if (filteredIndex >= 0) {
+    errMsg = MoreErrors[filteredIndex].message;
+  } else {
+    const filteredError = MoreErrors.find(
+      (moreError) => moreError.action == moreAction
+    );
+    errMsg = filteredError ? filteredError.message : "";
+  }
 
   notify(errMsg);
 };
@@ -155,3 +185,44 @@ export const wMulDown = (x: bigint, y: bigint) => {
   const returnVal = mulDivDown(x, y, WAD);
   return returnVal > moreTolerance ? returnVal - moreTolerance : BigInt(0);
 };
+
+export const fetchVaultAprs = async (
+  targetDate: number,
+  vaultAddress: string = ""
+): Promise<IVaultApr[]> => {
+  const fetchResult = await fetch(
+    "/api/vaultapr?targetDate=" + targetDate + "&vaultid=" + vaultAddress,
+    {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+      },
+    }
+  );
+  const vaultAprList = await fetchResult.json();
+  return vaultAprList.vaultaprs;
+};
+
+export const fetchMarketAprs = async (
+  targetDate: number,
+  marketid: string = ""
+): Promise<IMarketApr[]> => {
+  const fetchResult = await fetch(
+    "/api/marketapr?targetDate=" + targetDate + "&marketid=" + marketid,
+    {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+      },
+    }
+  );
+  const marketAprList = await fetchResult.json();
+  return marketAprList.marketaprs;
+};
+
+export const convertAprToApy = (apr: number, aprInterval: number): number => {
+  return Math.pow(1 + apr / aprInterval, aprInterval) - 1;
+};
+
+export const delay = (seconds: number) =>
+  new Promise((res) => setTimeout(res, seconds * 1000));

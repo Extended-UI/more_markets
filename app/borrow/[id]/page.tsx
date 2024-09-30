@@ -10,10 +10,17 @@ import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
 // import { fetchMarket } from "@/utils/graph";
-import { getBorrowedAmount } from "@/utils/contract";
 import { BorrowMarket, BorrowPosition } from "@/types";
-import { getMarketData, getPosition, fetchMarket } from "@/utils/contract";
-import leftArrow from "@/public/assets/icons/left-arrow.png";
+
+import { fetchMarketAprs, convertAprToApy } from "@/utils/utils";
+import {
+  getMarketData,
+  getPosition,
+  fetchMarket,
+  getBorrowedAmount,
+} from "@/utils/contract";
+
+import leftArrow from "@/public/assets/icons/left-arrow.svg";
 
 const BorrowDetailPage: React.FC = () => {
   const router = useRouter();
@@ -25,24 +32,41 @@ const BorrowDetailPage: React.FC = () => {
     null
   );
 
+  const aprDate = 1;
   const marketId = params ? params.replace("/borrow/", "") : "";
 
   const initMarket = async () => {
     try {
       if (marketId.length > 0) {
-        const [marketInfo, marketData] = await Promise.all([
+        const [marketInfo, marketData, marketAprs] = await Promise.all([
           fetchMarket(marketId),
           getMarketData(marketId),
+          fetchMarketAprs(aprDate, marketId),
         ]);
+
+        const aprItem = marketAprs.find(
+          (marketApr) =>
+            marketApr.marketid.toLowerCase() == marketId.toLowerCase()
+        );
 
         setBorrowMarket({
           ...marketInfo,
           marketParams: marketData.params,
           marketInfo: marketData.info,
+          borrow_apr: aprItem
+            ? convertAprToApy(aprItem.borrow_apr, aprDate)
+            : 0,
+          supply_usual_apr: aprItem
+            ? convertAprToApy(aprItem.supply_usual_apr, aprDate)
+            : 0,
+          supply_prem_apr: aprItem
+            ? convertAprToApy(aprItem.supply_prem_apr, aprDate)
+            : 0,
         } as BorrowMarket);
 
         if (userAddress) {
           const positionInfo = await getPosition(userAddress, marketId);
+
           if (positionInfo)
             setBorrowPosition({
               ...marketInfo,
@@ -56,6 +80,9 @@ const BorrowDetailPage: React.FC = () => {
               borrowShares: positionInfo.borrowShares,
               collateral: positionInfo.collateral,
               lastMultiplier: positionInfo.lastMultiplier,
+              borrow_apr: 0,
+              supply_usual_apr: 0,
+              supply_prem_apr: 0,
             });
         }
       } else {
@@ -84,15 +111,20 @@ const BorrowDetailPage: React.FC = () => {
   return (
     <>
       {borrowMarket && (
-        <div className="mb-8 p-3">
-          <Image
-            onClick={() => router.push("/borrow")}
-            className="my-5 cursor-pointer"
-            src={leftArrow}
-            alt="left-arrow"
-            width={35}
-            height={35}
-          />
+        <div className="mb-8">
+          <div className="flex items-center mr-10 cursor-pointer mb-14 mt-14">
+            <Image
+              onClick={() => router.push("/borrow")}
+              className="mr-4"
+              src={leftArrow}
+              alt="left-arrow"
+              width={24}
+              height={24}
+            />
+            <div className="text-[16px] text-white font-medium">
+              Back
+            </div>
+          </div>
           <HeaderBorrowDetail item={borrowMarket} updateInfo={updateInfo} />
           <InfosBorrowDetails item={borrowMarket} />
           {borrowPosition && (

@@ -124,9 +124,9 @@ const LoanMoreTable: React.FC<Props> = ({
     <>
       {borrowPositions.length > 0 && (
         <>
-          <h1 className="text-4xl mb-4 mt-14">My Loans</h1>
+          <h1 className="text-[30px] mb-8 mt-28 font-semibold">My Loans</h1>
           <div
-            className="overflow-x-auto relative rounded-[15px] mb-16"
+            className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table"
             style={{
               overflowX: "auto",
               scrollbarWidth: "none",
@@ -135,21 +135,21 @@ const LoanMoreTable: React.FC<Props> = ({
               overflow: "visible",
             }}
           >
-            <table className="w-full text-sm text-left border border-gray-800">
+            <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
               <thead
-                className="bg-[#212121] h-20  text-xs "
+                className="bg-[#212121] h-20  text-white  text-xs"
                 style={{
                   boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)",
                 }}
               >
                 <tr className="rounded-t-lg">
-                  <th style={{ width: "500px" }} className="rounded-tl-lg">
+                  <th style={{ width: "500px" }} className="p-6">
                     <TableHeaderCell
                       title="Collateral"
                       infoText="The token(s) that borrowers must lock in order to borrow funds."
                     />
                   </th>
-                  <th style={{ width: "400px" }}>
+                  <th style={{ width: "400px" }} className="p-6">
                     <div className="justify-start pr-8">
                       <TableHeaderCell
                         title="Loan"
@@ -157,7 +157,7 @@ const LoanMoreTable: React.FC<Props> = ({
                       />
                     </div>
                   </th>
-                  <th>
+                  <th className="p-6">
                     <div className="flex justify-start">
                       <TableHeaderCell
                         title="Liquidation LTV"
@@ -165,7 +165,7 @@ const LoanMoreTable: React.FC<Props> = ({
                       />
                     </div>
                   </th>
-                  <th>
+                  <th className="p-6">
                     <div className="flex justify-start">
                       <TableHeaderCell
                         title="1D Borrow APY"
@@ -188,15 +188,15 @@ const LoanMoreTable: React.FC<Props> = ({
                           }
                         : undefined
                     }
-                    className={`last:border-b-0 text-[12px]  ${
-                      index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
+                    className={`last:border-b-0 text-[14px] border border-[#202020] cursor-pointer ${
+                      index % 2 === 0 ? "bg-[#141414]" : "bg-[#191919]"
                     }`}
                   >
-                    <td className="py-4 px-6 items-center h-full gap-2">
+                    <td className="px-6 py-[12.5px] items-center gap-2">
                       <div className="flex gap-2 items-center">
                         <div className="flex items-center">
                           <IconToken
-                            className="mr-2 w-6 h-6"
+                            className="mr-3 w-8 h-8"
                             tokenName={item.inputToken.id}
                           />
                         </div>
@@ -210,7 +210,7 @@ const LoanMoreTable: React.FC<Props> = ({
                           inTable={true}
                         />
                         <div
-                          className="ml-8 flex gap-2"
+                          className="ml-8 flex gap-5"
                           onClick={(event) => event.stopPropagation()}
                         >
                           <ButtonDialog color="secondary" buttonText="Add">
@@ -239,10 +239,10 @@ const LoanMoreTable: React.FC<Props> = ({
                       </div>
                     </td>
 
-                    <td className="py-4 px-6 items-center h-full gap-2">
+                    <td className="px-6  py-[12.5px] items-center gap-2">
                       <div className="flex gap-2 items-center">
                         <IconToken
-                          className="w-6 h-6"
+                          className="mr-3 w-8 h-8"
                           tokenName={item.borrowedToken.id}
                         />
                         <FormatTokenMillion
@@ -254,7 +254,7 @@ const LoanMoreTable: React.FC<Props> = ({
                           totalValue={0}
                         />
                         <div
-                          className="ml-8 flex gap-2"
+                          className="ml-8 flex gap-5"
                           onClick={(event) => event.stopPropagation()}
                         >
                           <ButtonDialog
@@ -287,7 +287,7 @@ const LoanMoreTable: React.FC<Props> = ({
                       </div>
                     </td>
 
-                    <td className="py-4 pl-4 items-center h-full">
+                    <td className="p-6 items-center">
                       <div className="flex gap-1 justify-start">
                         <FormatTwoPourcentage
                           value={formatTokenValue(item.lltv, "", 18)}
@@ -295,9 +295,9 @@ const LoanMoreTable: React.FC<Props> = ({
                         />
                       </div>
                     </td>
-                    <td className="py-4 items-center h-full">
+                    <td className="p-6 items-center">
                       <div className="flex justify-start ml-3">
-                        <FormatPourcentage value={"N/A"} />
+                        <FormatPourcentage value={item.borrow_apr} />
                       </div>
                     </td>
                   </tr>

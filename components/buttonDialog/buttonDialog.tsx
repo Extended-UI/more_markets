@@ -42,7 +42,7 @@ const ButtonDialog: React.FC<ButtonDialogProps> = ({
           // onClick={closeModal} // Close modal when background is clicked
         >
           <div
-            className="modal-box rounded-[20px] max-w-full p-3 bg-[#343434]"
+            className="modal-box rounded-[24px] max-w-full p-3 bg-[#343434]"
             onClick={(e) => e.stopPropagation()} // Prevent click inside the modal from closing it
           >
             {children(closeModal)}

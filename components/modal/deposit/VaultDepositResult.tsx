@@ -6,6 +6,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { InvestmentData } from "@/types";
 import { notifyError } from "@/utils/utils";
+import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
@@ -37,7 +38,7 @@ const VaultDepositResult: React.FC<Props> = ({
         }
       } catch (err) {
         setExecuted(true);
-        notifyError(err);
+        notifyError(err, MoreAction.DEPOSIT);
       }
     };
 
@@ -45,48 +46,55 @@ const VaultDepositResult: React.FC<Props> = ({
   }, [txhash]);
 
   return (
-    <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-xl mb-10 px-4 pt-5">Transaction Confirmation</div>
-      <div className="text-l mb-5 px-4">
-        <span>
-          <Icon
-            icon="circle-check"
-            className="text-secondary text-xl cursor-pointer mr-5"
-          />
-        </span>
-        Execute the following actions
-      </div>
-      <div className="more-bg-primary px-4 mx-5">
-        <TokenAmount
-          title="Deposit"
-          token={item.assetAddress}
-          amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
-        />
-      </div>
-      {txhash.length > 0 && (
-        <div className="text-l my-5 px-4">
-          <span>
-            {executed ? (
-              <Icon
-                icon="circle-check"
-                className="text-secondary text-xl cursor-pointer mr-5"
-              />
-            ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
-            )}
-          </span>
-          {executed ? (
-            <>Transaction {txHashStr} has been successfully executed.</>
-          ) : (
-            <>Transaction {txHashStr} has been sent.</>
-          )}
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Transaction Confirmation
         </div>
-      )}
-      <div className="more-bg-primary px-4  py-2 rounded-b-[20px]">
+        <div className="text-[20px] font-medium mb-6">
+          <span>
+            <Icon
+              icon="circle-check"
+              className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
+            />
+          </span>
+          Execute the following actions
+        </div>
+        <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
+          <TokenAmount
+            title="Deposit"
+            token={item.assetAddress}
+            amount={amount}
+            ltv={"ltv"}
+            totalTokenAmount={item.totalDeposits}
+          />
+        </div>
+        {txhash.length > 0 && (
+          <div className="text-[20px] font-medium mb-6 mt-[40px]">
+            <span>
+              {executed ? (
+                <Icon
+                  icon="circle-check"
+                  className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
+                />
+              ) : (
+                <Icon
+                  icon="circle"
+                  className="text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
+                />
+              )}
+            </span>
+            {executed ? (
+              <>Transaction {txHashStr} has been successfully executed.</>
+            ) : (
+              <>Transaction {txHashStr} has been sent.</>
+            )}
+          </div>
+        )}
+      </div>
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (
-          <div className="flex justify-end mr-5">
+          <div className="flex justify-end">
             <MoreButton
               className="text-2xl py-2"
               text="Done"
@@ -95,7 +103,7 @@ const VaultDepositResult: React.FC<Props> = ({
             />
           </div>
         ) : (
-          <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
+          <div className=" text-secondary border border-secondary border-dashed border-1 rounded-[12px]">
             Confirming transaction... Browse MORE vaults while you wait.
           </div>
         )}

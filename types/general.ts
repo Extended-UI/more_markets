@@ -1,6 +1,7 @@
 import { BorrowMarket } from "./borrowMarket";
 import { BorrowPosition } from "./borrowPosition";
 import { InvestmentData } from "./investmentData";
+import { MoreAction } from "@/utils/const";
 
 export interface IToken {
   name: string;
@@ -36,4 +37,22 @@ export interface IBorrowPosition {
 
 export interface IBorrowPositionProp extends IBorrowPosition {
   updateInfo: (marketId: string) => void;
+}
+
+export interface IVaultApr {
+  vaultid: string;
+  apr: number;
+}
+
+export interface IMarketApr {
+  marketid: string;
+  supply_usual_apr: number;
+  supply_prem_apr: number;
+  borrow_apr: number;
+}
+
+export interface IMoreError {
+  action: MoreAction;
+  error: string;
+  message: string;
 }

@@ -6,6 +6,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { BorrowPosition } from "@/types";
+import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 import {
   getTokenInfo,
@@ -44,7 +45,7 @@ const VaultAddResult: React.FC<Props> = ({
         }
       } catch (err) {
         setExecuted(true);
-        notifyError(err);
+        notifyError(err, MoreAction.ADD_COLLATERAL);
       }
     };
 

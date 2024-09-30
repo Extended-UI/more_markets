@@ -8,6 +8,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import { BorrowPosition } from "@/types";
+import { MoreAction } from "@/utils/const";
 import { withdrawCollateral } from "@/utils/contract";
 import { getTokenInfo, notifyError } from "@/utils/utils";
 
@@ -35,9 +36,9 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
   const tokenAmount = parseUnits(amount.toString(), collateralToken.decimals);
 
   const handleWithdraw = async () => {
-    setIsLoading(true);
-    try {
-      if (userAddress) {
+    if (userAddress) {
+      setIsLoading(true);
+      try {
         const txHash = await withdrawCollateral(
           item.marketParams,
           tokenAmount,
@@ -47,13 +48,11 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         validWithdraw();
         setTxHash(txHash);
         setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        notifyError(err, MoreAction.WITHDRAW_COLLATERAL);
       }
-    } catch (err) {
-      setIsLoading(false);
-      notifyError(err);
     }
-
-    validWithdraw();
   };
 
   return (

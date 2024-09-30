@@ -6,11 +6,11 @@ import { parseUnits, formatEther } from "ethers";
 import MoreButton from "../../moreButton/MoreButton";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import TokenAmount from "@/components/token/TokenAmount";
-import PositionChangeToken from "@/components/token/PositionChangeToken";
+// import PositionChangeToken from "@/components/token/PositionChangeToken";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
-import { contracts } from "@/utils/const";
-import { getTimestamp, getTokenInfo, notifyError } from "@/utils/utils";
+import { contracts, MoreAction } from "@/utils/const";
+import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -40,8 +40,6 @@ const VaultAddPush: React.FC<Props> = ({
   const [permitNonce, setPermitNonce] = useState(0);
   const [hasApprove, setHasApprove] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [signHash, setSignHash] = useState("");
-  const [deadline, setDeadline] = useState(BigInt(0));
 
   const collateralToken = getTokenInfo(item.inputToken.id);
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
@@ -49,23 +47,22 @@ const VaultAddPush: React.FC<Props> = ({
 
   useEffect(() => {
     const initApprove = async () => {
-      const nonce = userAddress
-        ? await getPermitNonce([
-            userAddress,
-            item.inputToken.id,
-            contracts.MORE_BUNDLER,
+      const [nonce, allowance] = userAddress
+        ? await Promise.all([
+            getPermitNonce([
+              userAddress,
+              item.inputToken.id,
+              contracts.MORE_BUNDLER,
+            ]),
+            getTokenAllowance(
+              item.inputToken.id,
+              userAddress,
+              contracts.PERMIT2
+            ),
           ])
-        : 0;
+        : [0, BigInt(0)];
+
       setPermitNonce(nonce);
-
-      const allowance = userAddress
-        ? await getTokenAllowance(
-            item.inputToken.id,
-            userAddress,
-            contracts.PERMIT2
-          )
-        : BigInt(0);
-
       if (allowance >= supplyAmount) setHasApprove(true);
       else setHasApprove(false);
     };
@@ -73,72 +70,68 @@ const VaultAddPush: React.FC<Props> = ({
     initApprove();
   }, [userAddress, item, supplyAmount]);
 
-  const handleApprove = async () => {
-    if (userAddress) {
-      setIsLoading(true);
-      try {
-        await setTokenAllowance(
-          item.inputToken.id,
-          contracts.PERMIT2,
-          supplyAmount
-        );
+  const doApprove = async () => {
+    await setTokenAllowance(
+      item.inputToken.id,
+      contracts.PERMIT2,
+      supplyAmount
+    );
 
-        setHasApprove(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
-    }
+    setHasApprove(true);
+    await delay(2);
   };
 
-  const handlePermit = async () => {
-    if (userAddress && supplyAmount > 0) {
-      setIsLoading(true);
-      try {
-        const deadline = getTimestamp();
-        const signHash = await setTokenPermit(
-          item.inputToken.id,
-          supplyAmount,
-          permitNonce,
-          contracts.MORE_BUNDLER,
-          deadline
-        );
+  const doPermit = async (deadline: bigint): Promise<string> => {
+    if (userAddress && supplyAmount) {
+      const signHash = await setTokenPermit(
+        item.inputToken.id,
+        supplyAmount,
+        permitNonce,
+        contracts.MORE_BUNDLER,
+        deadline
+      );
 
-        setSignHash(signHash);
-        setDeadline(deadline);
+      setHasPermit(true);
+      await delay(2);
 
-        setHasPermit(true);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      return signHash;
+    }
+
+    return "";
+  };
+
+  const doSupplyCollateral = async (deadline: bigint, signHash: string) => {
+    if (userAddress) {
+      const txHash = await supplycollateral(
+        item.inputToken.id,
+        userAddress,
+        signHash,
+        deadline,
+        supplyAmount,
+        permitNonce,
+        item.marketParams
+      );
+
+      await delay(2);
+      validAdd();
+      setTxHash(txHash);
     }
   };
 
   const handleSupply = async () => {
     // generate borrow tx
-    if (userAddress && hasApprove && hasPermit) {
-      setIsLoading(true);
-      try {
-        const txHash = await supplycollateral(
-          item.inputToken.id,
-          userAddress,
-          signHash,
-          deadline,
-          supplyAmount,
-          permitNonce,
-          item.marketParams
-        );
+    setIsLoading(true);
+    try {
+      const deadline = getTimestamp();
 
-        validAdd();
-        setTxHash(txHash);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        notifyError(err);
-      }
+      if (!hasApprove) await doApprove();
+      const permitHash = hasPermit ? "" : await doPermit(deadline);
+      await doSupplyCollateral(deadline, permitHash);
+
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      notifyError(err, MoreAction.ADD_COLLATERAL);
     }
   };
 
@@ -194,40 +187,20 @@ const VaultAddPush: React.FC<Props> = ({
         </a>{" "}
         and the services provisions relating to the MORE Protocol Vault.
       </div>
-      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="gray"
-          />
-        </div>
-        {hasApprove && hasPermit ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Add Collateral"
-            disabled={isLoading}
-            onClick={handleSupply}
-            color="primary"
-          />
-        ) : hasApprove ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Permit"
-            disabled={isLoading}
-            onClick={handlePermit}
-            color="primary"
-          />
-        ) : (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Approve"
-            disabled={isLoading}
-            onClick={() => handleApprove()}
-            color="primary"
-          />
-        )}
+      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4 gap-2">
+        <MoreButton
+          className="text-2xl py-2"
+          text="Cancel"
+          onClick={closeModal}
+          color="gray"
+        />
+        <MoreButton
+          className="text-2xl py-2"
+          text="Add Collateral"
+          disabled={isLoading}
+          onClick={handleSupply}
+          color="primary"
+        />
       </div>
     </div>
   );
