@@ -6,11 +6,17 @@ import { parseUnits, formatEther } from "ethers";
 import MoreButton from "../../moreButton/MoreButton";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import TokenAmount from "@/components/token/TokenAmount";
-// import PositionChangeToken from "@/components/token/PositionChangeToken";
+import PositionChangeToken from "@/components/token/PositionChangeToken";
 import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
-import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
+import {
+  getTimestamp,
+  getTokenInfo,
+  notifyError,
+  delay,
+  formatTokenValue,
+} from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -44,7 +50,16 @@ const VaultAddPush: React.FC<Props> = ({
   const collateralToken = getTokenInfo(item.inputToken.id);
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
   const roundedAmount = Number(amount.toFixed(collateralToken.decimals));
-  const supplyAmount = parseUnits(roundedAmount.toString(), collateralToken.decimals);
+  const supplyAmount = parseUnits(
+    roundedAmount.toString(),
+    collateralToken.decimals
+  );
+
+  const collateralAmount = formatTokenValue(
+    item.collateral,
+    "",
+    collateralToken.decimals
+  );
 
   useEffect(() => {
     const initApprove = async () => {
@@ -139,74 +154,76 @@ const VaultAddPush: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base">
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Review Transaction</div>
-      <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
-        <ListIconToken
-          iconNames={[item.inputToken.id, item.borrowedToken.id]}
-          className="w-[24px] h-[24px]"
-        />
-        <div className="ml-3 flex items-center">
-          {collateralToken.symbol} / {loanToken}
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Review Transaction
         </div>
-      </div>
-      <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
-        <span>
-          <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
-        </span>
-        Approve the bundler to spend {amount} {collateralToken.symbol} (via
-        permit)
-      </div>
-      <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
-        <span>
-          <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
-        </span>
-        Bundle the following actions
-      </div>
+        <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
+          <ListIconToken
+            iconNames={[item.inputToken.id, item.borrowedToken.id]}
+            className="w-[24px] h-[24px]"
+          />
+          <div className="ml-3 flex items-center">
+            {collateralToken.symbol} / {loanToken}
+          </div>
+        </div>
+        <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
+          <span>
+            <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
+          </span>
+          Approve the bundler to spend {amount} {collateralToken.symbol} (via
+          permit)
+        </div>
+        <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
+          <span>
+            <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
+          </span>
+          Bundle the following actions
+        </div>
 
-      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <TokenAmount
-          title="Add Collateral"
-          token={item.inputToken.id}
-          amount={amount}
-          ltv={formatEther(item.marketParams.lltv)}
-          totalTokenAmount={amount}
-        />
-      </div>
-      {/* <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
-        <div className="text-grey pb-4"> Position Change </div>
-        <PositionChangeToken
-          title="Deposit"
-          value={amount}
-          token={collateralToken.symbol}
-          value2={0}
-        />
-      </div> */}
-
-      <div className="pt-5 px-5 text-[16px] leading-10">
-        By confirming this transaction, you agree to the{" "}
-        <a className="underline" href="#goto">
-          Terms of Use
-        </a>{" "}
-        and the services provisions relating to the MORE Protocol Vault.
-      </div>
-      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="gray"
+        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+          <TokenAmount
+            title="Add Collateral"
+            token={item.inputToken.id}
+            amount={amount}
+            ltv={formatEther(item.marketParams.lltv)}
+            totalTokenAmount={amount}
           />
         </div>
-        <MoreButton
-          className="text-2xl py-2"
-          text="Add Collateral"
-          disabled={isLoading}
-          onClick={handleSupply}
-          color="primary"
-        />
+        <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
+          <div className="text-grey pb-4">Position Change</div>
+          <PositionChangeToken
+            title="Collateral"
+            value={collateralAmount}
+            token={collateralToken.symbol}
+            value2={collateralAmount + amount}
+          />
+        </div>
+
+        <div className="pt-5 px-5 text-[16px] leading-10">
+          By confirming this transaction, you agree to the{" "}
+          <a className="underline" href="#goto">
+            Terms of Use
+          </a>{" "}
+          and the services provisions relating to the MORE Protocol Vault.
+        </div>
+        <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+          <div className="mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text="Cancel"
+              onClick={closeModal}
+              color="gray"
+            />
+          </div>
+          <MoreButton
+            className="text-2xl py-2"
+            text="Add Collateral"
+            disabled={isLoading}
+            onClick={handleSupply}
+            color="primary"
+          />
+        </div>
       </div>
-    </div>
     </div>
   );
 };
