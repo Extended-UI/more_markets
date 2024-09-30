@@ -1146,6 +1146,10 @@ export const fetchVaults = async (): Promise<GraphVault[]> => {
           ...vaultContract,
           functionName: "supplyQueueLength",
         },
+        {
+          ...vaultContract,
+          functionName: "timelock",
+        },
       ],
     });
 
@@ -1184,6 +1188,7 @@ export const fetchVaults = async (): Promise<GraphVault[]> => {
       guardian: {
         id: vaultInfos[3].result == ZeroAddress ? "-" : "Guardian",
       },
+      timelock: vaultInfos[5].result,
     } as GraphVault;
   });
 
@@ -1217,6 +1222,10 @@ export const fetchVault = async (vaultId: string): Promise<GraphVault> => {
       {
         ...vaultContract,
         functionName: "supplyQueueLength",
+      },
+      {
+        ...vaultContract,
+        functionName: "timelock",
       },
     ],
   });
@@ -1256,6 +1265,7 @@ export const fetchVault = async (vaultId: string): Promise<GraphVault> => {
     guardian: {
       id: vaultInfos[3].result == ZeroAddress ? "-" : "Guardian",
     },
+    timelock: vaultInfos[5].result,
   } as GraphVault;
 };
 

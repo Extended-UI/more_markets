@@ -1,3 +1,4 @@
+import React from "react";
 import { useAccount } from "wagmi";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDetail from "../modal/VaultDetail";

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { formatEther } from "viem";
 import IconToken from "../token/IconToken";
 import MoreButton from "../moreButton/MoreButton";
 import { InvestmentData } from "@/types";
@@ -35,7 +36,7 @@ const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
         </div>
         <div className="flex justify-between mt-5">
           <div>Vault Deployment Date</div>
-          <div className="">July 2024</div>
+          <div className="">Sep 2024</div>
         </div>
         <div className="flex justify-between mt-5">
           <div>Guardian Address</div>
@@ -43,7 +44,7 @@ const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
         </div>
         <div className="flex justify-between mt-5 pb-4">
           <div>Risk Curator Tumelock</div>
-          <div>1 Days</div>
+          <div>{formatEther(item.timelock)} Days</div>
         </div>
       </div>
       <div className="flex justify-end mt-7 pb-5">
