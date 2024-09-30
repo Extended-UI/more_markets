@@ -1047,9 +1047,67 @@ export const addNewToken = async (
   });
 };
 
-export const getVaultSupplyRate = async (vaultAddress: string) => {
-  
-}
+export const getVaultSupplyRate = async (
+  vaultAddress: string
+): Promise<bigint> => {
+  const aprInfo = await readContract(config, {
+    ...apyfeedInstance,
+    functionName: "getVaultSupplyRate",
+    args: [vaultAddress],
+  });
+
+  return aprInfo as bigint;
+};
+
+export const getMarketSupplyRate = async (
+  marketParams: MarketParams
+): Promise<bigint> => {
+  const aprInfo = await readContract(config, {
+    ...apyfeedInstance,
+    functionName: "getMarketSupplyRate",
+    args: [
+      contracts.MORE_MARKETS,
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+    ],
+  });
+
+  return aprInfo as bigint;
+};
+
+export const getMarketBorrowRate = async (
+  marketParams: MarketParams
+): Promise<bigint> => {
+  const aprInfo = await readContract(config, {
+    ...apyfeedInstance,
+    functionName: "getBorrowRate",
+    args: [
+      contracts.MORE_MARKETS,
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+    ],
+  });
+
+  return aprInfo as bigint;
+};
 
 // ******************************************
 export const fetchVaults = async (): Promise<GraphVault[]> => {
