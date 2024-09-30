@@ -19,4 +19,5 @@ export interface GraphVault {
   guardian: {
     id: string;
   } | null;
+  timelock: bigint;
 }

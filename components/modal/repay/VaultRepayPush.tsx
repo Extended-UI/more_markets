@@ -12,7 +12,7 @@ import FormatPourcentage from "@/components/tools/formatPourcentage";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { BorrowPosition } from "@/types";
-import { contracts } from "@/utils/const";
+import { contracts, MoreAction } from "@/utils/const";
 import { getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -100,7 +100,7 @@ const VaultRepayPush: React.FC<Props> = ({
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      notifyError(err);
+      notifyError(err, MoreAction.REPAY);
     }
   };
 

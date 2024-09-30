@@ -1,4 +1,5 @@
-import { ZeroAddress, MaxUint256, parseUnits } from "ethers";
+import { encodeFunctionData } from "viem";
+import { ZeroAddress, MaxUint256, parseUnits, formatUnits } from "ethers";
 import {
   readContract,
   readContracts,
@@ -8,10 +9,9 @@ import {
   watchAsset,
   type GetBalanceReturnType,
   waitForTransactionReceipt,
+  simulateContract,
 } from "@wagmi/core";
-import { encodeFunctionData, erc20Abi, formatUnits } from "viem";
 import { config } from "./wagmi";
-import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
@@ -48,6 +48,21 @@ import {
   getTokenInfo,
   toAssetsUp,
 } from "./utils";
+
+const executeTransaction = async (
+  multicallArgs: string[],
+  value: bigint = BigInt(0)
+): Promise<string> => {
+  const simulateResult = await simulateContract(config, {
+    ...bundlerInstance,
+    functionName: "multicall",
+    args: [multicallArgs],
+    value: value,
+    gas: parseUnits(gasLimit, 6),
+  });
+
+  return await writeContract(config, simulateResult.request);
+};
 
 export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
   try {
@@ -115,7 +130,7 @@ export const setTokenAllowance = async (
 ) => {
   const txHash = await writeContract(config, {
     address: token as `0x${string}`,
-    abi: erc20Abi,
+    abi: ERC20Abi,
     functionName: "approve",
     args: [spender as `0x${string}`, amount],
   });
@@ -453,21 +468,6 @@ export const getVaultDetail = async (
   });
 };
 
-export const sendToMarkets = async (
-  functionName: string,
-  args: any[]
-): Promise<string> => {
-  const txHash = await writeContract(config, {
-    address: contracts.MORE_MARKETS as `0x${string}`,
-    abi: MarketsAbi,
-    functionName: functionName,
-    args: args,
-    gas: parseUnits(gasLimit, 6),
-  });
-
-  return txHash;
-};
-
 export const getPermitNonce = async (args: any[]): Promise<number> => {
   const nonceInfo = await readContract(config, {
     ...permit2Instance,
@@ -516,7 +516,7 @@ export const getVaultNonce = async (
   return nonceInfo as bigint;
 };
 
-export const supplyToVaults = async (
+export const depositToVaults = async (
   vault: string,
   asset: string,
   account: string,
@@ -573,15 +573,7 @@ export const supplyToVaults = async (
     })
   );
 
-  const txHash = await writeContract(config, {
-    ...bundlerInstance,
-    functionName: "multicall",
-    args: [multicallArgs],
-    value: useFlow ? amount : BigInt(0),
-    gas: parseUnits(gasLimit, 6),
-  });
-
-  return txHash;
+  return await executeTransaction(multicallArgs, useFlow ? amount : BigInt(0));
 };
 
 export const withdrawFromVaults = async (
@@ -670,14 +662,7 @@ export const withdrawFromVaults = async (
     );
   }
 
-  const txHash = await writeContract(config, {
-    ...bundlerInstance,
-    functionName: "multicall",
-    args: [multicallArgs],
-    gas: parseUnits(gasLimit, 6),
-  });
-
-  return txHash;
+  return await executeTransaction(multicallArgs);
 };
 
 export const supplycollateralAndBorrow = async (
@@ -791,14 +776,7 @@ export const supplycollateralAndBorrow = async (
     })
   );
 
-  const txHash = await writeContract(config, {
-    ...bundlerInstance,
-    functionName: "multicall",
-    args: [multicallArgs],
-    gas: parseUnits(gasLimit, 6),
-  });
-
-  return txHash;
+  return await executeTransaction(multicallArgs);
 };
 
 export const getBorrowedAmount = async (
@@ -839,7 +817,7 @@ export const repayLoanViaMarkets = async (
   item: BorrowPosition
 ): Promise<string> => {
   const marketParams = item.marketParams;
-  const txHash = await writeContract(config, {
+  const simulateResult = await simulateContract(config, {
     ...marketsInstance,
     functionName: "repay",
     args: [
@@ -862,7 +840,7 @@ export const repayLoanViaMarkets = async (
     gas: parseUnits(gasLimit, 6),
   });
 
-  return txHash;
+  return await writeContract(config, simulateResult.request);
 };
 
 export const repayLoanToMarkets = async (
@@ -930,14 +908,7 @@ export const repayLoanToMarkets = async (
     })
   );
 
-  const txHash = await writeContract(config, {
-    ...bundlerInstance,
-    functionName: "multicall",
-    args: [multicallArgs],
-    gas: parseUnits(gasLimit, 6),
-  });
-
-  return txHash;
+  return await executeTransaction(multicallArgs);
 };
 
 export const supplycollateral = async (
@@ -949,58 +920,61 @@ export const supplycollateral = async (
   nonce: number,
   marketParams: MarketParams
 ): Promise<string> => {
+  let multicallArgs: string[] = [];
+
   // encode approve2
-  const approve2 = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "approve2",
-    args: [
-      [
-        [supplyAsset, supplyAmount, Uint48Max, nonce],
-        contracts.MORE_BUNDLER,
-        deadline,
-      ],
-      signhash,
-      false,
-    ],
-  });
+  if (signhash.length > 0) {
+    multicallArgs.push(
+      encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "approve2",
+        args: [
+          [
+            [supplyAsset, supplyAmount, Uint48Max, nonce],
+            contracts.MORE_BUNDLER,
+            deadline,
+          ],
+          signhash,
+          false,
+        ],
+      })
+    );
+  }
 
   // encode transferFrom2
-  const transferFrom2 = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "transferFrom2",
-    args: [supplyAsset, supplyAmount],
-  });
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "transferFrom2",
+      args: [supplyAsset, supplyAmount],
+    })
+  );
 
   // encode morphoSupplyCollateral
-  const morphoSupplyCollateral = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "morphoSupplyCollateral",
-    args: [
-      [
-        marketParams.isPremiumMarket,
-        marketParams.loanToken,
-        marketParams.collateralToken,
-        marketParams.oracle,
-        marketParams.irm,
-        marketParams.lltv,
-        marketParams.creditAttestationService,
-        marketParams.irxMaxLltv,
-        marketParams.categoryLltv,
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "morphoSupplyCollateral",
+      args: [
+        [
+          marketParams.isPremiumMarket,
+          marketParams.loanToken,
+          marketParams.collateralToken,
+          marketParams.oracle,
+          marketParams.irm,
+          marketParams.lltv,
+          marketParams.creditAttestationService,
+          marketParams.irxMaxLltv,
+          marketParams.categoryLltv,
+        ],
+        supplyAmount,
+        account,
+        "",
       ],
-      supplyAmount,
-      account,
-      "",
-    ],
-  });
+    })
+  );
 
-  const txHash = await writeContract(config, {
-    ...bundlerInstance,
-    functionName: "multicall",
-    args: [[approve2, transferFrom2, morphoSupplyCollateral]],
-    gas: parseUnits(gasLimit, 6),
-  });
-
-  return txHash;
+  return await executeTransaction(multicallArgs);
 };
 
 export const withdrawCollateral = async (
@@ -1008,35 +982,32 @@ export const withdrawCollateral = async (
   amount: bigint,
   account: string
 ) => {
+  let multicallArgs: string[] = [];
+
   // encode morphoWithdrawCollateral
-  const morphoWithdrawCollateral = encodeFunctionData({
-    abi: BundlerAbi,
-    functionName: "morphoWithdrawCollateral",
-    args: [
-      [
-        marketParams.isPremiumMarket,
-        marketParams.loanToken,
-        marketParams.collateralToken,
-        marketParams.oracle,
-        marketParams.irm,
-        marketParams.lltv,
-        marketParams.creditAttestationService,
-        marketParams.irxMaxLltv,
-        marketParams.categoryLltv,
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "morphoWithdrawCollateral",
+      args: [
+        [
+          marketParams.isPremiumMarket,
+          marketParams.loanToken,
+          marketParams.collateralToken,
+          marketParams.oracle,
+          marketParams.irm,
+          marketParams.lltv,
+          marketParams.creditAttestationService,
+          marketParams.irxMaxLltv,
+          marketParams.categoryLltv,
+        ],
+        amount,
+        account,
       ],
-      amount,
-      account,
-    ],
-  });
+    })
+  );
 
-  const txHash = await writeContract(config, {
-    ...bundlerInstance,
-    functionName: "multicall",
-    args: [[morphoWithdrawCollateral]],
-    gas: parseUnits(gasLimit, 6),
-  });
-
-  return txHash;
+  return await executeTransaction(multicallArgs);
 };
 
 export const addNewToken = async (
@@ -1146,6 +1117,10 @@ export const fetchVaults = async (): Promise<GraphVault[]> => {
           ...vaultContract,
           functionName: "supplyQueueLength",
         },
+        {
+          ...vaultContract,
+          functionName: "timelock",
+        },
       ],
     });
 
@@ -1184,6 +1159,7 @@ export const fetchVaults = async (): Promise<GraphVault[]> => {
       guardian: {
         id: vaultInfos[3].result == ZeroAddress ? "-" : "Guardian",
       },
+      timelock: vaultInfos[5].result,
     } as GraphVault;
   });
 
@@ -1217,6 +1193,10 @@ export const fetchVault = async (vaultId: string): Promise<GraphVault> => {
       {
         ...vaultContract,
         functionName: "supplyQueueLength",
+      },
+      {
+        ...vaultContract,
+        functionName: "timelock",
       },
     ],
   });
@@ -1256,6 +1236,7 @@ export const fetchVault = async (vaultId: string): Promise<GraphVault> => {
     guardian: {
       id: vaultInfos[3].result == ZeroAddress ? "-" : "Guardian",
     },
+    timelock: vaultInfos[5].result,
   } as GraphVault;
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { formatEther } from "viem";
 import IconToken from "../token/IconToken";
 import MoreButton from "../moreButton/MoreButton";
 import { InvestmentData } from "@/types";
@@ -23,13 +24,8 @@ const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
         </div>
       </div>
       <div className="my-[30px] text-[16px] text-[#E0DFE3]">
-        This is a blurb that describes the strategy of the vault and any
-        specific information that the curator might want to communicate to
-        depositors. It can include things like the rationale, the risk
-        tolerance, any calculations or other information that is helpful to the
-        user. This text should be limited to 4 lines (however many characters
-        that makes since this is about that).
-      </div>
+        This vault manages liquidity allocations of Flow-indexed tokens based on
+        supply and demand for liquid staked FLOW and FLOW
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-primary !p-0 w-full"></div>
@@ -41,7 +37,7 @@ const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
         </div>
         <div className="flex justify-between mb-[20px]">
           <div>Vault Deployment Date</div>
-          <div className="">July 2024</div>
+          <div className="">Sep 2024</div>
         </div>
         <div className="flex justify-between mb-[20px]">
           <div>Guardian Address</div>
@@ -49,16 +45,27 @@ const VaultDetail: React.FC<Props> = ({ item, closeModal }) => {
         </div>
         <div className="flex justify-between ">
           <div>Risk Curator Tumelock</div>
-          <div>1 Days</div>
+          <div>{formatEther(item.timelock)} Days</div>
         </div>
       </div>
+<<<<<<< HEAD
       <div className="px-[28px] py-[30px] flex justify-end">
+=======
+      <div className="flex justify-end mt-7 pb-5">
+        <div className="mr-5">
+>>>>>>> graph-integration
           <MoreButton
             className="text-2xl py-2"
             text="Close"
             onClick={closeModal}
+<<<<<<< HEAD
             color="grey"
           />
+=======
+            color="gray"
+          />
+        </div>
+>>>>>>> graph-integration
       </div>
     </div>
   );

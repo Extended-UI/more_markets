@@ -137,6 +137,7 @@ const EarnDetailPage: React.FC = () => {
               curator: formatCurator(fetchedVault),
               collateral: [],
               guardian: fetchedVault.guardian ? fetchedVault.guardian.id : "",
+              timelock: fetchedVault.timelock,
             } as InvestmentData);
           }
         }
@@ -185,7 +186,9 @@ const EarnDetailPage: React.FC = () => {
             <HeaderEarnDetail updateInfo={updateInfo} item={vaultInfo} />
             <InfosEarnDetails vault={vaultInfo} totalBorrow={totalBorrow} />
           </div>
-          <h1 className="text-4xl !text-[30px] mt-[60px] mb-10 font-semibold">Vault Breakdown</h1>
+          <h1 className="text-4xl !text-[30px] mt-[60px] mb-10 font-semibold">
+            Vault Breakdown
+          </h1>
           <DetailEarnMoreTable breakdowns={breakdowns} />
         </>
       )}

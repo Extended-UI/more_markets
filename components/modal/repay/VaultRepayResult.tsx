@@ -7,6 +7,7 @@ import ListIconToken from "@/components/token/ListIconToken";
 import { BorrowPosition } from "@/types";
 import { getTokenInfo, notifyError } from "@/utils/utils";
 import { waitForTransaction } from "@/utils/contract";
+import { MoreAction } from "@/utils/const";
 
 interface Props {
   amount: number;
@@ -34,7 +35,7 @@ const VaultRepayResult: React.FC<Props> = ({
         }
       } catch (err) {
         setExecuted(true);
-        notifyError(err);
+        notifyError(err, MoreAction.REPAY);
       }
     };
 

@@ -6,6 +6,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { InvestmentData } from "@/types";
 import { notifyError } from "@/utils/utils";
+import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 
 interface Props {
@@ -37,7 +38,7 @@ const VaultDepositResult: React.FC<Props> = ({
         }
       } catch (err) {
         setExecuted(true);
-        notifyError(err);
+        notifyError(err, MoreAction.DEPOSIT);
       }
     };
 
@@ -47,47 +48,51 @@ const VaultDepositResult: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base">
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
-      <div className="text-[20px] font-medium mb-6">
-        <span>
-          <Icon
-            icon="circle-check"
-            className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
-          />
-        </span>
-        Execute the following actions
-      </div>
-      <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <TokenAmount
-          title="Deposit"
-          token={item.assetAddress}
-          amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
-        />
-      </div>
-      {txhash.length > 0 && (
-        <div className="text-[20px] font-medium mb-6 mt-[40px]">
-          <span>
-            {executed ? (
-              <Icon
-                icon="circle-check"
-                className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
-              />
-            ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer mr-5  w-[20px] !h-[20px]" />
-            )}
-          </span>
-          {executed ? (
-            <>Transaction {txHashStr} has been successfully executed.</>
-          ) : (
-            <>Transaction {txHashStr} has been sent.</>
-          )}
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Transaction Confirmation
         </div>
-      )}
-      
-    </div>
-    <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+        <div className="text-[20px] font-medium mb-6">
+          <span>
+            <Icon
+              icon="circle-check"
+              className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
+            />
+          </span>
+          Execute the following actions
+        </div>
+        <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
+          <TokenAmount
+            title="Deposit"
+            token={item.assetAddress}
+            amount={amount}
+            ltv={"ltv"}
+            totalTokenAmount={item.totalDeposits}
+          />
+        </div>
+        {txhash.length > 0 && (
+          <div className="text-[20px] font-medium mb-6 mt-[40px]">
+            <span>
+              {executed ? (
+                <Icon
+                  icon="circle-check"
+                  className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
+                />
+              ) : (
+                <Icon
+                  icon="circle"
+                  className="text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
+                />
+              )}
+            </span>
+            {executed ? (
+              <>Transaction {txHashStr} has been successfully executed.</>
+            ) : (
+              <>Transaction {txHashStr} has been sent.</>
+            )}
+          </div>
+        )}
+      </div>
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (
           <div className="flex justify-end">
             <MoreButton

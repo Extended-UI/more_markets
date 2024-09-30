@@ -9,14 +9,14 @@ import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { contracts } from "@/utils/const";
+import { contracts, MoreAction } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
   setTokenPermit,
   getPermitNonce,
-  supplyToVaults,
+  depositToVaults,
 } from "@/utils/contract";
 
 interface Props {
@@ -104,7 +104,7 @@ const VaultDepositPush: React.FC<Props> = ({
 
   const doDeposit = async (deadline: bigint, signHash: string) => {
     if (userAddress) {
-      const txHash = await supplyToVaults(
+      const txHash = await depositToVaults(
         item.vaultId,
         item.assetAddress,
         userAddress,
@@ -133,7 +133,7 @@ const VaultDepositPush: React.FC<Props> = ({
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      notifyError(err);
+      notifyError(err, MoreAction.DEPOSIT);
     }
   };
 

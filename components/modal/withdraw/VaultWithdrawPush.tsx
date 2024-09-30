@@ -10,6 +10,7 @@ import IconToken from "@/components/token/IconToken";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
+import { MoreAction } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   withdrawFromVaults,
@@ -144,7 +145,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        notifyError(err);
+        notifyError(err, MoreAction.WITHDRAW);
       }
     }
   };

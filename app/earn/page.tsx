@@ -63,6 +63,7 @@ const EarnPage: React.FC = () => {
             curator: formatCurator(vault),
             collateral: uniq(activeCollaterals),
             guardian: vault.guardian ? vault.guardian.id : "",
+            timelock: vault.timelock,
           } as InvestmentData;
         });
 

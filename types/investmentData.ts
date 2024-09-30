@@ -1,5 +1,3 @@
-import { Market } from "./market";
-
 export interface InvestmentData {
   vaultId: string;
   vaultName: string;
@@ -11,7 +9,6 @@ export interface InvestmentData {
   curator: string;
   collateral: string[];
   guardian: string;
-  // tokenBalance: GetBalanceReturnType;
+  timelock: bigint;
   // unsecured: number;
-  // market: Market | null;
 }
