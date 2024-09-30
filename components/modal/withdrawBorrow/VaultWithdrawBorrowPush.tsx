@@ -96,6 +96,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         </a>{" "}
         and the services provisions relating to the MORE Protocol Vault.
       </div>
+      </div>
       <div className="flex justify-end pt-[28px] rounded-b-[20px]">
         <div className="mr-5">
           <MoreButton
@@ -112,7 +113,6 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
           onClick={handleWithdraw}
           color="primary"
         />
-      </div>
       </div>
     </div>
   );

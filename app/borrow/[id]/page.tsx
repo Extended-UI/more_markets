@@ -111,7 +111,7 @@ const BorrowDetailPage: React.FC = () => {
   return (
     <>
       {borrowMarket && (
-        <div className="mb-8">
+        <div className="mb-8 mt-14">
           <div className=" mr-10 mb-14">
           <div className="flex items-center w-[80px] cursor-pointer" onClick={() => router.push("/borrow")}>
                 <Image

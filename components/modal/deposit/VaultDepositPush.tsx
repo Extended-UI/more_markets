@@ -215,7 +215,7 @@ const VaultDepositPush: React.FC<Props> = ({
           className="text-2xl py-2"
           text="Cancel"
           onClick={closeModal}
-          color="gray"
+          color="grey"
         />
         <MoreButton
           className="text-2xl py-2"
