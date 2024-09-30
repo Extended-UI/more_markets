@@ -3,15 +3,17 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import Icon from "../FontAwesomeIcon";
 
 interface Props {
-  title: string;
+  title?: string;
   additionalClasses?: string;
   infoText: string;
+  sortColum?:boolean;
 }
 
 const TableHeaderCell: React.FC<Props> = ({
   title,
   additionalClasses,
   infoText,
+  sortColum
 }) => {
   const [isTooltipVisible, setTooltipVisible] = useState(false);
 
@@ -19,16 +21,22 @@ const TableHeaderCell: React.FC<Props> = ({
     <div
       className={`relative flex flex-row items-center justify-start gap-3 text-[12px] font-medium ${additionalClasses}`}
     >
-      <div className="flex flex-col items-center mr-2">
-        <Icon
-          icon="caret-up"
-          className="text-[#545454] text-m cursor-pointer"
-        />
-        <Icon
-          icon="caret-down"
-          className="text-[#545454] text-m cursor-pointer"
-        />
-      </div>
+      { !sortColum ? (
+        <>
+            <div className="flex flex-col items-center mr-2">
+            <Icon
+              icon="caret-up"
+              className="text-[#545454] text-m cursor-pointer"
+            />
+            <Icon
+              icon="caret-down"
+              className="text-[#545454] text-m cursor-pointer"
+            />
+          </div>
+        </>
+        ):''
+      }
+      
       {title}
       <div
         className="relative"

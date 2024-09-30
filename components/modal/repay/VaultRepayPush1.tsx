@@ -224,7 +224,7 @@ const VaultRepayPush: React.FC<Props> = ({
             className="text-2xl py-2"
             text="Cancel"
             onClick={closeModal}
-            color="gray"
+            color="grey"
           />
         </div>
         {hasApprove && hasPermit ? (
