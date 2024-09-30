@@ -167,14 +167,15 @@ const VaultRepayPush: React.FC<Props> = ({
         </a>{" "}
         and the services provisions relating to the MORE Protocol Vault.
       </div>
-<<<<<<< HEAD
-      <div className="flex justify-end py-5 more-bg-primary rounded-b-[20px] px-4 gap-2">
-        <MoreButton
-          className="text-2xl py-2"
-          text="Cancel"
-          onClick={closeModal}
-          color="gray"
-        />
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+        <div className="mr-5">
+          <MoreButton
+            className="text-2xl py-2"
+            text="Cancel"
+            onClick={closeModal}
+            color="gray"
+          />
+        </div>
         <MoreButton
           className="text-2xl py-2"
           text="Repay"
@@ -182,36 +183,8 @@ const VaultRepayPush: React.FC<Props> = ({
           onClick={handleRepay}
           color="primary"
         />
-=======
       </div>
-      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="grey"
-          />
-        </div>
-        {hasApprove ? (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Repay"
-            disabled={isLoading}
-            onClick={handleRepay}
-            color="primary"
-          />
-        ) : (
-          <MoreButton
-            className="text-2xl py-2"
-            text="Approve"
-            disabled={isLoading}
-            onClick={handleApprove}
-            color="primary"
-          />
-        )}
->>>>>>> styles-fix
-      </div>
+    </div>
     </div>
   );
 };
