@@ -44,50 +44,52 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full modal-base">
-       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Withdraw collateral</div>
-      <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
-        <ListIconToken
-          iconNames={[item.inputToken.id, item.borrowedToken.id]}
-          className="w-7 h-7"
-        />
-        <div className="ml-3 flex items-center">
-          {collateralToken} / {loanToken}
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Withdraw collateral
         </div>
-      </div>
-      <div className="text-[16px] mb-5">Withdraw {collateralToken}</div>
-      <div className="w-full flex justify-center">
-        <InputTokenMax
-          type="number"
-          value={withdrawCollateral}
-          onChange={handleInputChange}
-          placeholder="0"
-          token={item.inputToken.id}
-          balance={userCollateral}
-          setMax={handleSetMax}
-        />
-      </div>
-      <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-        Available to Withdraw:
-        {formatTokenValue(item.collateral, item.inputToken.id)}
-        {collateralToken}
-      </div>
-      <div className="flex justify-end mt-[40px]">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="grey"
+        <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
+          <ListIconToken
+            iconNames={[item.inputToken.id, item.borrowedToken.id]}
+            className="w-7 h-7"
+          />
+          <div className="ml-3 flex items-center">
+            {collateralToken} / {loanToken}
+          </div>
+        </div>
+        <div className="text-[16px] mb-5">Withdraw {collateralToken}</div>
+        <div className="w-full flex justify-center">
+          <InputTokenMax
+            type="number"
+            value={withdrawCollateral}
+            onChange={handleInputChange}
+            placeholder="0"
+            token={item.inputToken.id}
+            balance={userCollateral}
+            setMax={handleSetMax}
           />
         </div>
-        <MoreButton
-          className="text-2xl py-2"
-          text="Confirm"
-          onClick={handleWithdraw}
-          color="primary"
-        />
-      </div>
+        <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
+          Available to Withdraw:
+          {formatTokenValue(item.collateral, item.inputToken.id)}
+          {collateralToken}
+        </div>
+        <div className="flex justify-end mt-[40px]">
+          <div className="mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text="Cancel"
+              onClick={closeModal}
+              color="grey"
+            />
+          </div>
+          <MoreButton
+            className="text-2xl py-2"
+            text="Confirm"
+            onClick={handleWithdraw}
+            color="primary"
+          />
+        </div>
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-primary !pb-0 w-full"></div>
@@ -101,7 +103,7 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between  mb-[20px]">
+        <div className="flex w-full justify-between mb-[20px]">
           <div>Liquidation LTV</div>
           <div>
             <span className="more-text-gray font-medium">
@@ -112,22 +114,22 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between ">
-          <div>Collateral {collateralToken} </div>
+        <div className="flex w-full justify-between mb-[20px]">
+          <div>Collateral ({collateralToken})</div>
           <div>
             <span className="more-text-gray font-medium">
-              {formatTokenValue(item.collateral, item.inputToken.id)}
+              {formatTokenValue(item.collateral, item.inputToken.id).toFixed(2)}
             </span>
           </div>
         </div>
-        {/* <div className="flex w-full justify-between">
-          <div>Loan {loanToken}</div>
+        <div className="flex w-full justify-between">
+          <div>Loan ({loanToken})</div>
           <div>
-            <span className="more-text-gray">
-              {formatTokenValue(item.loan, item.borrowedToken.id)}
+            <span className="more-text-gray font-medium">
+              {formatTokenValue(item.loan, item.borrowedToken.id).toFixed(2)}
             </span>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

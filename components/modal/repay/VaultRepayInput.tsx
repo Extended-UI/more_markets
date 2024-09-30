@@ -73,50 +73,48 @@ const VaultRepayInput: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full modal-base">
-       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Repay Loan</div>
-      <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
-        <ListIconToken
-          iconNames={[item.inputToken.id, item.borrowedToken.id]}
-          className="w-[24px] h-[24px] "
-        />
-        <div className="ml-3  flex items-center'">
-          {collateralToken} / {loanToken.symbol}
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+        <div className="text-[24px] mb-[40px] font-semibold">Repay Loan</div>
+        <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
+          <ListIconToken
+            iconNames={[item.inputToken.id, item.borrowedToken.id]}
+            className="w-[24px] h-[24px] "
+          />
+          <div className="ml-3  flex items-center'">
+            {collateralToken} / {loanToken.symbol}
+          </div>
         </div>
-      </div>
-      <div className="w-full flex flex-col justify-center">
-        <div className="text-[16px] mb-5">
-          Repay {loanToken.symbol}
+        <div className="w-full flex flex-col justify-center">
+          <div className="text-[16px] mb-5">Repay {loanToken.symbol}</div>
+          <InputTokenMax
+            type="number"
+            value={repayAmount}
+            onChange={handleInputChange}
+            placeholder="0"
+            token={item.borrowedToken.id}
+            balance={Number(loanBalance ? loanBalance.formatted : 0)}
+            setMax={handleSetMax}
+          />
+          <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
+            Balance: {loanBalance?.formatted} {loanToken.symbol}
+          </div>
         </div>
-        <InputTokenMax
-          type="number"
-          value={repayAmount}
-          onChange={handleInputChange}
-          placeholder="0"
-          token={item.borrowedToken.id}
-          balance={Number(loanBalance ? loanBalance.formatted : 0)}
-          setMax={handleSetMax}
-        />
-        <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-          Balance: {loanBalance?.formatted} {loanToken.symbol}
-        </div>
-      </div>
-      <div className="flex justify-end mt-[40px] ">
-        <div className="mr-5">
+        <div className="flex justify-end mt-[40px] ">
+          <div className="mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text="Cancel"
+              onClick={closeModal}
+              color="grey"
+            />
+          </div>
           <MoreButton
             className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="grey"
+            text="Confirm"
+            onClick={() => handleRepay()}
+            color="primary"
           />
         </div>
-        <MoreButton
-          className="text-2xl py-2"
-          text="Confirm"
-          onClick={() => handleRepay()}
-          color="primary"
-        />
-      </div>
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-primary w-full" />
@@ -142,7 +140,7 @@ const VaultRepayInput: React.FC<Props> = ({
           </div>
         </div>
         <div className="flex w-full justify-between mb-[20px]">
-          <div>Collateral {collateralToken} </div>
+          <div>Collateral ({collateralToken})</div>
           <div>
             <span className="more-text-gray font-medium">
               {formatTokenValue(item.collateral, item.inputToken.id)}
@@ -150,10 +148,10 @@ const VaultRepayInput: React.FC<Props> = ({
           </div>
         </div>
         <div className="flex w-full justify-between">
-          <div>Loan {loanToken.symbol}</div>
+          <div>Loan ({loanToken.symbol})</div>
           <div>
             <span className="more-text-gray font-medium">
-              {formatTokenValue(item.loan, item.borrowedToken.id)}
+              {formatTokenValue(item.loan, item.borrowedToken.id).toFixed(2)}
             </span>
           </div>
         </div>

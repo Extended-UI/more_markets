@@ -85,24 +85,14 @@ export const formatTokenValue = (
   );
 };
 
-export const formatLocale = (
-  amount: bigint,
-  token: string,
-  decimals?: number
-): string => {
-  return formatTokenValue(amount, token, decimals).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-};
-
 export const formatNumberLocale = (
   numValue: number,
   maxFranction: number = 2
 ): string => {
+  const actualFraction = numValue > 0.01 ? 2 : maxFranction;
   return numValue.toLocaleString(undefined, {
     minimumFractionDigits: 2,
-    maximumFractionDigits: maxFranction,
+    maximumFractionDigits: actualFraction,
   });
 };
 

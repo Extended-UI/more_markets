@@ -106,111 +106,111 @@ const BorrowersMoreTable: React.FC<Props> = () => {
   return (
     <div>
       <h1 className="text-[20px] font-semibold mb-8 mt-16">Borrowers</h1>
-    <div
-      className="rounded-2xl table-wrapper more-table"
-      style={{
-        scrollbarWidth: "none",
-        msOverflowStyle: "none",
-        position: "relative",
-      }}
-    >
-      <table className="w-full rounded-2xl text-sm text-left table overflow-x-scroll">
-        <thead
-          className="bg-[#212121] h-20 text-white text-xs "
-          style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
-        >
-          <tr >
-            <th style={{ width: "300px" }} className="p-6">
-              <TableHeaderCell title="Wallet" infoText="" />
-            </th>
-            <th style={{ width: "200px" }} className="p-6">
-              <div className="flex justify-start">
-                <TableHeaderCell
-                  title="Collateral"
-                  infoText="The token(s) that borrowers must lock in order to borrow funds."
-                />
-              </div>
-            </th>
-            <th style={{ width: "200px" }} className="p-6">
-              <div className="flex justify-start">
-                <TableHeaderCell title="Loan" infoText="" />
-              </div>
-            </th>
-            <th style={{ width: "200px" }} className="p-6">
-              <div className="flex justify-start">
-                <TableHeaderCell title="Health Factor" infoText="" />
-              </div>
-            </th>
-            <th style={{ width: "100px" }} className="p-6">
-              <div className="flex justify-start">
-                <TableHeaderCell title="Share" infoText="" />
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-transparent">
-          {currentPageData.map((item, index, arr) => (
-            <tr
-              key={index}
-              style={
-                index === arr.length - 1
-                  ? {
-                      borderBottomLeftRadius: "8px",
-                      borderBottomRightRadius: "8px",
-                    }
-                  : undefined
-              }
-              className={`last:border-b-0 text-[14px]  cursor-pointer ${
-                index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
-              }`}
-            >
-              <td className="p-6">
-                <span
-                  style={{ backgroundColor: item.allocationColor }}
-                  className={`w-5 h-5  rounded-full mr-2`}
-                ></span>
-                <span>0x1234...xxyz</span>
-              </td>
-
-              <td className="py-4">
-                <div className="flex p-6 justify-start items-center gap-2 ml-3">
-                  <FormatPrice
-                    value={item.supplyAmount}
-                    token={item.supplyCurrency}
-                  ></FormatPrice>
+      <div
+        className="rounded-2xl table-wrapper more-table"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          position: "relative",
+        }}
+      >
+        <table className="w-full rounded-2xl text-sm text-left table overflow-x-scroll">
+          <thead
+            className="bg-[#212121] h-20 text-white text-xs "
+            style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
+          >
+            <tr>
+              <th style={{ width: "300px" }} className="p-6">
+                <TableHeaderCell title="Wallet" infoText="" />
+              </th>
+              <th style={{ width: "200px" }} className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell
+                    title="Collateral"
+                    infoText="The token(s) that borrowers must lock in order to borrow funds."
+                  />
                 </div>
-              </td>
-
-              <td className="py-4">
-                <div className="flex p-6 justify-start items-center gap-2 ml-3">
-                  <FormatPrice
-                    value={item.supplyAmount}
-                    token={item.supplyCurrency}
-                  ></FormatPrice>
+              </th>
+              <th style={{ width: "200px" }} className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Loan" infoText="" />
                 </div>
-              </td>
-
-              <td className="p-6">
-                <div className="flex gap-1 justify-start ml-3">
-                  <div>{item.unsecuredAPY}</div>
+              </th>
+              <th style={{ width: "200px" }} className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Health Factor" infoText="" />
                 </div>
-              </td>
-
-              <td className="p-6">
-                <div className="flex gap-1 justify-start ml-3">
-                  <FormatPourcentage
-                    value={item.unsecuredAPY}
-                  ></FormatPourcentage>
+              </th>
+              <th style={{ width: "100px" }} className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Share" infoText="" />
                 </div>
-              </td>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="w-full text-[14px] flex justify-start py-10 px-6">
-        <Pagination totalItems={tableData.length}></Pagination>
+          </thead>
+          <tbody className="bg-transparent">
+            {currentPageData.map((item, index, arr) => (
+              <tr
+                key={index}
+                style={
+                  index === arr.length - 1
+                    ? {
+                        borderBottomLeftRadius: "8px",
+                        borderBottomRightRadius: "8px",
+                      }
+                    : undefined
+                }
+                className={`last:border-b-0 text-[14px]  cursor-pointer ${
+                  index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
+                }`}
+              >
+                <td className="p-6">
+                  <span
+                    style={{ backgroundColor: item.allocationColor }}
+                    className={`w-5 h-5  rounded-full mr-2`}
+                  ></span>
+                  <span>0x1234...xxyz</span>
+                </td>
+
+                <td className="py-4">
+                  <div className="flex p-6 justify-start items-center gap-2 ml-3">
+                    <FormatPrice
+                      value={item.supplyAmount}
+                      token={item.supplyCurrency}
+                    />
+                  </div>
+                </td>
+
+                <td className="py-4">
+                  <div className="flex p-6 justify-start items-center gap-2 ml-3">
+                    <FormatPrice
+                      value={item.supplyAmount}
+                      token={item.supplyCurrency}
+                    />
+                  </div>
+                </td>
+
+                <td className="p-6">
+                  <div className="flex gap-1 justify-start ml-3">
+                    <div>{item.unsecuredAPY}</div>
+                  </div>
+                </td>
+
+                <td className="p-6">
+                  <div className="flex gap-1 justify-start ml-3">
+                    <FormatPourcentage
+                      value={item.unsecuredAPY}
+                    ></FormatPourcentage>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="w-full text-[14px] flex justify-start py-10 px-6">
+          <Pagination totalItems={tableData.length}></Pagination>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

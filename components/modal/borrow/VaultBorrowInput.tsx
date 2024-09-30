@@ -17,6 +17,7 @@ import {
   mulDivDown,
   wMulDown,
   formatTokenValue,
+  formatNumberLocale
 } from "@/utils/utils";
 
 interface Props {
@@ -157,7 +158,7 @@ const VaultBorrowInput: React.FC<Props> = ({
         />
       </div>
       <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-        Maximum Available to Borrow: {availableLiquidity} {borrowToken.symbol}
+        Maximum Available to Borrow: {formatNumberLocale(availableLiquidity)} {borrowToken.symbol}
       </div>
       <div className="flex justify-end mt-[40px] mb">
         <div className="mr-5">

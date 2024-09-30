@@ -26,7 +26,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
       // then mint tokens
       let reqList: IMintRequet[] = [];
       _.forOwn(tokens, (value, token) => {
-        if (token != ZeroAddress) {
+        if (
+          token != ZeroAddress &&
+          token.toLowerCase() != contracts.WNATIVE.toLowerCase() // removing wflow
+        ) {
           const amount = parseUnits(
             faucetAmounts[reqList.length],
             value.decimals

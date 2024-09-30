@@ -6,7 +6,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { getTokenInfo } from "@/utils/utils";
+import { getTokenInfo, formatNumberLocale } from "@/utils/utils";
 
 interface Props {
   item: InvestmentData;
@@ -50,7 +50,9 @@ const VaultWithdrawInput: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full modal-base">
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-        <div className="text-[24px] mb-[40px] font-semibold">{item.vaultName}</div>
+        <div className="text-[24px] mb-[40px] font-semibold">
+          {item.vaultName}
+        </div>
         <div className="text-[16px] mb-5">Withdraw {tokenInfo.symbol}</div>
         <div className="w-full flex justify-center">
           <InputTokenMax
@@ -64,7 +66,8 @@ const VaultWithdrawInput: React.FC<Props> = ({
           />
         </div>
         <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-          Your Deposits: {item.userDeposits} {tokenInfo.symbol}
+          Your Deposits: {formatNumberLocale(item.userDeposits)}{" "}
+          {tokenInfo.symbol}
         </div>
         <div className="flex justify-end mt-[40px]">
           <div className="mr-5">
@@ -84,8 +87,8 @@ const VaultWithdrawInput: React.FC<Props> = ({
         </div>
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
-          <div className="glowing-text-primary !pb-0 w-full" />
-        </div>
+        <div className="glowing-text-primary !pb-0 w-full" />
+      </div>
       <div className="flex items-center justify-between more-bg-primary rounded-b-[20px] px-[28px] pb-[40px] pt-[30px] text-[16px] font-normal">
         <div className="flex items-center gap-2">
           Withdraw <ArrowLongRightIcon className="w-4 h-4" /> Deposit APY /
