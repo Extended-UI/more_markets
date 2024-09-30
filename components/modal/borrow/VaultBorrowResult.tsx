@@ -54,16 +54,17 @@ const VaultBorrowResult: React.FC<Props> = ({
     txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
 
   return (
-    <div className="more-bg-secondary h-full rounded-[20px]">
-      <div className="text-xl mb-10 px-4 pt-5">Transaction Confirmation</div>
-      <div className="text-l flex mb-5 px-4">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
+      <div className="text-[20px] font-medium mb-[40px] flex items-center">
         <span>
-          <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5" />
+          <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
         </span>
         Executed the following actions
       </div>
       {supplyAmount > 0 && (
-        <div className="more-bg-primary px-4 mx-5">
+        <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
           <TokenAmount
             title="Supply"
             token={item.inputToken.id}
@@ -73,7 +74,7 @@ const VaultBorrowResult: React.FC<Props> = ({
           />
         </div>
       )}
-      <div className="more-bg-primary px-4 mx-5">
+      <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
         <TokenAmount
           title="Borrow"
           token={item.borrowedToken.id}
@@ -83,15 +84,15 @@ const VaultBorrowResult: React.FC<Props> = ({
         />
       </div>
       {txhash.length > 0 && (
-        <div className="text-l my-5 px-4">
-          <span>
+        <div className="text-[20px] flex items-center font-medium mb-6 mt-[40px]">
+          <span >
             {executed ? (
               <Icon
                 icon="circle-check"
-                className="text-secondary text-xl cursor-pointer mr-5"
+                className="text-secondary text-xl cursor-pointer mr-5 w-[30px] !h-[30px]"
               />
             ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer mr-5" />
+              <Icon icon="circle" className="text-xl cursor-pointer mr-5 w-[30px] !h-[30px]"/>
             )}
           </span>
           {executed ? (
@@ -101,7 +102,8 @@ const VaultBorrowResult: React.FC<Props> = ({
           )}
         </div>
       )}
-      <div className="more-bg-primary px-4  py-2  rounded-b-[20px]">
+      </div>
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (
           <div className="flex justify-end mr-5">
             <MoreButton
@@ -112,7 +114,7 @@ const VaultBorrowResult: React.FC<Props> = ({
             />
           </div>
         ) : (
-          <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
+          <div className="text-secondary p-5 border border-secondary border-dashed border-1 rounded-[12px]">
             Confirming transaction... Browse MORE vaults while you wait.
           </div>
         )}

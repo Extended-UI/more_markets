@@ -43,19 +43,20 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
   const userCollateral = formatTokenValue(item.collateral, item.inputToken.id);
 
   return (
-    <div className="more-bg-secondary w-full pt-8 rounded-[20px]">
-      <div className="text-2xl mb-10 px-5 pt-5">Withdraw collateral</div>
-      <div className="flex items-center mb-10 px-5 gap-2">
+    <div className="more-bg-secondary w-full modal-base">
+       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      <div className="text-[24px] mb-[40px] font-semibold">Withdraw collateral</div>
+      <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
         <ListIconToken
           iconNames={[item.inputToken.id, item.borrowedToken.id]}
           className="w-7 h-7"
         />
-        <div className="text-l flex items-center'">
+        <div className="ml-3 flex items-center">
           {collateralToken} / {loanToken}
         </div>
       </div>
-      <div className="text-l mb-5 px-5">Withdraw {collateralToken}</div>
-      <div className="w-full flex justify-center px-5">
+      <div className="text-[16px] mb-5">Withdraw {collateralToken}</div>
+      <div className="w-full flex justify-center">
         <InputTokenMax
           type="number"
           value={withdrawCollateral}
@@ -66,18 +67,18 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
           setMax={handleSetMax}
         />
       </div>
-      <div className="text-right more-text-gray py-2 px-4">
+      <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
         Available to Withdraw:
         {formatTokenValue(item.collateral, item.inputToken.id)}
         {collateralToken}
       </div>
-      <div className="flex justify-end mt-7 mb-7 px-4">
+      <div className="flex justify-end mt-[40px]">
         <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
             text="Cancel"
             onClick={closeModal}
-            color="gray"
+            color="grey"
           />
         </div>
         <MoreButton
@@ -87,22 +88,23 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
           color="primary"
         />
       </div>
-      <div className="w-[50%] mx-15 flex justify-center mx-auto">
-        <div className="glowing-text-primary w-full"></div>
       </div>
-      <div className="flex  w-full flex-col items-center justify-start more-bg-primary px-8 rounded-b-[10px] py-10 px-8 gap-4">
-        <div className="flex w-full justify-between">
+      <div className="w-[50%] mx-15 flex justify-center mx-auto">
+        <div className="glowing-text-primary !pb-0 w-full"></div>
+      </div>
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] pb-[40px] pt-[30px] text-[16px] font-normal">
+        <div className="flex w-full justify-between mb-[20px]">
           <div>Borrow APY / Projected Borrow APY</div>
           <div>
-            <span className="more-text-gray">
+            <span className="more-text-gray font-medium">
               {(item.borrow_apr * 100).toFixed(2)} %
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-between  mb-[20px]">
           <div>Liquidation LTV</div>
           <div>
-            <span className="more-text-gray">
+            <span className="more-text-gray font-medium">
               <FormatTwoPourcentage
                 value={formatTokenValue(item.lltv, "", 18)}
                 value2={getPremiumLltv(item.marketParams)}
@@ -110,10 +112,10 @@ const VaultWithdrawBorrowInput: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-between ">
           <div>Collateral {collateralToken} </div>
           <div>
-            <span className="more-text-gray">
+            <span className="more-text-gray font-medium">
               {formatTokenValue(item.collateral, item.inputToken.id)}
             </span>
           </div>

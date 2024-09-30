@@ -193,7 +193,8 @@ const LoanMoreTable: React.FC<Props> = ({
                     }`}
                   >
                     <td className="px-6 py-[12.5px] items-center gap-2">
-                      <div className="flex gap-2 items-center">
+                      <div className="flex gap-2 items-center justify-between">
+                        <div className="flex items-center">
                         <div className="flex items-center">
                           <IconToken
                             className="mr-3 w-8 h-8"
@@ -209,6 +210,7 @@ const LoanMoreTable: React.FC<Props> = ({
                           totalValue={0}
                           inTable={true}
                         />
+                        </div>
                         <div
                           className="ml-8 flex gap-5"
                           onClick={(event) => event.stopPropagation()}
@@ -240,7 +242,8 @@ const LoanMoreTable: React.FC<Props> = ({
                     </td>
 
                     <td className="px-6  py-[12.5px] items-center gap-2">
-                      <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center justify-between">
+                    <div className="flex items-center">
                         <IconToken
                           className="mr-3 w-8 h-8"
                           tokenName={item.borrowedToken.id}
@@ -253,6 +256,7 @@ const LoanMoreTable: React.FC<Props> = ({
                           token={item.borrowedToken.id}
                           totalValue={0}
                         />
+                        </div>
                         <div
                           className="ml-8 flex gap-5"
                           onClick={(event) => event.stopPropagation()}

@@ -133,7 +133,7 @@ const PositionMoreTable: React.FC<IBorrowPositionProp> = ({
               {userAddress && (
                 <td className="px-6 py-4">
                   <div
-                    className="flex gap-4"
+                    className="flex gap-4 justify-end"
                     onClick={(event) => event.stopPropagation()}
                   >
                     <ButtonDialog color="secondary" buttonText="Borrow More">

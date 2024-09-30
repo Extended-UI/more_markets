@@ -20,8 +20,8 @@ const PositionChangeToken: React.FC<Props> = ({
   return (
     <div className="flex flex-col">
       <div className="flex flex-row justify-between items-center">
-        <div className="text-xl">{title}</div>
-        <div className="flex  items-center gap-2">
+        <div className="text-[20px] font-normal">{title}</div>
+        <div className="flex  items-center gap-2 text-[16px]">
           {value} <span className="text-grey"> {token} </span>
           <ArrowLongRightIcon className="w-4 h-4 text-grey" /> {value2}
           <span className="text-grey"> {token} </span>
