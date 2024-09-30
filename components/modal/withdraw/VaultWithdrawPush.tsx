@@ -153,97 +153,101 @@ const VaultWithdrawPush: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base">
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Review Transaction</div>
-      <div className="text-[20px] font-medium mb-[30px]">{item.vaultName}</div>
-      <div className="flex flex-row justify-between items-center mb-[30px]">
-        <div className="text-[20px] font-semibold flex items-center gap-3">
-          <span className="more-text-gray text-[16px]">Curator:</span>
-          <IconToken className="w-[24px] h-[24px]" tokenName="wflow" />
-          <span>{"curator"}</span>
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Review Transaction
         </div>
-        <div className="flex gap-2 mb-5 text-[16px]">
-          <span className="more-text-gray">Net APY:</span>
-          <FormatTwoPourcentage value={item.netAPY} />
+        <div className="text-[20px] font-medium mb-[30px]">
+          {item.vaultName}
         </div>
-      </div>
-      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <TokenAmount
-          title="Authorize"
-          token={item.assetAddress}
-          amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
-        />
-        {hasAuth && (
-          <CheckCircleIcon
-            className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
-            style={{ position: "absolute", top: "2rem", left: "12rem"  }}
+        <div className="flex flex-row justify-between items-center mb-[30px]">
+          <div className="text-[20px] font-semibold flex items-center gap-3">
+            <span className="more-text-gray text-[16px]">Curator:</span>
+            <IconToken className="w-[24px] h-[24px]" tokenName="wflow" />
+            <span>{item.curator}</span>
+          </div>
+          <div className="flex gap-2 mb-5 text-[16px]">
+            <span className="more-text-gray">Net APY:</span>
+            <FormatTwoPourcentage value={item.netAPY} />
+          </div>
+        </div>
+        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+          <TokenAmount
+            title="Authorize"
+            token={item.assetAddress}
+            amount={amount}
+            ltv={"ltv"}
+            totalTokenAmount={item.totalDeposits}
           />
-        )}
-      </div>
-      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <TokenAmount
-          title="Permit"
-          token={item.assetAddress}
-          amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
-        />
-        {hasPermit && (
-          <CheckCircleIcon
-            className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
-            style={{ position: "absolute", top: "2rem", left: "12rem"  }}
+          {hasAuth && (
+            <CheckCircleIcon
+              className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+              style={{ position: "absolute", top: "2rem", left: "12rem" }}
+            />
+          )}
+        </div>
+        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+          <TokenAmount
+            title="Permit"
+            token={item.assetAddress}
+            amount={amount}
+            ltv={"ltv"}
+            totalTokenAmount={item.totalDeposits}
           />
-        )}
-      </div>
-      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <TokenAmount
-          title="Withdraw"
-          token={item.assetAddress}
-          amount={amount}
-          ltv={"ltv"}
-          totalTokenAmount={item.totalDeposits}
-        />
-      </div>
-      <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <div className="text-grey text-[16px] pb-7">Position Change</div>
-        <PositionChangeToken
-          title="Withdraw"
-          value={item.userDeposits}
-          token={tokenInfo.symbol}
-          value2={item.userDeposits - amount}
-        />
-      </div>
+          {hasPermit && (
+            <CheckCircleIcon
+              className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+              style={{ position: "absolute", top: "2rem", left: "12rem" }}
+            />
+          )}
+        </div>
+        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+          <TokenAmount
+            title="Withdraw"
+            token={item.assetAddress}
+            amount={amount}
+            ltv={"ltv"}
+            totalTokenAmount={item.totalDeposits}
+          />
+        </div>
+        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+          <div className="text-grey text-[16px] pb-7">Position Change</div>
+          <PositionChangeToken
+            title="Withdraw"
+            value={item.userDeposits}
+            token={tokenInfo.symbol}
+            value2={item.userDeposits - amount}
+          />
+        </div>
 
-      {/* <div className="flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4
+        {/* <div className="flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4
         Unwrap USDC
         <MoreToggle />
       </div> */}
 
-      <div className="pt-5 px-5 text-[16px] leading-10">
-        By confirming this transaction, you agree to the{" "}
-        <a className="underline" href="#goto">
-          Terms of Use
-        </a>{" "}
-        and the services provisions relating to the MORE Protocol Vault.
-      </div>
-      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
-        <div className="mr-5">
-        <MoreButton
-          className="text-2xl py-2"
-          text="Cancel"
-          onClick={closeModal}
-          color="gray"
-        />
+        <div className="pt-5 px-5 text-[16px] leading-10">
+          By confirming this transaction, you agree to the{" "}
+          <a className="underline" href="#goto">
+            Terms of Use
+          </a>{" "}
+          and the services provisions relating to the MORE Protocol Vault.
         </div>
-        <MoreButton
-          className="text-2xl py-2"
-          text="Withdraw"
-          disabled={isLoading}
-          onClick={handleWithdraw}
-          color="primary"
-        />
-      </div>
+        <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+          <div className="mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text="Cancel"
+              onClick={closeModal}
+              color="gray"
+            />
+          </div>
+          <MoreButton
+            className="text-2xl py-2"
+            text="Withdraw"
+            disabled={isLoading}
+            onClick={handleWithdraw}
+            color="primary"
+          />
+        </div>
       </div>
     </div>
   );
