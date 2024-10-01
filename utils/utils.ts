@@ -171,17 +171,8 @@ export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {
   return (x * y) / d;
 };
 
-export const wMulDown = (
-  x: bigint,
-  y: bigint,
-  supplyDecimals: number,
-  loanDecimals: number
-) => {
-  const newWAD =
-    supplyDecimals >= loanDecimals
-      ? WAD * BigInt(18 ** (supplyDecimals - loanDecimals))
-      : WAD / BigInt(18 ** (supplyDecimals - loanDecimals));
-  const returnVal = mulDivDown(x, y, newWAD);
+export const wMulDown = (x: bigint, y: bigint) => {
+  const returnVal = mulDivDown(x, y, WAD);
   return returnVal > moreTolerance ? returnVal - moreTolerance : BigInt(0);
 };
 

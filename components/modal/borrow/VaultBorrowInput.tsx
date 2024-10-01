@@ -77,12 +77,7 @@ const VaultBorrowInput: React.FC<Props> = ({
     let maxBorrow = BigInt(0);
     if (onlyBorrow) {
       maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(
-        maxBorrow,
-        item.lltv,
-        collateralToken.decimals,
-        borrowToken.decimals
-      );
+      maxBorrow = wMulDown(maxBorrow, item.lltv);
       maxBorrow = maxBorrow >= item.loan ? maxBorrow - item.loan : BigInt(0);
     } else if (deposit) {
       const depositAmount = parseUnits(
@@ -90,12 +85,7 @@ const VaultBorrowInput: React.FC<Props> = ({
         collateralToken.decimals
       );
       maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(
-        maxBorrow,
-        item.lltv,
-        collateralToken.decimals,
-        borrowToken.decimals
-      );
+      maxBorrow = wMulDown(maxBorrow, item.lltv);
     }
 
     setBorrow(Number(formatUnits(maxBorrow, borrowToken.decimals)));
