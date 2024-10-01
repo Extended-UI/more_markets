@@ -263,8 +263,8 @@ export const getPositions = async (
         borrowShares: getVauleBigint(fetchedPosition, 1),
         collateral: getVauleBigint(fetchedPosition, 2),
         lastMultiplier: getVauleBigint(fetchedPosition, 3),
-        debtTokenMissed: getVauleBigint(fetchedPosition, 4),
-        debtTokenGained: getVauleBigint(fetchedPosition, 5),
+        // debtTokenMissed: getVauleBigint(fetchedPosition, 4),
+        // debtTokenGained: getVauleBigint(fetchedPosition, 5),
       } as Position;
     })
     .filter(
@@ -292,8 +292,8 @@ export const getPosition = async (
     borrowShares: BigInt((fetchedPosition as any[])[1]),
     collateral: BigInt((fetchedPosition as any[])[2]),
     lastMultiplier: BigInt((fetchedPosition as any[])[3]),
-    debtTokenMissed: BigInt((fetchedPosition as any[])[4]),
-    debtTokenGained: BigInt((fetchedPosition as any[])[5]),
+    // debtTokenMissed: BigInt((fetchedPosition as any[])[4]),
+    // debtTokenGained: BigInt((fetchedPosition as any[])[5]),
   } as Position;
 
   return positionItem.collateral > BigInt(0) ||
