@@ -5,18 +5,15 @@ import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { BorrowPosition } from "@/types";
+import { IBorrowPositionResult } from "@/types";
 import { notifyError } from "@/utils/utils";
 import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 
-interface Props {
-  txhash: string;
+interface Props extends IBorrowPositionResult {
   onlyBorrow?: boolean;
-  item: BorrowPosition;
   supplyAmount: number;
   borrowAmount: number;
-  processDone: () => void;
 }
 
 const VaultBorrowResult: React.FC<Props> = ({
@@ -48,7 +45,7 @@ const VaultBorrowResult: React.FC<Props> = ({
     };
 
     waitTx();
-  }, [txhash]);
+  }, [txhash, onlyBorrow]);
 
   const txHashStr =
     txhash.substring(0, 5) + "..." + txhash.substring(txhash.length - 4);
@@ -56,52 +53,57 @@ const VaultBorrowResult: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base">
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
-      <div className="text-[20px] font-medium mb-[40px] flex items-center">
-        <span>
-          <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
-        </span>
-        Executed the following actions
-      </div>
-      {supplyAmount > 0 && (
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Transaction Confirmation
+        </div>
+        <div className="text-[20px] font-medium mb-[40px] flex items-center">
+          <span>
+            <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
+          </span>
+          Executed the following actions
+        </div>
+        {supplyAmount > 0 && (
+          <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
+            <TokenAmount
+              title="Supply"
+              token={item.inputToken.id}
+              amount={supplyAmount}
+              ltv={"ltv"}
+              totalTokenAmount={supplyAmount}
+            />
+          </div>
+        )}
         <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
           <TokenAmount
-            title="Supply"
-            token={item.inputToken.id}
-            amount={supplyAmount}
+            title="Borrow"
+            token={item.borrowedToken.id}
+            amount={borrowAmount}
             ltv={"ltv"}
-            totalTokenAmount={supplyAmount}
+            totalTokenAmount={borrowAmount}
           />
         </div>
-      )}
-      <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <TokenAmount
-          title="Borrow"
-          token={item.borrowedToken.id}
-          amount={borrowAmount}
-          ltv={"ltv"}
-          totalTokenAmount={borrowAmount}
-        />
-      </div>
-      {txhash.length > 0 && (
-        <div className="text-[20px] flex items-center font-medium mb-6 mt-[40px]">
-          <span >
+        {txhash.length > 0 && (
+          <div className="text-[20px] flex items-center font-medium mb-6 mt-[40px]">
+            <span>
+              {executed ? (
+                <Icon
+                  icon="circle-check"
+                  className="text-secondary text-xl cursor-pointer mr-5 w-[30px] !h-[30px]"
+                />
+              ) : (
+                <Icon
+                  icon="circle"
+                  className="text-xl cursor-pointer mr-5 w-[30px] !h-[30px]"
+                />
+              )}
+            </span>
             {executed ? (
-              <Icon
-                icon="circle-check"
-                className="text-secondary text-xl cursor-pointer mr-5 w-[30px] !h-[30px]"
-              />
+              <>Transaction {txHashStr} has been successfully executed.</>
             ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer mr-5 w-[30px] !h-[30px]"/>
+              <>Transaction {txHashStr} has been sent.</>
             )}
-          </span>
-          {executed ? (
-            <>Transaction {txHashStr} has been successfully executed.</>
-          ) : (
-            <>Transaction {txHashStr} has been sent.</>
-          )}
-        </div>
-      )}
+          </div>
+        )}
       </div>
       <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (

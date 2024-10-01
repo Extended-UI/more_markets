@@ -216,3 +216,7 @@ export const convertAprToApy = (apr: number, aprInterval: number): number => {
 
 export const delay = (seconds: number) =>
   new Promise((res) => setTimeout(res, seconds * 1000));
+
+export const isFlow = (token: string): boolean => {
+  return token.toLowerCase() == contracts.WNATIVE.toLowerCase();
+};

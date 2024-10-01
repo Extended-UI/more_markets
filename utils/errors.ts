@@ -60,3 +60,9 @@ export const MoreErrors: IMoreError[] = [
     message: "Your supplied collateral exceeds the maximum amount.",
   },
 ];
+
+export const errMessages = {
+  invalid_amount: "Invalid input amount.",
+  insufficient_amount: "Insufficient token balance.",
+  withdraw_exceeded: "Input amount exceeds deposit balance.",
+};

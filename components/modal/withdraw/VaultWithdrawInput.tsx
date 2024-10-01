@@ -1,19 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
+import { ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
-import { getTokenInfo, formatNumberLocale } from "@/utils/utils";
+import { errMessages } from "@/utils/errors";
+import { getTokenInfo, formatNumberLocale, notify } from "@/utils/utils";
 
 interface Props {
   item: InvestmentData;
   useMax: boolean;
   closeModal: () => void;
-  setUseMax: (useMax: boolean) => void;
   setAmount: (amount: number) => void;
+  setUseMax: (useMax: boolean) => void;
 }
 
 const VaultWithdrawInput: React.FC<Props> = ({
@@ -24,6 +25,8 @@ const VaultWithdrawInput: React.FC<Props> = ({
   setUseMax,
 }) => {
   const [withdraw, setWithdraw] = useState<number>();
+
+  const tokenInfo = getTokenInfo(item.assetAddress);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputVal =
@@ -41,11 +44,15 @@ const VaultWithdrawInput: React.FC<Props> = ({
 
   const handleWithdraw = () => {
     if (withdraw && (useMax || withdraw > 0)) {
-      setAmount(withdraw);
+      if (!useMax && withdraw > item.userDeposits) {
+        notify(errMessages.withdraw_exceeded);
+      } else {
+        setAmount(withdraw);
+      }
+    } else {
+      notify(errMessages.invalid_amount);
     }
   };
-
-  const tokenInfo = getTokenInfo(item.assetAddress);
 
   return (
     <div className="more-bg-secondary w-full modal-base">
@@ -81,7 +88,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
           <MoreButton
             className="text-2xl py-2"
             text="Withdraw"
-            onClick={() => handleWithdraw()}
+            onClick={handleWithdraw}
             color="primary"
           />
         </div>

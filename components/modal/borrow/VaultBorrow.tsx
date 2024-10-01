@@ -59,6 +59,7 @@ const VaultBorrow: React.FC<Props> = ({
       ) : (
         <VaultBorrowSummary
           item={item}
+          amount={0}
           supplyAmount={amount}
           borrowAmount={borrow}
           txhash={txHash}

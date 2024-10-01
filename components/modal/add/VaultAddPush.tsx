@@ -8,7 +8,7 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import TokenAmount from "@/components/token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import ListIconToken from "@/components/token/ListIconToken";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
 import {
   getTimestamp,
@@ -22,13 +22,11 @@ import {
   setTokenAllowance,
   setTokenPermit,
   getPermitNonce,
-  supplycollateral,
+  supplyCollateral,
 } from "@/utils/contract";
 
-interface Props {
+interface Props extends IBorrowPosition {
   amount: number;
-  item: BorrowPosition;
-  closeModal: () => void;
   validAdd: () => void;
   setTxHash: (hash: string) => void;
 }
@@ -118,7 +116,7 @@ const VaultAddPush: React.FC<Props> = ({
 
   const doSupplyCollateral = async (deadline: bigint, signHash: string) => {
     if (userAddress) {
-      const txHash = await supplycollateral(
+      const txHash = await supplyCollateral(
         item.inputToken.id,
         userAddress,
         signHash,

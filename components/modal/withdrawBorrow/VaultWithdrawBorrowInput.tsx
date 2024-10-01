@@ -5,12 +5,10 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import ListIconToken from "@/components/token/ListIconToken";
 import FormatTwoPourcentage from "../../tools/formatTwoPourcentage";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
 
-interface Props {
-  item: BorrowPosition;
-  closeModal: () => void;
+interface Props extends IBorrowPosition {
   setAmount: (amount: number) => void;
 }
 

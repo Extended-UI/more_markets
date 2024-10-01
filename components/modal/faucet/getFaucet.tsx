@@ -1,10 +1,9 @@
 "use client";
 
 import _ from "lodash";
-import { ZeroAddress } from "ethers";
 import React, { useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
-import { notify } from "@/utils/utils";
+import { notify, isFlow } from "@/utils/utils";
 import { addNewToken } from "@/utils/contract";
 import { tokens, faucetAmounts, contracts } from "@/utils/const";
 
@@ -62,10 +61,8 @@ const GetFaucet: React.FC<Props> = ({ wallet, closeModal }) => {
 
   let tokenList: ITokenItem[] = [];
   _.forOwn(tokens, (value, token) => {
-    if (
-      token != ZeroAddress &&
-      token.toLowerCase() != contracts.WNATIVE.toLowerCase() // removing wflow
-    ) {
+    // removing wflow
+    if (!isFlow(token)) {
       tokenList.push({
         address: token,
         symbol: value.symbol,

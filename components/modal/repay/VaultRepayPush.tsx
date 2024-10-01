@@ -12,7 +12,7 @@ import FormatPourcentage from "@/components/tools/formatPourcentage";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import usePrice from "@/hooks/usePrice";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
 import {
   getTokenInfo,
@@ -26,12 +26,10 @@ import {
   repayLoanViaMarkets,
 } from "@/utils/contract";
 
-interface Props {
+interface Props extends IBorrowPosition {
   amount: number;
   useMax: boolean;
-  item: BorrowPosition;
   validRepay: () => void;
-  closeModal: () => void;
   setTxHash: (hash: string) => void;
 }
 

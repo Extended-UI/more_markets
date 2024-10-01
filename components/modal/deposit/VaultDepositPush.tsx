@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { parseUnits, ZeroAddress } from "ethers";
+import { parseUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import IconToken from "@/components/token/IconToken";
@@ -10,7 +10,13 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { InvestmentData } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
-import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
+import {
+  getTimestamp,
+  getTokenInfo,
+  notifyError,
+  delay,
+  isFlow,
+} from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -21,7 +27,6 @@ import {
 
 interface Props {
   amount: number;
-  useFlow: boolean;
   item: InvestmentData;
   closeModal: () => void;
   validDeposit: () => void;
@@ -31,7 +36,6 @@ interface Props {
 const VaultDepositPush: React.FC<Props> = ({
   item,
   amount,
-  useFlow,
   setTxHash,
   closeModal,
   validDeposit,
@@ -47,9 +51,7 @@ const VaultDepositPush: React.FC<Props> = ({
     getTokenInfo(item.assetAddress).decimals
   );
 
-  const flowVault =
-    useFlow &&
-    item.assetAddress.toLowerCase() == contracts.WNATIVE.toLowerCase();
+  const flowVault = isFlow(item.assetAddress);
 
   useEffect(() => {
     const initApprove = async () => {
@@ -196,7 +198,7 @@ const VaultDepositPush: React.FC<Props> = ({
         <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
           <TokenAmount
             title="Deposit"
-            token={flowVault ? ZeroAddress : item.assetAddress}
+            token={item.assetAddress}
             amount={amount}
             ltv={""}
             totalTokenAmount={0}
