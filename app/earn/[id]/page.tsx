@@ -22,6 +22,7 @@ import {
   fetchMarkets,
   fetchVault,
   getTokenBallance,
+  depositToVaults
 } from "@/utils/contract";
 import leftArrow from "@/public/assets/icons/left-arrow.svg";
 

@@ -12,13 +12,13 @@ export const virtualShares = BigInt(1e6);
 export const oraclePriceScale = BigInt(1e36);
 
 export const contracts = {
-  MORE_MARKETS: "0x878Fcd47982aD589A527C1B670Ba39fA6e1733Fb",
-  MORE_BUNDLER: "0x75fe8d12098897641e2ca50a9801282af2af5109",
-  MORE_VAULTS_FACTORY: "0xB09baEC4B6075aeFB7E576e2F4709755Bc49e298",
+  MORE_MARKETS: "0x94A2a9202EFf6422ab80B6338d41c89014E5DD72",
+  MORE_BUNDLER: "0x1f474e384712cA7EC0dEE3cD9E4c3905dC8beA18",
+  MORE_VAULTS_FACTORY: "0x4B447E14Ee051522BDe18c6827A5a47B2D29293f",
   WNATIVE: "0xd3bF53DAC106A0290B0483EcBC89d40FcC961f3e", // wflow
   MULTICALL3: "0x8358d18E99F44E39ea90339c4d6E8C36101f8161",
   PERMIT2: "0x2ce0a0Ac76F9e4Ab49ff0370516D4b23bE7AE46d",
-  APY_FEED: "0x266340Dc2bDDCc7D37B1d19412a67e445b6D0E5a",
+  APY_FEED: "0x9c2CE59eCC6930fFd12bE4944B482df008486D7f",
 };
 
 export const tokens: { [key: string]: IToken } = {
@@ -90,13 +90,14 @@ export const sactionedCountries = ["KP", "IR", "MM"];
 export const CHAINALYSIS_KEY =
   "39c46c2bd4bf2ef6e1489954b4aa55685a67ec9f8d641d5769f6aeb0c6fbeb57";
 
-// ******************************************
-// for testnet purpose only
-// ******************************************
-export const vaultIds = ["0x8434D9E41C822F4e10AACcc1D777AAcDf9D4BA60"];
+
+export const vaultIds = [
+  "0xe2aaC46C1272EEAa49ec7e7B9e7d34B90aaDB966",
+  "0x8c921f740B0065C7cE28EB93c7056d92C4735E7b",
+];
 export const marketIds = [
-  "0xb69f09df3fc268519760e05b4efbb75c1c23ac00d8247712a46199dee3188cfe",
-  "0x93c256e9fa38ee67d0b6cd5bac0aae32cc0498d5a1103ba52d41b772b82c2bef",
+  "0x3dca1854528f8a9bff744889198eb07ceacdfe25937450965e62103cefc69aa5",
+  "0x2ae0c40dc06f58ff0243b44116cd48cc4bdab19e2474792fbf1f413600ceab3a",
 ];
 export const curators: { [key: string]: string } = {
   "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Tentacle Labs",
