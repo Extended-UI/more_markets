@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/earn");
+    router.push("/easy-mode");
   }, [router]);
 
   return (
