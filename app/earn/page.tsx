@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import EarnMoreTable from "@/components/moreTable/EarnMoreTable";
 import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
 import { InvestmentData } from "@/types";
-import { blacklistedVaults } from "@/utils/const";
+// import { blacklistedVaults } from "@/utils/const";
 import { getVaultDetail, fetchVaults, fetchMarkets } from "@/utils/contract";
 import {
   formatTokenValue,
@@ -29,7 +29,7 @@ const EarnPage: React.FC = () => {
 
       if (marketsArr && vaultsArr && aprsArr) {
         const promises = vaultsArr.map(async (vault) => {
-          if (blacklistedVaults.includes(vault.id)) return null;
+          // if (blacklistedVaults.includes(vault.id)) return null;
 
           // get collaterals
           const collaterals: string[] = vault.supplyQueue.map((queue) => {

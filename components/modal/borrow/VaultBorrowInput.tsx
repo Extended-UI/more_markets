@@ -77,7 +77,12 @@ const VaultBorrowInput: React.FC<Props> = ({
     let maxBorrow = BigInt(0);
     if (onlyBorrow) {
       maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(maxBorrow, item.lltv);
+      maxBorrow = wMulDown(
+        maxBorrow,
+        item.lltv,
+        collateralToken.decimals,
+        borrowToken.decimals
+      );
       maxBorrow = maxBorrow >= item.loan ? maxBorrow - item.loan : BigInt(0);
     } else if (deposit) {
       const depositAmount = parseUnits(
@@ -85,7 +90,12 @@ const VaultBorrowInput: React.FC<Props> = ({
         collateralToken.decimals
       );
       maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(maxBorrow, item.lltv);
+      maxBorrow = wMulDown(
+        maxBorrow,
+        item.lltv,
+        collateralToken.decimals,
+        borrowToken.decimals
+      );
     }
 
     setBorrow(Number(formatUnits(maxBorrow, borrowToken.decimals)));
@@ -117,8 +127,15 @@ const VaultBorrowInput: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'/assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"/assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">Borrow</div>

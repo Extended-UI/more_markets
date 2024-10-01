@@ -119,27 +119,43 @@ export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
 export const getTokenPrice = async (token: string): Promise<number> => {
   try {
     const oracleContract = {
-      address: getTokenInfo(token).oracle as `0x${string}`,
+      address: getTokenInfo(contracts.WNATIVE).oracle as `0x${string}`,
       abi: OracleAbi,
     };
 
-    const [decimals, latestAnswer] = await readContracts(config, {
-      contracts: [
-        {
-          ...oracleContract,
-          functionName: "decimals",
-        },
-        {
-          ...oracleContract,
-          functionName: "latestAnswer",
-        },
-      ],
+    let requestList = [
+      {
+        ...oracleContract,
+        functionName: "decimals",
+      },
+      {
+        ...oracleContract,
+        functionName: "latestAnswer",
+      },
+    ];
+
+    if (!isFlow(token)) {
+      requestList.push({
+        address: getTokenInfo(token).oracle as `0x${string}`,
+        abi: OracleAbi,
+        functionName: "price",
+      });
+    }
+
+    const priceResult = await readContracts(config, {
+      contracts: requestList,
     });
 
-    const decimalVal = Number(decimals.result);
-    const answerVal = latestAnswer.result as bigint;
+    const decimalVal = Number(priceResult[0].result);
+    const answerVal = priceResult[1].result as bigint;
 
-    return parseFloat(formatUnits(answerVal, decimalVal));
+    const flowPrice = parseFloat(formatUnits(answerVal, decimalVal));
+    if (isFlow(token)) return flowPrice;
+    else {
+      return (
+        flowPrice * parseFloat(formatUnits(priceResult[2].result as bigint, 36))
+      );
+    }
   } catch {
     return 0;
   }

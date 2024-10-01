@@ -23,8 +23,6 @@ const MoreButton: React.FC<ButtonProps> = ({
   const [myColor, setMyColor] = useState("#737373");
   const [isHovered, setIsHovered] = useState(false);
 
-  const isFaucet = text == "Get Testnet Tokens";
-
   useEffect(() => {
     switch (color) {
       case "primary":
@@ -52,11 +50,6 @@ const MoreButton: React.FC<ButtonProps> = ({
     whiteSpace: "nowrap",
     transition: "all 0.3s ease",
   };
-
-  if (isFaucet) {
-    defaultStyle.paddingTop = "7px";
-    defaultStyle.paddingBottom = "7px";
-  }
 
   const hoverStyle: CSSProperties = {
     borderColor: `${myColor}`, 
