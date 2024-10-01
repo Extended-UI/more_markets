@@ -22,13 +22,13 @@ export const contracts = {
 };
 
 export const tokens: { [key: string]: IToken } = {
-  "0x1b97100eA1D7126C4d60027e231EA4CB25314bdb": {
+  "0x1b97100ea1d7126c4d60027e231ea4cb25314bdb": {
     symbol: "ankr.FLOW",
     name: "ankr.FLOW mock coin",
     decimals: 18,
     oracle: "0xA363e8627b5b4A5DC1cf6b5f228665C5CafF770f",
   },
-  "0xd3bF53DAC106A0290B0483EcBC89d40FcC961f3e": {
+  "0xd3bf53dac106a0290b0483ecbc89d40fcc961f3e": {
     symbol: "FLOW",
     name: "FLOW",
     decimals: 18,
@@ -99,7 +99,7 @@ export const marketIds = [
   "0x93c256e9fa38ee67d0b6cd5bac0aae32cc0498d5a1103ba52d41b772b82c2bef",
 ];
 export const curators: { [key: string]: string } = {
-  "0xB37a5BA4060D6bFD00a3bFCb235Bb596F13932Bd": "Lighthouse Labs",
+  "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Lighthouse Labs",
 };
 // ******************************************
 // for testnet purpose only
