@@ -7,6 +7,7 @@ import { sactionedCountries } from "@/utils/const";
 import SactionModal from "@/components/modal/SactionModal";
 import "react-toastify/dist/ReactToastify.css";
 import Banner from "@/components/header/Banner";
+import WelcomePopup from "@/components/modal/Welcome-modal";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -16,7 +17,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   const [sactioned, setSactioned] = useState(false);
   const [hasBanner, setHasBanner] = useState(true)
-  
+  const [show, setShow] = useState(false);
+
+  const closeModal = () => {
+    setShow(false);
+  };
+
   const checkRegion = async () => {
     try {
       const res = await fetch("https://get.geojs.io/v1/ip/country.json");
@@ -37,6 +43,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     checkRegion();
+    const storedValue = localStorage.getItem('isChecked');
+    const isChecked = storedValue ? JSON.parse(storedValue) : false;
+    isChecked ? setShow(false) : setShow(true);
+
   }, []);
 
   return (
@@ -64,6 +74,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               />
             ):''
           }
+            <WelcomePopup
+              closeModal={closeModal}
+              show={show}
+            />
             <div style={{ maxWidth: "1380px", margin: hasBanner ? "55px auto 0" : "0 auto", padding: "0 5%" }} >
               <Header/>
               <ToastContainer autoClose={3000} theme="dark" hideProgressBar={true} />
@@ -72,6 +86,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               </div>
             </div>
           </div>
+          
         </>
 
       )}
