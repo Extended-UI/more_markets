@@ -1,4 +1,3 @@
-import { ZeroAddress } from "ethers";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import { IToken } from "@/types";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
@@ -8,7 +7,7 @@ import { ApyFeedAbi } from "@/app/abi/ApyFeedAbi";
 
 export const WAD = BigInt(1e18);
 export const virtualAssets = BigInt(1);
-export const moreTolerance = BigInt(10);
+export const moreTolerance = BigInt(100);
 export const virtualShares = BigInt(1e6);
 export const oraclePriceScale = BigInt(1e36);
 
@@ -23,12 +22,6 @@ export const contracts = {
 };
 
 export const tokens: { [key: string]: IToken } = {
-  [ZeroAddress]: {
-    symbol: "FLOW",
-    name: "FLOW",
-    decimals: 18,
-    oracle: "",
-  },
   "0x5e65b6b04fba51d95409712978cb91e99d93ae73": {
     symbol: "USDCf",
     name: "USDCf(USDC) mock coin",
@@ -60,8 +53,8 @@ export const tokens: { [key: string]: IToken } = {
     oracle: "0x017efB6272Dc61DCcfc9a757c29Fd99187c9d208",
   },
   "0xe0fd0a2a4c2e59a479aab0cf44244e355c508766": {
-    symbol: "wFLOW",
-    name: "Wrapped FLOW",
+    symbol: "FLOW",
+    name: "FLOW",
     decimals: 18,
     oracle: "0xaCAd8eB605A93b8E0fF993f437f64155FB68D5DD",
   },
@@ -116,9 +109,6 @@ export const gasLimit = "0.8";
 
 export const blacklistedVaults = ["0xeabddabfe3d118092a4bbaf3c13bd923bc8f134e"];
 
-export const errMessages = {
-  invalid_amount: "Invalid amount",
-};
 export const enum MoreAction {
   GENERAL = "general",
   DEPOSIT = "deposit",

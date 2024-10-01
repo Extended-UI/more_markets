@@ -5,7 +5,7 @@ import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 import {
@@ -15,11 +15,9 @@ import {
   notifyError,
 } from "@/utils/utils";
 
-interface Props {
+interface Props extends IBorrowPosition {
   txhash: string;
   amount: number;
-  item: BorrowPosition;
-  closeModal: () => void;
   processDone: () => void;
 }
 
@@ -58,49 +56,54 @@ const VaultAddResult: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base">
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
-      <div className="text-[24px] mb-[40px] font-semibold flex justify-between">
-        <div className="flex items-center font-semibold text-[20px] gap-2">
-          <ListIconToken
-            iconNames={[item.inputToken.id, item.borrowedToken.id]}
-            className="w-[24px] h-[24px]"
-          />
-          <div className="ml-3 flex items-center">
-            {collateralToken} / {loanToken}
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Transaction Confirmation
+        </div>
+        <div className="text-[24px] mb-[40px] font-semibold flex justify-between">
+          <div className="flex items-center font-semibold text-[20px] gap-2">
+            <ListIconToken
+              iconNames={[item.inputToken.id, item.borrowedToken.id]}
+              className="w-[24px] h-[24px]"
+            />
+            <div className="ml-3 flex items-center">
+              {collateralToken} / {loanToken}
+            </div>
+          </div>
+          <div className="flex gap-2 text-[16px]">
+            <span className="more-text-gray">Liquidation LTV:</span>
+            <FormatTwoPourcentage
+              value={formatTokenValue(item.lltv, "", 18)}
+              value2={getPremiumLltv(item.marketParams)}
+            />
           </div>
         </div>
-        <div className="flex gap-2 text-[16px]">
-          <span className="more-text-gray">Liquidation LTV:</span>
-          <FormatTwoPourcentage
-            value={formatTokenValue(item.lltv, "", 18)}
-            value2={getPremiumLltv(item.marketParams)}
-          />
+
+        <div className="relative more-bg-primary rounded-[12px] text-[16px] p-[20px] mb-6">
+          Add {amount} {collateralToken} to Market
         </div>
-      </div>
 
-      <div className="relative more-bg-primary rounded-[12px] text-[16px] p-[20px] mb-6">
-        Add {amount} {collateralToken} to Market
-      </div>
-
-      {txhash.length > 0 && (
-        <div className="text-[20px] flex items-center font-medium mb-6 mt-[40px]">
-          <span>
+        {txhash.length > 0 && (
+          <div className="text-[20px] flex items-center font-medium mb-6 mt-[40px]">
+            <span>
+              {executed ? (
+                <Icon
+                  icon="circle-check"
+                  className="text-secondary text-xl cursor-pointer  w-[30px] !h-[30px] mr-5"
+                />
+              ) : (
+                <Icon
+                  icon="circle"
+                  className="text-xl cursor-pointer  w-[30px] !h-[30px] mr-5"
+                />
+              )}
+            </span>
             {executed ? (
-              <Icon
-                icon="circle-check"
-                className="text-secondary text-xl cursor-pointer  w-[30px] !h-[30px] mr-5"
-              />
+              <>Transaction {txHashStr} has been successfully executed.</>
             ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer  w-[30px] !h-[30px] mr-5" />
+              <>Transaction {txHashStr} has been sent.</>
             )}
-          </span>
-          {executed ? (
-            <>Transaction {txHashStr} has been successfully executed.</>
-          ) : (
-            <>Transaction {txHashStr} has been sent.</>
-          )}
-        </div>
-      )}
+          </div>
+        )}
       </div>
       <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (

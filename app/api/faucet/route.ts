@@ -1,11 +1,10 @@
 import _ from "lodash";
-import { ZeroAddress } from "ethers";
 import { encodeFunctionData } from "viem";
 import { JsonRpcProvider, Wallet, parseUnits } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
-
 import { ERC20Abi } from "../../abi/ERC20Abi";
 import { MulticallAbi } from "../../abi/Multicall";
+import { isFlow } from "@/utils/utils";
 import { contracts, tokens, faucetAmounts } from "@/utils/const";
 
 const provider = new JsonRpcProvider("https://testnet.evm.nodes.onflow.org/");
@@ -26,10 +25,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       // then mint tokens
       let reqList: IMintRequet[] = [];
       _.forOwn(tokens, (value, token) => {
-        if (
-          token != ZeroAddress &&
-          token.toLowerCase() != contracts.WNATIVE.toLowerCase() // removing wflow
-        ) {
+        // removing flow
+        if (!isFlow(token)) {
           const amount = parseUnits(
             faucetAmounts[reqList.length],
             value.decimals

@@ -7,7 +7,7 @@ import { type GetBalanceReturnType } from "@wagmi/core";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { oraclePriceScale } from "@/utils/const";
 import { getTokenBallance, getTokenPairPrice } from "@/utils/contract";
 import {
@@ -17,13 +17,11 @@ import {
   mulDivDown,
   wMulDown,
   formatTokenValue,
-  formatNumberLocale
+  formatNumberLocale,
 } from "@/utils/utils";
 
-interface Props {
-  item: BorrowPosition;
+interface Props extends IBorrowPosition {
   onlyBorrow?: boolean;
-  closeModal: () => void;
   setAmount: (amount: number, borrow: number) => void;
 }
 
@@ -120,36 +118,33 @@ const VaultBorrowInput: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
       <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+        <img src={'/assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Borrow</div>
-      {!onlyBorrow && (
-        <>
-          <div className="text-[16px] mb-5">
-            Deposit {collateralToken.symbol} Collateral
-          </div>
-          <div className="">
-            <InputTokenMax
-              type="number"
-              value={deposit}
-              onChange={handleInputDepositChange}
-              placeholder="0"
-              token={item.inputToken.id}
-              balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
-              setMax={handleSetMaxToken}
-            />
-          </div>
-          <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-            Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}
-            {collateralToken.symbol}
-          </div>
-        </>
-      )}
-      <div className="text-[16px] mb-5">
-        Borrow {borrowToken.symbol}
-      </div>
-      <div className="">
+        <div className="text-[24px] mb-[40px] font-semibold">Borrow</div>
+        {!onlyBorrow && (
+          <>
+            <div className="text-[16px] mb-5">
+              Deposit {collateralToken.symbol} Collateral
+            </div>
+            <div className="">
+              <InputTokenMax
+                type="number"
+                value={deposit}
+                onChange={handleInputDepositChange}
+                placeholder="0"
+                token={item.inputToken.id}
+                balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
+                setMax={handleSetMaxToken}
+              />
+            </div>
+            <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
+              Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}
+              {collateralToken.symbol}
+            </div>
+          </>
+        )}
+        <div className="text-[16px] mb-5">Borrow {borrowToken.symbol}</div>
         <InputTokenMax
           type="number"
           value={borrow}
@@ -159,28 +154,28 @@ const VaultBorrowInput: React.FC<Props> = ({
           balance={availableLiquidity}
           setMax={handleSetMaxFlow}
         />
-      </div>
-      <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-        Maximum Available to Borrow: {formatNumberLocale(availableLiquidity)} {borrowToken.symbol}
-      </div>
-      <div className="flex justify-end mt-[40px] mb">
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text="Cancel"
-            onClick={closeModal}
-            color="grey"
-          />
+        <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
+          Maximum Available to Borrow: {formatNumberLocale(availableLiquidity)}{" "}
+          {borrowToken.symbol}
         </div>
-        <div className="mr-5">
-          <MoreButton
-            className="text-2xl py-2"
-            text={onlyBorrow ? "Borrow More" : "Borrow"}
-            onClick={handleBorrow}
-            color="primary"
-          />
+        <div className="flex justify-end mt-[40px] mb">
+          <div className="mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text="Cancel"
+              onClick={closeModal}
+              color="grey"
+            />
+          </div>
+          <div className="mr-5">
+            <MoreButton
+              className="text-2xl py-2"
+              text={onlyBorrow ? "Borrow More" : "Borrow"}
+              onClick={handleBorrow}
+              color="primary"
+            />
+          </div>
         </div>
-      </div>
       </div>
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-secondary !p-0 w-full"></div>

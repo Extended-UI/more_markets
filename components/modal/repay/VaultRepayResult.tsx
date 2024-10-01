@@ -4,19 +4,12 @@ import React, { useState, useEffect } from "react";
 import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
-import { BorrowPosition } from "@/types";
-import { getTokenInfo, notifyError } from "@/utils/utils";
-import { waitForTransaction } from "@/utils/contract";
 import { MoreAction } from "@/utils/const";
+import { IBorrowPositionResult } from "@/types";
+import { waitForTransaction } from "@/utils/contract";
+import { getTokenInfo, notifyError } from "@/utils/utils";
 
-interface Props {
-  amount: number;
-  txhash: string;
-  item: BorrowPosition;
-  processDone: () => void;
-}
-
-const VaultRepayResult: React.FC<Props> = ({
+const VaultRepayResult: React.FC<IBorrowPositionResult> = ({
   item,
   amount,
   txhash,
@@ -50,41 +43,46 @@ const VaultRepayResult: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base">
-       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
-      <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
-        <ListIconToken
-          iconNames={[item.inputToken.id, item.borrowedToken.id]}
-          className="w-7 h-7"
-        />
-        <div className="flex items-center'">
-          {collateralToken} / {loanToken}
+      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Transaction Confirmation
         </div>
-      </div>
+        <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
+          <ListIconToken
+            iconNames={[item.inputToken.id, item.borrowedToken.id]}
+            className="w-7 h-7"
+          />
+          <div className="flex items-center'">
+            {collateralToken} / {loanToken}
+          </div>
+        </div>
 
-      <div className="relative more-bg-primary text-[16px] rounded-[12px] p-[20px] mb-6">
-        Repay {amount} {loanToken}
-      </div>
+        <div className="relative more-bg-primary text-[16px] rounded-[12px] p-[20px] mb-6">
+          Repay {amount} {loanToken}
+        </div>
 
-      {txhash.length > 0 && (
-        <div className="text-[20px] font-medium mb-6 mt-[40px]">
-          <span>
+        {txhash.length > 0 && (
+          <div className="text-[20px] font-medium mb-6 mt-[40px]">
+            <span>
+              {executed ? (
+                <Icon
+                  icon="circle-check"
+                  className="text-secondary cursor-pointer w-[30px] h-[30px] mr-5"
+                />
+              ) : (
+                <Icon
+                  icon="circle"
+                  className=" cursor-pointer w-[30px] h-[30px] mr-5"
+                />
+              )}
+            </span>
             {executed ? (
-              <Icon
-                icon="circle-check"
-                className="text-secondary cursor-pointer w-[30px] h-[30px] mr-5"
-              />
+              <>Transaction {txHashStr} has been successfully executed.</>
             ) : (
-              <Icon icon="circle" className=" cursor-pointer w-[30px] h-[30px] mr-5" />
+              <>Transaction {txHashStr} has been sent.</>
             )}
-          </span>
-          {executed ? (
-            <>Transaction {txHashStr} has been successfully executed.</>
-          ) : (
-            <>Transaction {txHashStr} has been sent.</>
-          )}
-        </div>
-      )}
+          </div>
+        )}
       </div>
       <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (

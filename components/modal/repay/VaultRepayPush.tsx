@@ -12,13 +12,14 @@ import FormatPourcentage from "@/components/tools/formatPourcentage";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import usePrice from "@/hooks/usePrice";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
 import {
   getTokenInfo,
   notifyError,
   delay,
   formatTokenValue,
+  isFlow,
 } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -26,12 +27,10 @@ import {
   repayLoanViaMarkets,
 } from "@/utils/contract";
 
-interface Props {
+interface Props extends IBorrowPosition {
   amount: number;
   useMax: boolean;
-  item: BorrowPosition;
   validRepay: () => void;
-  closeModal: () => void;
   setTxHash: (hash: string) => void;
 }
 
@@ -69,22 +68,28 @@ const VaultRepayPush: React.FC<Props> = ({
       ? (borrowPrice * (loanAmount - amount)) / collateralUsd
       : 0;
 
+  const loanFlow = isFlow(item.borrowedToken.id);
+
   useEffect(() => {
     const initApprove = async () => {
-      const allowance = userAddress
-        ? await getTokenAllowance(
-            item.borrowedToken.id,
-            userAddress,
-            contracts.MORE_MARKETS
-          )
-        : BigInt(0);
+      if (loanFlow) {
+        setHasApprove(true);
+      } else {
+        const allowance = userAddress
+          ? await getTokenAllowance(
+              item.borrowedToken.id,
+              userAddress,
+              contracts.MORE_MARKETS
+            )
+          : BigInt(0);
 
-      if (allowance >= repayAmount) setHasApprove(true);
-      else setHasApprove(false);
+        if (allowance >= repayAmount) setHasApprove(true);
+        else setHasApprove(false);
+      }
     };
 
     initApprove();
-  }, [userAddress, item, repayAmount]);
+  }, [userAddress, item, repayAmount, loanFlow]);
 
   const doApprove = async () => {
     await setTokenAllowance(
@@ -121,6 +126,7 @@ const VaultRepayPush: React.FC<Props> = ({
 
       setIsLoading(false);
     } catch (err) {
+      console.log(err);
       setIsLoading(false);
       notifyError(err, MoreAction.REPAY);
     }
@@ -128,8 +134,15 @@ const VaultRepayPush: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"/assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">
@@ -153,7 +166,6 @@ const VaultRepayPush: React.FC<Props> = ({
             totalTokenAmount={amount}
           />
         </div>
-
         <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6 flex flex-col gap-4 text-[16px]">
           <div className="text-grey">Position Change</div>
           <div className="flex flex-row justify-between items-center my-2">
@@ -196,24 +208,24 @@ const VaultRepayPush: React.FC<Props> = ({
           </a>{" "}
           and the services provisions relating to the MORE Protocol Vault.
         </div>
-        </div>
-        <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
-          <div className="mr-5">
-            <MoreButton
-              className="text-2xl py-2"
-              text="Cancel"
-              onClick={closeModal}
-              color="grey"
-            />
-          </div>
+      </div>
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+        <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
-            text="Repay"
-            disabled={isLoading}
-            onClick={handleRepay}
-            color="primary"
+            text="Cancel"
+            onClick={closeModal}
+            color="grey"
           />
         </div>
+        <MoreButton
+          className="text-2xl py-2"
+          text="Repay"
+          disabled={isLoading}
+          onClick={handleRepay}
+          color="primary"
+        />
+      </div>
     </div>
   );
 };

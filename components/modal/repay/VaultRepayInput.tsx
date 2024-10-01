@@ -1,20 +1,24 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { formatUnits } from "ethers";
+import { formatUnits, parseUnits } from "ethers";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import ListIconToken from "@/components/token/ListIconToken";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { getTokenBallance } from "@/utils/contract";
-import { getTokenInfo, getPremiumLltv, formatTokenValue } from "@/utils/utils";
+import {
+  getTokenInfo,
+  getPremiumLltv,
+  formatTokenValue,
+  notify,
+} from "@/utils/utils";
+import { errMessages } from "@/utils/errors";
 
-interface Props {
+interface Props extends IBorrowPosition {
   useMax: boolean;
-  item: BorrowPosition;
-  closeModal: () => void;
   setAmount: (amount: number) => void;
   setUseMax: (useMax: boolean) => void;
 }
@@ -55,26 +59,47 @@ const VaultRepayInput: React.FC<Props> = ({
         ? parseFloat(event.target.value)
         : undefined;
     setRepayAmount(inputVal);
-    setUseMax(false);
+    setUseMax(
+      inputVal &&
+        parseUnits(inputVal.toString(), loanToken.decimals) >= item.loan
+        ? true
+        : false
+    );
   };
 
   const handleSetMax = (maxValue: number) => {
     if (loanBalance) {
       const maxAmount =
         loanBalance.value >= item.loan ? item.loan : loanBalance.value;
+
       setRepayAmount(Number(formatUnits(maxAmount, loanToken.decimals)));
-      setUseMax(true);
+      setUseMax(loanBalance.value >= item.loan ? true : false);
     }
   };
 
   const handleRepay = () => {
-    if (repayAmount && repayAmount) setAmount(repayAmount);
+    if (repayAmount && repayAmount > 0) {
+      if (repayAmount > Number(loanBalance?.formatted)) {
+        notify(errMessages.insufficient_amount);
+      } else {
+        setAmount(repayAmount);
+      }
+    } else {
+      notify(errMessages.invalid_amount);
+    }
   };
 
   return (
     <div className="more-bg-secondary w-full modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">Repay Loan</div>

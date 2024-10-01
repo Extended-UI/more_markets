@@ -35,6 +35,13 @@ export interface IBorrowPosition {
   closeModal: () => void;
 }
 
+export interface IBorrowPositionResult {
+  txhash: string;
+  amount: number;
+  item: BorrowPosition;
+  processDone: () => void;
+}
+
 export interface IBorrowPositionProp extends IBorrowPosition {
   updateInfo: (marketId: string) => void;
 }

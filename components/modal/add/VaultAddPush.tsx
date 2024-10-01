@@ -8,7 +8,7 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import TokenAmount from "@/components/token/TokenAmount";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import ListIconToken from "@/components/token/ListIconToken";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
 import {
   getTimestamp,
@@ -16,19 +16,18 @@ import {
   notifyError,
   delay,
   formatTokenValue,
+  isFlow,
 } from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
   setTokenPermit,
   getPermitNonce,
-  supplycollateral,
+  supplyCollateral,
 } from "@/utils/contract";
 
-interface Props {
+interface Props extends IBorrowPosition {
   amount: number;
-  item: BorrowPosition;
-  closeModal: () => void;
   validAdd: () => void;
   setTxHash: (hash: string) => void;
 }
@@ -63,24 +62,29 @@ const VaultAddPush: React.FC<Props> = ({
 
   useEffect(() => {
     const initApprove = async () => {
-      const [nonce, allowance] = userAddress
-        ? await Promise.all([
-            getPermitNonce([
-              userAddress,
-              item.inputToken.id,
-              contracts.MORE_BUNDLER,
-            ]),
-            getTokenAllowance(
-              item.inputToken.id,
-              userAddress,
-              contracts.PERMIT2
-            ),
-          ])
-        : [0, BigInt(0)];
+      if (isFlow(item.inputToken.id)) {
+        setHasPermit(true);
+        setHasApprove(true);
+      } else {
+        const [nonce, allowance] = userAddress
+          ? await Promise.all([
+              getPermitNonce([
+                userAddress,
+                item.inputToken.id,
+                contracts.MORE_BUNDLER,
+              ]),
+              getTokenAllowance(
+                item.inputToken.id,
+                userAddress,
+                contracts.PERMIT2
+              ),
+            ])
+          : [0, BigInt(0)];
 
-      setPermitNonce(nonce);
-      if (allowance >= supplyAmount) setHasApprove(true);
-      else setHasApprove(false);
+        setPermitNonce(nonce);
+        if (allowance >= supplyAmount) setHasApprove(true);
+        else setHasApprove(false);
+      }
     };
 
     initApprove();
@@ -118,7 +122,7 @@ const VaultAddPush: React.FC<Props> = ({
 
   const doSupplyCollateral = async (deadline: bigint, signHash: string) => {
     if (userAddress) {
-      const txHash = await supplycollateral(
+      const txHash = await supplyCollateral(
         item.inputToken.id,
         userAddress,
         signHash,
@@ -153,8 +157,15 @@ const VaultAddPush: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"/assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">
@@ -209,25 +220,24 @@ const VaultAddPush: React.FC<Props> = ({
           </a>{" "}
           and the services provisions relating to the MORE Protocol Vault.
         </div>
-        </div>
-        <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
-          <div className="mr-5">
-            <MoreButton
-              className="text-2xl py-2"
-              text="Cancel"
-              onClick={closeModal}
-              color="grey"
-            />
-          </div>
+      </div>
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+        <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
-            text="Add Collateral"
-            disabled={isLoading}
-            onClick={handleSupply}
-            color="primary"
+            text="Cancel"
+            onClick={closeModal}
+            color="grey"
           />
         </div>
-      
+        <MoreButton
+          className="text-2xl py-2"
+          text="Add Collateral"
+          disabled={isLoading}
+          onClick={handleSupply}
+          color="primary"
+        />
+      </div>
     </div>
   );
 };

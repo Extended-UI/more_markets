@@ -1,11 +1,9 @@
 import React from "react";
 import millify from "millify";
 import { isUndefined } from "lodash";
-import { ZeroAddress } from "ethers";
 import IconToken from "../token/IconToken";
 import MoreButton from "../moreButton/MoreButton";
 import usePrice from "@/hooks/usePrice";
-import { contracts } from "@/utils/const";
 
 interface Props {
   type: string;
@@ -26,8 +24,7 @@ const InputTokenMax: React.FC<Props> = ({
   balance,
   setMax,
 }) => {
-  const tokenAddr = token == ZeroAddress ? contracts.WNATIVE : token;
-  const { tokenPrice } = usePrice(tokenAddr);
+  const { tokenPrice } = usePrice(token);
 
   return (
     <div className="w-full flex  rounded-[12px] more-input-bg-color justify-between items-center p-[16px] gap-4">

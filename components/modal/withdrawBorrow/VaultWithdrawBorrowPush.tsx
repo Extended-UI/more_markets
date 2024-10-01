@@ -7,15 +7,13 @@ import TokenAmount from "../../token/TokenAmount";
 import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { MoreAction } from "@/utils/const";
 import { withdrawCollateral } from "@/utils/contract";
 import { getTokenInfo, notifyError, formatTokenValue } from "@/utils/utils";
 
-interface Props {
+interface Props extends IBorrowPosition {
   amount: number;
-  item: BorrowPosition;
-  closeModal: () => void;
   validWithdraw: () => void;
   setTxHash: (hash: string) => void;
 }
@@ -48,7 +46,8 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         const txHash = await withdrawCollateral(
           item.marketParams,
           tokenAmount,
-          userAddress
+          userAddress,
+          item.inputToken.id
         );
 
         validWithdraw();
@@ -64,7 +63,7 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
       <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+        <img src={'/assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">

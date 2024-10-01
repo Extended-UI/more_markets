@@ -6,9 +6,15 @@ import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { BorrowPosition } from "@/types";
+import { IBorrowPosition } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
-import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
+import {
+  getTimestamp,
+  getTokenInfo,
+  notifyError,
+  delay,
+  isFlow,
+} from "@/utils/utils";
 import {
   getTokenAllowance,
   setTokenAllowance,
@@ -20,12 +26,10 @@ import {
   setMarketsAuthorize,
 } from "@/utils/contract";
 
-interface Props {
-  item: BorrowPosition;
+interface Props extends IBorrowPosition {
   supplyAmount: number;
   borrowAmount: number;
   onlyBorrow?: boolean;
-  closeModal: () => void;
   validDeposit: () => void;
   setTxHash: (hash: string) => void;
 }
@@ -58,6 +62,8 @@ const VaultBorrowPush: React.FC<Props> = ({
     borrowToken.decimals
   );
 
+  const collateralFlow = isFlow(item.inputToken.id);
+
   useEffect(() => {
     const initApprove = async () => {
       const [nonce, allowance, authNonce, authInfo] = userAddress
@@ -77,11 +83,15 @@ const VaultBorrowPush: React.FC<Props> = ({
           ])
         : [0, BigInt(0), BigInt(0), false];
 
+      setHasAuth(authInfo);
       setPermitNonce(nonce);
       setAuthorizeNonce(authNonce);
-      setHasAuth(authInfo);
 
-      if (onlyBorrow) {
+      if (collateralFlow) {
+        // if collateral is flow
+        setHasApprove(true);
+        setHasPermit(true);
+      } else if (onlyBorrow) {
         setHasApprove(true);
       } else {
         if (allowance >= supplyTokenAmount) setHasApprove(true);
@@ -92,7 +102,14 @@ const VaultBorrowPush: React.FC<Props> = ({
     };
 
     initApprove();
-  }, [userAddress, item, supplyAmount, onlyBorrow]);
+  }, [
+    userAddress,
+    item,
+    supplyAmount,
+    onlyBorrow,
+    supplyTokenAmount,
+    collateralFlow,
+  ]);
 
   const doApprove = async () => {
     await setTokenAllowance(
@@ -146,15 +163,14 @@ const VaultBorrowPush: React.FC<Props> = ({
       const txHash = await supplycollateralAndBorrow(
         authorizeHash,
         authorizeNonce,
-        item.inputToken.id,
         userAddress,
         signHash,
         deadline,
         supplyTokenAmount,
         borrowTokenAmount,
         permitNonce,
-        item.marketParams,
-        onlyBorrow ? true : false
+        onlyBorrow ? true : false,
+        item
       );
 
       await delay(2);
@@ -183,61 +199,69 @@ const VaultBorrowPush: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"/assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Review Transaction</div>
-      <div className="relative flex items-start text-[20px] leading-[1.5] mb-[30px]">
-        <span>
-          <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
-        </span>
-        Authorize the MORE to execute multiple actions in a single transaction
-        when updating your positions
-      </div>
-      {!onlyBorrow && (
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Review Transaction
+        </div>
+        <div className="relative flex items-start text-[20px] leading-[1.5] mb-[30px]">
+          <span>
+            <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
+          </span>
+          Authorize the MORE to execute multiple actions in a single transaction
+          when updating your positions
+        </div>
+        {!onlyBorrow && !collateralFlow && (
+          <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
+            <span>
+              <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
+            </span>
+            Approve the bundler to spend {supplyAmount} {borrowToken.symbol}{" "}
+            (via permit)
+          </div>
+        )}
         <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
           <span>
             <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
           </span>
-          Approve the bundler to spend {supplyAmount} {borrowToken.symbol} (via
-          permit)
+          Execute the following actions
         </div>
-      )}
-      <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
-        <span>
-          <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
-        </span>
-        Execute the following actions
-      </div>
-      {supplyAmount > 0 && (
+        {supplyAmount > 0 && (
+          <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+            <TokenAmount
+              title="Supply"
+              token={item.inputToken.id}
+              amount={supplyAmount}
+              ltv={"ltv"}
+              totalTokenAmount={supplyAmount}
+            />
+          </div>
+        )}
         <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
           <TokenAmount
-            title="Supply"
-            token={item.inputToken.id}
-            amount={supplyAmount}
+            title="Borrow"
+            token={item.borrowedToken.id}
+            amount={borrowAmount}
             ltv={"ltv"}
-            totalTokenAmount={supplyAmount}
+            totalTokenAmount={borrowAmount}
           />
         </div>
-      )}
-        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-        <TokenAmount
-          title="Borrow"
-          token={item.borrowedToken.id}
-          amount={borrowAmount}
-          ltv={"ltv"}
-          totalTokenAmount={borrowAmount}
-        />
-      </div>
-
-      <div className="pt-5 px-5 text-[16px] leading-10">
-        By confirming this transaction, you agree to the{" "}
-        <a className="underline" href="#goto">
-          Terms of Use
-        </a>{" "}
-        and the services provisions relating to the MORE Protocol Vault.
-      </div>
+        <div className="pt-5 px-5 text-[16px] leading-10">
+          By confirming this transaction, you agree to the{" "}
+          <a className="underline" href="#goto">
+            Terms of Use
+          </a>{" "}
+          and the services provisions relating to the MORE Protocol Vault.
+        </div>
       </div>
       <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         <div className="mr-5">
@@ -256,7 +280,6 @@ const VaultBorrowPush: React.FC<Props> = ({
           color="primary"
         />
       </div>
-      
     </div>
   );
 };

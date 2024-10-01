@@ -47,6 +47,7 @@ import {
   getVauleBigintList,
   getTokenInfo,
   toAssetsUp,
+  isFlow,
 } from "./utils";
 
 const executeTransaction = async (
@@ -62,6 +63,41 @@ const executeTransaction = async (
   });
 
   return await writeContract(config, simulateResult.request);
+};
+
+const addWrapNative = (multicallArgs: string[], amount: bigint): string[] => {
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "wrapNative",
+      args: [amount],
+    })
+  );
+
+  return multicallArgs;
+};
+
+const addUnwrapNative = (
+  multicallArgs: string[],
+  account: string
+): string[] => {
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "unwrapNative",
+      args: [MaxUint256],
+    })
+  );
+
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "nativeTransfer",
+      args: [account, MaxUint256],
+    })
+  );
+
+  return multicallArgs;
 };
 
 export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
@@ -82,9 +118,8 @@ export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
 
 export const getTokenPrice = async (token: string): Promise<number> => {
   try {
-    const actualToken = token == ZeroAddress ? contracts.WNATIVE : token;
     const oracleContract = {
-      address: getTokenInfo(actualToken).oracle as `0x${string}`,
+      address: getTokenInfo(token).oracle as `0x${string}`,
       abi: OracleAbi,
     };
 
@@ -123,23 +158,35 @@ export const getTokenAllowance = async (
   });
 };
 
-export const setTokenAllowance = async (
-  token: string,
-  spender: string,
-  amount: bigint
-) => {
-  const txHash = await writeContract(config, {
-    address: token as `0x${string}`,
-    abi: ERC20Abi,
-    functionName: "approve",
-    args: [spender as `0x${string}`, amount],
-  });
+export const getBorrowedAmount = async (
+  marketId: string,
+  multiplier: bigint,
+  shares: bigint
+): Promise<bigint> => {
+  if (shares > BigInt(0)) {
+    const [totalBAMultiplier, totalBSMultiplier] = await readContracts(config, {
+      contracts: [
+        {
+          ...marketsInstance,
+          functionName: "totalBorrowAssetsForMultiplier",
+          args: [marketId, multiplier],
+        },
+        {
+          ...marketsInstance,
+          functionName: "totalBorrowSharesForMultiplier",
+          args: [marketId, multiplier],
+        },
+      ],
+    });
 
-  await waitForTransaction(txHash);
-};
-
-export const waitForTransaction = async (txHash: string) => {
-  await waitForTransactionReceipt(config, { hash: txHash as `0x${string}` });
+    return toAssetsUp(
+      shares,
+      totalBAMultiplier.result as bigint,
+      totalBSMultiplier.result as bigint
+    );
+  } else {
+    return BigInt(0);
+  }
 };
 
 export const getTokenPermit = async (args: any[]): Promise<bigint> => {
@@ -157,135 +204,12 @@ export const getTokenPermit = async (args: any[]): Promise<bigint> => {
     : BigInt(0);
 };
 
-export const setTokenPermit = async (
-  token: string,
-  amount: bigint,
-  nonce: number,
-  spender: string,
-  deadline: bigint
-): Promise<string> => {
-  const result = await signTypedData(config, {
-    types: {
-      PermitDetails: [
-        {
-          name: "token",
-          type: "address",
-        },
-        {
-          name: "amount",
-          type: "uint160",
-        },
-        {
-          name: "expiration",
-          type: "uint48",
-        },
-        {
-          name: "nonce",
-          type: "uint48",
-        },
-      ],
-      PermitSingle: [
-        { name: "details", type: "PermitDetails" },
-        { name: "spender", type: "address" },
-        { name: "sigDeadline", type: "uint256" },
-      ],
-    },
-    primaryType: "PermitSingle",
-    message: {
-      details: {
-        token: token as `0x${string}`,
-        amount: amount,
-        expiration: Uint48Max,
-        nonce,
-      },
-      spender: spender as `0x${string}`,
-      sigDeadline: deadline,
-    },
-    domain: {
-      verifyingContract: contracts.PERMIT2 as `0x${string}`,
-      chainId: 545,
-      name: "Permit2",
-    },
-  });
-
-  return result;
-};
-
-export const setMarketsAuthorize = async (
-  account: `0x${string}`,
-  nonce: bigint,
-  deadline: bigint
-): Promise<string> => {
-  const result = await signTypedData(config, {
-    types: {
-      Authorization: [
-        { name: "authorizer", type: "address" },
-        { name: "authorized", type: "address" },
-        { name: "isAuthorized", type: "bool" },
-        { name: "nonce", type: "uint256" },
-        { name: "deadline", type: "uint256" },
-      ],
-    },
-    primaryType: "Authorization",
-    message: {
-      authorizer: account,
-      authorized: contracts.MORE_BUNDLER as `0x${string}`,
-      isAuthorized: true,
-      nonce,
-      deadline,
-    },
-    domain: {
-      verifyingContract: contracts.MORE_MARKETS as `0x${string}`,
-      chainId: 545,
-    },
-  });
-
-  return result;
-};
-
-export const setVaultPermit = async (
-  vaultName: string,
-  account: `0x${string}`,
-  vaultAddress: string,
-  amount: bigint,
-  nonce: bigint,
-  deadline: bigint
-): Promise<string> => {
-  const result = await signTypedData(config, {
-    types: {
-      Permit: [
-        { name: "owner", type: "address" },
-        { name: "spender", type: "address" },
-        { name: "value", type: "uint256" },
-        { name: "nonce", type: "uint256" },
-        { name: "deadline", type: "uint256" },
-      ],
-    },
-    primaryType: "Permit",
-    message: {
-      owner: account,
-      spender: contracts.MORE_BUNDLER as `0x${string}`,
-      value: amount,
-      nonce,
-      deadline,
-    },
-    domain: {
-      verifyingContract: vaultAddress as `0x${string}`,
-      chainId: 545,
-      name: vaultName,
-      version: "1",
-    },
-  });
-
-  return result;
-};
-
 export const getTokenBallance = async (
   token: string,
   wallet: `0x${string}` | undefined
 ): Promise<GetBalanceReturnType> => {
   const userBalance = wallet
-    ? token.toLowerCase() == ZeroAddress.toLowerCase()
+    ? isFlow(token)
       ? await getBalance(config, {
           address: wallet,
         })
@@ -516,6 +440,225 @@ export const getVaultNonce = async (
   return nonceInfo as bigint;
 };
 
+export const getVaultSupplyRate = async (
+  vaultAddress: string
+): Promise<bigint> => {
+  const aprInfo = await readContract(config, {
+    ...apyfeedInstance,
+    functionName: "getVaultSupplyRate",
+    args: [vaultAddress],
+  });
+
+  return aprInfo as bigint;
+};
+
+export const getMarketSupplyRate = async (
+  marketParams: MarketParams
+): Promise<bigint> => {
+  const aprInfo = await readContract(config, {
+    ...apyfeedInstance,
+    functionName: "getMarketSupplyRate",
+    args: [
+      contracts.MORE_MARKETS,
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+    ],
+  });
+
+  return aprInfo as bigint;
+};
+
+export const getMarketBorrowRate = async (
+  marketParams: MarketParams
+): Promise<bigint> => {
+  const aprInfo = await readContract(config, {
+    ...apyfeedInstance,
+    functionName: "getBorrowRate",
+    args: [
+      contracts.MORE_MARKETS,
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+    ],
+  });
+
+  return aprInfo as bigint;
+};
+
+export const waitForTransaction = async (txHash: string) => {
+  await waitForTransactionReceipt(config, { hash: txHash as `0x${string}` });
+};
+
+export const addNewToken = async (
+  token: string,
+  symbol: string,
+  decimals: number
+) => {
+  await watchAsset(config, {
+    type: "ERC20",
+    options: {
+      address: token,
+      symbol,
+      decimals,
+    },
+  });
+};
+
+export const setTokenAllowance = async (
+  token: string,
+  spender: string,
+  amount: bigint
+) => {
+  const txHash = await writeContract(config, {
+    address: token as `0x${string}`,
+    abi: ERC20Abi,
+    functionName: "approve",
+    args: [spender as `0x${string}`, amount],
+  });
+
+  await waitForTransaction(txHash);
+};
+
+export const setTokenPermit = async (
+  token: string,
+  amount: bigint,
+  nonce: number,
+  spender: string,
+  deadline: bigint
+): Promise<string> => {
+  const result = await signTypedData(config, {
+    types: {
+      PermitDetails: [
+        {
+          name: "token",
+          type: "address",
+        },
+        {
+          name: "amount",
+          type: "uint160",
+        },
+        {
+          name: "expiration",
+          type: "uint48",
+        },
+        {
+          name: "nonce",
+          type: "uint48",
+        },
+      ],
+      PermitSingle: [
+        { name: "details", type: "PermitDetails" },
+        { name: "spender", type: "address" },
+        { name: "sigDeadline", type: "uint256" },
+      ],
+    },
+    primaryType: "PermitSingle",
+    message: {
+      details: {
+        token: token as `0x${string}`,
+        amount: amount,
+        expiration: Uint48Max,
+        nonce,
+      },
+      spender: spender as `0x${string}`,
+      sigDeadline: deadline,
+    },
+    domain: {
+      verifyingContract: contracts.PERMIT2 as `0x${string}`,
+      chainId: 545,
+      name: "Permit2",
+    },
+  });
+
+  return result;
+};
+
+export const setMarketsAuthorize = async (
+  account: `0x${string}`,
+  nonce: bigint,
+  deadline: bigint
+): Promise<string> => {
+  const result = await signTypedData(config, {
+    types: {
+      Authorization: [
+        { name: "authorizer", type: "address" },
+        { name: "authorized", type: "address" },
+        { name: "isAuthorized", type: "bool" },
+        { name: "nonce", type: "uint256" },
+        { name: "deadline", type: "uint256" },
+      ],
+    },
+    primaryType: "Authorization",
+    message: {
+      authorizer: account,
+      authorized: contracts.MORE_BUNDLER as `0x${string}`,
+      isAuthorized: true,
+      nonce,
+      deadline,
+    },
+    domain: {
+      verifyingContract: contracts.MORE_MARKETS as `0x${string}`,
+      chainId: 545,
+    },
+  });
+
+  return result;
+};
+
+export const setVaultPermit = async (
+  vaultName: string,
+  account: `0x${string}`,
+  vaultAddress: string,
+  amount: bigint,
+  nonce: bigint,
+  deadline: bigint
+): Promise<string> => {
+  const result = await signTypedData(config, {
+    types: {
+      Permit: [
+        { name: "owner", type: "address" },
+        { name: "spender", type: "address" },
+        { name: "value", type: "uint256" },
+        { name: "nonce", type: "uint256" },
+        { name: "deadline", type: "uint256" },
+      ],
+    },
+    primaryType: "Permit",
+    message: {
+      owner: account,
+      spender: contracts.MORE_BUNDLER as `0x${string}`,
+      value: amount,
+      nonce,
+      deadline,
+    },
+    domain: {
+      verifyingContract: vaultAddress as `0x${string}`,
+      chainId: 545,
+      name: vaultName,
+      version: "1",
+    },
+  });
+
+  return result;
+};
+
 export const depositToVaults = async (
   vault: string,
   asset: string,
@@ -528,13 +671,7 @@ export const depositToVaults = async (
 ): Promise<string> => {
   let multicallArgs: string[] = [];
   if (useFlow) {
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "wrapNative",
-        args: [amount],
-      })
-    );
+    multicallArgs = addWrapNative(multicallArgs, amount);
   } else {
     // encode approve2
     if (signhash.length > 0)
@@ -572,7 +709,6 @@ export const depositToVaults = async (
       args: [vault, amount, 0, account],
     })
   );
-
   return await executeTransaction(multicallArgs, useFlow ? amount : BigInt(0));
 };
 
@@ -624,8 +760,7 @@ export const withdrawFromVaults = async (
     );
   }
 
-  const flowVault =
-    assetAddress.toLowerCase() == contracts.WNATIVE.toLowerCase();
+  const flowVault = isFlow(assetAddress);
   const receiverAddr = flowVault ? contracts.MORE_BUNDLER : account;
 
   // encode erc4626Withdraw
@@ -643,43 +778,29 @@ export const withdrawFromVaults = async (
         })
   );
 
-  // unwrap and transfer if wflow
-  if (flowVault) {
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "unwrapNative",
-        args: [MaxUint256],
-      })
-    );
-
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "nativeTransfer",
-        args: [account, MaxUint256],
-      })
-    );
-  }
-
+  // unwrap and transfer if flow
+  if (flowVault) multicallArgs = addUnwrapNative(multicallArgs, account);
   return await executeTransaction(multicallArgs);
 };
 
 export const supplycollateralAndBorrow = async (
   authHash: string,
   authNonce: bigint,
-  supplyAsset: string,
   account: string,
   signhash: string,
   deadline: bigint,
   supplyAmount: bigint,
   borrowAmount: bigint,
   nonce: number,
-  marketParams: MarketParams,
-  onlyBorrow: boolean
+  onlyBorrow: boolean,
+  item: BorrowPosition
 ): Promise<string> => {
-  // authorize
   let multicallArgs: string[] = [];
+  const { marketParams, inputToken, borrowedToken } = item;
+  const { id: supplyAsset } = inputToken;
+  const { id: borrowAsset } = borrowedToken;
+
+  // authorize
   if (authHash.length > 0) {
     const r1 = authHash.slice(0, 66);
     const s1 = "0x" + authHash.slice(66, 130);
@@ -698,33 +819,38 @@ export const supplycollateralAndBorrow = async (
     );
   }
 
+  const supplyFlow = isFlow(supplyAsset);
   if (!onlyBorrow) {
-    // encode approve2
-    if (signhash.length > 0)
+    if (supplyFlow) {
+      multicallArgs = addWrapNative(multicallArgs, supplyAmount);
+    } else {
+      // encode approve2
+      if (signhash.length > 0)
+        multicallArgs.push(
+          encodeFunctionData({
+            abi: BundlerAbi,
+            functionName: "approve2",
+            args: [
+              [
+                [supplyAsset, supplyAmount, Uint48Max, nonce],
+                contracts.MORE_BUNDLER,
+                deadline,
+              ],
+              signhash,
+              false,
+            ],
+          })
+        );
+
+      // encode transferFrom2
       multicallArgs.push(
         encodeFunctionData({
           abi: BundlerAbi,
-          functionName: "approve2",
-          args: [
-            [
-              [supplyAsset, supplyAmount, Uint48Max, nonce],
-              contracts.MORE_BUNDLER,
-              deadline,
-            ],
-            signhash,
-            false,
-          ],
+          functionName: "transferFrom2",
+          args: [supplyAsset, supplyAmount],
         })
       );
-
-    // encode transferFrom2
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "transferFrom2",
-        args: [supplyAsset, supplyAmount],
-      })
-    );
+    }
 
     // encode morphoSupplyCollateral
     multicallArgs.push(
@@ -751,6 +877,7 @@ export const supplycollateralAndBorrow = async (
     );
   }
 
+  const borrowFlow = isFlow(borrowAsset);
   // encode morphoBorrow
   multicallArgs.push(
     encodeFunctionData({
@@ -771,43 +898,16 @@ export const supplycollateralAndBorrow = async (
         borrowAmount,
         0,
         MaxUint256,
-        account,
+        borrowFlow ? contracts.MORE_BUNDLER : account,
       ],
     })
   );
 
-  return await executeTransaction(multicallArgs);
-};
-
-export const getBorrowedAmount = async (
-  marketId: string,
-  multiplier: bigint,
-  shares: bigint
-): Promise<bigint> => {
-  if (shares > BigInt(0)) {
-    const [totalBAMultiplier, totalBSMultiplier] = await readContracts(config, {
-      contracts: [
-        {
-          ...marketsInstance,
-          functionName: "totalBorrowAssetsForMultiplier",
-          args: [marketId, multiplier],
-        },
-        {
-          ...marketsInstance,
-          functionName: "totalBorrowSharesForMultiplier",
-          args: [marketId, multiplier],
-        },
-      ],
-    });
-
-    return toAssetsUp(
-      shares,
-      totalBAMultiplier.result as bigint,
-      totalBSMultiplier.result as bigint
-    );
-  } else {
-    return BigInt(0);
-  }
+  if (borrowFlow) multicallArgs = addUnwrapNative(multicallArgs, account);
+  return await executeTransaction(
+    multicallArgs,
+    supplyFlow ? supplyAmount : BigInt(0)
+  );
 };
 
 export const repayLoanViaMarkets = async (
@@ -816,31 +916,80 @@ export const repayLoanViaMarkets = async (
   useShare: boolean,
   item: BorrowPosition
 ): Promise<string> => {
-  const marketParams = item.marketParams;
-  const simulateResult = await simulateContract(config, {
-    ...marketsInstance,
-    functionName: "repay",
-    args: [
-      [
-        marketParams.isPremiumMarket,
-        marketParams.loanToken,
-        marketParams.collateralToken,
-        marketParams.oracle,
-        marketParams.irm,
-        marketParams.lltv,
-        marketParams.creditAttestationService,
-        marketParams.irxMaxLltv,
-        marketParams.categoryLltv,
-      ],
-      useShare ? 0 : repayAmount,
-      useShare ? item.borrowShares : 0,
-      account,
-      "",
-    ],
-    gas: parseUnits(gasLimit, 6),
-  });
+  const { marketParams, borrowedToken } = item;
+  const { id: borrowToken } = borrowedToken;
+  const borrowFlow = isFlow(borrowToken);
 
-  return await writeContract(config, simulateResult.request);
+  if (borrowFlow) {
+    let multicallArgs: string[] = [];
+
+    const flowAmount =
+      (await getBorrowedAmount(
+        item.id,
+        item.lastMultiplier,
+        item.borrowShares
+      )) + parseUnits("0.0001");
+
+    // wrap
+    multicallArgs = addWrapNative(multicallArgs, flowAmount);
+
+    // then repay
+    multicallArgs.push(
+      encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "morphoRepay",
+        args: [
+          [
+            marketParams.isPremiumMarket,
+            marketParams.loanToken,
+            marketParams.collateralToken,
+            marketParams.oracle,
+            marketParams.irm,
+            marketParams.lltv,
+            marketParams.creditAttestationService,
+            marketParams.irxMaxLltv,
+            marketParams.categoryLltv,
+          ],
+          useShare ? 0 : repayAmount,
+          useShare ? item.borrowShares : 0,
+          useShare ? MaxUint256 : 0,
+          account,
+          "",
+        ],
+      })
+    );
+
+    console.log("eheree", flowAmount);
+
+    // then unwarp and transfer remaing flow
+    multicallArgs = addUnwrapNative(multicallArgs, account);
+    return await executeTransaction(multicallArgs, flowAmount);
+  } else {
+    const simulateResult = await simulateContract(config, {
+      ...marketsInstance,
+      functionName: "repay",
+      args: [
+        [
+          marketParams.isPremiumMarket,
+          marketParams.loanToken,
+          marketParams.collateralToken,
+          marketParams.oracle,
+          marketParams.irm,
+          marketParams.lltv,
+          marketParams.creditAttestationService,
+          marketParams.irxMaxLltv,
+          marketParams.categoryLltv,
+        ],
+        useShare ? 0 : repayAmount,
+        useShare ? item.borrowShares : 0,
+        account,
+        "",
+      ],
+      gas: parseUnits(gasLimit, 6),
+    });
+
+    return await writeContract(config, simulateResult.request);
+  }
 };
 
 export const repayLoanToMarkets = async (
@@ -907,11 +1056,10 @@ export const repayLoanToMarkets = async (
       ],
     })
   );
-
   return await executeTransaction(multicallArgs);
 };
 
-export const supplycollateral = async (
+export const supplyCollateral = async (
   supplyAsset: string,
   account: string,
   signhash: string,
@@ -921,6 +1069,7 @@ export const supplycollateral = async (
   marketParams: MarketParams
 ): Promise<string> => {
   let multicallArgs: string[] = [];
+  const supplyFlow = isFlow(supplyAsset);
 
   // encode approve2
   if (signhash.length > 0) {
@@ -941,14 +1090,18 @@ export const supplycollateral = async (
     );
   }
 
-  // encode transferFrom2
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "transferFrom2",
-      args: [supplyAsset, supplyAmount],
-    })
-  );
+  if (supplyFlow) {
+    multicallArgs = addWrapNative(multicallArgs, supplyAmount);
+  } else {
+    // encode transferFrom2
+    multicallArgs.push(
+      encodeFunctionData({
+        abi: BundlerAbi,
+        functionName: "transferFrom2",
+        args: [supplyAsset, supplyAmount],
+      })
+    );
+  }
 
   // encode morphoSupplyCollateral
   multicallArgs.push(
@@ -973,16 +1126,20 @@ export const supplycollateral = async (
       ],
     })
   );
-
-  return await executeTransaction(multicallArgs);
+  return await executeTransaction(
+    multicallArgs,
+    supplyFlow ? supplyAmount : BigInt(0)
+  );
 };
 
 export const withdrawCollateral = async (
   marketParams: MarketParams,
   amount: bigint,
-  account: string
+  account: string,
+  supplyToken: string
 ) => {
   let multicallArgs: string[] = [];
+  const supplyflow = isFlow(supplyToken);
 
   // encode morphoWithdrawCollateral
   multicallArgs.push(
@@ -1002,89 +1159,13 @@ export const withdrawCollateral = async (
           marketParams.categoryLltv,
         ],
         amount,
-        account,
+        supplyflow ? contracts.MORE_BUNDLER : account,
       ],
     })
   );
 
+  if (supplyflow) multicallArgs = addUnwrapNative(multicallArgs, account);
   return await executeTransaction(multicallArgs);
-};
-
-export const addNewToken = async (
-  token: string,
-  symbol: string,
-  decimals: number
-) => {
-  await watchAsset(config, {
-    type: "ERC20",
-    options: {
-      address: token,
-      symbol,
-      decimals,
-    },
-  });
-};
-
-export const getVaultSupplyRate = async (
-  vaultAddress: string
-): Promise<bigint> => {
-  const aprInfo = await readContract(config, {
-    ...apyfeedInstance,
-    functionName: "getVaultSupplyRate",
-    args: [vaultAddress],
-  });
-
-  return aprInfo as bigint;
-};
-
-export const getMarketSupplyRate = async (
-  marketParams: MarketParams
-): Promise<bigint> => {
-  const aprInfo = await readContract(config, {
-    ...apyfeedInstance,
-    functionName: "getMarketSupplyRate",
-    args: [
-      contracts.MORE_MARKETS,
-      [
-        marketParams.isPremiumMarket,
-        marketParams.loanToken,
-        marketParams.collateralToken,
-        marketParams.oracle,
-        marketParams.irm,
-        marketParams.lltv,
-        marketParams.creditAttestationService,
-        marketParams.irxMaxLltv,
-        marketParams.categoryLltv,
-      ],
-    ],
-  });
-
-  return aprInfo as bigint;
-};
-
-export const getMarketBorrowRate = async (
-  marketParams: MarketParams
-): Promise<bigint> => {
-  const aprInfo = await readContract(config, {
-    ...apyfeedInstance,
-    functionName: "getBorrowRate",
-    args: [
-      contracts.MORE_MARKETS,
-      [
-        marketParams.isPremiumMarket,
-        marketParams.loanToken,
-        marketParams.collateralToken,
-        marketParams.oracle,
-        marketParams.irm,
-        marketParams.lltv,
-        marketParams.creditAttestationService,
-        marketParams.irxMaxLltv,
-        marketParams.categoryLltv,
-      ],
-    ],
-  });
-
-  return aprInfo as bigint;
 };
 
 // ******************************************

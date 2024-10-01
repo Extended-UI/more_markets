@@ -147,7 +147,7 @@ const EarnDetailPage: React.FC = () => {
     };
 
     initVault();
-  }, [vaultId]);
+  }, [vaultId, userAddress, router]);
 
   const updateInfo = async (id: string) => {
     if (vaultInfo) {
@@ -170,7 +170,10 @@ const EarnDetailPage: React.FC = () => {
         <>
           <div className="mb-8 overflow-visible mt-14">
             <div className=" mr-10  mb-14">
-              <div className="flex items-center w-[80px] cursor-pointer" onClick={() => router.push("/earn")}>
+              <div
+                className="flex items-center w-[80px] cursor-pointer"
+                onClick={() => router.push("/earn")}
+              >
                 <Image
                   className="mr-4"
                   src={leftArrow}
@@ -178,9 +181,7 @@ const EarnDetailPage: React.FC = () => {
                   width={24}
                   height={24}
                 />
-                <div className="text-[16px] text-white font-medium">
-                  Back
-                </div>
+                <div className="text-[16px] text-white font-medium">Back</div>
               </div>
             </div>
             <HeaderEarnDetail updateInfo={updateInfo} item={vaultInfo} />
