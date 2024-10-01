@@ -50,6 +50,8 @@ import {
   isFlow,
 } from "./utils";
 
+const chainId = config.chains[0].id;
+
 const executeTransaction = async (
   multicallArgs: string[],
   value: bigint = BigInt(0)
@@ -598,7 +600,7 @@ export const setTokenPermit = async (
     },
     domain: {
       verifyingContract: contracts.PERMIT2 as `0x${string}`,
-      chainId: 545,
+      chainId: chainId,
       name: "Permit2",
     },
   });
@@ -631,7 +633,7 @@ export const setMarketsAuthorize = async (
     },
     domain: {
       verifyingContract: contracts.MORE_MARKETS as `0x${string}`,
-      chainId: 545,
+      chainId: chainId,
     },
   });
 
@@ -666,7 +668,7 @@ export const setVaultPermit = async (
     },
     domain: {
       verifyingContract: vaultAddress as `0x${string}`,
-      chainId: 545,
+      chainId: chainId,
       name: vaultName,
       version: "1",
     },
