@@ -189,7 +189,7 @@ const VaultAddPush: React.FC<Props> = ({
             totalTokenAmount={amount}
           />
         </div>
-        <div className="more-bg-primary rounded-b-[5px] mt-[1px] py-8 px-8">
+        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
           <div className="text-grey pb-4">Position Change</div>
           <PositionChangeToken
             title="Collateral"
@@ -206,13 +206,14 @@ const VaultAddPush: React.FC<Props> = ({
           </a>{" "}
           and the services provisions relating to the MORE Protocol Vault.
         </div>
+        </div>
         <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
           <div className="mr-5">
             <MoreButton
               className="text-2xl py-2"
               text="Cancel"
               onClick={closeModal}
-              color="gray"
+              color="grey"
             />
           </div>
           <MoreButton
@@ -223,7 +224,7 @@ const VaultAddPush: React.FC<Props> = ({
             color="primary"
           />
         </div>
-      </div>
+      
     </div>
   );
 };

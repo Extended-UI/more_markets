@@ -6,14 +6,17 @@ import Header from "../components/header/Header";
 import { sactionedCountries } from "@/utils/const";
 import SactionModal from "@/components/modal/SactionModal";
 import "react-toastify/dist/ReactToastify.css";
+import Banner from "@/components/header/Banner";
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const [sactioned, setSactioned] = useState(false);
 
+  const [sactioned, setSactioned] = useState(false);
+  const [hasBanner, setHasBanner] = useState(true)
+  
   const checkRegion = async () => {
     try {
       const res = await fetch("https://get.geojs.io/v1/ip/country.json");
@@ -37,29 +40,42 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <div style={{ maxWidth: "1380px", margin: "0 auto" }}>
+    <>
       {sactioned ? (
-        <div className="fixed inset-0 z-50 lg:px-[20%] flex items-center justify-center bg-black bg-opacity-75">
-          <div className="modal-box rounded-[20px] max-w-full p-3 bg-[#343434]">
-            <div className="h-full w-full">
-              <SactionModal />
+
+        <div style={{ maxWidth: "1380px", margin: "0 auto" }}>
+          <div className="fixed inset-0 z-50 lg:px-[20%] flex items-center justify-center bg-black bg-opacity-75">
+            <div className="modal-box rounded-[20px] max-w-full p-3 bg-[#343434]">
+              <div className="h-full w-full">
+                <SactionModal />
+              </div>
             </div>
           </div>
         </div>
+
       ) : (
         <>
-          <Header />
-          <ToastContainer
-            autoClose={3000}
-            theme="dark"
-            hideProgressBar={true}
-          />
-          <div className="mt-7 sm:mt-22">
-            <main>{children}</main>
+        
+          <div className="relative">
+          {
+            hasBanner ? (
+              <Banner
+                setHasBanner={setHasBanner}
+              />
+            ):''
+          }
+            <div style={{ maxWidth: "1380px", margin: hasBanner ? "55px auto 0" : "0 auto", padding: "0 5%" }} >
+              <Header/>
+              <ToastContainer autoClose={3000} theme="dark" hideProgressBar={true} />
+              <div className="mt-7 sm:mt-22">
+                <main>{children}</main>
+              </div>
+            </div>
           </div>
         </>
+
       )}
-    </div>
+    </>
   );
 };
 

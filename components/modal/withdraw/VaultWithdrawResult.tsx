@@ -84,7 +84,7 @@ const VaultWithdrawResult: React.FC<Props> = ({
             />
           </div>
         ) : (
-          <div className="mx-10 my-5 p-2 text-secondary border border-secondary border-dashed border-1 rounded-xl">
+          <div className="mx-10 my-5 p-5 text-secondary border border-secondary border-dashed border-1 rounded-xl">
             Confirming transaction... Browse MORE vaults while you wait.
           </div>
         )}

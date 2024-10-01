@@ -193,13 +193,14 @@ const VaultRepayPush: React.FC<Props> = ({
           </a>{" "}
           and the services provisions relating to the MORE Protocol Vault.
         </div>
+        </div>
         <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
           <div className="mr-5">
             <MoreButton
               className="text-2xl py-2"
               text="Cancel"
               onClick={closeModal}
-              color="gray"
+              color="grey"
             />
           </div>
           <MoreButton
@@ -210,7 +211,6 @@ const VaultRepayPush: React.FC<Props> = ({
             color="primary"
           />
         </div>
-      </div>
     </div>
   );
 };
