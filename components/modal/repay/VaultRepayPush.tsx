@@ -127,7 +127,10 @@ const VaultRepayPush: React.FC<Props> = ({
   };
 
   return (
-    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
+      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
+        <img src={'assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">
           Review Transaction
@@ -151,7 +154,7 @@ const VaultRepayPush: React.FC<Props> = ({
           />
         </div>
 
-        <div className="more-bg-primary rounded-b-[5px] mt-[1px] px-8 flex flex-col gap-4 py-8">
+        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6 flex flex-col gap-4 text-[16px]">
           <div className="text-grey">Position Change</div>
           <div className="flex flex-row justify-between items-center my-2">
             <div className="text-xl">Collateral</div>
@@ -193,13 +196,14 @@ const VaultRepayPush: React.FC<Props> = ({
           </a>{" "}
           and the services provisions relating to the MORE Protocol Vault.
         </div>
+        </div>
         <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
           <div className="mr-5">
             <MoreButton
               className="text-2xl py-2"
               text="Cancel"
               onClick={closeModal}
-              color="gray"
+              color="grey"
             />
           </div>
           <MoreButton
@@ -210,7 +214,6 @@ const VaultRepayPush: React.FC<Props> = ({
             color="primary"
           />
         </div>
-      </div>
     </div>
   );
 };
