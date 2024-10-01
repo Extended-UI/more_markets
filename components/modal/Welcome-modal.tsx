@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import MoreButton from "../moreButton/MoreButton";
-import { InvestmentData } from "@/types";
 
 interface Props {
   show: boolean;
@@ -46,6 +45,12 @@ const WelcomePopup: React.FC<Props> = ({ closeModal, show }) => {
                   To use the app, please acknowledge that you agree with the
                   terms of use and privacy policy by ticking the box below.
                 </div>
+                <div className="mb-[30px] text-[16px] font-medium leading-10">
+                  Please note that while all users can make deposits and
+                  withdrawals, Flow Wallet users are currently limited to
+                  deposits only. Withdrawals for Flow Wallet will be available
+                  in a few days.
+                </div>
                 <label className="label cursor-pointer flex justify-start">
                   <input
                     type="checkbox"
@@ -79,6 +84,7 @@ const WelcomePopup: React.FC<Props> = ({ closeModal, show }) => {
                   <MoreButton
                     className="text-2xl py-2"
                     text="Continue"
+                    disabled1={!isChecked}
                     onClick={closeModal}
                     color="primary"
                   />
