@@ -10,7 +10,7 @@ const Banner = (Props: { setHasBanner: (arg0: boolean) => void; }) => {
         MORE Markets is now live on Flow Crescendo Mainnet! <span className='hidden xxl:inline'>While we’re excited to share this with you, please be aware there are potential risks with smart contracts. </span> <a href='#' className='underline text-white font-bold'>Read the full announcement here</a>
       </div>
       <div className='text-[#141414] bg-[#612ecf] hover:bg-[#a886f3] h-[28px] w-[28px] rounded-full cursor-pointer flex justify-center items-center ml-5' onClick={()=>Props.setHasBanner(false)}>
-X
+        X
       </div>
     </div>
   );

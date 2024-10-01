@@ -55,9 +55,12 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
 
   return (
-    <div className="more-bg-secondary w-full rounded-[20px] modal-base">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
+      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
+        <img src={'assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      </div>
       <div className="px-[28px] pt-[50px] pb-[30px] text-[16px]">
-        <div className="text-[24px] mb-[40px] font-semibold">Add Collateral</div>
+          <div className="text-[24px] mb-[40px] font-semibold">Add Collateral</div>
         <div className="flex items-center mb-[30px] font-semibold text-[20px] gap-2">
           <ListIconToken
             iconNames={[item.inputToken.id, item.borrowedToken.id]}
