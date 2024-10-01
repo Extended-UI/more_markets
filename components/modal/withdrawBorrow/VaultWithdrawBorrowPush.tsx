@@ -101,10 +101,9 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
 
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
-          <a className="underline" href="#goto">
-            Terms of Use
+          <a className="underline" href="https://docs.more.markets/agreements/terms-of-use" target="_blank">
+            Terms of Use.
           </a>{" "}
-          and the services provisions relating to the MORE Protocol Vault.
         </div>
         </div>
         <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
