@@ -50,6 +50,8 @@ import {
   isFlow,
 } from "./utils";
 
+const chainId = config.chains[0].id;
+
 const executeTransaction = async (
   multicallArgs: string[],
   value: bigint = BigInt(0)
@@ -119,27 +121,43 @@ export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
 export const getTokenPrice = async (token: string): Promise<number> => {
   try {
     const oracleContract = {
-      address: getTokenInfo(token).oracle as `0x${string}`,
+      address: getTokenInfo(contracts.WNATIVE).oracle as `0x${string}`,
       abi: OracleAbi,
     };
 
-    const [decimals, latestAnswer] = await readContracts(config, {
-      contracts: [
-        {
-          ...oracleContract,
-          functionName: "decimals",
-        },
-        {
-          ...oracleContract,
-          functionName: "latestAnswer",
-        },
-      ],
+    let requestList = [
+      {
+        ...oracleContract,
+        functionName: "decimals",
+      },
+      {
+        ...oracleContract,
+        functionName: "latestAnswer",
+      },
+    ];
+
+    if (!isFlow(token)) {
+      requestList.push({
+        address: getTokenInfo(token).oracle as `0x${string}`,
+        abi: OracleAbi,
+        functionName: "price",
+      });
+    }
+
+    const priceResult = await readContracts(config, {
+      contracts: requestList,
     });
 
-    const decimalVal = Number(decimals.result);
-    const answerVal = latestAnswer.result as bigint;
+    const decimalVal = Number(priceResult[0].result);
+    const answerVal = priceResult[1].result as bigint;
 
-    return parseFloat(formatUnits(answerVal, decimalVal));
+    const flowPrice = parseFloat(formatUnits(answerVal, decimalVal));
+    if (isFlow(token)) return flowPrice;
+    else {
+      return (
+        flowPrice * parseFloat(formatUnits(priceResult[2].result as bigint, 36))
+      );
+    }
   } catch {
     return 0;
   }
@@ -245,8 +263,8 @@ export const getPositions = async (
         borrowShares: getVauleBigint(fetchedPosition, 1),
         collateral: getVauleBigint(fetchedPosition, 2),
         lastMultiplier: getVauleBigint(fetchedPosition, 3),
-        debtTokenMissed: getVauleBigint(fetchedPosition, 4),
-        debtTokenGained: getVauleBigint(fetchedPosition, 5),
+        // debtTokenMissed: getVauleBigint(fetchedPosition, 4),
+        // debtTokenGained: getVauleBigint(fetchedPosition, 5),
       } as Position;
     })
     .filter(
@@ -274,8 +292,8 @@ export const getPosition = async (
     borrowShares: BigInt((fetchedPosition as any[])[1]),
     collateral: BigInt((fetchedPosition as any[])[2]),
     lastMultiplier: BigInt((fetchedPosition as any[])[3]),
-    debtTokenMissed: BigInt((fetchedPosition as any[])[4]),
-    debtTokenGained: BigInt((fetchedPosition as any[])[5]),
+    // debtTokenMissed: BigInt((fetchedPosition as any[])[4]),
+    // debtTokenGained: BigInt((fetchedPosition as any[])[5]),
   } as Position;
 
   return positionItem.collateral > BigInt(0) ||
@@ -582,7 +600,7 @@ export const setTokenPermit = async (
     },
     domain: {
       verifyingContract: contracts.PERMIT2 as `0x${string}`,
-      chainId: 545,
+      chainId: chainId,
       name: "Permit2",
     },
   });
@@ -615,7 +633,7 @@ export const setMarketsAuthorize = async (
     },
     domain: {
       verifyingContract: contracts.MORE_MARKETS as `0x${string}`,
-      chainId: 545,
+      chainId: chainId,
     },
   });
 
@@ -650,7 +668,7 @@ export const setVaultPermit = async (
     },
     domain: {
       verifyingContract: vaultAddress as `0x${string}`,
-      chainId: 545,
+      chainId: chainId,
       name: vaultName,
       version: "1",
     },

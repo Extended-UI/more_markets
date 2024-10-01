@@ -16,14 +16,23 @@ interface IMarketAprRow {
 
 const DayInSec = 86400;
 
+let connection: mysql.Connection | null;
+const initConnection = async (): Promise<mysql.Connection> => {
+  if (connection == null) {
+    connection = await mysql.createConnection({
+      host: process.env.db_host,
+      port: process.env.db_port ? Number(process.env.db_port) : undefined,
+      user: process.env.db_user,
+      password: process.env.db_pawd,
+      database: process.env.db_name,
+    });
+  }
+
+  return connection;
+};
+
 export async function GET(req: NextRequest, res: NextResponse) {
-  const connection = await mysql.createConnection({
-    host: process.env.db_host,
-    port: process.env.db_port ? Number(process.env.db_port) : undefined,
-    user: process.env.db_user,
-    password: process.env.db_pawd,
-    database: process.env.db_name,
-  });
+  const connection = await initConnection();
 
   const marketid = req.nextUrl.searchParams.get("marketid");
   const targetDate = req.nextUrl.searchParams.get("targetDate");
