@@ -99,7 +99,7 @@ export const marketIds = [
   "0x93c256e9fa38ee67d0b6cd5bac0aae32cc0498d5a1103ba52d41b772b82c2bef",
 ];
 export const curators: { [key: string]: string } = {
-  "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Lighthouse Labs",
+  "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Tentacle Labs",
 };
 // ******************************************
 // for testnet purpose only
