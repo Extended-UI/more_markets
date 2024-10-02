@@ -520,7 +520,10 @@ export const getMarketBorrowRate = async (
 };
 
 export const waitForTransaction = async (txHash: string) => {
-  await waitForTransactionReceipt(config, { hash: txHash as `0x${string}` });
+  const updatedTxHash = txHash.substring(0, 2) == "0x" ? txHash : "0x" + txHash;
+  await waitForTransactionReceipt(config, {
+    hash: updatedTxHash as `0x${string}`,
+  });
 };
 
 export const addNewToken = async (

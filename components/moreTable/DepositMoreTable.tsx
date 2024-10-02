@@ -70,7 +70,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
 
   return (
     <>
-      {vaults.length > 0 && (
+      {userAddress && vaults.length > 0 && (
         <>
           <h1 className="text-[30px] mb-8 mt-28 font-semibold">My Deposits</h1>
           <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
