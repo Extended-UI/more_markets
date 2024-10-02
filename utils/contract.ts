@@ -63,7 +63,6 @@ const executeTransaction = async (
     value: value,
     gas: parseUnits(gasLimit, 6),
   });
-
   return await writeContract(config, simulateResult.request);
 };
 
@@ -976,8 +975,6 @@ export const repayLoanViaMarkets = async (
         ],
       })
     );
-
-    console.log("eheree", flowAmount);
 
     // then unwarp and transfer remaing flow
     multicallArgs = addUnwrapNative(multicallArgs, account);

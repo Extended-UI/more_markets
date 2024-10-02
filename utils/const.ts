@@ -90,7 +90,6 @@ export const sactionedCountries = ["KP", "IR", "MM"];
 export const CHAINALYSIS_KEY =
   "39c46c2bd4bf2ef6e1489954b4aa55685a67ec9f8d641d5769f6aeb0c6fbeb57";
 
-
 export const vaultIds = [
   "0xe2aaC46C1272EEAa49ec7e7B9e7d34B90aaDB966",
   "0x8c921f740B0065C7cE28EB93c7056d92C4735E7b",

@@ -54,7 +54,6 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
         setTxHash(txHash);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
         notifyError(err, MoreAction.WITHDRAW_COLLATERAL);
       }

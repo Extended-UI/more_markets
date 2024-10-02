@@ -113,7 +113,6 @@ const EasyModePage: React.FC = () => {
         notify("Deposit successed");
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
         notifyError(err, MoreAction.DEPOSIT);
       }
@@ -133,7 +132,6 @@ const EasyModePage: React.FC = () => {
   };
 
   const openChainModal = (name: string) => {
-    console.log("Open chain modal");
     setChain(name);
   };
 

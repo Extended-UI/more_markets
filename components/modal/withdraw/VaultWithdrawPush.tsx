@@ -144,7 +144,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
         notifyError(err, MoreAction.WITHDRAW);
       }

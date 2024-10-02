@@ -15,9 +15,6 @@ const WelcomePopup: React.FC<Props> = ({ closeModal, show }) => {
     target: { checked: boolean | ((prevState: boolean) => boolean) };
   }) => {
     setIsChecked(event.target.checked);
-    console.log(
-      "Checkbox is " + (event.target.checked ? "checked" : "unchecked")
-    );
     localStorage.setItem("isChecked", event.target.checked.toString());
   };
 
