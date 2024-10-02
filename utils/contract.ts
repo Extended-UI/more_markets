@@ -894,7 +894,7 @@ export const supplycollateralAndBorrow = async (
     );
   }
 
-  const borrowFlow = isFlow(borrowAsset);
+  const borroFlow = isFlow(borrowAsset);
   // encode morphoBorrow
   multicallArgs.push(
     encodeFunctionData({
@@ -915,12 +915,12 @@ export const supplycollateralAndBorrow = async (
         borrowAmount,
         0,
         MaxUint256,
-        borrowFlow ? contracts.MORE_BUNDLER : account,
+        borroFlow ? contracts.MORE_BUNDLER : account,
       ],
     })
   );
 
-  if (borrowFlow) multicallArgs = addUnwrapNative(multicallArgs, account);
+  if (borroFlow) multicallArgs = addUnwrapNative(multicallArgs, account);
   return await executeTransaction(
     multicallArgs,
     supplyFlow ? supplyAmount : BigInt(0)
@@ -935,9 +935,9 @@ export const repayLoanViaMarkets = async (
 ): Promise<string> => {
   const { marketParams, borrowedToken } = item;
   const { id: borrowToken } = borrowedToken;
-  const borrowFlow = isFlow(borrowToken);
+  const borroFlow = isFlow(borrowToken);
 
-  if (borrowFlow) {
+  if (borroFlow) {
     let multicallArgs: string[] = [];
 
     const flowAmount =

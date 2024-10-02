@@ -11,15 +11,12 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { InvestmentData } from "@/types";
 import { contracts, initBalance, vaultIds, MoreAction } from "@/utils/const";
 import {
-  formatTokenValue,
-  formatCurator,
   fetchVaultAprs,
   convertAprToApy,
   notifyError,
   notify,
 } from "@/utils/utils";
 import {
-  getVaultDetail,
   fetchVault,
   getTokenBallance,
   depositToVaults,
@@ -50,39 +47,14 @@ const EasyModePage: React.FC = () => {
       setBalanceString(tokenBal);
 
       if (fetchedVault) {
-        const [vaultShares, deposited] = await Promise.all([
-          getTokenBallance(fetchedVault.id, userAddress),
-          getVaultDetail(vaultId, "totalAssets", []),
-        ]);
-
-        let userAssets = BigInt(0);
-        if (vaultShares.value > 0) {
-          userAssets = (await getVaultDetail(
-            fetchedVault.id,
-            "convertToAssets",
-            [vaultShares.value]
-          )) as bigint;
-        }
-
         const aprItem = vaultAprs.find(
           (aprItem) => aprItem.vaultid.toLowerCase() == vaultId.toLowerCase()
         );
 
         setVaultInfo({
           vaultId: fetchedVault.id,
-          vaultName: fetchedVault.name,
           assetAddress: fetchedVault.asset.id,
           netAPY: aprItem ? convertAprToApy(aprItem.apr, aprDate) : 0,
-          userDeposits: formatTokenValue(userAssets, fetchedVault.asset.id),
-          userShares: vaultShares.value,
-          totalDeposits: formatTokenValue(
-            deposited as bigint,
-            fetchedVault.asset.id
-          ),
-          curator: formatCurator(fetchedVault),
-          collateral: [],
-          guardian: fetchedVault.guardian ? fetchedVault.guardian.id : "",
-          timelock: fetchedVault.timelock,
         } as InvestmentData);
       }
     }
@@ -108,8 +80,8 @@ const EasyModePage: React.FC = () => {
           true
         );
 
-        await initVault();
         await waitForTransaction(txHash);
+        await initVault();
         notify("Deposit successed");
         setIsLoading(false);
       } catch (err) {

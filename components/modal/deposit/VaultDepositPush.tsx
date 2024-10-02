@@ -4,7 +4,7 @@ import { useAccount } from "wagmi";
 import { parseUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
-import IconToken from "@/components/token/IconToken";
+import IconCurator from "@/components/token/IconCurator";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
@@ -157,8 +157,7 @@ const VaultDepositPush: React.FC<Props> = ({
         <div className="flex flex-row justify-between items-center mb-[30px]">
           <div className="text-[20px] font-semibold flex items-center gap-3">
             <span className="more-text-gray text-[16px]">Curator:</span>
-            <IconToken className="w-[24px] h-[24px]" tokenName="wflow" />
-            <span>{item.curator}</span>
+            <IconCurator classStr="w-8" curator={item.curator} />
           </div>
           <div className="flex gap-2 mb-5 text-[16px]">
             <span className="more-text-gray">Net APY:</span>

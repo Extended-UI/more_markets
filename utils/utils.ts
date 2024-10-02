@@ -63,9 +63,7 @@ export const getTokenInfo = (token: string | undefined): IToken => {
   };
 
   if (token) {
-    const tokenAddress = token == "wflow" ? contracts.WNATIVE : token;
-    const tokenInfo = tokens[tokenAddress.toLowerCase()];
-
+    const tokenInfo = tokens[token.toLowerCase()];
     return tokenInfo ? tokenInfo : initVal;
   }
 
@@ -116,10 +114,10 @@ export const getAvailableLiquidity = (
   );
 };
 
-export const formatCurator = (fetchedVault: GraphVault): string => {
-  return fetchedVault.curator && fetchedVault.curator.id != ZeroAddress
-    ? curators[fetchedVault.curator.id.toLowerCase()]
-    : "";
+export const formatCurator = (curator: string): string => {
+  return curator.length > 0 && curator != ZeroAddress
+    ? curators[curator.toLowerCase()]
+    : "-";
 };
 
 export const notifyError = async (

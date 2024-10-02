@@ -10,6 +10,7 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { InvestmentData, IInvestmentProps } from "@/types";
+import IconCurator from "../token/IconCurator";
 
 const EarnMoreTable: React.FC<IInvestmentProps> = ({
   investments,
@@ -83,7 +84,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                   backgroundColor: "#212121",
                   position: "static",
                   boxShadow: "inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)",
-                  padding: '1.5rem'
+                  padding: "1.5rem",
                 }}
               />
             )}
@@ -139,10 +140,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
               </td>
               <td className="p-6 items-center h-full">
                 <div className="items-center flex">
-                  <div className="mr-3 w-8 h-8">
-                    <IconToken tokenName="wflow" />
-                  </div>
-                  {item.curator}
+                  <IconCurator curator={item.curator} />
                 </div>
               </td>
               <td className="p-6 items-center h-full">

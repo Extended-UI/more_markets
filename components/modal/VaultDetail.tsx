@@ -2,7 +2,7 @@
 
 import React from "react";
 import { formatEther } from "viem";
-import IconToken from "../token/IconToken";
+import IconCurator from "../token/IconCurator";
 import MoreButton from "../moreButton/MoreButton";
 import { IInvestment } from "@/types";
 
@@ -26,8 +26,7 @@ const VaultDetail: React.FC<IInvestment> = ({ item, closeModal }) => {
         <div className="flex flex-row justify-between items-center mb-[30px]">
           <div className="text-[20px] font-semibold flex items-center gap-3">
             <span className="more-text-gray text-[16px]">Curator:</span>
-            <IconToken className="w-6 h-6" tokenName={item.assetAddress} />
-            <span>{item.curator}</span>
+            <IconCurator classStr="w-8" curator={item.curator} />
           </div>
         </div>
         <div className="my-[30px] text-[16px] text-[#E0DFE3]">

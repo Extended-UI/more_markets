@@ -9,7 +9,6 @@ import { InvestmentData } from "@/types";
 import { getVaultDetail, fetchVaults, fetchMarkets } from "@/utils/contract";
 import {
   formatTokenValue,
-  formatCurator,
   fetchVaultAprs,
   convertAprToApy,
 } from "@/utils/utils";
@@ -60,7 +59,7 @@ const EarnPage: React.FC = () => {
             assetAddress: vault.asset.id,
             netAPY: aprItem ? convertAprToApy(aprItem.apr, aprDates) : 0,
             totalDeposits: formatTokenValue(deposited, vault.asset.id),
-            curator: formatCurator(vault),
+            curator: vault.curator ? vault.curator.id : "",
             collateral: uniq(activeCollaterals),
             guardian: vault.guardian ? vault.guardian.id : "",
             timelock: vault.timelock,

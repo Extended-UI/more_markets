@@ -12,7 +12,6 @@ import { InvestmentData, VaultBreakdown } from "@/types";
 import {
   formatTokenValue,
   getPremiumLltv,
-  formatCurator,
   fetchVaultAprs,
   convertAprToApy,
 } from "@/utils/utils";
@@ -22,7 +21,7 @@ import {
   fetchMarkets,
   fetchVault,
   getTokenBallance,
-  depositToVaults
+  depositToVaults,
 } from "@/utils/contract";
 import leftArrow from "@/public/assets/icons/left-arrow.svg";
 
@@ -135,7 +134,7 @@ const EarnDetailPage: React.FC = () => {
                 deposited as bigint,
                 fetchedVault.asset.id
               ),
-              curator: formatCurator(fetchedVault),
+              curator: fetchedVault.curator ? fetchedVault.curator.id : "",
               collateral: [],
               guardian: fetchedVault.guardian ? fetchedVault.guardian.id : "",
               timelock: fetchedVault.timelock,
