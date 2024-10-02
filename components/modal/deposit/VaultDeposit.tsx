@@ -25,8 +25,8 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   };
 
   const handleProcessDone = () => {
-    closeModal();
     updateInfo(item.vaultId);
+    closeModal();
   };
 
   return (
@@ -41,8 +41,8 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
         <VaultDepositPush
           item={item}
           amount={amount}
-          closeModal={closeModal}
           setTxHash={setTxHash}
+          closeModal={closeModal}
           validDeposit={handleValidDeposit}
         />
       ) : step == 3 ? (
@@ -51,7 +51,6 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
           amount={amount}
           txhash={txHash}
           processDone={handleProcessDone}
-          closeModal={closeModal}
         />
       ) : null}
     </>

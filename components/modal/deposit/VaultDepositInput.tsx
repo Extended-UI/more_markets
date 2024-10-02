@@ -6,15 +6,13 @@ import { type GetBalanceReturnType } from "@wagmi/core";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatTokenMillion from "@/components/tools/formatTokenMillion";
-import { InvestmentData } from "@/types";
+import { IInvestment } from "@/types";
 import { initBalance } from "@/utils/const";
 import { errMessages } from "@/utils/errors";
 import { getTokenBallance } from "@/utils/contract";
 import { getTokenInfo, notify } from "@/utils/utils";
 
-interface Props {
-  item: InvestmentData;
-  closeModal: () => void;
+interface Props extends IInvestment {
   setAmount: (amount: number) => void;
 }
 

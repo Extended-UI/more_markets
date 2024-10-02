@@ -9,7 +9,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import IconToken from "@/components/token/IconToken";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
-import { InvestmentData } from "@/types";
+import { IInvestmentPush } from "@/types";
 import { MoreAction } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
@@ -21,20 +21,16 @@ import {
   setMarketsAuthorize,
 } from "@/utils/contract";
 
-interface Props {
-  amount: number;
+interface Props extends IInvestmentPush {
   useMax: boolean;
-  item: InvestmentData;
-  closeModal: () => void;
   validWithdraw: () => void;
-  setTxhash: (hash: string) => void;
 }
 
 const VaultWithdrawPush: React.FC<Props> = ({
   item,
   amount,
   useMax,
-  setTxhash,
+  setTxHash,
   closeModal,
   validWithdraw,
 }) => {
@@ -126,7 +122,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
       await delay(2);
 
-      setTxhash(hash);
+      setTxHash(hash);
       validWithdraw();
     }
   };
@@ -152,8 +148,15 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'/assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"/assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">
@@ -229,29 +232,32 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
-          <a className="underline" href="https://docs.more.markets/agreements/terms-of-use" target="_blank">
+          <a
+            className="underline"
+            href="https://docs.more.markets/agreements/terms-of-use"
+            target="_blank"
+          >
             Terms of Use.
           </a>{" "}
         </div>
-        </div>
-        <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
-          <div className="mr-5">
-            <MoreButton
-              className="text-2xl py-2"
-              text="Cancel"
-              onClick={closeModal}
-              color="grey"
-            />
-          </div>
+      </div>
+      <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
+        <div className="mr-5">
           <MoreButton
             className="text-2xl py-2"
-            text="Withdraw"
-            disabled={isLoading}
-            onClick={handleWithdraw}
-            color="primary"
+            text="Cancel"
+            onClick={closeModal}
+            color="grey"
           />
         </div>
-      
+        <MoreButton
+          className="text-2xl py-2"
+          text="Withdraw"
+          disabled={isLoading}
+          onClick={handleWithdraw}
+          color="primary"
+        />
+      </div>
     </div>
   );
 };

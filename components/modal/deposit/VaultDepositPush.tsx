@@ -8,7 +8,7 @@ import IconToken from "@/components/token/IconToken";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
-import { InvestmentData } from "@/types";
+import { IInvestmentPush } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
 import {
   getTimestamp,
@@ -25,12 +25,8 @@ import {
   depositToVaults,
 } from "@/utils/contract";
 
-interface Props {
-  amount: number;
-  item: InvestmentData;
-  closeModal: () => void;
+interface Props extends IInvestmentPush {
   validDeposit: () => void;
-  setTxHash: (hash: string) => void;
 }
 
 const VaultDepositPush: React.FC<Props> = ({
@@ -141,8 +137,15 @@ const VaultDepositPush: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'/assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"/assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">
@@ -209,7 +212,11 @@ const VaultDepositPush: React.FC<Props> = ({
         </div>
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
-          <a className="underline" href="https://docs.more.markets/agreements/terms-of-use" target="_blank">
+          <a
+            className="underline"
+            href="https://docs.more.markets/agreements/terms-of-use"
+            target="_blank"
+          >
             Terms of Use.
           </a>{" "}
         </div>

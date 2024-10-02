@@ -5,14 +5,12 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import { ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
-import { InvestmentData } from "@/types";
+import { IInvestment } from "@/types";
 import { errMessages } from "@/utils/errors";
 import { getTokenInfo, formatNumberLocale, notify } from "@/utils/utils";
 
-interface Props {
-  item: InvestmentData;
+interface Props extends IInvestment {
   useMax: boolean;
-  closeModal: () => void;
   setAmount: (amount: number) => void;
   setUseMax: (useMax: boolean) => void;
 }

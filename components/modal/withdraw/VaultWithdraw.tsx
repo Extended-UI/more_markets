@@ -45,7 +45,7 @@ const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
           item={item}
           useMax={useMax}
           amount={amount}
-          setTxhash={setTxhash}
+          setTxHash={setTxhash}
           closeModal={closeModal}
           validWithdraw={handleValidWithdraw}
         />

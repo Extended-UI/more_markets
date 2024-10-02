@@ -10,9 +10,27 @@ export interface IToken {
   oracle: string;
 }
 
-export interface IInvestmentProp {
+interface IInvestmentBase {
   item: InvestmentData;
+}
+
+export interface IInvestmentProp extends IInvestmentBase {
   updateInfo: (vaultId: string) => void;
+}
+
+export interface IInvestment extends IInvestmentBase {
+  closeModal: () => void;
+}
+
+export interface IInvestmentPush extends IInvestment {
+  amount: number;
+  setTxHash: (hash: string) => void;
+}
+
+export interface IInvestmentResult extends IInvestmentBase {
+  amount: number;
+  txhash: string;
+  processDone: () => void;
 }
 
 export interface IInvestmentProps {
