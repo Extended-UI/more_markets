@@ -29,6 +29,12 @@ export const MoreErrors: IMoreError[] = [
     message: "You are not authorized to sign this transaction.",
   },
   {
+    action: MoreAction.GENERAL,
+    error: "eth_signTypedData_v4",
+    message:
+      "Your wallet currently does not support signing transactions. Please try again later!",
+  },
+  {
     action: MoreAction.DEPOSIT,
     error: "all caps reached",
     message: "Your deposit exceeds the maximum deposit amount.",
