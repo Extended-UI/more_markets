@@ -169,9 +169,14 @@ export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {
   return (x * y) / d;
 };
 
-export const wMulDown = (x: bigint, y: bigint) => {
+export const wMulDown = (x: bigint, y: bigint): bigint => {
   const returnVal = mulDivDown(x, y, WAD);
   return returnVal > moreTolerance ? returnVal - moreTolerance : BigInt(0);
+};
+
+export const getExtraMax = (x: bigint, y: bigint): bigint => {
+  y = y + BigInt(1e14);
+  return x >= y ? x - y : BigInt(0);
 };
 
 export const fetchVaultAprs = async (

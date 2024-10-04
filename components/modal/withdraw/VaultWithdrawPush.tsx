@@ -21,6 +21,7 @@ import {
   setMarketsAuthorize,
   getTokenAllowance,
   setTokenAllowance,
+  doMarketsAuthorize,
 } from "@/utils/contract";
 
 interface Props extends IInvestmentPush {
@@ -56,12 +57,18 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
   useEffect(() => {
     const initApprove = async () => {
-      if (userAddress && isFlowWallet) {
-        const tokenAllowance = await getTokenAllowance(
-          item.vaultId,
-          userAddress,
-          contracts.MORE_BUNDLER
-        );
+      if (isFlowWallet) {
+        const [tokenAllowance, authInfo] = userAddress
+          ? await Promise.all([
+              getTokenAllowance(
+                item.vaultId,
+                userAddress,
+                contracts.MORE_BUNDLER
+              ),
+              checkAuthorized(userAddress),
+            ])
+          : [BigInt(0), false];
+        setHasAuth(authInfo);
         setHasPermit(tokenAllowance == MaxUint256);
       } else {
         const [nonce, aNonce, authInfo] = userAddress
@@ -112,11 +119,16 @@ const VaultWithdrawPush: React.FC<Props> = ({
 
   const doAuthorize = async (authDeadline: bigint): Promise<string> => {
     if (userAddress) {
-      const authHash = await setMarketsAuthorize(
-        userAddress,
-        authorizeNonce,
-        authDeadline
-      );
+      let authHash = "";
+      if (isFlowWallet) {
+        await doMarketsAuthorize();
+      } else {
+        authHash = await setMarketsAuthorize(
+          userAddress,
+          authorizeNonce,
+          authDeadline
+        );
+      }
 
       setHasAuth(true);
       await delay(2);
@@ -155,19 +167,13 @@ const VaultWithdrawPush: React.FC<Props> = ({
     if (userAddress) {
       setIsLoading(true);
       try {
-        if (isFlowWallet) {
-          await doPermit(BigInt(0));
-          await doWithdraw(BigInt(0), "", "");
-        } else {
-          const deadline = getTimestamp();
-          const authorizeHash = hasAuth ? "" : await doAuthorize(deadline);
-          const permitHash = hasPermit ? "" : await doPermit(deadline);
-          await doWithdraw(deadline, permitHash, authorizeHash);
-        }
+        const deadline = getTimestamp();
+        const authorizeHash = hasAuth ? "" : await doAuthorize(deadline);
+        const permitHash = hasPermit ? "" : await doPermit(deadline);
+        await doWithdraw(deadline, permitHash, authorizeHash);
 
         setIsLoading(false);
       } catch (err) {
-        console.log("here err", err);
         setIsLoading(false);
         notifyError(err, MoreAction.WITHDRAW);
       }

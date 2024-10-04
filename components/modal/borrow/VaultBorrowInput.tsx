@@ -18,6 +18,7 @@ import {
   wMulDown,
   formatTokenValue,
   formatNumberLocale,
+  getExtraMax,
 } from "@/utils/utils";
 
 interface Props extends IBorrowPosition {
@@ -78,7 +79,7 @@ const VaultBorrowInput: React.FC<Props> = ({
     if (onlyBorrow) {
       maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
       maxBorrow = wMulDown(maxBorrow, item.lltv);
-      maxBorrow = maxBorrow >= item.loan ? maxBorrow - item.loan : BigInt(0);
+      maxBorrow = getExtraMax(maxBorrow, item.loan);
     } else if (deposit) {
       const depositAmount = parseUnits(
         deposit.toString(),

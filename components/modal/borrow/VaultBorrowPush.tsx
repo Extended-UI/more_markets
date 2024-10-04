@@ -24,6 +24,7 @@ import {
   getAuthorizeNonce,
   checkAuthorized,
   setMarketsAuthorize,
+  doMarketsAuthorize,
 } from "@/utils/contract";
 
 interface Props extends IBorrowPosition {
@@ -43,7 +44,7 @@ const VaultBorrowPush: React.FC<Props> = ({
   closeModal,
   setTxHash,
 }) => {
-  const { address: userAddress } = useAccount();
+  const { address: userAddress, connector } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const [hasAuth, setHasAuth] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
@@ -63,6 +64,9 @@ const VaultBorrowPush: React.FC<Props> = ({
   );
 
   const collateralFlow = isFlow(item.inputToken.id);
+  const isFlowWallet = connector
+    ? connector.name.toLowerCase() == "flow wallet"
+    : false;
 
   useEffect(() => {
     const initApprove = async () => {
@@ -76,7 +80,7 @@ const VaultBorrowPush: React.FC<Props> = ({
             getTokenAllowance(
               item.inputToken.id,
               userAddress,
-              contracts.PERMIT2
+              isFlowWallet ? contracts.MORE_BUNDLER : contracts.PERMIT2
             ),
             getAuthorizeNonce(userAddress),
             checkAuthorized(userAddress),
@@ -98,7 +102,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         else setHasApprove(false);
       }
 
-      if (supplyAmount == 0) setHasPermit(true);
+      if (isFlowWallet || supplyAmount == 0) setHasPermit(true);
     };
 
     initApprove();
@@ -109,12 +113,13 @@ const VaultBorrowPush: React.FC<Props> = ({
     onlyBorrow,
     supplyTokenAmount,
     collateralFlow,
+    isFlowWallet,
   ]);
 
   const doApprove = async () => {
     await setTokenAllowance(
       item.inputToken.id,
-      contracts.PERMIT2,
+      isFlowWallet ? contracts.MORE_BUNDLER : contracts.PERMIT2,
       supplyTokenAmount
     );
 
@@ -124,11 +129,16 @@ const VaultBorrowPush: React.FC<Props> = ({
 
   const doAuthorize = async (authDeadline: bigint): Promise<string> => {
     if (userAddress) {
-      const authHash = await setMarketsAuthorize(
-        userAddress,
-        authorizeNonce,
-        authDeadline
-      );
+      let authHash = "";
+      if (isFlowWallet) {
+        await doMarketsAuthorize();
+      } else {
+        authHash = await setMarketsAuthorize(
+          userAddress,
+          authorizeNonce,
+          authDeadline
+        );
+      }
 
       setHasAuth(true);
       await delay(2);
@@ -170,6 +180,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         borrowTokenAmount,
         permitNonce,
         onlyBorrow ? true : false,
+        isFlowWallet,
         item
       );
 
@@ -220,7 +231,7 @@ const VaultBorrowPush: React.FC<Props> = ({
           Authorize the MORE to execute multiple actions in a single transaction
           when updating your positions
         </div>
-        {!onlyBorrow && !collateralFlow && (
+        {!onlyBorrow && !collateralFlow && !isFlowWallet && (
           <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
             <span>
               <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
@@ -255,7 +266,11 @@ const VaultBorrowPush: React.FC<Props> = ({
         </div>
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
-          <a className="underline" href="https://docs.more.markets/agreements/terms-of-use" target="_blank">
+          <a
+            className="underline"
+            href="https://docs.more.markets/agreements/terms-of-use"
+            target="_blank"
+          >
             Terms of Use.
           </a>{" "}
         </div>

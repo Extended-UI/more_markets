@@ -39,7 +39,7 @@ const VaultAddPush: React.FC<Props> = ({
   validAdd,
   closeModal,
 }) => {
-  const { address: userAddress } = useAccount();
+  const { address: userAddress, connector } = useAccount();
 
   const [hasPermit, setHasPermit] = useState(false);
   const [permitNonce, setPermitNonce] = useState(0);
@@ -53,12 +53,15 @@ const VaultAddPush: React.FC<Props> = ({
     roundedAmount.toString(),
     collateralToken.decimals
   );
-
   const collateralAmount = formatTokenValue(
     item.collateral,
     "",
     collateralToken.decimals
   );
+
+  const isFlowWallet = connector
+    ? connector.name.toLowerCase() == "flow wallet"
+    : false;
 
   useEffect(() => {
     const initApprove = async () => {
@@ -76,10 +79,12 @@ const VaultAddPush: React.FC<Props> = ({
               getTokenAllowance(
                 item.inputToken.id,
                 userAddress,
-                contracts.PERMIT2
+                isFlowWallet ? contracts.MORE_BUNDLER : contracts.PERMIT2
               ),
             ])
           : [0, BigInt(0)];
+
+        if (isFlowWallet) setHasPermit(true);
 
         setPermitNonce(nonce);
         if (allowance >= supplyAmount) setHasApprove(true);
@@ -93,7 +98,7 @@ const VaultAddPush: React.FC<Props> = ({
   const doApprove = async () => {
     await setTokenAllowance(
       item.inputToken.id,
-      contracts.PERMIT2,
+      isFlowWallet ? contracts.MORE_BUNDLER : contracts.PERMIT2,
       supplyAmount
     );
 
@@ -129,6 +134,7 @@ const VaultAddPush: React.FC<Props> = ({
         deadline,
         supplyAmount,
         permitNonce,
+        isFlowWallet,
         item.marketParams
       );
 
@@ -143,7 +149,6 @@ const VaultAddPush: React.FC<Props> = ({
     setIsLoading(true);
     try {
       const deadline = getTimestamp();
-
       if (!hasApprove) await doApprove();
       const permitHash = hasPermit ? "" : await doPermit(deadline);
       await doSupplyCollateral(deadline, permitHash);
@@ -180,20 +185,21 @@ const VaultAddPush: React.FC<Props> = ({
             {collateralToken.symbol} / {loanToken}
           </div>
         </div>
-        <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
-          <span>
-            <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
-          </span>
-          Approve the bundler to spend {amount} {collateralToken.symbol} (via
-          permit)
-        </div>
+        {!isFlowWallet && (
+          <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
+            <span>
+              <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
+            </span>
+            Approve the bundler to spend {amount} {collateralToken.symbol} (via
+            permit)
+          </div>
+        )}
         <div className="relative flex items-start text-[20px] leading-[1.2] mb-[30px]">
           <span>
             <CheckCircleIcon className="text-secondary text-xl cursor-pointer w-[30px] !h-[30px] mr-5" />
           </span>
           Bundle the following actions
         </div>
-
         <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
           <TokenAmount
             title="Add Collateral"
@@ -211,10 +217,13 @@ const VaultAddPush: React.FC<Props> = ({
             value2={collateralAmount + amount}
           />
         </div>
-
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
-          <a className="underline" href="https://docs.more.markets/agreements/terms-of-use" target="_blank">
+          <a
+            className="underline"
+            href="https://docs.more.markets/agreements/terms-of-use"
+            target="_blank"
+          >
             Terms of Use.
           </a>{" "}
         </div>

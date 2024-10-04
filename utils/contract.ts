@@ -66,39 +66,37 @@ const executeTransaction = async (
   return await writeContract(config, simulateResult.request);
 };
 
-const addWrapNative = (multicallArgs: string[], amount: bigint): string[] => {
+const addBundlerFunction = (
+  multicallArgs: string[],
+  functionName: string,
+  args: any[]
+): string[] => {
   multicallArgs.push(
     encodeFunctionData({
       abi: BundlerAbi,
-      functionName: "wrapNative",
-      args: [amount],
+      functionName,
+      args,
     })
   );
 
   return multicallArgs;
 };
 
+const addWrapNative = (multicallArgs: string[], amount: bigint): string[] => {
+  return addBundlerFunction(multicallArgs, "wrapNative", [amount]);
+};
+
 const addUnwrapNative = (
   multicallArgs: string[],
   account: string
 ): string[] => {
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "unwrapNative",
-      args: [MaxUint256],
-    })
-  );
-
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "nativeTransfer",
-      args: [account, MaxUint256],
-    })
-  );
-
-  return multicallArgs;
+  multicallArgs = addBundlerFunction(multicallArgs, "unwrapNative", [
+    MaxUint256,
+  ]);
+  return addBundlerFunction(multicallArgs, "nativeTransfer", [
+    account,
+    MaxUint256,
+  ]);
 };
 
 export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
@@ -610,6 +608,15 @@ export const setTokenPermit = async (
   return result;
 };
 
+export const doMarketsAuthorize = async () => {
+  const txHash = await writeContract(config, {
+    ...marketsInstance,
+    functionName: "setAuthorization",
+    args: [contracts.MORE_BUNDLER, true],
+  });
+  await waitForTransaction(txHash);
+};
+
 export const setMarketsAuthorize = async (
   account: `0x${string}`,
   nonce: bigint,
@@ -693,54 +700,35 @@ export const depositToVaults = async (
   let multicallArgs: string[] = [];
   if (useFlow) {
     multicallArgs = addWrapNative(multicallArgs, amount);
+  } else if (flowWallet) {
+    // encode transferFrom
+    multicallArgs = addBundlerFunction(multicallArgs, "erc20TransferFrom", [
+      asset,
+      amount,
+    ]);
   } else {
-    if (flowWallet) {
-      // encode transferFrom
-      multicallArgs.push(
-        encodeFunctionData({
-          abi: BundlerAbi,
-          functionName: "erc20TransferFrom",
-          args: [asset, amount],
-        })
-      );
-    } else {
-      // encode approve2
-      if (signhash.length > 0)
-        multicallArgs.push(
-          encodeFunctionData({
-            abi: BundlerAbi,
-            functionName: "approve2",
-            args: [
-              [
-                [asset, amount, Uint48Max, nonce],
-                contracts.MORE_BUNDLER,
-                deadline,
-              ],
-              signhash,
-              false,
-            ],
-          })
-        );
+    // encode approve2
+    if (signhash.length > 0)
+      multicallArgs = addBundlerFunction(multicallArgs, "approve2", [
+        [[asset, amount, Uint48Max, nonce], contracts.MORE_BUNDLER, deadline],
+        signhash,
+        false,
+      ]);
 
-      // encode transferFrom2
-      multicallArgs.push(
-        encodeFunctionData({
-          abi: BundlerAbi,
-          functionName: "transferFrom2",
-          args: [asset, amount],
-        })
-      );
-    }
+    // encode transferFrom2
+    multicallArgs = addBundlerFunction(multicallArgs, "transferFrom2", [
+      asset,
+      amount,
+    ]);
   }
 
   // encode erc4626Deposit
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "erc4626Deposit",
-      args: [vaultAddress, amount, 0, account],
-    })
-  );
+  multicallArgs = addBundlerFunction(multicallArgs, "erc4626Deposit", [
+    vaultAddress,
+    amount,
+    0,
+    account,
+  ]);
   return await executeTransaction(multicallArgs, useFlow ? amount : BigInt(0));
 };
 
@@ -763,16 +751,14 @@ export const withdrawFromVaults = async (
     const s1 = "0x" + authHash.slice(66, 130);
     const v1 = "0x" + authHash.slice(130, 132);
 
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "morphoSetAuthorizationWithSig",
-        args: [
-          [account, contracts.MORE_BUNDLER, true, authNonce, deadline],
-          [v1, r1, s1],
-          false,
-        ],
-      })
+    multicallArgs = addBundlerFunction(
+      multicallArgs,
+      "morphoSetAuthorizationWithSig",
+      [
+        [account, contracts.MORE_BUNDLER, true, authNonce, deadline],
+        [v1, r1, s1],
+        false,
+      ]
     );
   }
 
@@ -782,31 +768,27 @@ export const withdrawFromVaults = async (
     const v = "0x" + signhash.slice(130, 132);
 
     // encode permit
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "permit",
-        args: [vaultAddress, MaxUint256, deadline, v, r, s, false],
-      })
-    );
+    multicallArgs = addBundlerFunction(multicallArgs, "permit", [
+      vaultAddress,
+      MaxUint256,
+      deadline,
+      v,
+      r,
+      s,
+      false,
+    ]);
   }
 
   const flowVault = isFlow(assetAddress);
   const receiverAddr = flowVault ? contracts.MORE_BUNDLER : account;
 
   // encode erc4626Withdraw
-  multicallArgs.push(
+  multicallArgs = addBundlerFunction(
+    multicallArgs,
+    useShare ? "erc4626Redeem" : "erc4626Withdraw",
     useShare
-      ? encodeFunctionData({
-          abi: BundlerAbi,
-          functionName: "erc4626Redeem",
-          args: [vaultAddress, userShares, 0, receiverAddr, account],
-        })
-      : encodeFunctionData({
-          abi: BundlerAbi,
-          functionName: "erc4626Withdraw",
-          args: [vaultAddress, amount, MaxUint256, receiverAddr, account],
-        })
+      ? [vaultAddress, userShares, 0, receiverAddr, account]
+      : [vaultAddress, amount, MaxUint256, receiverAddr, account]
   );
 
   // unwrap and transfer if flow
@@ -824,6 +806,7 @@ export const supplycollateralAndBorrow = async (
   borrowAmount: bigint,
   nonce: number,
   onlyBorrow: boolean,
+  flowWallet: boolean,
   item: BorrowPosition
 ): Promise<string> => {
   let multicallArgs: string[] = [];
@@ -837,16 +820,14 @@ export const supplycollateralAndBorrow = async (
     const s1 = "0x" + authHash.slice(66, 130);
     const v1 = "0x" + authHash.slice(130, 132);
 
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "morphoSetAuthorizationWithSig",
-        args: [
-          [account, contracts.MORE_BUNDLER, true, authNonce, deadline],
-          [v1, r1, s1],
-          false,
-        ],
-      })
+    multicallArgs = addBundlerFunction(
+      multicallArgs,
+      "morphoSetAuthorizationWithSig",
+      [
+        [account, contracts.MORE_BUNDLER, true, authNonce, deadline],
+        [v1, r1, s1],
+        false,
+      ]
     );
   }
 
@@ -854,67 +835,36 @@ export const supplycollateralAndBorrow = async (
   if (!onlyBorrow) {
     if (supplyFlow) {
       multicallArgs = addWrapNative(multicallArgs, supplyAmount);
+    } else if (flowWallet) {
+      multicallArgs = addBundlerFunction(multicallArgs, "erc20TransferFrom", [
+        supplyAsset,
+        supplyAmount,
+      ]);
     } else {
       // encode approve2
       if (signhash.length > 0)
-        multicallArgs.push(
-          encodeFunctionData({
-            abi: BundlerAbi,
-            functionName: "approve2",
-            args: [
-              [
-                [supplyAsset, supplyAmount, Uint48Max, nonce],
-                contracts.MORE_BUNDLER,
-                deadline,
-              ],
-              signhash,
-              false,
-            ],
-          })
-        );
+        multicallArgs = addBundlerFunction(multicallArgs, "approve2", [
+          [
+            [supplyAsset, supplyAmount, Uint48Max, nonce],
+            contracts.MORE_BUNDLER,
+            deadline,
+          ],
+          signhash,
+          false,
+        ]);
 
       // encode transferFrom2
-      multicallArgs.push(
-        encodeFunctionData({
-          abi: BundlerAbi,
-          functionName: "transferFrom2",
-          args: [supplyAsset, supplyAmount],
-        })
-      );
+      multicallArgs = addBundlerFunction(multicallArgs, "transferFrom2", [
+        supplyAsset,
+        supplyAmount,
+      ]);
     }
 
     // encode morphoSupplyCollateral
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "morphoSupplyCollateral",
-        args: [
-          [
-            marketParams.isPremiumMarket,
-            marketParams.loanToken,
-            marketParams.collateralToken,
-            marketParams.oracle,
-            marketParams.irm,
-            marketParams.lltv,
-            marketParams.creditAttestationService,
-            marketParams.irxMaxLltv,
-            marketParams.categoryLltv,
-          ],
-          supplyAmount,
-          account,
-          "",
-        ],
-      })
-    );
-  }
-
-  const borroFlow = isFlow(borrowAsset);
-  // encode morphoBorrow
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "morphoBorrow",
-      args: [
+    multicallArgs = addBundlerFunction(
+      multicallArgs,
+      "morphoSupplyCollateral",
+      [
         [
           marketParams.isPremiumMarket,
           marketParams.loanToken,
@@ -926,13 +876,32 @@ export const supplycollateralAndBorrow = async (
           marketParams.irxMaxLltv,
           marketParams.categoryLltv,
         ],
-        borrowAmount,
-        0,
-        MaxUint256,
-        borroFlow ? contracts.MORE_BUNDLER : account,
-      ],
-    })
-  );
+        supplyAmount,
+        account,
+        "",
+      ]
+    );
+  }
+
+  const borroFlow = isFlow(borrowAsset);
+  // encode morphoBorrow
+  multicallArgs = addBundlerFunction(multicallArgs, "morphoBorrow", [
+    [
+      marketParams.isPremiumMarket,
+      marketParams.loanToken,
+      marketParams.collateralToken,
+      marketParams.oracle,
+      marketParams.irm,
+      marketParams.lltv,
+      marketParams.creditAttestationService,
+      marketParams.irxMaxLltv,
+      marketParams.categoryLltv,
+    ],
+    borrowAmount,
+    0,
+    MaxUint256,
+    borroFlow ? contracts.MORE_BUNDLER : account,
+  ]);
 
   if (borroFlow) multicallArgs = addUnwrapNative(multicallArgs, account);
   return await executeTransaction(
@@ -948,10 +917,8 @@ export const repayLoanViaMarkets = async (
   item: BorrowPosition
 ): Promise<string> => {
   const { marketParams, borrowedToken } = item;
-  const { id: borrowToken } = borrowedToken;
-  const borroFlow = isFlow(borrowToken);
 
-  if (borroFlow) {
+  if (isFlow(borrowedToken.id)) {
     let multicallArgs: string[] = [];
 
     const flowAmount =
@@ -965,30 +932,24 @@ export const repayLoanViaMarkets = async (
     multicallArgs = addWrapNative(multicallArgs, flowAmount);
 
     // then repay
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "morphoRepay",
-        args: [
-          [
-            marketParams.isPremiumMarket,
-            marketParams.loanToken,
-            marketParams.collateralToken,
-            marketParams.oracle,
-            marketParams.irm,
-            marketParams.lltv,
-            marketParams.creditAttestationService,
-            marketParams.irxMaxLltv,
-            marketParams.categoryLltv,
-          ],
-          useShare ? 0 : repayAmount,
-          useShare ? item.borrowShares : 0,
-          useShare ? MaxUint256 : 0,
-          account,
-          "",
-        ],
-      })
-    );
+    multicallArgs = addBundlerFunction(multicallArgs, "morphoRepay", [
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
+      ],
+      useShare ? 0 : repayAmount,
+      useShare ? item.borrowShares : 0,
+      useShare ? MaxUint256 : 0,
+      account,
+      "",
+    ]);
 
     // then unwarp and transfer remaing flow
     multicallArgs = addUnwrapNative(multicallArgs, account);
@@ -1035,56 +996,41 @@ export const repayLoanToMarkets = async (
   const repayToken = item.borrowedToken.id;
 
   // encode approve2
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "approve2",
-      args: [
-        [
-          [repayToken, repayAmount, Uint48Max, nonce],
-          contracts.MORE_BUNDLER,
-          deadline,
-        ],
-        signhash,
-        false,
-      ],
-    })
-  );
+  multicallArgs = addBundlerFunction(multicallArgs, "approve2", [
+    [
+      [repayToken, repayAmount, Uint48Max, nonce],
+      contracts.MORE_BUNDLER,
+      deadline,
+    ],
+    signhash,
+    false,
+  ]);
 
   // encode transferFrom2
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "transferFrom2",
-      args: [repayToken, repayAmount],
-    })
-  );
+  multicallArgs = addBundlerFunction(multicallArgs, "transferFrom2", [
+    repayToken,
+    repayAmount,
+  ]);
 
   // encode morphoRepay
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "morphoRepay",
-      args: [
-        [
-          marketParams.isPremiumMarket,
-          marketParams.loanToken,
-          marketParams.collateralToken,
-          marketParams.oracle,
-          marketParams.irm,
-          marketParams.lltv,
-          marketParams.creditAttestationService,
-          marketParams.irxMaxLltv,
-          marketParams.categoryLltv,
-        ],
-        useShare ? 0 : repayAmount,
-        useShare ? item.borrowShares : 0,
-        0,
-        account,
-        "",
-      ],
-    })
-  );
+  multicallArgs = addBundlerFunction(multicallArgs, "morphoRepay", [
+    [
+      marketParams.isPremiumMarket,
+      marketParams.loanToken,
+      marketParams.collateralToken,
+      marketParams.oracle,
+      marketParams.irm,
+      marketParams.lltv,
+      marketParams.creditAttestationService,
+      marketParams.irxMaxLltv,
+      marketParams.categoryLltv,
+    ],
+    useShare ? 0 : repayAmount,
+    useShare ? item.borrowShares : 0,
+    0,
+    account,
+    "",
+  ]);
   return await executeTransaction(multicallArgs);
 };
 
@@ -1095,6 +1041,7 @@ export const supplyCollateral = async (
   deadline: bigint,
   supplyAmount: bigint,
   nonce: number,
+  flowWallet: boolean,
   marketParams: MarketParams
 ): Promise<string> => {
   let multicallArgs: string[] = [];
@@ -1102,59 +1049,50 @@ export const supplyCollateral = async (
 
   if (supplyFlow) {
     multicallArgs = addWrapNative(multicallArgs, supplyAmount);
+  } else if (flowWallet) {
+    // encode transferFrom
+    multicallArgs = addBundlerFunction(multicallArgs, "erc20TransferFrom", [
+      supplyAsset,
+      supplyAmount,
+    ]);
   } else {
     // encode approve2
     if (signhash.length > 0) {
-      multicallArgs.push(
-        encodeFunctionData({
-          abi: BundlerAbi,
-          functionName: "approve2",
-          args: [
-            [
-              [supplyAsset, supplyAmount, Uint48Max, nonce],
-              contracts.MORE_BUNDLER,
-              deadline,
-            ],
-            signhash,
-            false,
-          ],
-        })
-      );
+      multicallArgs = addBundlerFunction(multicallArgs, "approve2", [
+        [
+          [supplyAsset, supplyAmount, Uint48Max, nonce],
+          contracts.MORE_BUNDLER,
+          deadline,
+        ],
+        signhash,
+        false,
+      ]);
     }
 
     // encode transferFrom2
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "transferFrom2",
-        args: [supplyAsset, supplyAmount],
-      })
-    );
+    multicallArgs = addBundlerFunction(multicallArgs, "transferFrom2", [
+      supplyAsset,
+      supplyAmount,
+    ]);
   }
 
   // encode morphoSupplyCollateral
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "morphoSupplyCollateral",
-      args: [
-        [
-          marketParams.isPremiumMarket,
-          marketParams.loanToken,
-          marketParams.collateralToken,
-          marketParams.oracle,
-          marketParams.irm,
-          marketParams.lltv,
-          marketParams.creditAttestationService,
-          marketParams.irxMaxLltv,
-          marketParams.categoryLltv,
-        ],
-        supplyAmount,
-        account,
-        "",
-      ],
-    })
-  );
+  multicallArgs = addBundlerFunction(multicallArgs, "morphoSupplyCollateral", [
+    [
+      marketParams.isPremiumMarket,
+      marketParams.loanToken,
+      marketParams.collateralToken,
+      marketParams.oracle,
+      marketParams.irm,
+      marketParams.lltv,
+      marketParams.creditAttestationService,
+      marketParams.irxMaxLltv,
+      marketParams.categoryLltv,
+    ],
+    supplyAmount,
+    account,
+    "",
+  ]);
   return await executeTransaction(
     multicallArgs,
     supplyFlow ? supplyAmount : BigInt(0)
@@ -1171,26 +1109,24 @@ export const withdrawCollateral = async (
   const supplyflow = isFlow(supplyToken);
 
   // encode morphoWithdrawCollateral
-  multicallArgs.push(
-    encodeFunctionData({
-      abi: BundlerAbi,
-      functionName: "morphoWithdrawCollateral",
-      args: [
-        [
-          marketParams.isPremiumMarket,
-          marketParams.loanToken,
-          marketParams.collateralToken,
-          marketParams.oracle,
-          marketParams.irm,
-          marketParams.lltv,
-          marketParams.creditAttestationService,
-          marketParams.irxMaxLltv,
-          marketParams.categoryLltv,
-        ],
-        amount,
-        supplyflow ? contracts.MORE_BUNDLER : account,
+  multicallArgs = addBundlerFunction(
+    multicallArgs,
+    "morphoWithdrawCollateral",
+    [
+      [
+        marketParams.isPremiumMarket,
+        marketParams.loanToken,
+        marketParams.collateralToken,
+        marketParams.oracle,
+        marketParams.irm,
+        marketParams.lltv,
+        marketParams.creditAttestationService,
+        marketParams.irxMaxLltv,
+        marketParams.categoryLltv,
       ],
-    })
+      amount,
+      supplyflow ? contracts.MORE_BUNDLER : account,
+    ]
   );
 
   if (supplyflow) multicallArgs = addUnwrapNative(multicallArgs, account);
