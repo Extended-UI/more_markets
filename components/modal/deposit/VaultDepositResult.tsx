@@ -57,7 +57,6 @@ const VaultDepositResult: React.FC<IInvestmentResult> = ({
             title="Deposit"
             token={item.assetAddress}
             amount={amount}
-            ltv={"ltv"}
             totalTokenAmount={item.totalDeposits}
           />
         </div>

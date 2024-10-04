@@ -180,7 +180,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
             title="Authorize"
             token={item.assetAddress}
             amount={amount}
-            ltv={"ltv"}
             totalTokenAmount={item.totalDeposits}
           />
           {hasAuth && (
@@ -195,7 +194,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
             title="Permit"
             token={item.assetAddress}
             amount={amount}
-            ltv={"ltv"}
             totalTokenAmount={item.totalDeposits}
           />
           {hasPermit && (
@@ -210,7 +208,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
             title="Withdraw"
             token={item.assetAddress}
             amount={amount}
-            ltv={"ltv"}
             totalTokenAmount={item.totalDeposits}
           />
         </div>

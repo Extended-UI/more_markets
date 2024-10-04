@@ -68,7 +68,6 @@ const VaultBorrowResult: React.FC<Props> = ({
               title="Supply"
               token={item.inputToken.id}
               amount={supplyAmount}
-              ltv={"ltv"}
               totalTokenAmount={supplyAmount}
             />
           </div>
@@ -78,7 +77,6 @@ const VaultBorrowResult: React.FC<Props> = ({
             title="Borrow"
             token={item.borrowedToken.id}
             amount={borrowAmount}
-            ltv={"ltv"}
             totalTokenAmount={borrowAmount}
           />
         </div>

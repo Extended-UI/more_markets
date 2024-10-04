@@ -1,8 +1,8 @@
 "use client";
 
 import { useAccount } from "wagmi";
+import { parseUnits } from "ethers";
 import React, { useEffect, useState } from "react";
-import { parseUnits, formatEther } from "ethers";
 import MoreButton from "../../moreButton/MoreButton";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import TokenAmount from "@/components/token/TokenAmount";
@@ -199,7 +199,6 @@ const VaultAddPush: React.FC<Props> = ({
             title="Add Collateral"
             token={item.inputToken.id}
             amount={amount}
-            ltv={formatEther(item.marketParams.lltv)}
             totalTokenAmount={amount}
           />
         </div>

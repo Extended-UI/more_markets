@@ -161,7 +161,6 @@ const VaultRepayPush: React.FC<Props> = ({
             title="Repay"
             token={item.borrowedToken.id}
             amount={amount}
-            ltv={""}
             totalTokenAmount={amount}
           />
         </div>

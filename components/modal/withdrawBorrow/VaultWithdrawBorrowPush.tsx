@@ -84,7 +84,6 @@ const VaultWithdrawBorrowPush: React.FC<Props> = ({
             title="Withdraw Collateral"
             token={item.inputToken.id}
             amount={amount}
-            ltv=""
             totalTokenAmount={amount}
           />
         </div>

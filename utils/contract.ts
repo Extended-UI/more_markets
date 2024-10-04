@@ -680,7 +680,7 @@ export const setVaultPermit = async (
 };
 
 export const depositToVaults = async (
-  vault: string,
+  vaultAddress: string,
   asset: string,
   account: string,
   signhash: string,
@@ -726,7 +726,7 @@ export const depositToVaults = async (
     encodeFunctionData({
       abi: BundlerAbi,
       functionName: "erc4626Deposit",
-      args: [vault, amount, 0, account],
+      args: [vaultAddress, amount, 0, account],
     })
   );
   return await executeTransaction(multicallArgs, useFlow ? amount : BigInt(0));

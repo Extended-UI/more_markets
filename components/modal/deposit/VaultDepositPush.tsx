@@ -36,7 +36,7 @@ const VaultDepositPush: React.FC<Props> = ({
   closeModal,
   validDeposit,
 }) => {
-  const { address: userAddress } = useAccount();
+  const { address: userAddress, connector } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
@@ -48,6 +48,9 @@ const VaultDepositPush: React.FC<Props> = ({
   );
 
   const flowVault = isFlow(item.assetAddress);
+  const isFlowWallet =
+    connector && connector.name.toLowerCase() == "flow wallet";
+  console.log(isFlowWallet);
 
   useEffect(() => {
     const initApprove = async () => {
@@ -80,7 +83,11 @@ const VaultDepositPush: React.FC<Props> = ({
   }, [userAddress, item, tokenAmount, flowVault]);
 
   const doApprove = async () => {
-    await setTokenAllowance(item.assetAddress, contracts.PERMIT2, tokenAmount);
+    await setTokenAllowance(
+      item.assetAddress,
+      isFlowWallet ? item.vaultId : contracts.PERMIT2,
+      tokenAmount
+    );
     setHasApprove(true);
   };
 
@@ -125,7 +132,14 @@ const VaultDepositPush: React.FC<Props> = ({
     try {
       const deadline = getTimestamp();
       if (!hasApprove) await doApprove();
-      const signHash = hasPermit ? "" : await doPermit(deadline);
+
+      let signHash = "";
+      if (isFlowWallet) {
+        // wrap flow -> wflow
+      } else {
+        signHash = hasPermit ? "" : await doPermit(deadline);
+      }
+
       await doDeposit(deadline, signHash);
 
       setIsLoading(false);
@@ -171,7 +185,6 @@ const VaultDepositPush: React.FC<Props> = ({
                 title="Approve"
                 token={item.assetAddress}
                 amount={amount}
-                ltv={"ltv"}
                 totalTokenAmount={item.totalDeposits}
               />
               {hasApprove && (
@@ -187,7 +200,6 @@ const VaultDepositPush: React.FC<Props> = ({
                 title="Permit"
                 token={item.assetAddress}
                 amount={amount}
-                ltv={"ltv"}
                 totalTokenAmount={item.totalDeposits}
               />
               {hasPermit && (
@@ -205,7 +217,6 @@ const VaultDepositPush: React.FC<Props> = ({
             title="Deposit"
             token={item.assetAddress}
             amount={amount}
-            ltv={""}
             totalTokenAmount={0}
           />
         </div>
