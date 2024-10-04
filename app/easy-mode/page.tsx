@@ -77,7 +77,8 @@ const EasyModePage: React.FC = () => {
           BigInt(0),
           parseEther(deposit.toString()),
           0,
-          true
+          true,
+          false
         );
 
         await waitForTransaction(txHash);

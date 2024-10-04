@@ -66,34 +66,6 @@ const executeTransaction = async (
   return await writeContract(config, simulateResult.request);
 };
 
-const executeVaultTransaction = async (
-  vaultAddress: string,
-  functionName: string,
-  args: any[]
-): Promise<string> => {
-  const simulateResult = await simulateContract(config, {
-    address: vaultAddress as `0x${string}`,
-    abi: VaultsAbi,
-    functionName: functionName,
-    args: args,
-    gas: parseUnits(gasLimit, 6),
-  });
-  return await writeContract(config, simulateResult.request);
-};
-
-const executeMarketsTransaction = async (
-  functionName: string,
-  args: any[]
-): Promise<string> => {
-  const simulateResult = await simulateContract(config, {
-    ...marketsInstance,
-    functionName: functionName,
-    args: args,
-    gas: parseUnits(gasLimit, 6),
-  });
-  return await writeContract(config, simulateResult.request);
-};
-
 const addWrapNative = (multicallArgs: string[], amount: bigint): string[] => {
   multicallArgs.push(
     encodeFunctionData({
@@ -718,15 +690,19 @@ export const depositToVaults = async (
   useFlow: boolean,
   flowWallet: boolean
 ): Promise<string> => {
-  if (flowWallet && !useFlow) {
-    return await executeVaultTransaction(vaultAddress, "deposit", [
-      amount,
-      account,
-    ]);
+  let multicallArgs: string[] = [];
+  if (useFlow) {
+    multicallArgs = addWrapNative(multicallArgs, amount);
   } else {
-    let multicallArgs: string[] = [];
-    if (useFlow) {
-      multicallArgs = addWrapNative(multicallArgs, amount);
+    if (flowWallet) {
+      // encode transferFrom
+      multicallArgs.push(
+        encodeFunctionData({
+          abi: BundlerAbi,
+          functionName: "erc20TransferFrom",
+          args: [asset, amount],
+        })
+      );
     } else {
       // encode approve2
       if (signhash.length > 0)
@@ -755,20 +731,17 @@ export const depositToVaults = async (
         })
       );
     }
-
-    // encode erc4626Deposit
-    multicallArgs.push(
-      encodeFunctionData({
-        abi: BundlerAbi,
-        functionName: "erc4626Deposit",
-        args: [vaultAddress, amount, 0, account],
-      })
-    );
-    return await executeTransaction(
-      multicallArgs,
-      useFlow ? amount : BigInt(0)
-    );
   }
+
+  // encode erc4626Deposit
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "erc4626Deposit",
+      args: [vaultAddress, amount, 0, account],
+    })
+  );
+  return await executeTransaction(multicallArgs, useFlow ? amount : BigInt(0));
 };
 
 export const withdrawFromVaults = async (
@@ -1122,90 +1095,70 @@ export const supplyCollateral = async (
   deadline: bigint,
   supplyAmount: bigint,
   nonce: number,
-  flowWallet: boolean,
   marketParams: MarketParams
 ): Promise<string> => {
   let multicallArgs: string[] = [];
   const supplyFlow = isFlow(supplyAsset);
 
-  if (flowWallet && !supplyFlow) {
-    return await executeMarketsTransaction("supplyCollateral", [
-      [
-        marketParams.isPremiumMarket,
-        marketParams.loanToken,
-        marketParams.collateralToken,
-        marketParams.oracle,
-        marketParams.irm,
-        marketParams.lltv,
-        marketParams.creditAttestationService,
-        marketParams.irxMaxLltv,
-        marketParams.categoryLltv,
-      ],
-      supplyAmount,
-      account,
-      "",
-    ]);
+  if (supplyFlow) {
+    multicallArgs = addWrapNative(multicallArgs, supplyAmount);
   } else {
-    if (supplyFlow) {
-      multicallArgs = addWrapNative(multicallArgs, supplyAmount);
-    } else {
-      // encode approve2
-      if (signhash.length > 0) {
-        multicallArgs.push(
-          encodeFunctionData({
-            abi: BundlerAbi,
-            functionName: "approve2",
-            args: [
-              [
-                [supplyAsset, supplyAmount, Uint48Max, nonce],
-                contracts.MORE_BUNDLER,
-                deadline,
-              ],
-              signhash,
-              false,
-            ],
-          })
-        );
-      }
-
-      // encode transferFrom2
+    // encode approve2
+    if (signhash.length > 0) {
       multicallArgs.push(
         encodeFunctionData({
           abi: BundlerAbi,
-          functionName: "transferFrom2",
-          args: [supplyAsset, supplyAmount],
+          functionName: "approve2",
+          args: [
+            [
+              [supplyAsset, supplyAmount, Uint48Max, nonce],
+              contracts.MORE_BUNDLER,
+              deadline,
+            ],
+            signhash,
+            false,
+          ],
         })
       );
     }
 
-    // encode morphoSupplyCollateral
+    // encode transferFrom2
     multicallArgs.push(
       encodeFunctionData({
         abi: BundlerAbi,
-        functionName: "morphoSupplyCollateral",
-        args: [
-          [
-            marketParams.isPremiumMarket,
-            marketParams.loanToken,
-            marketParams.collateralToken,
-            marketParams.oracle,
-            marketParams.irm,
-            marketParams.lltv,
-            marketParams.creditAttestationService,
-            marketParams.irxMaxLltv,
-            marketParams.categoryLltv,
-          ],
-          supplyAmount,
-          account,
-          "",
-        ],
+        functionName: "transferFrom2",
+        args: [supplyAsset, supplyAmount],
       })
     );
-    return await executeTransaction(
-      multicallArgs,
-      supplyFlow ? supplyAmount : BigInt(0)
-    );
   }
+
+  // encode morphoSupplyCollateral
+  multicallArgs.push(
+    encodeFunctionData({
+      abi: BundlerAbi,
+      functionName: "morphoSupplyCollateral",
+      args: [
+        [
+          marketParams.isPremiumMarket,
+          marketParams.loanToken,
+          marketParams.collateralToken,
+          marketParams.oracle,
+          marketParams.irm,
+          marketParams.lltv,
+          marketParams.creditAttestationService,
+          marketParams.irxMaxLltv,
+          marketParams.categoryLltv,
+        ],
+        supplyAmount,
+        account,
+        "",
+      ],
+    })
+  );
+  return await executeTransaction(
+    multicallArgs,
+    supplyFlow ? supplyAmount : BigInt(0)
+  );
 };
 
 export const withdrawCollateral = async (

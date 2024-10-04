@@ -68,7 +68,7 @@ const VaultDepositPush: React.FC<Props> = ({
               getTokenAllowance(
                 item.assetAddress,
                 userAddress,
-                isFlowWallet ? item.vaultId : contracts.PERMIT2
+                isFlowWallet ? contracts.MORE_BUNDLER : contracts.PERMIT2
               ),
             ])
           : [0, BigInt(0)];
@@ -87,7 +87,7 @@ const VaultDepositPush: React.FC<Props> = ({
   const doApprove = async () => {
     await setTokenAllowance(
       item.assetAddress,
-      isFlowWallet ? item.vaultId : contracts.PERMIT2,
+      isFlowWallet ? contracts.MORE_BUNDLER : contracts.PERMIT2,
       tokenAmount
     );
     setHasApprove(true);
