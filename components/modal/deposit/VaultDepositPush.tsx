@@ -48,9 +48,9 @@ const VaultDepositPush: React.FC<Props> = ({
   );
 
   const flowVault = isFlow(item.assetAddress);
-  const isFlowWallet =
-    connector && connector.name.toLowerCase() == "flow wallet";
-  console.log(isFlowWallet);
+  const isFlowWallet = connector
+    ? connector.name.toLowerCase() == "flow wallet"
+    : false;
 
   useEffect(() => {
     const initApprove = async () => {
@@ -68,10 +68,12 @@ const VaultDepositPush: React.FC<Props> = ({
               getTokenAllowance(
                 item.assetAddress,
                 userAddress,
-                contracts.PERMIT2
+                isFlowWallet ? item.vaultId : contracts.PERMIT2
               ),
             ])
           : [0, BigInt(0)];
+
+        if (isFlowWallet) setHasPermit(true);
 
         setPermitNonce(nonce);
         if (allowance >= tokenAmount) setHasApprove(true);
@@ -80,7 +82,7 @@ const VaultDepositPush: React.FC<Props> = ({
     };
 
     initApprove();
-  }, [userAddress, item, tokenAmount, flowVault]);
+  }, [userAddress, item, tokenAmount, flowVault, isFlowWallet]);
 
   const doApprove = async () => {
     await setTokenAllowance(
@@ -117,7 +119,8 @@ const VaultDepositPush: React.FC<Props> = ({
         deadline,
         tokenAmount,
         permitNonce,
-        flowVault
+        flowVault,
+        isFlowWallet
       );
 
       await delay(2);
@@ -132,14 +135,7 @@ const VaultDepositPush: React.FC<Props> = ({
     try {
       const deadline = getTimestamp();
       if (!hasApprove) await doApprove();
-
-      let signHash = "";
-      if (isFlowWallet) {
-        // wrap flow -> wflow
-      } else {
-        signHash = hasPermit ? "" : await doPermit(deadline);
-      }
-
+      const signHash = hasPermit ? "" : await doPermit(deadline);
       await doDeposit(deadline, signHash);
 
       setIsLoading(false);
@@ -195,20 +191,26 @@ const VaultDepositPush: React.FC<Props> = ({
               )}
             </div>
 
-            <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-              <TokenAmount
-                title="Permit"
-                token={item.assetAddress}
-                amount={amount}
-                totalTokenAmount={item.totalDeposits}
-              />
-              {hasPermit && (
-                <CheckCircleIcon
-                  className="text-secondary text-xl cursor-pointer w-[20px] !h-[20px] mr-5"
-                  style={{ position: "absolute", top: "2rem", left: "10.5rem" }}
+            {!isFlowWallet && (
+              <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+                <TokenAmount
+                  title="Permit"
+                  token={item.assetAddress}
+                  amount={amount}
+                  totalTokenAmount={item.totalDeposits}
                 />
-              )}
-            </div>
+                {hasPermit && (
+                  <CheckCircleIcon
+                    className="text-secondary text-xl cursor-pointer w-[20px] !h-[20px] mr-5"
+                    style={{
+                      position: "absolute",
+                      top: "2rem",
+                      left: "10.5rem",
+                    }}
+                  />
+                )}
+              </div>
+            )}
           </>
         )}
 

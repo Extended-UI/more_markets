@@ -10,7 +10,7 @@ import IconCurator from "@/components/token/IconCurator";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { IInvestmentPush } from "@/types";
-import { MoreAction } from "@/utils/const";
+import { contracts, MoreAction } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   withdrawFromVaults,
@@ -19,6 +19,8 @@ import {
   getAuthorizeNonce,
   checkAuthorized,
   setMarketsAuthorize,
+  getTokenAllowance,
+  setTokenAllowance,
 } from "@/utils/contract";
 
 interface Props extends IInvestmentPush {
@@ -34,7 +36,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
   closeModal,
   validWithdraw,
 }) => {
-  const { address: userAddress } = useAccount();
+  const { address: userAddress, connector } = useAccount();
   const [hasAuth, setHasAuth] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,34 +50,56 @@ const VaultWithdrawPush: React.FC<Props> = ({
     tokenInfo.decimals
   );
 
+  const isFlowWallet = connector
+    ? connector.name.toLowerCase() == "flow wallet"
+    : false;
+
   useEffect(() => {
     const initApprove = async () => {
-      const [nonce, aNonce, authInfo] = userAddress
-        ? await Promise.all([
-            getVaultNonce(item.vaultId as `0x${string}`, userAddress),
-            getAuthorizeNonce(userAddress),
-            checkAuthorized(userAddress),
-          ])
-        : [BigInt(0), BigInt(0), false];
+      if (userAddress && isFlowWallet) {
+        const tokenAllowance = await getTokenAllowance(
+          item.vaultId,
+          userAddress,
+          contracts.MORE_BUNDLER
+        );
+        setHasPermit(tokenAllowance == MaxUint256);
+      } else {
+        const [nonce, aNonce, authInfo] = userAddress
+          ? await Promise.all([
+              getVaultNonce(item.vaultId as `0x${string}`, userAddress),
+              getAuthorizeNonce(userAddress),
+              checkAuthorized(userAddress),
+            ])
+          : [BigInt(0), BigInt(0), false];
 
-      setVaultNonce(nonce);
-      setHasAuth(authInfo);
-      setAuthorizeNonce(aNonce);
+        setVaultNonce(nonce);
+        setHasAuth(authInfo);
+        setAuthorizeNonce(aNonce);
+      }
     };
 
     initApprove();
-  }, [userAddress, item]);
+  }, [userAddress, item, isFlowWallet]);
 
   const doPermit = async (permitDeadline: bigint): Promise<string> => {
     if (userAddress) {
-      const signHash = await setVaultPermit(
-        item.vaultName,
-        userAddress,
-        item.vaultId,
-        MaxUint256,
-        vaultNonce,
-        permitDeadline
-      );
+      let signHash = "";
+      if (isFlowWallet) {
+        await setTokenAllowance(
+          item.vaultId,
+          contracts.MORE_BUNDLER,
+          MaxUint256
+        );
+      } else {
+        signHash = await setVaultPermit(
+          item.vaultName,
+          userAddress,
+          item.vaultId,
+          MaxUint256,
+          vaultNonce,
+          permitDeadline
+        );
+      }
 
       setHasPermit(true);
       await delay(2);
@@ -131,15 +155,19 @@ const VaultWithdrawPush: React.FC<Props> = ({
     if (userAddress) {
       setIsLoading(true);
       try {
-        const deadline = getTimestamp();
-
-        const authorizeHash = hasAuth ? "" : await doAuthorize(deadline);
-        const permitHash = hasPermit ? "" : await doPermit(deadline);
-
-        await doWithdraw(deadline, permitHash, authorizeHash);
+        if (isFlowWallet) {
+          await doPermit(BigInt(0));
+          await doWithdraw(BigInt(0), "", "");
+        } else {
+          const deadline = getTimestamp();
+          const authorizeHash = hasAuth ? "" : await doAuthorize(deadline);
+          const permitHash = hasPermit ? "" : await doPermit(deadline);
+          await doWithdraw(deadline, permitHash, authorizeHash);
+        }
 
         setIsLoading(false);
       } catch (err) {
+        console.log("here err", err);
         setIsLoading(false);
         notifyError(err, MoreAction.WITHDRAW);
       }
@@ -175,34 +203,38 @@ const VaultWithdrawPush: React.FC<Props> = ({
             <FormatTwoPourcentage value={item.netAPY} />
           </div>
         </div>
-        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-          <TokenAmount
-            title="Authorize"
-            token={item.assetAddress}
-            amount={amount}
-            totalTokenAmount={item.totalDeposits}
-          />
-          {hasAuth && (
-            <CheckCircleIcon
-              className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
-              style={{ position: "absolute", top: "2rem", left: "12rem" }}
-            />
-          )}
-        </div>
-        <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-          <TokenAmount
-            title="Permit"
-            token={item.assetAddress}
-            amount={amount}
-            totalTokenAmount={item.totalDeposits}
-          />
-          {hasPermit && (
-            <CheckCircleIcon
-              className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
-              style={{ position: "absolute", top: "2rem", left: "12rem" }}
-            />
-          )}
-        </div>
+        {!isFlowWallet && (
+          <>
+            <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+              <TokenAmount
+                title="Authorize"
+                token={item.assetAddress}
+                amount={amount}
+                totalTokenAmount={item.totalDeposits}
+              />
+              {hasAuth && (
+                <CheckCircleIcon
+                  className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+                  style={{ position: "absolute", top: "2rem", left: "12rem" }}
+                />
+              )}
+            </div>
+            <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+              <TokenAmount
+                title="Permit"
+                token={item.assetAddress}
+                amount={amount}
+                totalTokenAmount={item.totalDeposits}
+              />
+              {hasPermit && (
+                <CheckCircleIcon
+                  className="text-secondary text-xl cursor-pointer w-8 h-8 mr-5"
+                  style={{ position: "absolute", top: "2rem", left: "12rem" }}
+                />
+              )}
+            </div>
+          </>
+        )}
         <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
           <TokenAmount
             title="Withdraw"
