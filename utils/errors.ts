@@ -65,6 +65,11 @@ export const MoreErrors: IMoreError[] = [
     error: "supply cap exceeded",
     message: "Your supplied collateral exceeds the maximum amount.",
   },
+  {
+    action: MoreAction.WITHDRAW_COLLATERAL,
+    error: "insufficient collateral",
+    message: "You do not have enough collateral for maintaining your position.",
+  },
 ];
 
 export const errMessages = {
