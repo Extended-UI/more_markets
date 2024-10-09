@@ -56,15 +56,14 @@ const executeTransaction = async (
   multicallArgs: string[],
   value: bigint = BigInt(0)
 ): Promise<string> => {
-  // const simulateResult = await simulateContract(config, {
-  return await writeContract(config, {
+  const simulateResult = await simulateContract(config, {
     ...bundlerInstance,
     functionName: "multicall",
     args: [multicallArgs],
     value: value,
     gas: parseUnits(gasLimit, 6),
   });
-  // return await writeContract(config, simulateResult.request);
+  return await writeContract(config, simulateResult.request);
 };
 
 const addBundlerFunction = (
