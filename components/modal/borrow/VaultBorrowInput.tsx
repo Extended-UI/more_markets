@@ -8,7 +8,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { IBorrowPosition } from "@/types";
-import { oraclePriceScale } from "@/utils/const";
+import { oraclePriceScale, initBalance } from "@/utils/const";
 import { getTokenBallance, getTokenPairPrice } from "@/utils/contract";
 import {
   getTokenInfo,
@@ -19,11 +19,12 @@ import {
   formatTokenValue,
   formatNumberLocale,
   getExtraMax,
+  validInputAmount,
 } from "@/utils/utils";
 
 interface Props extends IBorrowPosition {
   onlyBorrow?: boolean;
-  setAmount: (amount: number, borrow: number) => void;
+  setAmount: (amount: string, borrow: string) => void;
 }
 
 const VaultBorrowInput: React.FC<Props> = ({
@@ -32,11 +33,11 @@ const VaultBorrowInput: React.FC<Props> = ({
   setAmount,
   closeModal,
 }) => {
-  const [borrow, setBorrow] = useState<number>();
-  const [deposit, setDeposit] = useState<number>();
+  const [borrow, setBorrow] = useState("");
+  const [deposit, setDeposit] = useState("");
   const [pairPrice, setPairPrice] = useState(BigInt(0));
   const [supplyBalance, setSupplyBalance] =
-    useState<GetBalanceReturnType | null>(null);
+    useState<GetBalanceReturnType>(initBalance);
 
   const { address: userAddress } = useAccount();
 
@@ -53,28 +54,20 @@ const VaultBorrowInput: React.FC<Props> = ({
   const handleInputDepositChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setDeposit(inputVal);
+    setDeposit(event.target.value);
   };
 
   const handleInputBorrowChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setBorrow(inputVal);
+    setBorrow(event.target.value);
   };
 
-  const handleSetMaxToken = (maxValue: number) => {
+  const handleSetMaxToken = (maxValue: string) => {
     setDeposit(maxValue);
   };
 
-  const handleSetMaxFlow = (maxValue: number) => {
+  const handleSetMaxFlow = (maxValue: string) => {
     let maxBorrow = BigInt(0);
     if (onlyBorrow) {
       maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
@@ -89,14 +82,14 @@ const VaultBorrowInput: React.FC<Props> = ({
       maxBorrow = wMulDown(maxBorrow, item.lltv);
     }
 
-    setBorrow(Number(formatUnits(maxBorrow, borrowToken.decimals)));
+    setBorrow(formatUnits(maxBorrow, borrowToken.decimals));
   };
 
   const handleBorrow = () => {
-    if (borrow && borrow > 0) {
+    if (validInputAmount(borrow)) {
       if (onlyBorrow) {
-        setAmount(0, borrow);
-      } else if (deposit && deposit > 0) {
+        setAmount("0", borrow);
+      } else if (validInputAmount(deposit)) {
         setAmount(deposit, borrow);
       }
     }
@@ -109,7 +102,7 @@ const VaultBorrowInput: React.FC<Props> = ({
         getTokenPairPrice(item.marketParams.oracle),
       ]);
 
-      setSupplyBalance(userAddress ? userSupplyBalance : null);
+      setSupplyBalance(userSupplyBalance);
       setPairPrice(tokenPairPrice);
     };
 
@@ -142,13 +135,12 @@ const VaultBorrowInput: React.FC<Props> = ({
                 onChange={handleInputDepositChange}
                 placeholder="0"
                 token={item.inputToken.id}
-                balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
+                balance={supplyBalance.formatted}
                 setMax={handleSetMaxToken}
               />
             </div>
             <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-              Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}
-              {collateralToken.symbol}
+              Balance: {supplyBalance.formatted + " " + collateralToken.symbol}
             </div>
           </>
         )}
@@ -159,7 +151,7 @@ const VaultBorrowInput: React.FC<Props> = ({
           onChange={handleInputBorrowChange}
           placeholder="0"
           token={item.borrowedToken.id}
-          balance={availableLiquidity}
+          balance={availableLiquidity.toString()}
           setMax={handleSetMaxFlow}
         />
         <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">

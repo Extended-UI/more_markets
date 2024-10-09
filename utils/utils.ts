@@ -83,6 +83,14 @@ export const formatTokenValue = (
   );
 };
 
+export const validInputAmount = (inputVal: string): boolean =>
+  inputVal.length > 0 && Number(inputVal) > 0;
+
+export const validAmountWithBool = (
+  inputVal: string,
+  boolVal: boolean
+): boolean => inputVal.length > 0 && (boolVal || Number(inputVal) > 0);
+
 export const formatNumberLocale = (
   numValue: number,
   maxFranction: number = 2

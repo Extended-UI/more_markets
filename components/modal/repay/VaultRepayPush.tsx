@@ -1,5 +1,6 @@
 "use client";
 
+import { toNumber } from "lodash";
 import { useAccount } from "wagmi";
 import { parseUnits, MaxUint256 } from "ethers";
 import React, { useState, useEffect } from "react";
@@ -28,7 +29,7 @@ import {
 } from "@/utils/contract";
 
 interface Props extends IBorrowPosition {
-  amount: number;
+  amount: string;
   useMax: boolean;
   validRepay: () => void;
   setTxHash: (hash: string) => void;
@@ -63,9 +64,10 @@ const VaultRepayPush: React.FC<Props> = ({
   const collateralUsd = collateralPrice * collateralAmount;
   const beforeLtv =
     collateralUsd > 0 ? (borrowPrice * loanAmount) / collateralUsd : 0;
+  const numAmount = toNumber(amount);
   const afterLtv =
     collateralUsd > 0
-      ? (borrowPrice * (loanAmount - amount)) / collateralUsd
+      ? (borrowPrice * (loanAmount - numAmount)) / collateralUsd
       : 0;
 
   const loanFlow = isFlow(item.borrowedToken.id);
@@ -160,8 +162,8 @@ const VaultRepayPush: React.FC<Props> = ({
           <TokenAmount
             title="Repay"
             token={item.borrowedToken.id}
-            amount={amount}
-            totalTokenAmount={amount}
+            amount={numAmount}
+            totalTokenAmount={numAmount}
           />
         </div>
         <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6 flex flex-col gap-4 text-[16px]">
@@ -179,7 +181,7 @@ const VaultRepayPush: React.FC<Props> = ({
             title="Borrow"
             token={loanToken}
             value={loanAmount}
-            value2={loanAmount - amount}
+            value2={loanAmount - numAmount}
           />
           <div className="flex flex-row justify-between items-center my-2">
             <div className="text-xl">LTV / Liquidation LTV</div>
@@ -201,7 +203,11 @@ const VaultRepayPush: React.FC<Props> = ({
 
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
-          <a className="underline" href="https://docs.more.markets/agreements/terms-of-use" target="_blank">
+          <a
+            className="underline"
+            href="https://docs.more.markets/agreements/terms-of-use"
+            target="_blank"
+          >
             Terms of Use.
           </a>{" "}
         </div>

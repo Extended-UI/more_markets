@@ -1,5 +1,6 @@
 "use client";
 
+import { toNumber } from "lodash";
 import { useAccount } from "wagmi";
 import { parseUnits } from "ethers";
 import React, { useEffect, useState } from "react";
@@ -51,6 +52,7 @@ const VaultDepositPush: React.FC<Props> = ({
   const isFlowWallet = connector
     ? connector.name.toLowerCase() == "flow wallet"
     : false;
+  const numAmount = toNumber(amount);
 
   useEffect(() => {
     const initApprove = async () => {
@@ -180,7 +182,7 @@ const VaultDepositPush: React.FC<Props> = ({
               <TokenAmount
                 title="Approve"
                 token={item.assetAddress}
-                amount={amount}
+                amount={numAmount}
                 totalTokenAmount={item.totalDeposits}
               />
               {hasApprove && (
@@ -196,7 +198,7 @@ const VaultDepositPush: React.FC<Props> = ({
                 <TokenAmount
                   title="Permit"
                   token={item.assetAddress}
-                  amount={amount}
+                  amount={numAmount}
                   totalTokenAmount={item.totalDeposits}
                 />
                 {hasPermit && (
@@ -218,7 +220,7 @@ const VaultDepositPush: React.FC<Props> = ({
           <TokenAmount
             title="Deposit"
             token={item.assetAddress}
-            amount={amount}
+            amount={numAmount}
             totalTokenAmount={0}
           />
         </div>

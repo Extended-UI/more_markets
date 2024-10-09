@@ -12,10 +12,10 @@ interface Props extends IInvestmentProp {
 
 const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   const [step, setStep] = useState(1);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [txHash, setTxHash] = useState("");
 
-  const handleSetDeposit = (amount: number) => {
+  const handleSetDeposit = (amount: string) => {
     setAmount(amount);
     setStep(2);
   };

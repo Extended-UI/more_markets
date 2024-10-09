@@ -17,7 +17,7 @@ import {
 
 interface Props extends IBorrowPosition {
   txhash: string;
-  amount: number;
+  amount: string;
   processDone: () => void;
 }
 

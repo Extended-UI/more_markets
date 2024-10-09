@@ -23,12 +23,12 @@ export interface IInvestment extends IInvestmentBase {
 }
 
 export interface IInvestmentPush extends IInvestment {
-  amount: number;
+  amount: string;
   setTxHash: (hash: string) => void;
 }
 
 export interface IInvestmentResult extends IInvestmentBase {
-  amount: number;
+  amount: string;
   txhash: string;
   processDone: () => void;
 }
@@ -55,7 +55,7 @@ export interface IBorrowPosition {
 
 export interface IBorrowPositionResult {
   txhash: string;
-  amount: number;
+  amount: string;
   item: BorrowPosition;
   processDone: () => void;
 }

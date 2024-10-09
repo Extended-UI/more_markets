@@ -1,5 +1,6 @@
 "use client";
 
+import { toNumber } from "lodash";
 import { useAccount } from "wagmi";
 import { parseUnits, MaxUint256 } from "ethers";
 import React, { useState, useEffect } from "react";
@@ -50,6 +51,8 @@ const VaultWithdrawPush: React.FC<Props> = ({
     item.userDeposits.toString(),
     tokenInfo.decimals
   );
+
+  const numAmount = toNumber(amount);
 
   const isFlowWallet = connector
     ? connector.name.toLowerCase() == "flow wallet"
@@ -215,7 +218,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
               <TokenAmount
                 title="Authorize"
                 token={item.assetAddress}
-                amount={amount}
+                amount={numAmount}
                 totalTokenAmount={item.totalDeposits}
               />
               {hasAuth && (
@@ -229,7 +232,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
               <TokenAmount
                 title="Permit"
                 token={item.assetAddress}
-                amount={amount}
+                amount={numAmount}
                 totalTokenAmount={item.totalDeposits}
               />
               {hasPermit && (
@@ -245,7 +248,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
           <TokenAmount
             title="Withdraw"
             token={item.assetAddress}
-            amount={amount}
+            amount={numAmount}
             totalTokenAmount={item.totalDeposits}
           />
         </div>
@@ -255,7 +258,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
             title="Withdraw"
             value={item.userDeposits}
             token={tokenInfo.symbol}
-            value2={item.userDeposits - amount}
+            value2={item.userDeposits - numAmount}
           />
         </div>
 

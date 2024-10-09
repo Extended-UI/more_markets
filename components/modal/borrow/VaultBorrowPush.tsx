@@ -1,5 +1,6 @@
 "use client";
 
+import { toNumber } from "lodash";
 import { useAccount } from "wagmi";
 import { parseUnits } from "ethers";
 import React, { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ import {
   notifyError,
   delay,
   isFlow,
+  validInputAmount,
 } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -28,8 +30,8 @@ import {
 } from "@/utils/contract";
 
 interface Props extends IBorrowPosition {
-  supplyAmount: number;
-  borrowAmount: number;
+  supplyAmount: string;
+  borrowAmount: string;
   onlyBorrow?: boolean;
   validDeposit: () => void;
   setTxHash: (hash: string) => void;
@@ -67,6 +69,8 @@ const VaultBorrowPush: React.FC<Props> = ({
   const isFlowWallet = connector
     ? connector.name.toLowerCase() == "flow wallet"
     : false;
+  const numSupplyAmount = toNumber(supplyAmount);
+  const numBorrowAmount = toNumber(borrowAmount);
 
   useEffect(() => {
     const initApprove = async () => {
@@ -102,7 +106,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         else setHasApprove(false);
       }
 
-      if (isFlowWallet || supplyAmount == 0) setHasPermit(true);
+      if (isFlowWallet || supplyAmount == "0") setHasPermit(true);
     };
 
     initApprove();
@@ -203,6 +207,7 @@ const VaultBorrowPush: React.FC<Props> = ({
 
       setIsLoading(false);
     } catch (err) {
+      console.log("here err:", err);
       setIsLoading(false);
       notifyError(err, onlyBorrow ? MoreAction.BORROW_MORE : MoreAction.BORROW);
     }
@@ -246,13 +251,13 @@ const VaultBorrowPush: React.FC<Props> = ({
           </span>
           Execute the following actions
         </div>
-        {supplyAmount > 0 && (
+        {validInputAmount(supplyAmount) && (
           <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
             <TokenAmount
               title="Supply"
               token={item.inputToken.id}
-              amount={supplyAmount}
-              totalTokenAmount={supplyAmount}
+              amount={numSupplyAmount}
+              totalTokenAmount={numSupplyAmount}
             />
           </div>
         )}
@@ -260,8 +265,8 @@ const VaultBorrowPush: React.FC<Props> = ({
           <TokenAmount
             title="Borrow"
             token={item.borrowedToken.id}
-            amount={borrowAmount}
-            totalTokenAmount={borrowAmount}
+            amount={numBorrowAmount}
+            totalTokenAmount={numBorrowAmount}
           />
         </div>
         <div className="pt-5 px-5 text-[16px] leading-10">
@@ -272,7 +277,7 @@ const VaultBorrowPush: React.FC<Props> = ({
             target="_blank"
           >
             Terms of Use.
-          </a>{" "}
+          </a>
         </div>
       </div>
       <div className="flex justify-end more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">

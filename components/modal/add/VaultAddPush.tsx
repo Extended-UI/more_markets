@@ -27,7 +27,7 @@ import {
 } from "@/utils/contract";
 
 interface Props extends IBorrowPosition {
-  amount: number;
+  amount: string;
   validAdd: () => void;
   setTxHash: (hash: string) => void;
 }
@@ -48,16 +48,13 @@ const VaultAddPush: React.FC<Props> = ({
 
   const collateralToken = getTokenInfo(item.inputToken.id);
   const loanToken = getTokenInfo(item.borrowedToken.id).symbol;
-  const roundedAmount = Number(amount.toFixed(collateralToken.decimals));
-  const supplyAmount = parseUnits(
-    roundedAmount.toString(),
-    collateralToken.decimals
-  );
+  const supplyAmount = parseUnits(amount, collateralToken.decimals);
   const collateralAmount = formatTokenValue(
     item.collateral,
     "",
     collateralToken.decimals
   );
+  const amountNum = Number(amount);
 
   const isFlowWallet = connector
     ? connector.name.toLowerCase() == "flow wallet"
@@ -204,8 +201,8 @@ const VaultAddPush: React.FC<Props> = ({
           <TokenAmount
             title="Add Collateral"
             token={item.inputToken.id}
-            amount={amount}
-            totalTokenAmount={amount}
+            amount={amountNum}
+            totalTokenAmount={amountNum}
           />
         </div>
         <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
@@ -214,7 +211,7 @@ const VaultAddPush: React.FC<Props> = ({
             title="Collateral"
             value={collateralAmount}
             token={collateralToken.symbol}
-            value2={collateralAmount + amount}
+            value2={collateralAmount + amountNum}
           />
         </div>
         <div className="pt-5 px-5 text-[16px] leading-10">

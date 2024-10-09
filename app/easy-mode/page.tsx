@@ -15,6 +15,7 @@ import {
   convertAprToApy,
   notifyError,
   notify,
+  validInputAmount,
 } from "@/utils/utils";
 import {
   fetchVault,
@@ -27,7 +28,7 @@ import TableHeaderCell from "@/components/moreTable/MoreTableHeader";
 const EasyModePage: React.FC = () => {
   const [chain, setChain] = useState("Flow");
   const [isLoading, setIsLoading] = useState(false);
-  const [deposit, setDeposit] = useState<number>();
+  const [deposit, setDeposit] = useState("");
   const [balanceString, setBalanceString] =
     useState<GetBalanceReturnType>(initBalance);
   const [vaultInfo, setVaultInfo] = useState<InvestmentData | null>(null);
@@ -65,7 +66,7 @@ const EasyModePage: React.FC = () => {
   }, [userAddress]);
 
   const handleDeposit = async () => {
-    if (vaultInfo && userAddress && deposit && deposit > 0) {
+    if (vaultInfo && userAddress && validInputAmount(deposit)) {
       // generate deposit tx
       setIsLoading(true);
       try {
@@ -93,14 +94,10 @@ const EasyModePage: React.FC = () => {
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setDeposit(inputVal);
+    setDeposit(event.target.value);
   };
 
-  const handleSetMax = (maxValue: number) => {
+  const handleSetMax = (maxValue: string) => {
     setDeposit(maxValue);
   };
 
@@ -177,7 +174,7 @@ const EasyModePage: React.FC = () => {
                 onChange={handleInputChange}
                 placeholder="0"
                 token={contracts.WNATIVE}
-                balance={Number(balanceString.formatted)}
+                balance={balanceString.formatted}
                 setMax={handleSetMax}
               />
             </div>

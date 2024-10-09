@@ -1,5 +1,6 @@
 "use client";
 
+import { toNumber } from "lodash";
 import React, { useEffect, useState } from "react";
 import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
@@ -56,7 +57,7 @@ const VaultDepositResult: React.FC<IInvestmentResult> = ({
           <TokenAmount
             title="Deposit"
             token={item.assetAddress}
-            amount={amount}
+            amount={toNumber(amount)}
             totalTokenAmount={item.totalDeposits}
           />
         </div>

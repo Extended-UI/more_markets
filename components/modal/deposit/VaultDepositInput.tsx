@@ -10,10 +10,10 @@ import { IInvestment } from "@/types";
 import { initBalance } from "@/utils/const";
 import { errMessages } from "@/utils/errors";
 import { getTokenBallance } from "@/utils/contract";
-import { getTokenInfo, notify } from "@/utils/utils";
+import { getTokenInfo, notify, validInputAmount } from "@/utils/utils";
 
 interface Props extends IInvestment {
-  setAmount: (amount: number) => void;
+  setAmount: (amount: string) => void;
 }
 
 const VaultDepositInput: React.FC<Props> = ({
@@ -22,7 +22,7 @@ const VaultDepositInput: React.FC<Props> = ({
   closeModal,
 }) => {
   const { address: userAddress } = useAccount();
-  const [deposit, setDeposit] = useState<number>();
+  const [deposit, setDeposit] = useState("");
   const [balanceString, setBalanceString] =
     useState<GetBalanceReturnType>(initBalance);
 
@@ -40,20 +40,16 @@ const VaultDepositInput: React.FC<Props> = ({
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setDeposit(inputVal);
+    setDeposit(event.target.value);
   };
 
-  const handleSetMax = (maxValue: number) => {
+  const handleSetMax = (maxValue: string) => {
     setDeposit(maxValue);
   };
 
   const handleDeposit = () => {
-    if (deposit && deposit > 0) {
-      if (deposit > Number(balanceString.formatted)) {
+    if (validInputAmount(deposit)) {
+      if (deposit > balanceString.formatted) {
         notify(errMessages.insufficient_amount);
       } else {
         setAmount(deposit);
@@ -88,7 +84,7 @@ const VaultDepositInput: React.FC<Props> = ({
           onChange={handleInputChange}
           placeholder="0"
           token={item.assetAddress}
-          balance={Number(balanceString.formatted)}
+          balance={balanceString.formatted}
           setMax={handleSetMax}
         />
         <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">

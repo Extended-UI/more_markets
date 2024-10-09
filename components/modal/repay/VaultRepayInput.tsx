@@ -8,34 +8,33 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import ListIconToken from "@/components/token/ListIconToken";
 import { IBorrowPosition } from "@/types";
+import { initBalance } from "@/utils/const";
 import { getTokenBallance } from "@/utils/contract";
 import {
   getTokenInfo,
   getPremiumLltv,
   formatTokenValue,
   notify,
+  validInputAmount,
 } from "@/utils/utils";
 import { errMessages } from "@/utils/errors";
 
 interface Props extends IBorrowPosition {
-  useMax: boolean;
-  setAmount: (amount: number) => void;
+  setAmount: (amount: string) => void;
   setUseMax: (useMax: boolean) => void;
 }
 
 const VaultRepayInput: React.FC<Props> = ({
   item,
-  useMax,
   setUseMax,
   setAmount,
   closeModal,
 }) => {
   const { address: userAddress } = useAccount();
 
-  const [repayAmount, setRepayAmount] = useState<number>();
-  const [loanBalance, setLoanBalance] = useState<GetBalanceReturnType | null>(
-    null
-  );
+  const [repayAmount, setRepayAmount] = useState("");
+  const [loanBalance, setLoanBalance] =
+    useState<GetBalanceReturnType>(initBalance);
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
   const loanToken = getTokenInfo(item.borrowedToken.id);
@@ -43,43 +42,38 @@ const VaultRepayInput: React.FC<Props> = ({
 
   useEffect(() => {
     const initBalances = async () => {
-      setLoanBalance(
-        userAddress
-          ? await getTokenBallance(item.borrowedToken.id, userAddress)
-          : null
-      );
+      if (userAddress)
+        setLoanBalance(
+          await getTokenBallance(item.borrowedToken.id, userAddress)
+        );
     };
 
     initBalances();
   }, [item, userAddress]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setRepayAmount(inputVal);
+    setRepayAmount(event.target.value);
     setUseMax(
-      inputVal &&
-        parseUnits(inputVal.toString(), loanToken.decimals) >= item.loan
+      event.target.value.length > 0 &&
+        parseUnits(event.target.value, loanToken.decimals) >= item.loan
         ? true
         : false
     );
   };
 
-  const handleSetMax = (maxValue: number) => {
+  const handleSetMax = (maxValue: string) => {
     if (loanBalance) {
       const maxAmount =
         loanBalance.value >= item.loan ? item.loan : loanBalance.value;
 
-      setRepayAmount(Number(formatUnits(maxAmount, loanToken.decimals)));
+      setRepayAmount(formatUnits(maxAmount, loanToken.decimals));
       setUseMax(loanBalance.value >= item.loan ? true : false);
     }
   };
 
   const handleRepay = () => {
-    if (repayAmount && repayAmount > 0) {
-      if (repayAmount > Number(loanBalance?.formatted)) {
+    if (validInputAmount(repayAmount)) {
+      if (repayAmount > loanBalance?.formatted) {
         notify(errMessages.insufficient_amount);
       } else {
         setAmount(repayAmount);
@@ -120,7 +114,7 @@ const VaultRepayInput: React.FC<Props> = ({
             onChange={handleInputChange}
             placeholder="0"
             token={item.borrowedToken.id}
-            balance={Number(loanBalance ? loanBalance.formatted : 0)}
+            balance={loanBalance.formatted}
             setMax={handleSetMax}
           />
           <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">

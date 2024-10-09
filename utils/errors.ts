@@ -48,12 +48,12 @@ export const MoreErrors: IMoreError[] = [
   {
     action: MoreAction.BORROW,
     error: "insufficient collateral",
-    message: "You do not supply enough collateral to borrow.",
+    message: "You do not have enough collateral to borrow.",
   },
   {
     action: MoreAction.BORROW_MORE,
     error: "insufficient collateral",
-    message: "You do not have enough collateral to increase borrow more.",
+    message: "You do not have enough collateral to borrow more.",
   },
   {
     action: MoreAction.REPAY,
