@@ -1,107 +1,83 @@
 "use client";
 
-import React from "react";
-import { DetailEarnData } from "@/types/detailEarnData";
+import React, { useEffect, useState } from "react";
+import FormatPrice from "../tools/formatPrice";
 import TableHeaderCell from "./MoreTableHeader";
 import usePagination from "@/hooks/usePagination";
 import Pagination from "../pagination/Pagination";
-import FormatPrice from "../tools/formatPrice";
 import FormatPourcentage from "../tools/formatPourcentage";
+import { oraclePriceScale } from "@/utils/const";
+import { getTokenPairPrice } from "@/utils/contract";
+import { IMarketUser, IMarketUserProps } from "@/types";
+import { formatAddress, formatTokenValue, getTokenInfo } from "@/utils/utils";
 
-interface Props {}
+const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
+  marketUsers,
+  item,
+}) => {
+  const [showList, setShowList] = useState<IMarketUser[]>([]);
 
-const BorrowersMoreTable: React.FC<Props> = () => {
-  const tableData: DetailEarnData[] = [
-    {
-      allocationColor: "orange",
-      supplyAmount: 3288.62,
-      supplyCurrency: "USDC",
-      supplyValue: 1.96,
-      collateral: ["usdc", "btc", "add", "ada"],
-      liquidationLTV: 90,
-      liquidationLTV2: 130,
-      credoraRating: "CCC+ / BBB",
-      unsecuredBorrowAmount: 7890.12,
-      unsecuredBorrowValue: 4.98,
-      unsecuredAPY: 16.8,
-    },
-    {
-      allocationColor: "green",
-      supplyAmount: 5432.1,
-      supplyCurrency: "USDT",
-      supplyValue: 3.25,
-      collateral: ["usdc", "btc", "add", "ada", "ant"],
-      liquidationLTV: 85,
-      liquidationLTV2: 130,
-      credoraRating: "BB+ / AA-",
-      unsecuredBorrowAmount: 6543.21,
-      unsecuredBorrowValue: 3.67,
-      unsecuredAPY: 13.5,
-    },
-    {
-      allocationColor: "yellow",
-      supplyAmount: 7654.32,
-      supplyCurrency: "USDA",
-      supplyValue: 1.55,
-      collateral: ["usdc", "btc", "add", "ada"],
-      liquidationLTV: 95,
-      liquidationLTV2: 130,
-      credoraRating: "CC+ / A-",
-      unsecuredBorrowAmount: 4321.09,
-      unsecuredBorrowValue: 2.45,
-      unsecuredAPY: 17.5,
-    },
-    {
-      allocationColor: "orange",
-      supplyAmount: 3288.62,
-      supplyCurrency: "USDC",
-      supplyValue: 1.96,
-      collateral: ["usdc", "btc", "add", "ada"],
-      liquidationLTV: 90,
-      liquidationLTV2: 130,
-      credoraRating: "CCC+ / BBB",
-      unsecuredBorrowAmount: 7890.12,
-      unsecuredBorrowValue: 4.98,
-      unsecuredAPY: 16.8,
-    },
-    {
-      allocationColor: "green",
-      supplyAmount: 5432.1,
-      supplyCurrency: "USDT",
-      supplyValue: 3.25,
-      collateral: ["usdc", "btc", "add", "ada", "ant"],
-      liquidationLTV: 85,
-      liquidationLTV2: 130,
-      credoraRating: "BB+ / AA-",
-      unsecuredBorrowAmount: 6543.21,
-      unsecuredBorrowValue: 3.67,
-      unsecuredAPY: 13.5,
-    },
-    {
-      allocationColor: "yellow",
-      supplyAmount: 7654.32,
-      supplyCurrency: "USDA",
-      supplyValue: 1.55,
-      collateral: ["usdc", "btc", "add", "ada"],
-      liquidationLTV: 95,
-      liquidationLTV2: 130,
-      credoraRating: "CC+ / A-",
-      unsecuredBorrowAmount: 4321.09,
-      unsecuredBorrowValue: 2.45,
-      unsecuredAPY: 17.5,
-    },
-  ];
+  useEffect(() => {
+    const getPrice = async () => {
+      const pairPrice = await getTokenPairPrice(item.marketParams.oracle);
+
+      let _showList = marketUsers
+        ? marketUsers.filter(
+            (marketUser) => marketUser.borrow_amount > BigInt(0)
+          )
+        : [];
+
+      let totalBorrow = BigInt(0);
+      for (const showItem of _showList) {
+        totalBorrow += showItem.borrow_amount;
+      }
+
+      if (totalBorrow > BigInt(0)) {
+        const collateralToken = getTokenInfo(item.inputToken.id).decimals;
+        const borrowToken = getTokenInfo(item.borrowedToken.id).decimals;
+        const isBig = collateralToken >= borrowToken;
+        const decimalsPow = BigInt(
+          10 **
+            (isBig
+              ? collateralToken - borrowToken
+              : borrowToken - collateralToken)
+        );
+        _showList.map((showItem) => {
+          showItem.borrow_percent =
+            (formatTokenValue(showItem.borrow_amount, item.borrowedToken.id) *
+              100) /
+            formatTokenValue(totalBorrow, item.borrowedToken.id);
+
+          const factorVal =
+            (showItem.collateral_amount *
+              pairPrice *
+              BigInt(100) *
+              (isBig ? BigInt(1) : decimalsPow)) /
+            showItem.borrow_amount /
+            oraclePriceScale /
+            (isBig ? decimalsPow : BigInt(1));
+          showItem.health_factor =
+            factorVal > BigInt(0) ? 1e4 / Number(factorVal) : 0;
+        });
+
+        console.log(_showList);
+        setShowList(
+          _showList.sort(
+            (item1, item2) => item2.borrow_percent - item1.borrow_percent
+          )
+        );
+      }
+    };
+
+    getPrice();
+  }, [item, marketUsers]);
+
   const itemsPerPage = 5;
-
-  const { currentPage, totalPages, goToNextPage, goToPreviousPage } =
-    usePagination(tableData.length, itemsPerPage);
+  const { currentPage } = usePagination(showList.length, itemsPerPage);
 
   // Calculate the current page data slice
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentPageData = tableData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const currentPageData = showList.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div>
@@ -149,7 +125,7 @@ const BorrowersMoreTable: React.FC<Props> = () => {
             </tr>
           </thead>
           <tbody className="bg-transparent">
-            {currentPageData.map((item, index, arr) => (
+            {currentPageData.map((showItem, index, arr) => (
               <tr
                 key={index}
                 style={
@@ -166,41 +142,47 @@ const BorrowersMoreTable: React.FC<Props> = () => {
               >
                 <td className="p-6">
                   <span
-                    style={{ backgroundColor: item.allocationColor }}
+                    // style={{ backgroundColor: item.allocationColor }}
                     className={`w-5 h-5  rounded-full mr-2`}
                   ></span>
-                  <span>0x1234...xxyz</span>
+                  <span>{formatAddress(showItem.user_address)}</span>
                 </td>
 
                 <td className="py-4">
                   <div className="flex p-6 justify-start items-center gap-2 ml-3">
                     <FormatPrice
-                      value={item.supplyAmount}
-                      token={item.supplyCurrency}
+                      value={formatTokenValue(
+                        showItem.collateral_amount,
+                        item.inputToken.id
+                      )}
+                      token={getTokenInfo(item.inputToken.id).symbol}
                     />
                   </div>
                 </td>
-
                 <td className="py-4">
                   <div className="flex p-6 justify-start items-center gap-2 ml-3">
                     <FormatPrice
-                      value={item.supplyAmount}
-                      token={item.supplyCurrency}
+                      value={formatTokenValue(
+                        showItem.borrow_amount,
+                        item.borrowedToken.id
+                      )}
+                      token={getTokenInfo(item.borrowedToken.id).symbol}
                     />
                   </div>
                 </td>
 
                 <td className="p-6">
                   <div className="flex gap-1 justify-start ml-3">
-                    <div>{item.unsecuredAPY}</div>
+                    <div>{showItem.health_factor.toFixed(2)} %</div>
                   </div>
                 </td>
 
                 <td className="p-6">
                   <div className="flex gap-1 justify-start ml-3">
                     <FormatPourcentage
-                      value={item.unsecuredAPY}
-                    ></FormatPourcentage>
+                      value={showItem.borrow_percent}
+                      multiplier={1}
+                    />
                   </div>
                 </td>
               </tr>
@@ -208,7 +190,7 @@ const BorrowersMoreTable: React.FC<Props> = () => {
           </tbody>
         </table>
         <div className="w-full text-[14px] flex justify-start py-10 px-6">
-          <Pagination totalItems={tableData.length}></Pagination>
+          <Pagination totalItems={showList.length} />
         </div>
       </div>
     </div>

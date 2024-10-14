@@ -9,6 +9,7 @@ import {
   MarketParams,
   IVaultApr,
   IMarketApr,
+  IMarketUserRow,
 } from "@/types";
 import {
   tokens,
@@ -221,6 +222,19 @@ export const fetchMarketAprs = async (
   return marketAprList.marketaprs;
 };
 
+export const fetchMarketUsers = async (
+  marketid: string
+): Promise<IMarketUserRow[]> => {
+  const fetchResult = await fetch("/api/marketuser?&marketid=" + marketid, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+  const marketAprList = await fetchResult.json();
+  return marketAprList.users;
+};
+
 export const convertAprToApy = (apr: number, aprInterval: number): number => {
   return Math.pow(1 + apr / aprInterval, aprInterval) - 1;
 };
@@ -230,4 +244,10 @@ export const delay = (seconds: number) =>
 
 export const isFlow = (token: string): boolean => {
   return token.toLowerCase() == contracts.WNATIVE.toLowerCase();
+};
+
+export const formatAddress = (userAddr: string): string => {
+  return (
+    userAddr.substring(0, 6) + "..." + userAddr.substring(userAddr.length - 4)
+  );
 };

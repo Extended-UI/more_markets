@@ -81,3 +81,23 @@ export interface IMoreError {
   error: string;
   message: string;
 }
+
+export interface IMarketUserRow {
+  user_address: string;
+  collateral_amount: string;
+  borrow_amount: string;
+}
+
+export interface IMarketUser {
+  user_address: string;
+  collateral_amount: bigint;
+  borrow_amount: bigint;
+  collateral_percent: number;
+  borrow_percent: number;
+  health_factor: number
+}
+
+export interface IMarketUserProps {
+  marketUsers: IMarketUser[];
+  item: BorrowMarket;
+}

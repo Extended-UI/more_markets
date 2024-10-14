@@ -21,7 +21,6 @@ import {
   fetchMarkets,
   fetchVault,
   getTokenBallance,
-  depositToVaults,
 } from "@/utils/contract";
 import leftArrow from "@/public/assets/icons/left-arrow.svg";
 
@@ -97,9 +96,7 @@ const EarnDetailPage: React.FC = () => {
               return {
                 ...item,
                 allowcation:
-                  totalSupply > 0
-                    ? (Number(item.supply) * 100) / totalSupply
-                    : "0",
+                  totalSupply > 0 ? (item.supply * 100) / totalSupply : "0",
               } as VaultBreakdown;
             });
             setBreakdowns(updated);

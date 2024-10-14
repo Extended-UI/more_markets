@@ -61,7 +61,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
       </td>
       <td className="p-6">
         <div className="flex">
-          <FormatPourcentage value={utilization / 100} />
+          <FormatPourcentage value={utilization} multiplier={1} />
         </div>
       </td>
       <td className="p-6">
