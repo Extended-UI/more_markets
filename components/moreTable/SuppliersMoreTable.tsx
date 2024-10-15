@@ -17,10 +17,10 @@ const SuppliersMoreTable: React.FC<IMarketUserProps> = ({
       )
     : [];
 
-  let totalSupply = BigInt(0);
-  for (const showItem of showList) {
-    totalSupply += showItem.collateral_amount;
-  }
+  const totalSupply = showList.reduce(
+    (memo, showItem) => (memo += showItem.collateral_amount),
+    BigInt(0)
+  );
 
   if (totalSupply > BigInt(0)) {
     showList.map((showItem) => {

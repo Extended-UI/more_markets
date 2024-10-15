@@ -27,10 +27,10 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
           )
         : [];
 
-      let totalBorrow = BigInt(0);
-      for (const showItem of _showList) {
-        totalBorrow += showItem.borrow_amount;
-      }
+      const totalBorrow = _showList.reduce(
+        (memo, showItem) => (memo += showItem.borrow_amount),
+        BigInt(0)
+      );
 
       if (totalBorrow > BigInt(0)) {
         const collateralToken = getTokenInfo(item.inputToken.id).decimals;
