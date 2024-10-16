@@ -926,7 +926,7 @@ export const repayLoanViaMarkets = async (
         item.id,
         item.lastMultiplier,
         item.borrowShares
-      )) + parseUnits("0.0001");
+      )) + parseUnits("0.01");
 
     // wrap
     multicallArgs = addWrapNative(multicallArgs, flowAmount);
