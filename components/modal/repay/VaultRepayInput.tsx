@@ -73,7 +73,7 @@ const VaultRepayInput: React.FC<Props> = ({
 
   const handleRepay = () => {
     if (validInputAmount(repayAmount)) {
-      if (repayAmount > loanBalance?.formatted) {
+      if (Number(repayAmount) > Number(loanBalance?.formatted)) {
         notify(errMessages.insufficient_amount);
       } else {
         setAmount(repayAmount);

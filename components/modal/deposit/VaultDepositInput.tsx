@@ -49,7 +49,7 @@ const VaultDepositInput: React.FC<Props> = ({
 
   const handleDeposit = () => {
     if (validInputAmount(deposit)) {
-      if (deposit > balanceString.formatted) {
+      if (Number(deposit) > Number(balanceString.formatted)) {
         notify(errMessages.insufficient_amount);
       } else {
         setAmount(deposit);
