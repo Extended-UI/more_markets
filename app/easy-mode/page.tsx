@@ -24,6 +24,7 @@ import {
   waitForTransaction,
 } from "@/utils/contract";
 import TableHeaderCell from "@/components/moreTable/MoreTableHeader";
+import HoverCardComp from "@/components/hoverCard/HoverCard";
 
 const EasyModePage: React.FC = () => {
   const [chain, setChain] = useState("Flow");
@@ -106,6 +107,7 @@ const EasyModePage: React.FC = () => {
   };
 
   return (
+    <>
     <div className="flex justify-center items-center min-h-[calc(100vh-80px)]">
       <div className="max-w-[600px]">
         <div className="more-bg-secondary w-full rounded-[20px] modal-base border-[#343434] border-[8.25px]">
@@ -219,12 +221,23 @@ const EasyModePage: React.FC = () => {
                   sortColum={true}
                 />
               </div>
-              <div>13% - 40%</div>
+              <div>
+                <HoverCardComp
+                  mainText={'13% - 40%'}
+                  rate={'+0.4'}
+                  box={'+1.35'}
+                  boostReward={'+4'}
+                  apy={'5.75'}
+                />
+
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    
+</>
   );
 };
 
