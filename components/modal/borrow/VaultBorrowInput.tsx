@@ -1,15 +1,20 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { formatUnits, parseUnits } from "ethers";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
+import { formatUnits, parseUnits, ZeroAddress } from "ethers";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { IBorrowPosition } from "@/types";
 import { oraclePriceScale, initBalance } from "@/utils/const";
-import { getTokenBallance, getTokenPairPrice } from "@/utils/contract";
+import {
+  getTokenBallance,
+  getTokenPairPrice,
+  getPosition,
+  getBorrowedAmount,
+} from "@/utils/contract";
 import {
   getTokenInfo,
   getPremiumLltv,
@@ -36,6 +41,8 @@ const VaultBorrowInput: React.FC<Props> = ({
   const [borrow, setBorrow] = useState("");
   const [deposit, setDeposit] = useState("");
   const [pairPrice, setPairPrice] = useState(BigInt(0));
+  const [loan, setLoan] = useState(BigInt(0));
+  const [collateral, setCollateral] = useState(BigInt(0));
   const [supplyBalance, setSupplyBalance] =
     useState<GetBalanceReturnType>(initBalance);
 
@@ -50,6 +57,32 @@ const VaultBorrowInput: React.FC<Props> = ({
   );
 
   const isPremiumUser = item.lastMultiplier != BigInt(1e18);
+
+  useEffect(() => {
+    const initBalances = async () => {
+      const [userSupplyBalance, tokenPairPrice, positionInfo] =
+        await Promise.all([
+          getTokenBallance(item.inputToken.id, userAddress),
+          getTokenPairPrice(item.marketParams.oracle),
+          getPosition(userAddress || ZeroAddress, item.id),
+        ]);
+
+      setPairPrice(tokenPairPrice);
+      setSupplyBalance(userSupplyBalance);
+      if (positionInfo) {
+        setCollateral(positionInfo.collateral);
+        setLoan(
+          await getBorrowedAmount(
+            item.id,
+            positionInfo.lastMultiplier,
+            positionInfo.borrowShares
+          )
+        );
+      }
+    };
+
+    initBalances();
+  }, [item, userAddress]);
 
   const handleInputDepositChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -68,20 +101,13 @@ const VaultBorrowInput: React.FC<Props> = ({
   };
 
   const handleSetMaxFlow = (maxValue: string) => {
-    let maxBorrow = BigInt(0);
-    if (onlyBorrow) {
-      maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(maxBorrow, item.lltv);
-      maxBorrow = getExtraMax(maxBorrow, item.loan);
-    } else if (deposit) {
-      const depositAmount = parseUnits(
-        deposit.toString(),
-        collateralToken.decimals
-      );
-      maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(maxBorrow, item.lltv);
-    }
+    const totalCollateral = onlyBorrow
+      ? item.collateral
+      : collateral + parseUnits(deposit, collateralToken.decimals);
 
+    let maxBorrow = mulDivDown(totalCollateral, pairPrice, oraclePriceScale);
+    maxBorrow = wMulDown(maxBorrow, item.lltv);
+    maxBorrow = getExtraMax(maxBorrow, onlyBorrow ? item.loan : loan);
     setBorrow(formatUnits(maxBorrow, borrowToken.decimals));
   };
 
@@ -94,20 +120,6 @@ const VaultBorrowInput: React.FC<Props> = ({
       }
     }
   };
-
-  useEffect(() => {
-    const initBalances = async () => {
-      const [userSupplyBalance, tokenPairPrice] = await Promise.all([
-        getTokenBallance(item.inputToken.id, userAddress),
-        getTokenPairPrice(item.marketParams.oracle),
-      ]);
-
-      setSupplyBalance(userSupplyBalance);
-      setPairPrice(tokenPairPrice);
-    };
-
-    initBalances();
-  }, [item, userAddress]);
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
