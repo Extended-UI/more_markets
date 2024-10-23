@@ -303,7 +303,7 @@ const LoanMoreTable: React.FC<Props> = ({
                       </div>
                     </td>
                     <td className="p-6 items-center">
-                      <div className="flex justify-start ml-3">
+                      <div className="flex justify-start items-center ml-3">
                         <div className="mr-3">
                         <FormatPourcentage value={item.borrow_apr} />
                         </div>
