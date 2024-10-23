@@ -921,12 +921,13 @@ export const repayLoanViaMarkets = async (
   if (isFlow(borrowedToken.id)) {
     let multicallArgs: string[] = [];
 
-    const flowAmount =
-      (await getBorrowedAmount(
-        item.id,
-        item.lastMultiplier,
-        item.borrowShares
-      )) + parseUnits("0.01");
+    const flowAmount = useShare
+      ? (await getBorrowedAmount(
+          item.id,
+          item.lastMultiplier,
+          item.borrowShares
+        )) + parseUnits("0.01")
+      : repayAmount;
 
     // wrap
     multicallArgs = addWrapNative(multicallArgs, flowAmount);
@@ -952,7 +953,8 @@ export const repayLoanViaMarkets = async (
     ]);
 
     // then unwarp and transfer remaing flow
-    multicallArgs = addUnwrapNative(multicallArgs, account);
+    if (useShare) multicallArgs = addUnwrapNative(multicallArgs, account);
+
     return await executeTransaction(multicallArgs, flowAmount);
   } else {
     const simulateResult = await simulateContract(config, {
