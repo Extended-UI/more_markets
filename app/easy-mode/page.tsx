@@ -222,14 +222,7 @@ const EasyModePage: React.FC = () => {
                 />
               </div>
               <div>
-                <HoverCardComp
-                  mainText={'13% - 40%'}
-                  rate={'+0.4'}
-                  box={'+1.35'}
-                  boostReward={'+4'}
-                  apy={'5.75'}
-                />
-
+                13% - 40%
               </div>
             </div>
           </div>

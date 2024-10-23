@@ -11,6 +11,7 @@ import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { InvestmentData, IInvestmentProps } from "@/types";
 import IconCurator from "../token/IconCurator";
+import HoverCardComp from "../hoverCard/HoverCard";
 
 const EarnMoreTable: React.FC<IInvestmentProps> = ({
   investments,
@@ -126,7 +127,15 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
               </td>
               <td className="p-6 items-center h-full">
                 <div className="flex gap-1 justify-start">
-                  <FormatPourcentage value={item.netAPY} />
+                  <div className="mr-3">
+                    <FormatPourcentage value={item.netAPY} />
+                  </div>
+                  <HoverCardComp
+                    rate={'+0.4'}
+                    box={'+1.35'}
+                    boostReward={'+4'}
+                    apy={'5.75'}
+                  />
                 </div>
               </td>
               <td className="p-6 items-left h-full">

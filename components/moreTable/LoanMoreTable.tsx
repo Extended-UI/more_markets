@@ -15,6 +15,7 @@ import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 import { getPositions, getBorrowedAmount } from "@/utils/contract";
+import HoverCardComp from "../hoverCard/HoverCard";
 import {
   GraphPosition,
   BorrowPosition,
@@ -303,7 +304,15 @@ const LoanMoreTable: React.FC<Props> = ({
                     </td>
                     <td className="p-6 items-center">
                       <div className="flex justify-start ml-3">
+                        <div className="mr-3">
                         <FormatPourcentage value={item.borrow_apr} />
+                        </div>
+                        <HoverCardComp
+                          rate={'+0.4'}
+                          box={'+1.35'}
+                          boostReward={'+4'}
+                          apy={'5.75'}
+                        />
                       </div>
                     </td>
                   </tr>

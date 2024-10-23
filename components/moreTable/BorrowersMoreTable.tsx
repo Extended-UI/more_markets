@@ -168,6 +168,7 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
                       )}
                       token={getTokenInfo(item.borrowedToken.id).symbol}
                     />
+                    x
                   </div>
                 </td>
 

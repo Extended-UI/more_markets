@@ -2,7 +2,7 @@ import React, {} from "react"
 import {HoverCard, HoverCardContent, HoverCardTrigger,} from "./HoverCardBase"
 
 interface Props {
-    mainText: string | number;
+    mainText?: string | number;
     rate?: string | number;
     box?: string | number;
     boostReward?: string | number;
@@ -15,7 +15,13 @@ const HoverCardComp : React.FC<Props> = ({mainText, rate, box, boostReward, apy}
     return (
         <div className="text-[16px]">
         <HoverCard>
-            <HoverCardTrigger className="cursor-pointer">{mainText}</HoverCardTrigger>
+            <HoverCardTrigger className="cursor-pointer">
+                {mainText ? (
+                    mainText
+                ):(
+                    <img src={"/assets/icons/info-orange.svg"} alt="info" width={16} height={16}/>
+                )}
+            </HoverCardTrigger>
             <HoverCardContent className="bg-[#141414] rounded-[1.25em] border-[0.5em] p-0 border-[#343434] border-solid">
                 <div className="bg-[#212121] px-[1.75em] py-[1.25em] rounded-t-[0.5em]">
                     <div className="text-[1.5em] text-[#E0DFE3] font-semibold">
