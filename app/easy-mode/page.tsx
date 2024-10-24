@@ -49,7 +49,7 @@ const EasyModePage: React.FC = () => {
 
       if (fetchedVault) {
         const aprItem = vaultAprs.find(
-          (aprItem) => aprItem.vaultid.toLowerCase() == vaultId.toLowerCase()
+          (aprItem) => aprItem.vaultid == vaultId.toLowerCase()
         );
 
         setVaultInfo({

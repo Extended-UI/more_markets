@@ -45,16 +45,15 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   let vaultAprInfos: IVaultAprItem[] = [];
   for (let resultItem of rows as IVaultAprRow[]) {
-    const itemInd = vaultAprInfos.findIndex(
-      (item) => item.vaultid.toLowerCase() == resultItem.vaultid.toLowerCase()
-    );
+    const vaultId = resultItem.vaultid.toLowerCase();
+    const itemInd = vaultAprInfos.findIndex((item) => item.vaultid == vaultId);
 
     if (itemInd >= 0) {
       vaultAprInfos[itemInd].count++;
       vaultAprInfos[itemInd].apr += Number(resultItem.supply_apr);
     } else {
       vaultAprInfos.push({
-        vaultid: resultItem.vaultid,
+        vaultid: vaultId,
         count: 1,
         apr: Number(resultItem.supply_apr),
       });

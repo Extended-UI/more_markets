@@ -44,7 +44,7 @@ const EarnPage: React.FC = () => {
           );
 
           const aprItem = aprsArr.find(
-            (aprItem) => aprItem.vaultid.toLowerCase() == vault.id.toLowerCase()
+            (aprItem) => aprItem.vaultid == vault.id.toLowerCase()
           );
 
           const deposited = (await getVaultDetail(

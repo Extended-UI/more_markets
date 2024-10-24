@@ -116,8 +116,7 @@ const EarnDetailPage: React.FC = () => {
             }
 
             const aprItem = vaultAprs.find(
-              (aprItem) =>
-                aprItem.vaultid.toLowerCase() == vaultId.toLowerCase()
+              (aprItem) => aprItem.vaultid == vaultId.toLowerCase()
             );
 
             setVaultInfo({
