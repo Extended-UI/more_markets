@@ -20,6 +20,9 @@
   body {
     @apply text-white;
   }
+  :root {
+    --radius: 0.5rem;
+  }
 }
 
 html {
