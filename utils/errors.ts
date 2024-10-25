@@ -70,6 +70,11 @@ export const MoreErrors: IMoreError[] = [
     error: "insufficient collateral",
     message: "You do not have enough collateral for maintaining your position.",
   },
+  {
+    action: MoreAction.CLAIM,
+    error: "reward claim failed",
+    message: "You have claimed already",
+  },
 ];
 
 export const errMessages = {
