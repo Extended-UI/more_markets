@@ -109,3 +109,11 @@ export interface IMarketUserProps {
   marketUsers: IMarketUser[];
   item: BorrowMarket;
 }
+
+export interface IRewardClaim {
+  urdAddress: string;
+  rewardToken: string;
+  user: string;
+  amount: string;
+  proof: string[];
+}

@@ -15,6 +15,7 @@ import {
   IVaultProgram,
   IVaultApy,
   IVaultAprItem,
+  IRewardClaim,
 } from "@/types";
 import {
   tokens,
@@ -231,6 +232,34 @@ export const fetchMarketAprs = async (
   return marketAprList.marketaprs;
 };
 
+export const fetchVaultClaims = async (
+  account: string
+): Promise<IRewardClaim[]> => {
+  const fetchResult = await fetch("/api/claimreward?account=" + account, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  const vaultClaimList = await fetchResult.json();
+  const claimList = vaultClaimList.claimList as IRewardClaim[];
+  const claimedList = vaultClaimList.claimedList as IRewardClaim[];
+
+  return _.compact(
+    claimList.map((claimItem, key) => {
+      const claimaleAmount = BigInt(claimItem.amount);
+      const claimedAmount = BigInt(claimedList[key].amount);
+      return BigInt(claimItem.amount) > BigInt(claimedList[key].amount)
+        ? {
+            ...claimItem,
+            amount: (claimaleAmount - claimedAmount).toString(),
+          }
+        : null;
+    })
+  );
+};
+
 export const fetchMarketUsers = async (
   marketid: string
 ): Promise<IMarketUserRow[]> => {
@@ -279,8 +308,10 @@ export const getVaultApyInfo = (
     aprItem.programs,
     toBigInt(aprItem.total_shares)
   );
-  const totalBoostApy =
-    boostApy.reduce((memo, boostApyItem) => (memo += boostApyItem.apy), 0);
+  const totalBoostApy = boostApy.reduce(
+    (memo, boostApyItem) => (memo += boostApyItem.apy),
+    0
+  );
   const boxApy = 0;
 
   return {

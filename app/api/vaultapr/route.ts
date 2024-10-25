@@ -2,7 +2,6 @@ import _ from "lodash";
 import mysql from "mysql2/promise";
 import { NextResponse, NextRequest } from "next/server";
 import { IVaultApr, IVaultProgram } from "@/types";
-import { formatUnits } from "viem";
 
 interface IVaultAprItem extends IVaultApr {
   count: number;
@@ -34,13 +33,13 @@ const initConnection = async (): Promise<mysql.Connection> => {
 export async function GET(req: NextRequest, res: NextResponse) {
   const connection = await initConnection();
 
-  const vaultid = req.nextUrl.searchParams.get("vaultid");
+  const vaultid = req.nextUrl.searchParams.get("vaultid") || "";
   const targetDate = req.nextUrl.searchParams.get("targetDate");
   const currentTime = Math.floor(Date.now() / 1000);
   const targetTime = currentTime - DayInSec * Number(targetDate);
 
   let query = `SELECT supply_apr, vaultid, apr_time FROM vault_aprs WHERE apr_time >= '${targetTime}'`;
-  if (vaultid && vaultid.length > 0) {
+  if (vaultid.length > 0) {
     query += ` AND vaultid = '${vaultid}'`;
   }
   const [[rows], [vaultPrograms], [vaultShares]] = await Promise.all([

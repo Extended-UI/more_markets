@@ -16,6 +16,7 @@ import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { OracleAbi } from "@/app/abi/OracleAbi";
+import { UrdAbi } from "@/app/abi/UrdAbi";
 import {
   Market,
   MarketInfo,
@@ -25,6 +26,7 @@ import {
   GraphMarket,
   BorrowPosition,
   InvestmentData,
+  IRewardClaim,
 } from "../types";
 import {
   contracts,
@@ -33,6 +35,7 @@ import {
   bundlerInstance,
   permit2Instance,
   apyfeedInstance,
+  multicallInstance,
   Uint48Max,
   gasLimit,
   vaultIds,
@@ -97,6 +100,26 @@ const addUnwrapNative = (
     account,
     MaxUint256,
   ]);
+};
+
+export const getClaimedAmount = async (
+  claimList: IRewardClaim[]
+): Promise<IRewardClaim[]> => {
+  const requestList = claimList.map((claimItem, key) => ({
+    address: claimItem.urdAddress as `0x${string}`,
+    abi: UrdAbi,
+    functionName: "claimed",
+    args: [claimItem.user, claimItem.rewardToken],
+  }));
+
+  const claimedResults = await readContracts(config, {
+    contracts: requestList,
+  });
+
+  return claimedResults.map((claimedResult, key) => ({
+    ...claimList[key],
+    amount: claimedResult.result?.toString() || "0",
+  }));
 };
 
 export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
@@ -1135,7 +1158,29 @@ export const withdrawCollateral = async (
   return await executeTransaction(multicallArgs);
 };
 
-export const unwrapFlow = async () => {};
+export const doClaimReward = async (claimList: IRewardClaim[]) => {
+  const multicallArgs = claimList.map((claimItem) => ({
+    target: claimItem.urdAddress,
+    callData: encodeFunctionData({
+      abi: UrdAbi,
+      functionName: "claim",
+      args: [
+        claimItem.user as `0x${string}`,
+        claimItem.rewardToken as `0x${string}`,
+        BigInt(claimItem.amount),
+        claimItem.proof as `0x${string}`[],
+      ],
+    }),
+  }));
+
+  const simulateResult = await simulateContract(config, {
+    ...multicallInstance,
+    functionName: "aggregate",
+    args: [multicallArgs],
+    gas: parseUnits(gasLimit, 6),
+  });
+  return await writeContract(config, simulateResult.request);
+};
 
 // ******************************************
 export const fetchVaults = async (): Promise<GraphVault[]> => {
