@@ -305,14 +305,9 @@ const LoanMoreTable: React.FC<Props> = ({
                     <td className="p-6 items-center">
                       <div className="flex justify-start items-center ml-3">
                         <div className="mr-3">
-                        <FormatPourcentage value={item.borrow_apr} />
+                          <FormatPourcentage value={item.borrow_apr} />
                         </div>
-                        <HoverCardComp
-                          rate={'+0.4'}
-                          box={'+1.35'}
-                          boostReward={'+4'}
-                          apy={'5.75'}
-                        />
+                        {/* <HoverCardComp apy={item.netAPY} /> */}
                       </div>
                     </td>
                   </tr>

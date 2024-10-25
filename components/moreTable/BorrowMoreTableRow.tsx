@@ -60,12 +60,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           <div className="mr-3">
             <FormatPourcentage value={item.borrow_apr} />
           </div>
-          <HoverCardComp
-            rate={'+0.4'}
-            box={'+1.35'}
-            boostReward={'+4'}
-            apy={'5.75'}
-          />
+          {/* <HoverCardComp apy={item.netAPY} /> */}
         </div>
       </td>
       <td className="p-6">

@@ -113,7 +113,7 @@ const VaultDepositInput: React.FC<Props> = ({
           <div>APY:</div>
           <div>
             <span className="more-text-gray">
-              {(item.netAPY * 100).toFixed(2)} %
+              {item.netAPY.total_apy.toFixed(2)} %
             </span>
           </div>
         </div>

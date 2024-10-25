@@ -13,7 +13,7 @@ import {
   formatTokenValue,
   getPremiumLltv,
   fetchVaultAprs,
-  convertAprToApy,
+  getVaultApyInfo,
 } from "@/utils/utils";
 import {
   getVaultDetail,
@@ -123,7 +123,8 @@ const EarnDetailPage: React.FC = () => {
               vaultId: fetchedVault.id,
               vaultName: fetchedVault.name,
               assetAddress: fetchedVault.asset.id,
-              netAPY: aprItem ? convertAprToApy(aprItem.apr, aprDate) : 0,
+              netAPY: getVaultApyInfo(aprItem, aprDate),
+              programs: aprItem?.programs,
               userDeposits: formatTokenValue(userAssets, fetchedVault.asset.id),
               userShares: vaultShares.value,
               totalDeposits: formatTokenValue(
