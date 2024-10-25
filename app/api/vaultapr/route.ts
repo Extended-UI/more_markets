@@ -1,6 +1,8 @@
+import _ from "lodash";
 import mysql from "mysql2/promise";
 import { NextResponse, NextRequest } from "next/server";
-import { IVaultApr } from "@/types";
+import { IVaultApr, IVaultProgram } from "@/types";
+import { formatUnits } from "viem";
 
 interface IVaultAprItem extends IVaultApr {
   count: number;
@@ -34,29 +36,51 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   const vaultid = req.nextUrl.searchParams.get("vaultid");
   const targetDate = req.nextUrl.searchParams.get("targetDate");
-  const targetTime =
-    Math.floor(Date.now() / 1000) - DayInSec * Number(targetDate);
+  const currentTime = Math.floor(Date.now() / 1000);
+  const targetTime = currentTime - DayInSec * Number(targetDate);
 
   let query = `SELECT supply_apr, vaultid, apr_time FROM vault_aprs WHERE apr_time >= '${targetTime}'`;
   if (vaultid && vaultid.length > 0) {
     query += ` AND vaultid = '${vaultid}'`;
   }
-  const [rows] = await connection.query(query);
+  const [[rows], [vaultPrograms], [vaultShares]] = await Promise.all([
+    connection.query(query),
+    connection.query(`SELECT * FROM vault_programs WHERE program_ended = '0'`),
+    connection.query(`SELECT * FROM vault_valid_shares`),
+  ]);
 
   let vaultAprInfos: IVaultAprItem[] = [];
   for (let resultItem of rows as IVaultAprRow[]) {
-    const itemInd = vaultAprInfos.findIndex(
-      (item) => item.vaultid.toLowerCase() == resultItem.vaultid.toLowerCase()
-    );
+    const vaultId = resultItem.vaultid.toLowerCase();
+    const itemInd = vaultAprInfos.findIndex((item) => item.vaultid == vaultId);
 
     if (itemInd >= 0) {
       vaultAprInfos[itemInd].count++;
       vaultAprInfos[itemInd].apr += Number(resultItem.supply_apr);
     } else {
+      const shareItem = (vaultShares as any[]).find(
+        (vaultShare) => vaultShare.vault_address == vaultId
+      );
+
       vaultAprInfos.push({
-        vaultid: resultItem.vaultid,
+        vaultid: vaultId,
         count: 1,
         apr: Number(resultItem.supply_apr),
+        programs: _.compact(
+          (vaultPrograms as any[]).map((vaultProgram) => {
+            return vaultProgram.vault_address == vaultId &&
+              currentTime >= Number(vaultProgram.start_time)
+              ? ({
+                  total_reward: vaultProgram.total_reward,
+                  reward_decimals: vaultProgram.reward_decimals,
+                  price_info: vaultProgram.price_info || "",
+                } as unknown as IVaultProgram)
+              : null;
+          })
+        ),
+        total_shares: shareItem
+          ? BigInt(shareItem.total_amount).toString()
+          : "0",
       });
     }
   }
@@ -65,6 +89,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
     return {
       vaultid: vaultAprInfo.vaultid,
       apr: vaultAprInfo.apr / vaultAprInfo.count,
+      programs: vaultAprInfo.programs,
+      total_shares: vaultAprInfo.total_shares,
     };
   });
 

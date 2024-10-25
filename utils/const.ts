@@ -73,7 +73,7 @@ export const Uint48Max = 281474976710655;
 
 export const gasLimit = "0.7";
 
-export const blacklistedVaults = [];
+export const blacklistedVaults: string[] = [];
 
 export const enum MoreAction {
   GENERAL = "general",

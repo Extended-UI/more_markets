@@ -64,9 +64,17 @@ export interface IBorrowPositionProp extends IBorrowPosition {
   updateInfo: (marketId: string) => void;
 }
 
+export interface IVaultProgram {
+  total_reward: string;
+  reward_decimals: string;
+  price_info: string;
+}
+
 export interface IVaultApr {
   vaultid: string;
   apr: number;
+  programs: IVaultProgram[];
+  total_shares: string;
 }
 
 export interface IMarketApr {
@@ -94,7 +102,7 @@ export interface IMarketUser {
   borrow_amount: bigint;
   collateral_percent: number;
   borrow_percent: number;
-  health_factor: number
+  health_factor: number;
 }
 
 export interface IMarketUserProps {

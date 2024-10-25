@@ -163,14 +163,14 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     <td className="p-6">
                       <div className="flex justify-start items-center">
                         <div className="mr-3">
-                          <FormatPourcentage value={item.netAPY} />
+                          <FormatPourcentage
+                            value={item.netAPY.total_apy}
+                            multiplier={1}
+                          />
                         </div>
-                        <HoverCardComp
-                          rate={'+0.4'}
-                          box={'+1.35'}
-                          boostReward={'+4'}
-                          apy={'5.75'}
-                        />
+                        {item.programs.length > 0 && (
+                          <HoverCardComp apy={item.netAPY} />
+                        )}
                       </div>
                     </td>
                     <td className="p-6">
