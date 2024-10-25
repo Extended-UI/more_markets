@@ -345,7 +345,7 @@ const getVaultProgramApy = (
       );
 
       return {
-        apy: Number((rewardSum * BigInt(100)) / deposited),
+        apy: Number((rewardSum * BigInt(1e4)) / deposited) / 1e2,
         priceInfo: key,
       };
     })

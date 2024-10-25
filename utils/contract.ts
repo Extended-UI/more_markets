@@ -51,6 +51,7 @@ import {
   getTokenInfo,
   toAssetsUp,
   isFlow,
+  delay,
 } from "./utils";
 
 const chainId = config.chains[0].id;
@@ -1158,28 +1159,50 @@ export const withdrawCollateral = async (
   return await executeTransaction(multicallArgs);
 };
 
-export const doClaimReward = async (claimList: IRewardClaim[]) => {
-  const multicallArgs = claimList.map((claimItem) => ({
-    target: claimItem.urdAddress,
-    callData: encodeFunctionData({
-      abi: UrdAbi,
-      functionName: "claim",
-      args: [
-        claimItem.user as `0x${string}`,
-        claimItem.rewardToken as `0x${string}`,
-        BigInt(claimItem.amount),
-        claimItem.proof as `0x${string}`[],
-      ],
-    }),
-  }));
+export const doClaimReward = async (
+  claimList: IRewardClaim[],
+  isFlowWallet: boolean
+) => {
+  if (isFlowWallet) {
+    for (const claimItem of claimList) {
+      const simulateResult = await simulateContract(config, {
+        address: claimItem.urdAddress as `0x${string}`,
+        abi: UrdAbi,
+        functionName: "claim",
+        args: [
+          claimItem.user as `0x${string}`,
+          claimItem.rewardToken as `0x${string}`,
+          BigInt(claimItem.amount),
+          claimItem.proof as `0x${string}`[],
+        ],
+        gas: parseUnits(gasLimit, 6),
+      });
+      await writeContract(config, simulateResult.request);
+      await delay(2);
+    }
+  } else {
+    const multicallArgs = claimList.map((claimItem) => ({
+      target: claimItem.urdAddress,
+      callData: encodeFunctionData({
+        abi: UrdAbi,
+        functionName: "claim",
+        args: [
+          claimItem.user as `0x${string}`,
+          claimItem.rewardToken as `0x${string}`,
+          BigInt(claimItem.amount),
+          claimItem.proof as `0x${string}`[],
+        ],
+      }),
+    }));
 
-  const simulateResult = await simulateContract(config, {
-    ...multicallInstance,
-    functionName: "aggregate",
-    args: [multicallArgs],
-    gas: parseUnits(gasLimit, 6),
-  });
-  return await writeContract(config, simulateResult.request);
+    const simulateResult = await simulateContract(config, {
+      ...multicallInstance,
+      functionName: "aggregate",
+      args: [multicallArgs],
+      gas: parseUnits(gasLimit, 6),
+    });
+    await writeContract(config, simulateResult.request);
+  }
 };
 
 // ******************************************

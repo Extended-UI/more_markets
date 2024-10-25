@@ -4,21 +4,29 @@ import { FC, useState, useEffect } from "react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import Menu from "./Menu";
-import ClaimRewards from "../modal/ClaimRewards";
-import ButtonDialog from "../buttonDialog/buttonDialog";
+import MoreButton from "../moreButton/MoreButton";
 import { WalletConnect } from "../walletConnect/WalletConnect";
 import { IRewardClaim } from "@/types";
-import { fetchVaultClaims } from "@/utils/utils";
+import { MoreAction } from "@/utils/const";
+import { doClaimReward } from "@/utils/contract";
+import { fetchVaultClaims, notifyError } from "@/utils/utils";
 import logo from "@/public/assets/icons/logo.png";
 
 const Header: FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [claimList, setClaimList] = useState<IRewardClaim[]>([]);
-  const { address: userAddress } = useAccount();
+  const { address: userAddress, connector } = useAccount();
+  const isFlowWallet = connector
+    ? connector.name.toLowerCase() == "flow wallet"
+    : false;
 
   useEffect(() => {
     const initClaim = async () => {
       if (userAddress) {
-        setClaimList(await fetchVaultClaims(userAddress));
+        // setClaimList(await fetchVaultClaims(userAddress));
+        setClaimList(
+          await fetchVaultClaims("0x000000000000000000000002146dEaA9b9Bc2610")
+        );
       } else {
         setClaimList([]);
       }
@@ -26,6 +34,21 @@ const Header: FC = () => {
 
     initClaim();
   }, [userAddress]);
+
+  const handleClaim = async () => {
+    if (claimList.length > 0) {
+      setIsLoading(true);
+      try {
+        await doClaimReward(claimList, isFlowWallet);
+        setIsLoading(false);
+        setClaimList([]);
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+        notifyError(err, MoreAction.CLAIM);
+      }
+    }
+  };
 
   return (
     <header className="pt-3">
@@ -39,17 +62,12 @@ const Header: FC = () => {
 
         <div className="w-full flex justify-end space-x-4 mt-10 sm:mt-0 text-[16px]">
           {userAddress && claimList.length > 0 && (
-            <ButtonDialog color="primary" buttonText="Claim rewards">
-              {(closeModal) => (
-                <div className="h-full w-full">
-                  <ClaimRewards
-                    claimList={claimList}
-                    setClaimList={setClaimList}
-                    closeModal={closeModal}
-                  />
-                </div>
-              )}
-            </ButtonDialog>
+            <MoreButton
+              text="Claim rewards"
+              color="primary"
+              onClick={handleClaim}
+              disabled={isLoading}
+            />
           )}
           <WalletConnect />
         </div>
