@@ -60,7 +60,6 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
             factorVal > BigInt(0) ? 1e4 / Number(factorVal) : 0;
         });
 
-        console.log(_showList);
         setShowList(
           _showList.sort(
             (item1, item2) => item2.borrow_percent - item1.borrow_percent
@@ -168,6 +167,7 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
                       )}
                       token={getTokenInfo(item.borrowedToken.id).symbol}
                     />
+                    x
                   </div>
                 </td>
 

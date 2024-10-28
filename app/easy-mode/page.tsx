@@ -12,7 +12,7 @@ import { InvestmentData } from "@/types";
 import { contracts, initBalance, vaultIds, MoreAction } from "@/utils/const";
 import {
   fetchVaultAprs,
-  convertAprToApy,
+  getVaultApyInfo,
   notifyError,
   notify,
   validInputAmount,
@@ -49,13 +49,13 @@ const EasyModePage: React.FC = () => {
 
       if (fetchedVault) {
         const aprItem = vaultAprs.find(
-          (aprItem) => aprItem.vaultid.toLowerCase() == vaultId.toLowerCase()
+          (aprItem) => aprItem.vaultid == vaultId.toLowerCase()
         );
 
         setVaultInfo({
           vaultId: fetchedVault.id,
           assetAddress: fetchedVault.asset.id,
-          netAPY: aprItem ? convertAprToApy(aprItem.apr, aprDate) : 0,
+          netAPY: getVaultApyInfo(aprItem, aprDate),
         } as InvestmentData);
       }
     }
@@ -106,6 +106,7 @@ const EasyModePage: React.FC = () => {
   };
 
   return (
+    
     <div className="flex justify-center items-center min-h-[calc(100vh-80px)]">
       <div className="max-w-[600px]">
         <div className="more-bg-secondary w-full rounded-[20px] modal-base border-[#343434] border-[8.25px]">
@@ -213,8 +214,15 @@ const EasyModePage: React.FC = () => {
                 />
               </div>
               <div>
-                {(vaultInfo ? vaultInfo.netAPY * 100 : 0).toFixed(2)}
-                <span className="more-text-gray">%</span>
+                <InputTokenMax
+                  type="number"
+                  value={deposit}
+                  onChange={handleInputChange}
+                  placeholder="0"
+                  token={contracts.WNATIVE}
+                  balance={balanceString.formatted}
+                  setMax={handleSetMax}
+                />
               </div>
             </div>
             <div className="flex justify-between mt-7">

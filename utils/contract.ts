@@ -16,6 +16,7 @@ import { ERC20Abi } from "@/app/abi/ERC20Abi";
 import { VaultsAbi } from "@/app/abi/VaultsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { OracleAbi } from "@/app/abi/OracleAbi";
+import { UrdAbi } from "@/app/abi/UrdAbi";
 import {
   Market,
   MarketInfo,
@@ -25,6 +26,7 @@ import {
   GraphMarket,
   BorrowPosition,
   InvestmentData,
+  IRewardClaim,
 } from "../types";
 import {
   contracts,
@@ -33,6 +35,7 @@ import {
   bundlerInstance,
   permit2Instance,
   apyfeedInstance,
+  multicallInstance,
   Uint48Max,
   gasLimit,
   vaultIds,
@@ -48,6 +51,7 @@ import {
   getTokenInfo,
   toAssetsUp,
   isFlow,
+  delay,
 } from "./utils";
 
 const chainId = config.chains[0].id;
@@ -97,6 +101,26 @@ const addUnwrapNative = (
     account,
     MaxUint256,
   ]);
+};
+
+export const getClaimedAmount = async (
+  claimList: IRewardClaim[]
+): Promise<IRewardClaim[]> => {
+  const requestList = claimList.map((claimItem, key) => ({
+    address: claimItem.urdAddress as `0x${string}`,
+    abi: UrdAbi,
+    functionName: "claimed",
+    args: [claimItem.user, claimItem.rewardToken],
+  }));
+
+  const claimedResults = await readContracts(config, {
+    contracts: requestList,
+  });
+
+  return claimedResults.map((claimedResult, key) => ({
+    ...claimList[key],
+    amount: claimedResult.result?.toString() || "0",
+  }));
 };
 
 export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
@@ -921,12 +945,13 @@ export const repayLoanViaMarkets = async (
   if (isFlow(borrowedToken.id)) {
     let multicallArgs: string[] = [];
 
-    const flowAmount =
-      (await getBorrowedAmount(
-        item.id,
-        item.lastMultiplier,
-        item.borrowShares
-      )) + parseUnits("0.01");
+    const flowAmount = useShare
+      ? (await getBorrowedAmount(
+          item.id,
+          item.lastMultiplier,
+          item.borrowShares
+        )) + parseUnits("0.01")
+      : repayAmount;
 
     // wrap
     multicallArgs = addWrapNative(multicallArgs, flowAmount);
@@ -952,7 +977,8 @@ export const repayLoanViaMarkets = async (
     ]);
 
     // then unwarp and transfer remaing flow
-    multicallArgs = addUnwrapNative(multicallArgs, account);
+    if (useShare) multicallArgs = addUnwrapNative(multicallArgs, account);
+
     return await executeTransaction(multicallArgs, flowAmount);
   } else {
     const simulateResult = await simulateContract(config, {
@@ -1133,7 +1159,51 @@ export const withdrawCollateral = async (
   return await executeTransaction(multicallArgs);
 };
 
-export const unwrapFlow = async () => {};
+export const doClaimReward = async (
+  claimList: IRewardClaim[],
+  isFlowWallet: boolean
+) => {
+  if (isFlowWallet) {
+    for (const claimItem of claimList) {
+      const simulateResult = await simulateContract(config, {
+        address: claimItem.urdAddress as `0x${string}`,
+        abi: UrdAbi,
+        functionName: "claim",
+        args: [
+          claimItem.user as `0x${string}`,
+          claimItem.rewardToken as `0x${string}`,
+          BigInt(claimItem.amount),
+          claimItem.proof as `0x${string}`[],
+        ],
+        gas: parseUnits(gasLimit, 6),
+      });
+      await writeContract(config, simulateResult.request);
+      await delay(2);
+    }
+  } else {
+    const multicallArgs = claimList.map((claimItem) => ({
+      target: claimItem.urdAddress,
+      callData: encodeFunctionData({
+        abi: UrdAbi,
+        functionName: "claim",
+        args: [
+          claimItem.user as `0x${string}`,
+          claimItem.rewardToken as `0x${string}`,
+          BigInt(claimItem.amount),
+          claimItem.proof as `0x${string}`[],
+        ],
+      }),
+    }));
+
+    const simulateResult = await simulateContract(config, {
+      ...multicallInstance,
+      functionName: "aggregate",
+      args: [multicallArgs],
+      gas: parseUnits(gasLimit, 6),
+    });
+    await writeContract(config, simulateResult.request);
+  }
+};
 
 // ******************************************
 export const fetchVaults = async (): Promise<GraphVault[]> => {

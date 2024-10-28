@@ -1,15 +1,21 @@
+import _ from "lodash";
 import { toast } from "react-toastify";
-import { formatUnits, ZeroAddress } from "ethers";
+import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx";
+import { formatUnits, parseUnits, ZeroAddress, toBigInt } from "ethers";
 import { ErrorDecoder } from "ethers-decode-error";
 import { MoreErrors } from "@/utils/errors";
 import {
-  GraphVault,
   IToken,
   MarketInfo,
   MarketParams,
   IVaultApr,
   IMarketApr,
   IMarketUserRow,
+  IVaultProgram,
+  IVaultApy,
+  IVaultAprItem,
+  IRewardClaim,
 } from "@/types";
 import {
   tokens,
@@ -25,6 +31,10 @@ import {
 const errorDecoder = ErrorDecoder.create();
 
 export const notify = (errMsg: string) => errMsg.length > 0 && toast(errMsg);
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export const getVaule = (param: any): string => {
   return param.result ? param.result.toString() : "";
@@ -222,6 +232,34 @@ export const fetchMarketAprs = async (
   return marketAprList.marketaprs;
 };
 
+export const fetchVaultClaims = async (
+  account: string
+): Promise<IRewardClaim[]> => {
+  const fetchResult = await fetch("/api/claimreward?account=" + account, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  const vaultClaimList = await fetchResult.json();
+  const claimList = vaultClaimList.claimList as IRewardClaim[];
+  const claimedList = vaultClaimList.claimedList as IRewardClaim[];
+
+  return _.compact(
+    claimList.map((claimItem, key) => {
+      const claimaleAmount = BigInt(claimItem.amount);
+      const claimedAmount = BigInt(claimedList[key].amount);
+      return BigInt(claimItem.amount) > BigInt(claimedList[key].amount)
+        ? {
+            ...claimItem,
+            amount: (claimaleAmount - claimedAmount).toString(),
+          }
+        : null;
+    })
+  );
+};
+
 export const fetchMarketUsers = async (
   marketid: string
 ): Promise<IMarketUserRow[]> => {
@@ -250,4 +288,66 @@ export const formatAddress = (userAddr: string): string => {
   return (
     userAddr.substring(0, 6) + "..." + userAddr.substring(userAddr.length - 4)
   );
+};
+
+export const getVaultApyInfo = (
+  aprItem: IVaultApr | undefined,
+  aprDates: number
+): IVaultApy => {
+  if (_.isUndefined(aprItem))
+    return {
+      base_apy: 0,
+      boost_apy: 0,
+      box_apy: 0,
+      total_apy: 0,
+      boost_apys: [],
+    };
+
+  const baseApy = convertAprToApy(aprItem.apr, aprDates) * 100;
+  const boostApy = getVaultProgramApy(
+    aprItem.programs,
+    toBigInt(aprItem.total_shares)
+  );
+  const totalBoostApy = boostApy.reduce(
+    (memo, boostApyItem) => (memo += boostApyItem.apy),
+    0
+  );
+  const boxApy = 0;
+
+  return {
+    base_apy: baseApy,
+    boost_apy: totalBoostApy,
+    boost_apys: boostApy,
+    box_apy: boxApy,
+    total_apy: baseApy + totalBoostApy + boxApy,
+  };
+};
+
+const getRewardPrice = (priceInfo: string): bigint => {
+  return BigInt(1);
+};
+
+const getVaultProgramApy = (
+  programs: IVaultProgram[],
+  deposited: bigint
+): IVaultAprItem[] => {
+  if (deposited == BigInt(0)) return [{ apy: 0, priceInfo: "" }];
+
+  return _.chain(programs)
+    .groupBy((item) => item.price_info)
+    .map((groupPrograms, key) => {
+      const rewardSum = groupPrograms.reduce(
+        (memo, program) =>
+          (memo +=
+            parseUnits(program.total_reward, program.reward_decimals) *
+            getRewardPrice(program.price_info)),
+        BigInt(0)
+      );
+
+      return {
+        apy: Number((rewardSum * BigInt(1e4)) / deposited) / 1e2,
+        priceInfo: key,
+      };
+    })
+    .value();
 };

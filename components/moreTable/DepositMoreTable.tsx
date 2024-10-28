@@ -15,6 +15,7 @@ import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
 import { formatTokenValue } from "@/utils/utils";
 import { InvestmentData, IInvestmentProps } from "@/types";
 import { getTokenBallance, getVaultDetail } from "@/utils/contract";
+import HoverCardComp from "../hoverCard/HoverCard";
 
 const DepositMoreTable: React.FC<IInvestmentProps> = ({
   investments,
@@ -161,7 +162,15 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     </td>
                     <td className="p-6">
                       <div className="flex justify-start items-center">
-                        <FormatPourcentage value={item.netAPY} />
+                        <div className="mr-3">
+                          <FormatPourcentage
+                            value={item.netAPY.total_apy}
+                            multiplier={1}
+                          />
+                        </div>
+                        {item.programs.length > 0 && (
+                          <HoverCardComp apy={item.netAPY} />
+                        )}
                       </div>
                     </td>
                     <td className="p-6">

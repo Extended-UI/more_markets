@@ -4,6 +4,7 @@ import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
 import { ApyFeedAbi } from "@/app/abi/ApyFeedAbi";
+import { MulticallAbi } from "@/app/abi/Multicall";
 
 export const WAD = BigInt(1e18);
 export const virtualAssets = BigInt(1);
@@ -69,11 +70,16 @@ export const apyfeedInstance = {
   abi: ApyFeedAbi,
 };
 
+export const multicallInstance = {
+  address: contracts.MULTICALL3 as `0x${string}`,
+  abi: MulticallAbi,
+};
+
 export const Uint48Max = 281474976710655;
 
 export const gasLimit = "0.7";
 
-export const blacklistedVaults = [];
+export const blacklistedVaults: string[] = [];
 
 export const enum MoreAction {
   GENERAL = "general",
@@ -84,6 +90,7 @@ export const enum MoreAction {
   ADD_COLLATERAL = "add_collateral",
   WITHDRAW_COLLATERAL = "withdraw_collateral",
   REPAY = "repay",
+  CLAIM = "claim",
 }
 
 export const sactionedCountries = ["KP", "IR", "MM"];
