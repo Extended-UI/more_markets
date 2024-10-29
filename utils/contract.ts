@@ -31,11 +31,13 @@ import {
 import {
   contracts,
   initBalance,
+  wflowInstance,
   marketsInstance,
   bundlerInstance,
   permit2Instance,
   apyfeedInstance,
   multicallInstance,
+  loopstrategyInstance,
   Uint48Max,
   gasLimit,
   vaultIds,
@@ -138,6 +140,16 @@ export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
   } catch {
     return BigInt(0);
   }
+};
+
+export const getLoopWithdraw = async (assets: bigint): Promise<bigint[]> => {
+  const withdrawInfo = await readContract(config, {
+    ...loopstrategyInstance,
+    functionName: "expectedAmountsToWithdraw",
+    args: [assets],
+  });
+
+  return withdrawInfo as unknown as bigint[];
 };
 
 export const getTokenPrice = async (token: string): Promise<number> => {
@@ -246,10 +258,11 @@ export const getTokenPermit = async (args: any[]): Promise<bigint> => {
 
 export const getTokenBallance = async (
   token: string,
-  wallet: `0x${string}` | undefined
+  wallet: `0x${string}` | undefined,
+  flowBal: boolean = true
 ): Promise<GetBalanceReturnType> => {
   const userBalance = wallet
-    ? isFlow(token)
+    ? isFlow(token) && flowBal
       ? await getBalance(config, {
           address: wallet,
         })
@@ -575,7 +588,6 @@ export const setTokenAllowance = async (
     functionName: "approve",
     args: [spender as `0x${string}`, amount],
   });
-
   await waitForTransaction(txHash);
 };
 
@@ -1209,6 +1221,37 @@ export const doClaimReward = async (
     });
     await writeContract(config, simulateResult.request);
   }
+};
+
+export const wrapFlow = async (flowAmount: bigint) => {
+  const simulateResult = await simulateContract(config, {
+    ...wflowInstance,
+    functionName: "deposit",
+    value: flowAmount,
+  });
+  await writeContract(config, simulateResult.request);
+};
+
+export const unwrapWFlow = async (wflowAmount: bigint) => {
+  const simulateResult = await simulateContract(config, {
+    ...wflowInstance,
+    functionName: "withdraw",
+    args: [wflowAmount],
+  });
+  await writeContract(config, simulateResult.request);
+};
+
+export const loopstrategyWithdraw = async (
+  useShare: boolean,
+  account: `0x${string}`,
+  amount: bigint
+): Promise<string> => {
+  const simulateResult = await simulateContract(config, {
+    ...loopstrategyInstance,
+    functionName: useShare ? "redeem" : "withdraw",
+    args: [amount, account, account],
+  });
+  return await writeContract(config, simulateResult.request);
 };
 
 // ******************************************

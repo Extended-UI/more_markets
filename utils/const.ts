@@ -1,10 +1,12 @@
 import { type GetBalanceReturnType } from "@wagmi/core";
 import { IToken } from "@/types";
+import { WETH9Abi } from "@/app/abi/WETH9Abi";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
 import { ApyFeedAbi } from "@/app/abi/ApyFeedAbi";
 import { MulticallAbi } from "@/app/abi/Multicall";
+import { LoopStrategyAbi } from "@/app/abi/LoopStrategyAbi";
 
 export const WAD = BigInt(1e18);
 export const virtualAssets = BigInt(1);
@@ -76,6 +78,16 @@ export const multicallInstance = {
   abi: MulticallAbi,
 };
 
+export const loopstrategyInstance = {
+  address: contracts.LOOP_STRATEGY as `0x${string}`,
+  abi: LoopStrategyAbi,
+};
+
+export const wflowInstance = {
+  address: contracts.WNATIVE as `0x${string}`,
+  abi: WETH9Abi,
+};
+
 export const Uint48Max = 281474976710655;
 
 export const gasLimit = "0.7";
@@ -92,6 +104,8 @@ export const enum MoreAction {
   WITHDRAW_COLLATERAL = "withdraw_collateral",
   REPAY = "repay",
   CLAIM = "claim",
+  LOOP_DEPOSIT = "loop_deposit",
+  LOOP_WITHDRAW = "loop_withdraw",
 }
 
 export const sactionedCountries = ["KP", "IR", "MM"];
