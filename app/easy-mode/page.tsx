@@ -23,6 +23,7 @@ const EasyModePage: React.FC = () => {
   const [deposit, setDeposit] = useState("");
   const [balanceString, setBalanceString] =
     useState<GetBalanceReturnType>(initBalance);
+  const [tabValue, setTabValue] = useState(0);
 
   const { address: userAddress } = useAccount();
 
@@ -82,8 +83,26 @@ const EasyModePage: React.FC = () => {
       <div className="max-w-[600px]">
         <div className="more-bg-secondary w-full rounded-[20px] modal-base border-[#343434] border-[8.25px]">
           <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-            <div className="text-[24px] mb-[40px] font-semibold">
-              Maximize Your FLOW Yield
+            <div className="flex items-center">
+              <div
+                className={`${
+                  tabValue === 0 ? "glowing-text-primary" : "text-[#FFF]"
+                } !pb-5 text-[16px] mr-[4.5rem] ml-[2rem] cursor-pointer`}
+                onClick={() => setTabValue(0)}
+              >
+                Deposit
+              </div>
+              <div
+                className={`${
+                  tabValue === 1 ? "glowing-text-primary" : "text-[#FFF]"
+                } !pb-5 text-[16px] cursor-pointer`}
+                onClick={() => setTabValue(1)}
+              >
+                Withdraw
+              </div>
+            </div>
+            <div className="text-[24px] mb-[40px] pt-[50px] font-semibold">
+              FLOW Dynamic Loop Super Vault
             </div>
             <div className="mb-[40px] hidden">
               <Menu as="div" className="relative inline-block">
@@ -136,8 +155,17 @@ const EasyModePage: React.FC = () => {
               </Menu>
             </div>
             <div className="text-l text-[16px] mb-5">
-              Deposit FLOW
-              {/* Deposit {flowVault ? "Flow" : tokenInfo.symbol} */}
+              {tabValue === 0 ? (
+                <>
+                  Deposit FLOW or{" "}
+                  <span className="text-[#F58420]">ankr.FLOW</span>
+                </>
+              ) : (
+                <>
+                  Withdraw FLOW and{" "}
+                  <span className="text-[#F58420]">ankr.FLOW</span>
+                </>
+              )}
             </div>
             <div>
               <InputTokenMax
@@ -156,7 +184,7 @@ const EasyModePage: React.FC = () => {
             <div className="flex justify-end mt-[40px]">
               <MoreButton
                 className="text-2xl py-2 "
-                text="Deposit"
+                text={tabValue === 0 ? "Deposit" : "Withdraw"}
                 onClick={handleDeposit}
                 color="primary"
                 disabled={isLoading}
@@ -168,7 +196,7 @@ const EasyModePage: React.FC = () => {
             <div className="glowing-text-primary !pb-0 w-full" />
           </div>
           <div className="more-bg-primary rounded-b-[14px] px-[28px] pb-[40px] pt-[30px] text-[16px] font-normal">
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between">
               <div className="flex items-center">
                 Current APY
                 <TableHeaderCell
@@ -178,21 +206,42 @@ const EasyModePage: React.FC = () => {
                 />
               </div>
               <div>
-                {/* {(vaultInfo ? vaultInfo.netAPY.total_apy : 0).toFixed(2)} */}
-                0.00
-                <span className="more-text-gray">%</span>
+                <InputTokenMax
+                  type="number"
+                  value={deposit}
+                  onChange={handleInputChange}
+                  placeholder="0"
+                  token={contracts.WNATIVE}
+                  balance={balanceString.formatted}
+                  setMax={handleSetMax}
+                />
               </div>
             </div>
-            <div className="flex justify-between mt-12">
+            <div className="flex justify-between mt-7">
               <div className="flex items-center">
-                Projected APY
+                {tabValue === 0 ? "Monthly Earnings" : "ankr.FLOW Amount"}
                 <TableHeaderCell
                   infoText="The projected APY is the expected total net APY calculated from the looping strategy after including all incentives and borrowing costs."
                   additionalClasses="ml-3"
                   sortColum={true}
                 />
               </div>
+              <div>{tabValue === 0 ? "1.4528823" : "0.55389294"}</div>
               <div>13% - 40%</div>
+            </div>
+            <div className="flex justify-between mt-7">
+              <div className="flex items-center">
+                {tabValue === 0 ? "Monthly Earnings" : "FLOW Amount"}
+                <TableHeaderCell
+                  infoText="The projected APY is the expected total net APY calculated from the looping strategy after including all incentives and borrowing costs."
+                  additionalClasses="ml-3"
+                  sortColum={true}
+                />
+              </div>
+              <div>{tabValue === 0 ? "15.8423751" : "0.44274291"}</div>
+            </div>
+            <div className="flex justify-between mt-7 text-[14px] font-normal">
+              *When you withdraw you will receive both FLOW and ankr.FLOW tokens
             </div>
           </div>
         </div>
