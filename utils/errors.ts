@@ -73,7 +73,17 @@ export const MoreErrors: IMoreError[] = [
   {
     action: MoreAction.CLAIM,
     error: "reward claim failed",
-    message: "You have claimed already",
+    message: "You have claimed already.",
+  },
+  {
+    action: MoreAction.LOOP_DEPOSIT,
+    error: "loop deposit",
+    message: "Deposit failed.",
+  },
+  {
+    action: MoreAction.LOOP_WITHDRAW,
+    error: "loop withdraw",
+    message: "Withdraw failed.",
   },
 ];
 

@@ -122,7 +122,8 @@ const VaultDepositPush: React.FC<Props> = ({
         tokenAmount,
         permitNonce,
         flowVault,
-        isFlowWallet
+        isFlowWallet,
+        false
       );
 
       await delay(2);

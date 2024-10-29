@@ -1,96 +1,191 @@
 "use client";
 
-import { parseEther } from "viem";
 import { useAccount } from "wagmi";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { parseEther, ZeroAddress, formatEther, MaxUint256 } from "ethers";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import MoreButton from "@/components/moreButton/MoreButton";
 import InputTokenMax from "@/components/input/InputTokenMax";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { InvestmentData } from "@/types";
-import { contracts, initBalance, vaultIds, MoreAction } from "@/utils/const";
+import TableHeaderCell from "@/components/moreTable/MoreTableHeader";
+import { contracts, initBalance, MoreAction } from "@/utils/const";
+import { notifyError, notify, validInputAmount, delay } from "@/utils/utils";
 import {
-  fetchVaultAprs,
-  getVaultApyInfo,
-  notifyError,
-  notify,
-  validInputAmount,
-} from "@/utils/utils";
-import {
-  fetchVault,
-  getTokenBallance,
   depositToVaults,
   waitForTransaction,
+  getTokenBallance,
+  getTokenAllowance,
+  getVaultDetail,
+  getLoopWithdraw,
+  wrapFlow,
+  unwrapWFlow,
+  setTokenAllowance,
+  loopstrategyWithdraw,
 } from "@/utils/contract";
-import TableHeaderCell from "@/components/moreTable/MoreTableHeader";
+
+interface ILoopStrategyInfo {
+  flowBalance: GetBalanceReturnType;
+  sharesBalance: GetBalanceReturnType;
+  wflowBalance: GetBalanceReturnType;
+  userAssets: bigint;
+  wflowAllowance: bigint;
+}
 
 const EasyModePage: React.FC = () => {
   const [chain, setChain] = useState("Flow");
-  const [isLoading, setIsLoading] = useState(false);
   const [deposit, setDeposit] = useState("");
-  const [balanceString, setBalanceString] = useState<GetBalanceReturnType>(initBalance);
-  const [vaultInfo, setVaultInfo] = useState<InvestmentData | null>(null);
-  const [tabValue, setTabValue] = useState(0)
+  const [tabValue, setTabValue] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loopInfo, setLoopInfo] = useState<ILoopStrategyInfo>({
+    flowBalance: initBalance,
+    sharesBalance: initBalance,
+    wflowBalance: initBalance,
+    userAssets: BigInt(0),
+    wflowAllowance: BigInt(0),
+  });
 
   const { address: userAddress } = useAccount();
 
-  const initVault = async () => {
+  const initValues = async () => {
     if (userAddress) {
-      const vaultId = vaultIds[0];
-      const aprDate = 7;
-      const [fetchedVault, vaultAprs, tokenBal] = await Promise.all([
-        fetchVault(vaultId),
-        fetchVaultAprs(aprDate, vaultId),
+      const [flowBal, wflowBal, sharesBal, sharesAllow] = await Promise.all([
         getTokenBallance(contracts.WNATIVE, userAddress),
+        getTokenBallance(contracts.WNATIVE, userAddress, false),
+        getTokenBallance(contracts.LOOP_STRATEGY, userAddress),
+        getTokenAllowance(
+          contracts.WNATIVE,
+          userAddress,
+          contracts.LOOP_STRATEGY
+        ),
       ]);
 
-      setBalanceString(tokenBal);
+      const userAssets = (await getVaultDetail(
+        contracts.LOOP_STRATEGY,
+        "convertToAssets",
+        [sharesBal.value]
+      )) as bigint;
 
-      if (fetchedVault) {
-        const aprItem = vaultAprs.find(
-          (aprItem) => aprItem.vaultid == vaultId.toLowerCase()
-        );
-
-        setVaultInfo({
-          vaultId: fetchedVault.id,
-          assetAddress: fetchedVault.asset.id,
-          netAPY: getVaultApyInfo(aprItem, aprDate),
-        } as InvestmentData);
-      }
+      setLoopInfo({
+        flowBalance: flowBal,
+        sharesBalance: sharesBal,
+        wflowBalance: wflowBal,
+        userAssets: userAssets,
+        wflowAllowance: sharesAllow,
+      });
+    } else {
+      setLoopInfo({
+        flowBalance: initBalance,
+        sharesBalance: initBalance,
+        wflowBalance: initBalance,
+        userAssets: BigInt(0),
+        wflowAllowance: BigInt(0),
+      });
     }
   };
 
   useEffect(() => {
-    initVault();
+    initValues();
   }, [userAddress]);
 
-  const handleDeposit = async () => {
-    if (vaultInfo && userAddress && validInputAmount(deposit)) {
+  const handleAction = async () => {
+    if (userAddress && validInputAmount(deposit)) {
       // generate deposit tx
       setIsLoading(true);
+      const isDeposit = tabValue === 0;
       try {
-        const txHash = await depositToVaults(
-          vaultInfo.vaultId,
-          vaultInfo.assetAddress,
-          userAddress,
-          "",
-          BigInt(0),
-          parseEther(deposit.toString()),
-          0,
-          true,
-          false
-        );
+        const txHash = isDeposit
+          ? await handleDeposit(userAddress)
+          : await handleWithdraw(userAddress);
+        if (txHash && txHash.length > 0) {
+          await waitForTransaction(txHash);
 
-        await waitForTransaction(txHash);
-        await initVault();
-        notify("Deposit successed");
+          // if withdraw, do unwrap
+          if (!isDeposit) {
+            await delay(1);
+            const wflowBalance = await getTokenBallance(
+              contracts.WNATIVE,
+              userAddress,
+              false
+            );
+            if (wflowBalance.value > BigInt(0))
+              await unwrapWFlow(wflowBalance.value);
+          }
+
+          await initValues();
+          notify(isDeposit ? "Deposit successed" : "Withdraw successed");
+        }
+
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        notifyError(err, MoreAction.DEPOSIT);
+        notifyError(
+          err,
+          isDeposit ? MoreAction.LOOP_DEPOSIT : MoreAction.LOOP_WITHDRAW
+        );
       }
     }
+  };
+
+  const handleWithdraw = async (account: `0x${string}`): Promise<string> => {
+    const depositAmount = parseEther(deposit);
+    const useShare = depositAmount >= loopInfo.userAssets;
+
+    let errMsg = "";
+
+    const expectedWithdraw = await getLoopWithdraw(
+      useShare ? loopInfo.userAssets : depositAmount
+    );
+    const amountToReapay = expectedWithdraw[0] + parseEther("0.001");
+
+    // if has insufficient wflow
+    if (loopInfo.wflowBalance.value < amountToReapay) {
+      // check has sufficient FLOW to wrap
+      if (loopInfo.flowBalance.value < amountToReapay) {
+        errMsg = "You do not have enough FLOW to repay.";
+      } else {
+        // wrap flow to wflow
+        await wrapFlow(amountToReapay);
+        await delay(1);
+      }
+
+      // then do approve
+      if (errMsg.length == 0 && loopInfo.wflowAllowance < amountToReapay) {
+        await setTokenAllowance(
+          contracts.WNATIVE,
+          contracts.LOOP_STRATEGY,
+          MaxUint256
+        );
+        await delay(1);
+      }
+    }
+
+    if (errMsg.length > 0) {
+      notify(errMsg);
+      return "";
+    }
+
+    // then withdraw
+    return loopstrategyWithdraw(
+      useShare,
+      account,
+      useShare ? loopInfo.sharesBalance.value : depositAmount
+    );
+  };
+
+  const handleDeposit = async (account: string): Promise<string> => {
+    return await depositToVaults(
+      contracts.LOOP_STRATEGY,
+      ZeroAddress,
+      account,
+      "",
+      BigInt(0),
+      parseEther(deposit),
+      0,
+      true,
+      false,
+      true
+    );
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,17 +200,33 @@ const EasyModePage: React.FC = () => {
     setChain(name);
   };
 
+  const updateTabValue = (newTab: number) => {
+    setDeposit("");
+    setTabValue(newTab);
+  };
+
+  const useDeposit = tabValue === 0;
+
   return (
-    
     <div className="flex justify-center items-center min-h-[calc(100vh-80px)]">
       <div className="max-w-[600px]">
         <div className="more-bg-secondary w-full rounded-[20px] modal-base border-[#343434] border-[8.25px]">
           <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
             <div className="flex items-center">
-              <div className={`${tabValue === 0 ? 'glowing-text-primary' : 'text-[#FFF]'} !pb-5 text-[16px] mr-[4.5rem] ml-[2rem] cursor-pointer`} onClick={()=>setTabValue(0)}>
+              <div
+                className={`${
+                  useDeposit ? "glowing-text-primary" : "text-[#FFF]"
+                } !pb-5 text-[16px] mr-[4.5rem] ml-[2rem] cursor-pointer`}
+                onClick={() => updateTabValue(0)}
+              >
                 Deposit
               </div>
-              <div className={`${tabValue === 1 ? 'glowing-text-primary' : 'text-[#FFF]'} !pb-5 text-[16px] cursor-pointer`} onClick={()=>setTabValue(1)}>
+              <div
+                className={`${
+                  tabValue === 1 ? "glowing-text-primary" : "text-[#FFF]"
+                } !pb-5 text-[16px] cursor-pointer`}
+                onClick={() => updateTabValue(1)}
+              >
                 Withdraw
               </div>
             </div>
@@ -173,7 +284,17 @@ const EasyModePage: React.FC = () => {
               </Menu>
             </div>
             <div className="text-l text-[16px] mb-5">
-              {tabValue === 0 ? <>Deposit FLOW or <span className="text-[#F58420]">ankr.FLOW</span></> : <>Withdraw FLOW and <span className="text-[#F58420]">ankr.FLOW</span></>}
+              {useDeposit ? (
+                <>
+                  Deposit FLOW or{" "}
+                  <span className="text-[#F58420]">ankr.FLOW</span>
+                </>
+              ) : (
+                <>
+                  Withdraw FLOW and{" "}
+                  <span className="text-[#F58420]">ankr.FLOW</span>
+                </>
+              )}
             </div>
             <div>
               <InputTokenMax
@@ -182,24 +303,31 @@ const EasyModePage: React.FC = () => {
                 onChange={handleInputChange}
                 placeholder="0"
                 token={contracts.WNATIVE}
-                balance={balanceString.formatted}
+                balance={
+                  useDeposit
+                    ? loopInfo.flowBalance.formatted
+                    : formatEther(loopInfo.userAssets)
+                }
                 setMax={handleSetMax}
               />
             </div>
             <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-              Balance: {balanceString.formatted} FLOW
+              Balance:{" "}
+              {useDeposit
+                ? loopInfo.flowBalance.formatted
+                : formatEther(loopInfo.userAssets)}{" "}
+              FLOW
             </div>
             <div className="flex justify-end mt-[40px]">
               <MoreButton
                 className="text-2xl py-2 "
-                text={tabValue === 0 ? "Deposit" : "Withdraw"}
-                onClick={handleDeposit}
+                text={useDeposit ? "Deposit" : "Withdraw"}
+                onClick={handleAction}
                 color="primary"
                 disabled={isLoading}
               />
             </div>
           </div>
-          <div className=""></div>
           <div className="w-[50%] mx-15 flex justify-center mx-auto">
             <div className="glowing-text-primary !pb-0 w-full" />
           </div>
@@ -214,46 +342,48 @@ const EasyModePage: React.FC = () => {
                 />
               </div>
               <div>
+                {/* {(vaultInfo ? vaultInfo.netAPY.total_apy : 0).toFixed(2)} */}
+                0.00
+                <span className="more-text-gray">%</span>
+              </div>
+              {/* <div>
                 <InputTokenMax
                   type="number"
                   value={deposit}
                   onChange={handleInputChange}
                   placeholder="0"
                   token={contracts.WNATIVE}
-                  balance={balanceString.formatted}
+                  balance={flowBalance.formatted}
                   setMax={handleSetMax}
                 />
-              </div>
+              </div> */}
             </div>
             <div className="flex justify-between mt-7">
               <div className="flex items-center">
-                {tabValue === 0 ? 'Monthly Earnings' : "ankr.FLOW Amount"}
+                {useDeposit ? "Monthly Earnings" : "ankr.FLOW Amount"}
                 <TableHeaderCell
                   infoText="The projected APY is the expected total net APY calculated from the looping strategy after including all incentives and borrowing costs."
                   additionalClasses="ml-3"
                   sortColum={true}
                 />
               </div>
-              <div>                
-                {tabValue === 0 ? '1.4528823' : "0.55389294"}
-              </div>
+              <div>{useDeposit ? "1.4528823" : "0.55389294"}</div>
+              <div>13% - 40%</div>
             </div>
             <div className="flex justify-between mt-7">
               <div className="flex items-center">
-              {tabValue === 0 ? 'Monthly Earnings' : "FLOW Amount"}
-              <TableHeaderCell
+                {useDeposit ? "Monthly Earnings" : "FLOW Amount"}
+                <TableHeaderCell
                   infoText="The projected APY is the expected total net APY calculated from the looping strategy after including all incentives and borrowing costs."
                   additionalClasses="ml-3"
                   sortColum={true}
                 />
               </div>
-              <div>
-                {tabValue === 0 ? '15.8423751' : "0.44274291"}
-              </div>
+              <div>{useDeposit ? "15.8423751" : "0.44274291"}</div>
             </div>
             <div className="flex justify-between mt-7 text-[14px] font-normal">
               *When you withdraw you will receive both FLOW and ankr.FLOW tokens
-            </div>  
+            </div>
           </div>
         </div>
       </div>

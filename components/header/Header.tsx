@@ -43,7 +43,6 @@ const Header: FC = () => {
         setIsLoading(false);
         setClaimList([]);
       } catch (err) {
-        console.log(err);
         setIsLoading(false);
         notifyError(err, MoreAction.CLAIM);
       }
