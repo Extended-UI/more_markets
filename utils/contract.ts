@@ -58,14 +58,15 @@ const chainId = config.chains[0].id;
 
 const executeTransaction = async (
   multicallArgs: string[],
-  value: bigint = BigInt(0)
+  value: bigint = BigInt(0),
+  setGas: string = gasLimit
 ): Promise<string> => {
   const simulateResult = await simulateContract(config, {
     ...bundlerInstance,
     functionName: "multicall",
     args: [multicallArgs],
     value: value,
-    gas: parseUnits(gasLimit, 6),
+    gas: parseUnits(setGas, 6),
   });
   return await writeContract(config, simulateResult.request);
 };
@@ -719,7 +720,8 @@ export const depositToVaults = async (
   amount: bigint,
   nonce: number,
   useFlow: boolean,
-  flowWallet: boolean
+  flowWallet: boolean,
+  easyMode: boolean
 ): Promise<string> => {
   let multicallArgs: string[] = [];
   if (useFlow) {
@@ -753,7 +755,11 @@ export const depositToVaults = async (
     0,
     account,
   ]);
-  return await executeTransaction(multicallArgs, useFlow ? amount : BigInt(0));
+  return await executeTransaction(
+    multicallArgs,
+    useFlow ? amount : BigInt(0),
+    easyMode ? "5" : gasLimit
+  );
 };
 
 export const withdrawFromVaults = async (
