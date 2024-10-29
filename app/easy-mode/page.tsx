@@ -318,15 +318,17 @@ const EasyModePage: React.FC = () => {
                 : formatEther(loopInfo.userAssets)}{" "}
               FLOW
             </div>
-            <div className="flex justify-end mt-[40px]">
-              <MoreButton
-                className="text-2xl py-2 "
-                text={useDeposit ? "Deposit" : "Withdraw"}
-                onClick={handleAction}
-                color="primary"
-                disabled={isLoading}
-              />
-            </div>
+            {userAddress && (
+              <div className="flex justify-end mt-[40px]">
+                <MoreButton
+                  className="text-2xl py-2 "
+                  text={useDeposit ? "Deposit" : "Withdraw"}
+                  onClick={handleAction}
+                  color="primary"
+                  disabled={isLoading}
+                />
+              </div>
+            )}
           </div>
           <div className="w-[50%] mx-15 flex justify-center mx-auto">
             <div className="glowing-text-primary !pb-0 w-full" />
