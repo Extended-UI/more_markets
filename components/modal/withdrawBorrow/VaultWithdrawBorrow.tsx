@@ -1,63 +1,59 @@
 "use client";
-import React, { useState } from 'react';
-import VaultWithdrawSet from './VaultWithdrawBorrowSet';
-import VaultWithdrawTransaction from './VaultWithdrawBorrowTransaction';
-import VaultWithdrawConfirm from './VaultWithdrawBorrowConfirm';
 
-interface Props {
-  title: string;
-  token: string;
-  balance: number;
-  apy: number;
-  ltv: string;
-  totalWithdraw: number;
-  totalTokenAmount: number;
-  curator: string;
-  closeModal: () => void;
-}
+import React, { useState } from "react";
+import VaultWithdrawConfirm from "./VaultWithdrawBorrowResult";
+import VaultWithdrawBorrowPush from "./VaultWithdrawBorrowPush";
+import VaultWithdrawBorrowInput from "./VaultWithdrawBorrowInput";
+import { IBorrowPositionProp } from "@/types";
 
-const VaultWithdraw: React.FC<Props> = ({ title, token, balance, apy, ltv, totalWithdraw, totalTokenAmount, curator, closeModal }) => {
-
+const VaultWithdraw: React.FC<IBorrowPositionProp> = ({
+  item,
+  closeModal,
+  updateInfo,
+}) => {
   const [step, setStep] = useState(1);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [txHash, setTxHash] = useState("");
 
-  const handleSetWithdraw = (amount: number) => {
-    console.log("DEPOSIT SET", amount)    
+  const handleSetWithdraw = (amount: string) => {
     setAmount(amount);
     setStep(2);
   };
 
-
   const handleValidWithdraw = () => {
-    console.log("DEPOSIT VALID")
     setStep(3);
   };
 
-
   const handleProcessDone = () => {
-    console.log("DEPOSIT DONE")
-  };
-
-  console.log("test", apy);
-  
-
-  const renderStep = () => {
-    switch(step) {
-      case 1:
-        return <VaultWithdrawSet title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalWithdraw={totalWithdraw} totalTokenAmount={totalTokenAmount} setAmount={(amount: number) => handleSetWithdraw(amount)}  closeModal={closeModal} />;
-      case 2:
-        return <VaultWithdrawTransaction title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalWithdraw={totalWithdraw} totalTokenAmount={totalTokenAmount} curator={curator} amount={amount}  validWithdraw={() => handleValidWithdraw()}  closeModal={closeModal} />;
-      case 3:
-        return <VaultWithdrawConfirm  amount={amount}  title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalWithdraw={totalWithdraw} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()} closeModal={closeModal}  ></VaultWithdrawConfirm>
-      default:
-        return null; // ou une vue par défaut
-    }
+    updateInfo(item.id);
+    closeModal();
   };
 
   return (
-    <div>
-      {renderStep()}
-    </div>
+    <>
+      {step == 1 ? (
+        <VaultWithdrawBorrowInput
+          item={item}
+          closeModal={closeModal}
+          setAmount={handleSetWithdraw}
+        />
+      ) : step == 2 ? (
+        <VaultWithdrawBorrowPush
+          item={item}
+          amount={amount}
+          setTxHash={setTxHash}
+          closeModal={closeModal}
+          validWithdraw={handleValidWithdraw}
+        />
+      ) : (
+        <VaultWithdrawConfirm
+          item={item}
+          amount={amount}
+          txhash={txHash}
+          processDone={handleProcessDone}
+        />
+      )}
+    </>
   );
 };
 

@@ -1,16 +1,109 @@
-import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
+"use client";
+
+import { uniq } from "lodash";
+import React, { useEffect, useState } from "react";
 import EarnMoreTable from "@/components/moreTable/EarnMoreTable";
+import DepositMoreTable from "@/components/moreTable/DepositMoreTable";
+import { InvestmentData } from "@/types";
+import { blacklistedVaults } from "@/utils/const";
+import { getVaultDetail, fetchVaults, fetchMarkets } from "@/utils/contract";
+import {
+  formatTokenValue,
+  fetchVaultAprs,
+  getVaultApyInfo,
+} from "@/utils/utils";
+// import { fetchMarkets, fetchVaults } from "@/utils/graph";
 
 const EarnPage: React.FC = () => {
-    return (
-    <div >
-      <h1 className="text-4xl mb-8">My Deposits</h1>
-      <DepositMoreTable></DepositMoreTable>
+  const [investments, setInvestments] = useState<InvestmentData[]>([]);
 
-      <h1 className="text-4xl mb-8">MORE Vaults</h1>
-      <EarnMoreTable  ></EarnMoreTable>
-    </div>
+  useEffect(() => {
+    const initFunc = async () => {
+      const aprDates = 30;
+      const [vaultsArr, marketsArr, aprsArr] = await Promise.all([
+        fetchVaults(),
+        fetchMarkets(),
+        fetchVaultAprs(aprDates),
+      ]);
+
+      if (marketsArr && vaultsArr && aprsArr) {
+        const promises = vaultsArr.map(async (vault) => {
+          if (blacklistedVaults.includes(vault.id)) return null;
+
+          // get collaterals
+          const collaterals: string[] = vault.supplyQueue.map((queue) => {
+            const marketItem = marketsArr.find(
+              (market) =>
+                market.id.toLowerCase() == queue.market.id.toLowerCase()
+            );
+
+            return marketItem ? marketItem.inputToken.id : "";
+          });
+          const activeCollaterals = collaterals.filter(
+            (item) => item.length > 0
+          );
+
+          const aprItem = aprsArr.find(
+            (aprItem) => aprItem.vaultid == vault.id.toLowerCase()
+          );
+
+          const deposited = (await getVaultDetail(
+            vault.id,
+            "totalAssets",
+            []
+          )) as bigint;
+
+          return {
+            vaultId: vault.id,
+            vaultName: vault.name,
+            assetAddress: vault.asset.id,
+            netAPY: getVaultApyInfo(aprItem, aprDates),
+            programs: aprItem?.programs,
+            totalDeposits: formatTokenValue(deposited, vault.asset.id),
+            curator: vault.curator ? vault.curator.id : "",
+            collateral: uniq(activeCollaterals),
+            guardian: vault.guardian ? vault.guardian.id : "",
+            timelock: vault.timelock,
+          } as InvestmentData;
+        });
+
+        const fetchedVaults = (await Promise.all(promises)).filter(
+          (item) => item !== null
+        );
+        setInvestments(fetchedVaults);
+      }
+    };
+
+    initFunc();
+  }, []);
+
+  const updateInfo = async (vaultId: string) => {
+    const deposited = (await getVaultDetail(
+      vaultId,
+      "totalAssets",
+      []
+    )) as bigint;
+
+    setInvestments((prevItems) =>
+      prevItems.map((item) =>
+        item.vaultId.toLowerCase() == vaultId.toLowerCase()
+          ? {
+              ...item,
+              totalDeposits: formatTokenValue(deposited, item.assetAddress),
+            }
+          : item
+      )
     );
   };
-  
-  export default EarnPage;
+
+  return (
+    <>
+      <DepositMoreTable investments={investments} updateInfo={updateInfo} />
+
+      <h1 className="text-[30px] mb-8 mt-28 font-semibold">MORE Vaults</h1>
+      <EarnMoreTable investments={investments} updateInfo={updateInfo} />
+    </>
+  );
+};
+
+export default EarnPage;

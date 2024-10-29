@@ -8,7 +8,7 @@ interface InfoDetailGreyProps extends PropsWithChildren<{}> {
 
 const InfoDetailGrey: React.FC<InfoDetailGreyProps> = ({ title, icon, children, className }) => {
   return (
-    <div className={`border border-[#343434] rounded-xl opacity-100 py-5 px-10 ${className}`}>
+    <div className={`border border-[#343434] rounded-xl opacity-100 p-5 ${className}`}>
         <div className='text-[#888888] text-[14px] flex items-center'> 
           {icon && <div className="mr-2">{icon}</div>} 
           {title}

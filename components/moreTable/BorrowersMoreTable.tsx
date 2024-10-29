@@ -1,171 +1,199 @@
-"use client"
+"use client";
 
-import React from 'react';
-import { DetailEarnData } from '@/types/detailEarnData';
-import TableHeaderCell from './MoreTableHeader';
-import usePagination from '@/hooks/usePagination';
-import Pagination from '../pagination/Pagination';
-import FormatNumber from '../tools/formatNumber';
-import FormatPrice from '../tools/formatPrice';
-import FormatPourcentage from '../tools/formatPourcentage';
+import React, { useEffect, useState } from "react";
+import FormatPrice from "../tools/formatPrice";
+import TableHeaderCell from "./MoreTableHeader";
+import usePagination from "@/hooks/usePagination";
+import Pagination from "../pagination/Pagination";
+import FormatPourcentage from "../tools/formatPourcentage";
+import { oraclePriceScale } from "@/utils/const";
+import { getTokenPairPrice } from "@/utils/contract";
+import { IMarketUser, IMarketUserProps } from "@/types";
+import { formatAddress, formatTokenValue, getTokenInfo } from "@/utils/utils";
 
-interface Props {
-  
-}
+const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
+  marketUsers,
+  item,
+}) => {
+  const [showList, setShowList] = useState<IMarketUser[]>([]);
 
-const BorrowersMoreTable: React.FC<Props> = () => {
+  useEffect(() => {
+    const getPrice = async () => {
+      const pairPrice = await getTokenPairPrice(item.marketParams.oracle);
 
+      let _showList = marketUsers
+        ? marketUsers.filter(
+            (marketUser) => marketUser.borrow_amount > BigInt(0)
+          )
+        : [];
 
-    const tableData: DetailEarnData[] = [
-        {
-          allocationColor: "orange",
-          supplyAmount: 3288.62,
-          supplyCurrency: "USDC",
-          supplyValue: 1.96,
-          collateral: ["usdc", "btc", "add", "ada"],
-          liquidationLTV: 90,
-          liquidationLTV2: 130,
-          credoraRating: "CCC+ / BBB",
-          unsecuredBorrowAmount: 7890.12,
-          unsecuredBorrowValue: 4.98,
-          unsecuredAPY: 16.8,         
-        },
-          {
-            allocationColor: "green",
-            supplyAmount: 5432.10,
-            supplyCurrency: "USDT",
-            supplyValue: 3.25,
-            collateral: ["usdc", "btc", "add", "ada","ant"],
-            liquidationLTV: 85,
-            liquidationLTV2: 130,
-            credoraRating: "BB+ / AA-",
-            unsecuredBorrowAmount: 6543.21,
-            unsecuredBorrowValue: 3.67,
-            unsecuredAPY: 13.5
-          },
-          {
-            allocationColor: "yellow",
-            supplyAmount: 7654.32,
-            supplyCurrency: "USDA",
-            supplyValue: 1.55,
-            collateral: ["usdc", "btc", "add", "ada"],
-            liquidationLTV: 95,
-            liquidationLTV2: 130,
-            credoraRating: "CC+ / A-",
-            unsecuredBorrowAmount: 4321.09,
-            unsecuredBorrowValue: 2.45,
-            unsecuredAPY: 17.5
-          },
-          {
-            allocationColor: "orange",
-            supplyAmount: 3288.62,
-            supplyCurrency: "USDC",
-            supplyValue: 1.96,
-            collateral: ["usdc", "btc", "add", "ada"],
-            liquidationLTV: 90,
-            liquidationLTV2: 130,
-            credoraRating: "CCC+ / BBB",
-            unsecuredBorrowAmount: 7890.12,
-            unsecuredBorrowValue: 4.98,
-            unsecuredAPY: 16.8
-          },
-          {
-            allocationColor: "green",
-            supplyAmount: 5432.10,
-            supplyCurrency: "USDT",
-            supplyValue: 3.25,
-            collateral: ["usdc", "btc", "add", "ada","ant"],
-            liquidationLTV: 85,
-            liquidationLTV2: 130,
-            credoraRating: "BB+ / AA-",
-            unsecuredBorrowAmount: 6543.21,
-            unsecuredBorrowValue: 3.67,
-            unsecuredAPY: 13.5
-          },
-          {
-            allocationColor: "yellow",
-            supplyAmount: 7654.32,
-            supplyCurrency: "USDA",
-            supplyValue: 1.55,
-            collateral: ["usdc", "btc", "add", "ada"],
-            liquidationLTV: 95,
-            liquidationLTV2: 130,
-            credoraRating: "CC+ / A-",
-            unsecuredBorrowAmount: 4321.09,
-            unsecuredBorrowValue: 2.45,
-            unsecuredAPY: 17.5
-          },
-          
-      ];
-      const itemsPerPage = 5;
-
-      const { currentPage, totalPages, goToNextPage, goToPreviousPage } = usePagination(tableData.length, itemsPerPage);
-      
-      // Calculate the current page data slice
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const currentPageData = tableData.slice(startIndex, startIndex + itemsPerPage);
-    
-
-     
-      return (
-          <div className='w-full h-full'>
-              <h1 className="text-2xl  mt-16 mb-8">Borrowers</h1>
-              <div className="overflow-x-auto relative table-wrapper  mb-16 w-full"  style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative' }}>
-              <table className="w-full text-sm text-left   border border-gray-800 w-full " >
-                      <thead className="bg-[#212121] h-20  text-xs "     style={{ boxShadow: 'inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)' }}>
-                      <tr className="rounded-t-lg">
-                          <th style={{ width: '300px' }} className="rounded-tl-lg"><TableHeaderCell title="Wallet" infoText=""/></th>
-                          <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Collateral" infoText="The token(s) that borrowers must lock in order to borrow funds." /></div></th>
-                          <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Loan"  infoText=""/></div></th>
-                          <th style={{ width: '200px' }}><div className='flex justify-start'><TableHeaderCell title="Health Factor" infoText="" /></div></th>
-                          <th style={{ width: '100px' }}> <div className='flex justify-start'><TableHeaderCell title="Share" infoText=""/> </div></th>
-                      </tr>
-                      </thead>
-                      <tbody className="bg-transparent ">
-                      {currentPageData.map((item, index, arr) => (
-                          <tr key={index} 
-                              style={index === arr.length - 1 ? { borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' } : undefined} 
-                              className={`last:border-b-0   cursor-pointer ${index % 2 === 0 ? 'bg-transparent' : 'dark:bg-[#191919]'}`}>
-                            
-                              <td className="py-4 px-4  items-center  h-full flex justify-start">
-                                  <span style={{ backgroundColor: item.allocationColor }} className={`w-5 h-5  rounded-full mr-2`}></span>
-                                  <span>0x1234...xxyz</span>
-                              </td>
-
-                            <td className="py-4  items-center h-full ">
-                                <div className='flex gap-1 justify-start items-center gap-2 ml-3' >
-                                  <FormatPrice value={item.supplyAmount} token={item.supplyCurrency} ></FormatPrice>                      
-                                </div>
-                              </td>  
-
-                              <td className="py-4  items-center h-full ">
-                                <div className='flex gap-1 justify-start items-center gap-2 ml-3' >
-                                  <FormatPrice value={item.supplyAmount} token={item.supplyCurrency} ></FormatPrice>                               
-                                </div>
-                              </td>  
-                              
-                              <td className=" items-center justify-start h-full ">
-                                  <div className='flex gap-1 justify-start ml-3' ><div  >{item.unsecuredAPY}</div></div>
-                              </td> 
-
-                              <td className=" items-center justify-start h-full ">
-                                  <div className='flex gap-1 justify-start ml-3' >
-                                    <FormatPourcentage value={item.unsecuredAPY} ></FormatPourcentage>
-                                  </div>                            
-                              </td> 
-                                
-                          </tr>
-                      ))}
-                      </tbody>
-                  </table>                 
-
-              </div>
-              <div className='w-full flex justify-start my-4 mr-4' >
-                      <Pagination totalItems={tableData.length} ></Pagination>
-              </div>
-        </div>   
-
-
+      const totalBorrow = _showList.reduce(
+        (memo, showItem) => (memo += showItem.borrow_amount),
+        BigInt(0)
       );
+
+      if (totalBorrow > BigInt(0)) {
+        const collateralToken = getTokenInfo(item.inputToken.id).decimals;
+        const borrowToken = getTokenInfo(item.borrowedToken.id).decimals;
+        const isBig = collateralToken >= borrowToken;
+        const decimalsPow = BigInt(
+          10 **
+            (isBig
+              ? collateralToken - borrowToken
+              : borrowToken - collateralToken)
+        );
+        _showList.map((showItem) => {
+          showItem.borrow_percent =
+            (formatTokenValue(showItem.borrow_amount, item.borrowedToken.id) *
+              100) /
+            formatTokenValue(totalBorrow, item.borrowedToken.id);
+
+          const factorVal =
+            (showItem.collateral_amount *
+              pairPrice *
+              BigInt(100) *
+              (isBig ? BigInt(1) : decimalsPow)) /
+            showItem.borrow_amount /
+            oraclePriceScale /
+            (isBig ? decimalsPow : BigInt(1));
+          showItem.health_factor =
+            factorVal > BigInt(0) ? 1e4 / Number(factorVal) : 0;
+        });
+
+        setShowList(
+          _showList.sort(
+            (item1, item2) => item2.borrow_percent - item1.borrow_percent
+          )
+        );
+      }
     };
+
+    getPrice();
+  }, [item, marketUsers]);
+
+  const itemsPerPage = 5;
+  const { currentPage } = usePagination(showList.length, itemsPerPage);
+
+  // Calculate the current page data slice
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentPageData = showList.slice(startIndex, startIndex + itemsPerPage);
+
+  return (
+    <div>
+      <h1 className="text-[20px] font-semibold mb-8 mt-16">Borrowers</h1>
+      <div
+        className="rounded-2xl table-wrapper more-table"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          position: "relative",
+        }}
+      >
+        <table className="w-full rounded-2xl text-sm text-left table overflow-x-scroll">
+          <thead
+            className="bg-[#212121] h-20 text-white text-xs "
+            style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
+          >
+            <tr>
+              <th style={{ width: "300px" }} className="p-6">
+                <TableHeaderCell title="Wallet" infoText="" />
+              </th>
+              <th style={{ width: "200px" }} className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell
+                    title="Collateral"
+                    infoText="The token(s) that borrowers must lock in order to borrow funds."
+                  />
+                </div>
+              </th>
+              <th style={{ width: "200px" }} className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Loan" infoText="" />
+                </div>
+              </th>
+              <th style={{ width: "200px" }} className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Health Factor" infoText="" />
+                </div>
+              </th>
+              <th style={{ width: "100px" }} className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Share" infoText="" />
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-transparent">
+            {currentPageData.map((showItem, index, arr) => (
+              <tr
+                key={index}
+                style={
+                  index === arr.length - 1
+                    ? {
+                        borderBottomLeftRadius: "8px",
+                        borderBottomRightRadius: "8px",
+                      }
+                    : undefined
+                }
+                className={`last:border-b-0 text-[14px]  cursor-pointer ${
+                  index % 2 === 0 ? "bg-transparent" : "dark:bg-[#191919]"
+                }`}
+              >
+                <td className="p-6">
+                  <span
+                    // style={{ backgroundColor: item.allocationColor }}
+                    className={`w-5 h-5  rounded-full mr-2`}
+                  ></span>
+                  <span>{formatAddress(showItem.user_address)}</span>
+                </td>
+
+                <td className="py-4">
+                  <div className="flex p-6 justify-start items-center gap-2 ml-3">
+                    <FormatPrice
+                      value={formatTokenValue(
+                        showItem.collateral_amount,
+                        item.inputToken.id
+                      )}
+                      token={getTokenInfo(item.inputToken.id).symbol}
+                    />
+                  </div>
+                </td>
+                <td className="py-4">
+                  <div className="flex p-6 justify-start items-center gap-2 ml-3">
+                    <FormatPrice
+                      value={formatTokenValue(
+                        showItem.borrow_amount,
+                        item.borrowedToken.id
+                      )}
+                      token={getTokenInfo(item.borrowedToken.id).symbol}
+                    />
+                    x
+                  </div>
+                </td>
+
+                <td className="p-6">
+                  <div className="flex gap-1 justify-start ml-3">
+                    <div>{showItem.health_factor.toFixed(2)} %</div>
+                  </div>
+                </td>
+
+                <td className="p-6">
+                  <div className="flex gap-1 justify-start ml-3">
+                    <FormatPourcentage
+                      value={showItem.borrow_percent}
+                      multiplier={1}
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="w-full text-[14px] flex justify-start py-10 px-6">
+          <Pagination totalItems={showList.length} />
+        </div>
+      </div>
+    </div>
+  );
+};
 export default BorrowersMoreTable;

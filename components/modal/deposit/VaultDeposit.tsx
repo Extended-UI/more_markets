@@ -1,63 +1,59 @@
 "use client";
-import React, { useState } from 'react';
-import VaultDepositSet from './VaultDepositSet';
-import VaultDepositConfirm from './VaultDepositConfirm';
-import VaultDepositSummary from './VaultDepositSummary';
 
-interface Props {
-  title: string;
-  token: string;
-  balance: number;
-  apy: number;
-  ltv: string;
-  totalDeposit: number;
-  totalTokenAmount: number;
-  curator: string;
+import React, { useState } from "react";
+import VaultDepositInput from "./VaultDepositInput";
+import VaultDepositPush from "./VaultDepositPush";
+import VaultDepositResult from "./VaultDepositResult";
+import { IInvestmentProp } from "@/types";
+
+interface Props extends IInvestmentProp {
   closeModal: () => void;
 }
 
-const VaultDeposit: React.FC<Props> = ({ title, token, balance, apy, ltv, totalDeposit, totalTokenAmount, curator, closeModal }) => {
-
+const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   const [step, setStep] = useState(1);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [txHash, setTxHash] = useState("");
 
-  const handleSetDeposit = (amount: number) => {
-    console.log("DEPOSIT SET", amount)    
+  const handleSetDeposit = (amount: string) => {
     setAmount(amount);
     setStep(2);
   };
 
-
   const handleValidDeposit = () => {
-    console.log("DEPOSIT VALID")
     setStep(3);
   };
 
-
   const handleProcessDone = () => {
-    console.log("DEPOSIT DONE")
-  };
-
-  console.log("test", apy);
-  
-
-  const renderStep = () => {
-    switch(step) {
-      case 1:
-        return <VaultDepositSet title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} setAmount={(amount: number) => handleSetDeposit(amount)}  closeModal={closeModal} />;
-      case 2:
-        return <VaultDepositConfirm title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} curator={curator} amount={amount}  validDeposit={() => handleValidDeposit()}  closeModal={closeModal} />;
-      case 3:
-        return <VaultDepositSummary amount={amount}  title={title} token={token} balance={balance} apy={apy} ltv={ltv} totalDeposit={totalDeposit} totalTokenAmount={totalTokenAmount} processDone={() => handleProcessDone()} closeModal={closeModal}   />;
-      default:
-        return null; // ou une vue par défaut
-    }
+    updateInfo(item.vaultId);
+    closeModal();
   };
 
   return (
-    <div>
-      {renderStep()}
-    </div>
+    <>
+      {step == 1 ? (
+        <VaultDepositInput
+          item={item}
+          closeModal={closeModal}
+          setAmount={handleSetDeposit}
+        />
+      ) : step == 2 ? (
+        <VaultDepositPush
+          item={item}
+          amount={amount}
+          setTxHash={setTxHash}
+          closeModal={closeModal}
+          validDeposit={handleValidDeposit}
+        />
+      ) : step == 3 ? (
+        <VaultDepositResult
+          item={item}
+          amount={amount}
+          txhash={txHash}
+          processDone={handleProcessDone}
+        />
+      ) : null}
+    </>
   );
 };
 
