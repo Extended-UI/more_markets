@@ -13,6 +13,8 @@ export const virtualAssets = BigInt(1);
 export const moreTolerance = BigInt(100);
 export const virtualShares = BigInt(1e6);
 export const oraclePriceScale = BigInt(1e36);
+export const apyMultiplier = BigInt(1e4);
+export const apyDivider = 1e2;
 
 export const contracts = {
   MORE_MARKETS: "0x94A2a9202EFf6422ab80B6338d41c89014E5DD72",

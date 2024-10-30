@@ -23,10 +23,7 @@ const Header: FC = () => {
   useEffect(() => {
     const initClaim = async () => {
       if (userAddress) {
-        // setClaimList(await fetchVaultClaims(userAddress));
-        setClaimList(
-          await fetchVaultClaims("0x000000000000000000000002146dEaA9b9Bc2610")
-        );
+        setClaimList(await fetchVaultClaims(userAddress));
       } else {
         setClaimList([]);
       }

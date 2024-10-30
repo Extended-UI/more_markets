@@ -1,5 +1,6 @@
 import _ from "lodash";
 import mysql from "mysql2/promise";
+import { parseEther } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
 import { IVaultApr, IVaultProgram } from "@/types";
 
@@ -42,11 +43,17 @@ export async function GET(req: NextRequest, res: NextResponse) {
   if (vaultid.length > 0) {
     query += ` AND vaultid = '${vaultid}'`;
   }
-  const [[rows], [vaultPrograms], [vaultShares]] = await Promise.all([
-    connection.query(query),
-    connection.query(`SELECT * FROM vault_programs WHERE program_ended = '0'`),
-    connection.query(`SELECT * FROM vault_valid_shares`),
-  ]);
+  const [[rows], [vaultPrograms], [vaultShares], [boxPrograms]] =
+    await Promise.all([
+      connection.query(query),
+      connection.query(
+        `SELECT * FROM vault_programs WHERE program_ended = '0'`
+      ),
+      connection.query(`SELECT * FROM vault_valid_shares`),
+      connection.query(
+        `SELECT * FROM vault_box_programs WHERE program_ended = '0'`
+      ),
+    ]);
 
   let vaultAprInfos: IVaultAprItem[] = [];
   for (let resultItem of rows as IVaultAprRow[]) {
@@ -77,6 +84,16 @@ export async function GET(req: NextRequest, res: NextResponse) {
               : null;
           })
         ),
+        boxes: _.compact(
+          (boxPrograms as any[]).map((boxProgram) => {
+            return boxProgram.vault_address == vaultId &&
+              currentTime >= Number(boxProgram.start_time)
+              ? parseEther(boxProgram.batch_mint_amount)
+              : null;
+          })
+        )
+          .reduce((memo, boxAmount) => (memo += boxAmount), BigInt(0))
+          .toString(),
         total_shares: shareItem
           ? BigInt(shareItem.total_amount).toString()
           : "0",
@@ -90,6 +107,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
       apr: vaultAprInfo.apr / vaultAprInfo.count,
       programs: vaultAprInfo.programs,
       total_shares: vaultAprInfo.total_shares,
+      boxes: vaultAprInfo.boxes,
     };
   });
 

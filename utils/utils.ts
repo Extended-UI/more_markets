@@ -26,6 +26,8 @@ import {
   WAD,
   moreTolerance,
   MoreAction,
+  apyMultiplier,
+  apyDivider,
 } from "./const";
 
 const errorDecoder = ErrorDecoder.create();
@@ -312,7 +314,10 @@ export const getVaultApyInfo = (
     (memo, boostApyItem) => (memo += boostApyItem.apy),
     0
   );
-  const boxApy = 0;
+  const boxApy = getBoxProgramApy(
+    toBigInt(aprItem.boxes),
+    toBigInt(aprItem.total_shares)
+  );
 
   return {
     base_apy: baseApy,
@@ -325,6 +330,16 @@ export const getVaultApyInfo = (
 
 const getRewardPrice = (priceInfo: string): bigint => {
   return BigInt(1);
+};
+
+const getBoxProgramApy = (boxes: bigint, deposited: bigint): number => {
+  if (deposited == BigInt(0)) return 0;
+
+  // 1box = 0.005FLOW
+  return (
+    Number((boxes * BigInt(5) * apyMultiplier) / deposited / BigInt(1e3)) /
+    apyDivider
+  );
 };
 
 const getVaultProgramApy = (
@@ -345,7 +360,7 @@ const getVaultProgramApy = (
       );
 
       return {
-        apy: Number((rewardSum * BigInt(1e4)) / deposited) / 1e2,
+        apy: Number((rewardSum * apyMultiplier) / deposited) / apyDivider,
         priceInfo: key,
       };
     })

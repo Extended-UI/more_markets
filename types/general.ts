@@ -74,6 +74,7 @@ export interface IVaultApr {
   vaultid: string;
   apr: number;
   programs: IVaultProgram[];
+  boxes: string;
   total_shares: string;
 }
 
