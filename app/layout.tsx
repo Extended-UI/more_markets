@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
 import MainLayout from "@/layouts/MainLayout";
+import { GoogleTagManager } from "@next/third-parties/google";
+
 import { Providers } from "./providers";
 
 import "@rainbow-me/rainbowkit/styles.css";
@@ -31,6 +33,7 @@ const RootLayout = ({ children }: LayoutProps) => {
             `,
           }}
         />
+        <GoogleTagManager gtmId="GTM-T6JLGPRG" />
         <title>More Markets</title>
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
