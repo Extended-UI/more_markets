@@ -168,7 +168,8 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                             multiplier={1}
                           />
                         </div>
-                        {item.programs.length > 0 && (
+                        {(item.netAPY.box_apy > 0 ||
+                          item.programs.length > 0) && (
                           <HoverCardComp apy={item.netAPY} />
                         )}
                       </div>
