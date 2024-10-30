@@ -183,15 +183,17 @@ const EasyModePage: React.FC = () => {
               <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
                 Balance: {balanceString.formatted} FLOW
               </div>
-              <div className="flex justify-end mt-[40px]">
-                <MoreButton
-                  className="text-2xl py-2 "
-                  text="Deposit"
-                  onClick={handleDeposit}
-                  color="primary"
-                  disabled={isLoading}
-                />
-              </div>
+              {userAddress && (
+                <div className="flex justify-end mt-[40px]">
+                  <MoreButton
+                    className="text-2xl py-2 "
+                    text="Deposit"
+                    onClick={handleDeposit}
+                    color="primary"
+                    disabled={isLoading}
+                  />
+                </div>
+              )}
             </div>
             <div className=""></div>
             <div className="w-[50%] mx-15 flex justify-center mx-auto">

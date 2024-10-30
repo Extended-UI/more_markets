@@ -11,7 +11,10 @@ const flowMainnet = {
   nativeCurrency: { name: "Flow", symbol: "FLOW", decimals: 18 },
   rpcUrls: {
     default: {
-      http: ["https://mainnet.evm.nodes.onflow.org/"],
+      http: [
+        "https://flow-mainnet.g.alchemy.com/v2/giF5d0sHzxK4OoanZ-rwx6Z-jpLMuB1S",
+        "https://mainnet.evm.nodes.onflow.org",
+      ],
     },
   },
   contracts: {
@@ -34,7 +37,10 @@ export const config = createConfig({
   chains: [flowMainnet],
   connectors: [injected()],
   transports: {
-    [flowMainnet.id]: http("https://mainnet.evm.nodes.onflow.org"),
+    // [flowMainnet.id]: http("https://mainnet.evm.nodes.onflow.org"),
+    [flowMainnet.id]: http(
+      "https://flow-mainnet.g.alchemy.com/v2/giF5d0sHzxK4OoanZ-rwx6Z-jpLMuB1S"
+    ),
   },
   ssr: true,
   pollingInterval: 30_000,
