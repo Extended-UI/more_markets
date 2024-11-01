@@ -4,7 +4,6 @@ import { WETH9Abi } from "@/app/abi/WETH9Abi";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
-import { ApyFeedAbi } from "@/app/abi/ApyFeedAbi";
 import { MulticallAbi } from "@/app/abi/Multicall";
 import { LoopStrategyAbi } from "@/app/abi/LoopStrategyAbi";
 
@@ -19,11 +18,9 @@ export const apyDivider = 1e2;
 export const contracts = {
   MORE_MARKETS: "0x94A2a9202EFf6422ab80B6338d41c89014E5DD72",
   MORE_BUNDLER: "0x1f474e384712cA7EC0dEE3cD9E4c3905dC8beA18",
-  MORE_VAULTS_FACTORY: "0x4B447E14Ee051522BDe18c6827A5a47B2D29293f",
   WNATIVE: "0xd3bF53DAC106A0290B0483EcBC89d40FcC961f3e", // wflow
   MULTICALL3: "0x8358d18E99F44E39ea90339c4d6E8C36101f8161",
   PERMIT2: "0x2ce0a0Ac76F9e4Ab49ff0370516D4b23bE7AE46d",
-  APY_FEED: "0x9c2CE59eCC6930fFd12bE4944B482df008486D7f",
   LOOP_STRATEGY: "0xBEe4769E53d1A6BABC4fC2E91F9B730770453bad",
 };
 
@@ -68,11 +65,6 @@ export const bundlerInstance = {
 export const permit2Instance = {
   address: contracts.PERMIT2 as `0x${string}`,
   abi: Permit2Abi,
-};
-
-export const apyfeedInstance = {
-  address: contracts.APY_FEED as `0x${string}`,
-  abi: ApyFeedAbi,
 };
 
 export const multicallInstance = {
