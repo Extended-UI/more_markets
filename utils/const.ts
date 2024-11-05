@@ -6,14 +6,15 @@ import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
 import { MulticallAbi } from "@/app/abi/Multicall";
 import { LoopStrategyAbi } from "@/app/abi/LoopStrategyAbi";
+import { parseEther } from "ethers";
 
+export const apyDivider = 1e2;
 export const WAD = BigInt(1e18);
 export const virtualAssets = BigInt(1);
 export const moreTolerance = BigInt(100);
 export const virtualShares = BigInt(1e6);
-export const oraclePriceScale = BigInt(1e36);
 export const apyMultiplier = BigInt(1e4);
-export const apyDivider = 1e2;
+export const oraclePriceScale = parseEther(WAD.toString());
 
 export const contracts = {
   MORE_MARKETS: "0x94A2a9202EFf6422ab80B6338d41c89014E5DD72",
