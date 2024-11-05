@@ -46,11 +46,9 @@ const MoreGraphicsV1: React.FC<Props> = ({
     setVisibility(initialVisibility);
   }, [datasets]);
 
-  // Écouter les changements de visibilité
-  useEffect(() => {
-    // console.log("Visibility updated: ", visibility);
-    // console.log("Visibility updated: ", datasets);
-  }, [visibility, datasets]);
+  // // Écouter les changements de visibilité
+  // useEffect(() => {
+  // }, [visibility, datasets]);
 
   const toggleVisibility = (label: string): void => {
     setVisibility((prevVisibility) => ({

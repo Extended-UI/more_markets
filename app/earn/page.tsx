@@ -9,9 +9,8 @@ import { blacklistedVaults } from "@/utils/const";
 import { getVaultDetail, fetchVaults, fetchMarkets } from "@/utils/contract";
 import {
   formatTokenValue,
-  formatCurator,
   fetchVaultAprs,
-  convertAprToApy,
+  getVaultApyInfo,
 } from "@/utils/utils";
 // import { fetchMarkets, fetchVaults } from "@/utils/graph";
 
@@ -45,7 +44,7 @@ const EarnPage: React.FC = () => {
           );
 
           const aprItem = aprsArr.find(
-            (aprItem) => aprItem.vaultid.toLowerCase() == vault.id.toLowerCase()
+            (aprItem) => aprItem.vaultid == vault.id.toLowerCase()
           );
 
           const deposited = (await getVaultDetail(
@@ -58,9 +57,10 @@ const EarnPage: React.FC = () => {
             vaultId: vault.id,
             vaultName: vault.name,
             assetAddress: vault.asset.id,
-            netAPY: aprItem ? convertAprToApy(aprItem.apr, aprDates) : 0,
+            netAPY: getVaultApyInfo(aprItem, aprDates),
+            programs: aprItem?.programs || [],
             totalDeposits: formatTokenValue(deposited, vault.asset.id),
-            curator: formatCurator(vault),
+            curator: vault.curator ? vault.curator.id : "",
             collateral: uniq(activeCollaterals),
             guardian: vault.guardian ? vault.guardian.id : "",
             timelock: vault.timelock,

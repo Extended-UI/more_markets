@@ -1,24 +1,26 @@
 import { type GetBalanceReturnType } from "@wagmi/core";
 import { IToken } from "@/types";
+import { WETH9Abi } from "@/app/abi/WETH9Abi";
 import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
-import { ApyFeedAbi } from "@/app/abi/ApyFeedAbi";
+import { MulticallAbi } from "@/app/abi/Multicall";
+import { LoopStrategyAbi } from "@/app/abi/LoopStrategyAbi";
 
 export const WAD = BigInt(1e18);
 export const virtualAssets = BigInt(1);
 export const moreTolerance = BigInt(100);
 export const virtualShares = BigInt(1e6);
 export const oraclePriceScale = BigInt(1e36);
+export const apyMultiplier = BigInt(1e4);
+export const apyDivider = 1e2;
 
 export const contracts = {
   MORE_MARKETS: "0x9a9B20fAb58a0fF084e70283E91448bB31d0FAfa",
   MORE_BUNDLER: "0x34596c09bd484e315c9915a2a1aa6b50bc99428a",
-  MORE_VAULTS_FACTORY: "0xACBdE7028CC21FD95496e3481AdCe5aDdB3C3B38",
   WNATIVE: "0xe0fd0a2a4c2e59a479aab0cf44244e355c508766", // wflow
   MULTICALL3: "0xF7d11c74B5706155d7C6DBe931d590611a371a8a",
   PERMIT2: "0x000000000022D473030F116dDEE9F6B43aC78BA3",
-  APY_FEED: "0x2e201ACF426D45949bF685312f99CBf4f4ceEeC5",
 };
 
 export const tokens: { [key: string]: IToken } = {
@@ -98,16 +100,23 @@ export const permit2Instance = {
   abi: Permit2Abi,
 };
 
-export const apyfeedInstance = {
-  address: contracts.APY_FEED as `0x${string}`,
-  abi: ApyFeedAbi,
+export const multicallInstance = {
+  address: contracts.MULTICALL3 as `0x${string}`,
+  abi: MulticallAbi,
+};
+
+export const wflowInstance = {
+  address: contracts.WNATIVE as `0x${string}`,
+  abi: WETH9Abi,
 };
 
 export const Uint48Max = 281474976710655;
 
 export const gasLimit = "0.8";
 
-export const blacklistedVaults = ["0xeabddabfe3d118092a4bbaf3c13bd923bc8f134e"];
+export const blacklistedVaults: string[] = [
+  "0xeabddabfe3d118092a4bbaf3c13bd923bc8f134e",
+];
 
 export const enum MoreAction {
   GENERAL = "general",
@@ -118,6 +127,9 @@ export const enum MoreAction {
   ADD_COLLATERAL = "add_collateral",
   WITHDRAW_COLLATERAL = "withdraw_collateral",
   REPAY = "repay",
+  CLAIM = "claim",
+  LOOP_DEPOSIT = "loop_deposit",
+  LOOP_WITHDRAW = "loop_withdraw",
 }
 
 export const sactionedCountries = ["KP", "IR", "MM"];

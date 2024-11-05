@@ -7,46 +7,43 @@ import InputTokenMax from "../../input/InputTokenMax";
 import MoreButton from "../../moreButton/MoreButton";
 import ListIconToken from "@/components/token/ListIconToken";
 import { IBorrowPosition } from "@/types";
-import { getTokenInfo } from "@/utils/utils";
+import { initBalance } from "@/utils/const";
 import { getTokenBallance } from "@/utils/contract";
+import { getTokenInfo, validInputAmount } from "@/utils/utils";
 
 interface Props extends IBorrowPosition {
-  setAmount: (amount: number) => void;
+  setAmount: (amount: string) => void;
 }
 
 const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
-  const [deposit, setAdd] = useState<number>();
+  const [deposit, setAdd] = useState("");
   const [supplyBalance, setSupplyBalance] =
-    useState<GetBalanceReturnType | null>(null);
+    useState<GetBalanceReturnType>(initBalance);
 
   const { address: userAddress } = useAccount();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setAdd(inputVal);
+    setAdd(event.target.value);
   };
 
-  const handleSetMax = (maxValue: number) => {
+  const handleSetMax = (maxValue: string) => {
     setAdd(maxValue);
   };
 
   useEffect(() => {
     const initBalances = async () => {
-      setSupplyBalance(
-        userAddress
-          ? await getTokenBallance(item.inputToken.id, userAddress)
-          : null
-      );
+      if (userAddress) {
+        setSupplyBalance(
+          await getTokenBallance(item.inputToken.id, userAddress)
+        );
+      }
     };
 
     initBalances();
   }, [item, userAddress]);
 
   const handleAdd = () => {
-    if (deposit && deposit > 0) setAmount(deposit);
+    if (validInputAmount(deposit)) setAmount(deposit);
   };
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
@@ -86,7 +83,7 @@ const VaultAddInput: React.FC<Props> = ({ item, setAmount, closeModal }) => {
               onChange={handleInputChange}
               placeholder="0"
               token={item.inputToken.id}
-              balance={Number(supplyBalance ? supplyBalance.formatted : 0)}
+              balance={supplyBalance.formatted}
               setMax={handleSetMax}
             />
           </div>

@@ -10,9 +10,12 @@ import HeaderBorrowDetail from "@/components/details/HeaderBorrowDetail";
 import GraphsBorrowDetails from "@/components/details/GraphsBorrowDetails";
 import ActivityBorrowDetail from "@/components/details/ActivityBorrowDetail";
 // import { fetchMarket } from "@/utils/graph";
-import { BorrowMarket, BorrowPosition } from "@/types";
-
-import { fetchMarketAprs, convertAprToApy } from "@/utils/utils";
+import { BorrowMarket, BorrowPosition, IMarketUser } from "@/types";
+import {
+  fetchMarketAprs,
+  convertAprToApy,
+  fetchMarketUsers,
+} from "@/utils/utils";
 import {
   getMarketData,
   getPosition,
@@ -27,6 +30,7 @@ const BorrowDetailPage: React.FC = () => {
   const params = usePathname();
   const { address: userAddress } = useAccount();
 
+  const [marketUsers, setMarketUsers] = useState<IMarketUser[]>([]);
   const [borrowMarket, setBorrowMarket] = useState<BorrowMarket | null>(null);
   const [borrowPosition, setBorrowPosition] = useState<BorrowPosition | null>(
     null
@@ -39,16 +43,30 @@ const BorrowDetailPage: React.FC = () => {
     const initMarket = async () => {
       try {
         if (marketId.length > 0) {
-          const [marketInfo, marketData, marketAprs] = await Promise.all([
-            fetchMarket(marketId),
-            getMarketData(marketId),
-            fetchMarketAprs(aprDate, marketId),
-          ]);
+          const [marketInfo, marketData, marketAprs, fetchedUsers] =
+            await Promise.all([
+              fetchMarket(marketId),
+              getMarketData(marketId),
+              fetchMarketAprs(aprDate, marketId),
+              fetchMarketUsers(marketId),
+            ]);
 
           const aprItem = marketAprs.find(
             (marketApr) =>
               marketApr.marketid.toLowerCase() == marketId.toLowerCase()
           );
+
+          const usersList = fetchedUsers.map((userItem) => {
+            return {
+              user_address: userItem.user_address,
+              collateral_amount: BigInt(userItem.collateral_amount),
+              borrow_amount: BigInt(userItem.borrow_amount),
+              collateral_percent: 0,
+              borrow_percent: 0,
+              health_factor: 0,
+            } as IMarketUser;
+          });
+          setMarketUsers(usersList);
 
           setBorrowMarket({
             ...marketInfo,
@@ -138,7 +156,7 @@ const BorrowDetailPage: React.FC = () => {
           )}
 
           <GraphsBorrowDetails />
-          <ActivityBorrowDetail />
+          <ActivityBorrowDetail item={borrowMarket} marketUsers={marketUsers} />
         </div>
       )}
     </>

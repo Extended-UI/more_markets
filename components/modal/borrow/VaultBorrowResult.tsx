@@ -1,19 +1,20 @@
 "use client";
 
+import { toNumber } from "lodash";
 import React, { useState, useEffect } from "react";
 import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { IBorrowPositionResult } from "@/types";
-import { notifyError } from "@/utils/utils";
 import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
+import { notifyError, validInputAmount } from "@/utils/utils";
 
 interface Props extends IBorrowPositionResult {
   onlyBorrow?: boolean;
-  supplyAmount: number;
-  borrowAmount: number;
+  supplyAmount: string;
+  borrowAmount: string;
 }
 
 const VaultBorrowResult: React.FC<Props> = ({
@@ -25,6 +26,9 @@ const VaultBorrowResult: React.FC<Props> = ({
   processDone,
 }) => {
   const [executed, setExecuted] = useState(false);
+
+  const numSupplyAmount = toNumber(supplyAmount);
+  const numBorrowAmount = toNumber(borrowAmount);
 
   useEffect(() => {
     const waitTx = async () => {
@@ -62,14 +66,13 @@ const VaultBorrowResult: React.FC<Props> = ({
           </span>
           Executed the following actions
         </div>
-        {supplyAmount > 0 && (
+        {validInputAmount(supplyAmount) && (
           <div className="more-bg-primary rounded-[12px] p-[20px] mb-6">
             <TokenAmount
               title="Supply"
               token={item.inputToken.id}
-              amount={supplyAmount}
-              ltv={"ltv"}
-              totalTokenAmount={supplyAmount}
+              amount={numSupplyAmount}
+              totalTokenAmount={numSupplyAmount}
             />
           </div>
         )}
@@ -77,9 +80,8 @@ const VaultBorrowResult: React.FC<Props> = ({
           <TokenAmount
             title="Borrow"
             token={item.borrowedToken.id}
-            amount={borrowAmount}
-            ltv={"ltv"}
-            totalTokenAmount={borrowAmount}
+            amount={numBorrowAmount}
+            totalTokenAmount={numBorrowAmount}
           />
         </div>
         {txhash.length > 0 && (

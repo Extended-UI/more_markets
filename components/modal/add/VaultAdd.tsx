@@ -12,10 +12,10 @@ const VaultAdd: React.FC<IBorrowPositionProp> = ({
   updateInfo,
 }) => {
   const [step, setStep] = useState(1);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [txHash, setTxHash] = useState("");
 
-  const handleSetAdd = (amount: number) => {
+  const handleSetAdd = (amount: string) => {
     setAmount(amount);
     setStep(2);
   };
@@ -35,7 +35,7 @@ const VaultAdd: React.FC<IBorrowPositionProp> = ({
         <VaultAddInput
           item={item}
           closeModal={closeModal}
-          setAmount={(amount: number) => handleSetAdd(amount)}
+          setAmount={handleSetAdd}
         />
       ) : step == 2 ? (
         <VaultAddPush

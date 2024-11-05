@@ -17,11 +17,11 @@ const VaultBorrow: React.FC<Props> = ({
   updateInfo,
 }) => {
   const [step, setStep] = useState(1);
-  const [amount, setAmount] = useState(0);
-  const [borrow, setBorrow] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [borrow, setBorrow] = useState("");
   const [txHash, setTxHash] = useState("");
 
-  const handleSetBorrow = (amount: number, borrow: number) => {
+  const handleSetBorrow = (amount: string, borrow: string) => {
     setStep(2);
     setAmount(amount);
     setBorrow(borrow);
@@ -59,7 +59,7 @@ const VaultBorrow: React.FC<Props> = ({
       ) : (
         <VaultBorrowSummary
           item={item}
-          amount={0}
+          amount={""}
           supplyAmount={amount}
           borrowAmount={borrow}
           txhash={txHash}

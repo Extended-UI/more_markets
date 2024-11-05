@@ -7,6 +7,7 @@ import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import { BorrowPosition, IBorrowMarketProp } from "@/types";
+import HoverCardComp from "../hoverCard/HoverCard";
 import {
   formatTokenValue,
   getPremiumLltv,
@@ -55,13 +56,16 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
         </div>
       </td>
       <td className="p-6">
-        <div className="flex justify-start">
-          <FormatPourcentage value={item.borrow_apr} />
+        <div className="flex justify-start items-center">
+          <div className="mr-3">
+            <FormatPourcentage value={item.borrow_apr} />
+          </div>
+          {/* <HoverCardComp apy={item.netAPY} /> */}
         </div>
       </td>
       <td className="p-6">
         <div className="flex">
-          <FormatPourcentage value={utilization / 100} />
+          <FormatPourcentage value={utilization} multiplier={1} />
         </div>
       </td>
       <td className="p-6">

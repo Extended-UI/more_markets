@@ -14,9 +14,8 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-
   const [sactioned, setSactioned] = useState(false);
-  const [hasBanner, setHasBanner] = useState(true)
+  const [hasBanner, setHasBanner] = useState(true);
   const [show, setShow] = useState(false);
 
   const closeModal = () => {
@@ -43,16 +42,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     checkRegion();
-    const storedValue = localStorage.getItem('isChecked');
+    const storedValue = localStorage.getItem("isChecked");
     const isChecked = storedValue ? JSON.parse(storedValue) : false;
     isChecked ? setShow(false) : setShow(true);
-
   }, []);
 
   return (
     <>
       {sactioned ? (
-
         <div style={{ maxWidth: "1380px", margin: "0 auto" }}>
           <div className="fixed inset-0 z-50 lg:px-[20%] flex items-center justify-center bg-black bg-opacity-75">
             <div className="modal-box rounded-[20px] max-w-full p-3 bg-[#343434]">
@@ -62,33 +59,30 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           </div>
         </div>
-
       ) : (
         <>
-        
           <div className="relative">
-          {
-            hasBanner ? (
-              <Banner
-                setHasBanner={setHasBanner}
+            {hasBanner ? <Banner setHasBanner={setHasBanner} /> : ""}
+            <WelcomePopup closeModal={closeModal} show={show} />
+            <div
+              style={{
+                maxWidth: "1380px",
+                margin: hasBanner ? "55px auto 0" : "0 auto",
+                padding: "0 5%",
+              }}
+            >
+              <Header />
+              <ToastContainer
+                autoClose={3000}
+                theme="dark"
+                hideProgressBar={true}
               />
-            ):''
-          }
-            <WelcomePopup
-              closeModal={closeModal}
-              show={show}
-            />
-            <div style={{ maxWidth: "1380px", margin: hasBanner ? "55px auto 0" : "0 auto", padding: "0 5%" }} >
-              <Header/>
-              <ToastContainer autoClose={3000} theme="dark" hideProgressBar={true} />
               <div className="mt-7 sm:mt-22">
                 <main>{children}</main>
               </div>
             </div>
           </div>
-          
         </>
-
       )}
     </>
   );

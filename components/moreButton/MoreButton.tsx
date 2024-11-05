@@ -8,8 +8,9 @@ interface ButtonProps {
   text: string;
   disabled?: boolean;
   onClick: () => void;
-  color: "primary" | "secondary" | "grey" | string;
   className?: string;
+  disabled1?: boolean;
+  color: "primary" | "secondary" | "grey" | string;
 }
 
 const MoreButton: React.FC<ButtonProps> = ({
@@ -18,12 +19,11 @@ const MoreButton: React.FC<ButtonProps> = ({
   color,
   className,
   disabled = false,
+  disabled1 = false,
 }) => {
   // Use state to store the color dynamically
   const [myColor, setMyColor] = useState("#737373");
   const [isHovered, setIsHovered] = useState(false);
-
-  const isFaucet = text == "Get Testnet Tokens";
 
   useEffect(() => {
     switch (color) {
@@ -53,14 +53,9 @@ const MoreButton: React.FC<ButtonProps> = ({
     transition: "all 0.3s ease",
   };
 
-  if (isFaucet) {
-    defaultStyle.paddingTop = "7px";
-    defaultStyle.paddingBottom = "7px";
-  }
-
   const hoverStyle: CSSProperties = {
-    borderColor: `${myColor}`, 
-    backgroundColor: `${myColor}`, 
+    borderColor: `${myColor}`,
+    backgroundColor: `${myColor}`,
     color: "#141414",
   };
 
@@ -70,10 +65,7 @@ const MoreButton: React.FC<ButtonProps> = ({
   return (
     <>
       {disabled ? (
-        <button
-          className="text-md px-5 py-1 wallet-networks"
-          color="primary"
-        >
+        <button className="text-md px-5 py-1 wallet-networks" color="primary">
           <SyncLoader color={myColor} />
         </button>
       ) : (
@@ -81,6 +73,7 @@ const MoreButton: React.FC<ButtonProps> = ({
           type="submit"
           onClick={onClick}
           className={classes}
+          disabled={disabled1}
           style={isHovered ? { ...defaultStyle, ...hoverStyle } : defaultStyle}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}

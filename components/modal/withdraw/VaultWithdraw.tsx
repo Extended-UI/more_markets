@@ -13,10 +13,10 @@ interface Props extends IInvestmentProp {
 const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   const [step, setStep] = useState(1);
   const [useMax, setUseMax] = useState(false);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [txhash, setTxhash] = useState("");
 
-  const handleSetWithdraw = (amount: number) => {
+  const handleSetWithdraw = (amount: string) => {
     setAmount(amount);
     setStep(2);
   };
@@ -45,7 +45,7 @@ const VaultWithdraw: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
           item={item}
           useMax={useMax}
           amount={amount}
-          setTxhash={setTxhash}
+          setTxHash={setTxhash}
           closeModal={closeModal}
           validWithdraw={handleValidWithdraw}
         />

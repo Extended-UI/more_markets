@@ -111,7 +111,7 @@ const DetailEarnMoreTable: React.FC<Props> = ({ breakdowns }) => {
             >
               <td className="p-6 items-center">
                 <div className="flex justify-start">
-                  <FormatPourcentage value={item.allowcation / 100} />
+                  <FormatPourcentage value={item.allowcation} multiplier={1} />
                 </div>
               </td>
               <td className="p-6 items-center">

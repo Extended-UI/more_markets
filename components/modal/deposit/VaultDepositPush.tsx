@@ -1,14 +1,15 @@
 "use client";
 
+import { toNumber } from "lodash";
 import { useAccount } from "wagmi";
 import { parseUnits } from "ethers";
 import React, { useEffect, useState } from "react";
 import MoreButton from "../../moreButton/MoreButton";
-import IconToken from "@/components/token/IconToken";
+import IconCurator from "@/components/token/IconCurator";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
-import { InvestmentData } from "@/types";
+import { IInvestmentPush } from "@/types";
 import { contracts, MoreAction } from "@/utils/const";
 import {
   getTimestamp,
@@ -25,12 +26,8 @@ import {
   depositToVaults,
 } from "@/utils/contract";
 
-interface Props {
-  amount: number;
-  item: InvestmentData;
-  closeModal: () => void;
+interface Props extends IInvestmentPush {
   validDeposit: () => void;
-  setTxHash: (hash: string) => void;
 }
 
 const VaultDepositPush: React.FC<Props> = ({
@@ -40,7 +37,7 @@ const VaultDepositPush: React.FC<Props> = ({
   closeModal,
   validDeposit,
 }) => {
-  const { address: userAddress } = useAccount();
+  const { address: userAddress, connector } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
@@ -52,6 +49,10 @@ const VaultDepositPush: React.FC<Props> = ({
   );
 
   const flowVault = isFlow(item.assetAddress);
+  const isFlowWallet = connector
+    ? connector.name.toLowerCase() == "flow wallet"
+    : false;
+  const numAmount = toNumber(amount);
 
   useEffect(() => {
     const initApprove = async () => {
@@ -69,10 +70,12 @@ const VaultDepositPush: React.FC<Props> = ({
               getTokenAllowance(
                 item.assetAddress,
                 userAddress,
-                contracts.PERMIT2
+                isFlowWallet ? contracts.MORE_BUNDLER : contracts.PERMIT2
               ),
             ])
           : [0, BigInt(0)];
+
+        if (isFlowWallet) setHasPermit(true);
 
         setPermitNonce(nonce);
         if (allowance >= tokenAmount) setHasApprove(true);
@@ -81,10 +84,14 @@ const VaultDepositPush: React.FC<Props> = ({
     };
 
     initApprove();
-  }, [userAddress, item, tokenAmount, flowVault]);
+  }, [userAddress, item, tokenAmount, flowVault, isFlowWallet]);
 
   const doApprove = async () => {
-    await setTokenAllowance(item.assetAddress, contracts.PERMIT2, tokenAmount);
+    await setTokenAllowance(
+      item.assetAddress,
+      isFlowWallet ? contracts.MORE_BUNDLER : contracts.PERMIT2,
+      tokenAmount
+    );
     setHasApprove(true);
   };
 
@@ -114,7 +121,9 @@ const VaultDepositPush: React.FC<Props> = ({
         deadline,
         tokenAmount,
         permitNonce,
-        flowVault
+        flowVault,
+        isFlowWallet,
+        false
       );
 
       await delay(2);
@@ -141,8 +150,15 @@ const VaultDepositPush: React.FC<Props> = ({
 
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'/assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"/assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">
@@ -154,12 +170,11 @@ const VaultDepositPush: React.FC<Props> = ({
         <div className="flex flex-row justify-between items-center mb-[30px]">
           <div className="text-[20px] font-semibold flex items-center gap-3">
             <span className="more-text-gray text-[16px]">Curator:</span>
-            <IconToken className="w-[24px] h-[24px]" tokenName="wflow" />
-            <span>{item.curator}</span>
+            <IconCurator classStr="w-8" curator={item.curator} />
           </div>
           <div className="flex gap-2 mb-5 text-[16px]">
             <span className="more-text-gray">Net APY:</span>
-            <FormatTwoPourcentage value={item.netAPY} />
+            <FormatTwoPourcentage value={item.netAPY.total_apy} multiplier={1} />
           </div>
         </div>
         {!flowVault && (
@@ -168,8 +183,7 @@ const VaultDepositPush: React.FC<Props> = ({
               <TokenAmount
                 title="Approve"
                 token={item.assetAddress}
-                amount={amount}
-                ltv={"ltv"}
+                amount={numAmount}
                 totalTokenAmount={item.totalDeposits}
               />
               {hasApprove && (
@@ -180,21 +194,26 @@ const VaultDepositPush: React.FC<Props> = ({
               )}
             </div>
 
-            <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
-              <TokenAmount
-                title="Permit"
-                token={item.assetAddress}
-                amount={amount}
-                ltv={"ltv"}
-                totalTokenAmount={item.totalDeposits}
-              />
-              {hasPermit && (
-                <CheckCircleIcon
-                  className="text-secondary text-xl cursor-pointer w-[20px] !h-[20px] mr-5"
-                  style={{ position: "absolute", top: "2rem", left: "10.5rem" }}
+            {!isFlowWallet && (
+              <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
+                <TokenAmount
+                  title="Permit"
+                  token={item.assetAddress}
+                  amount={numAmount}
+                  totalTokenAmount={item.totalDeposits}
                 />
-              )}
-            </div>
+                {hasPermit && (
+                  <CheckCircleIcon
+                    className="text-secondary text-xl cursor-pointer w-[20px] !h-[20px] mr-5"
+                    style={{
+                      position: "absolute",
+                      top: "2rem",
+                      left: "10.5rem",
+                    }}
+                  />
+                )}
+              </div>
+            )}
           </>
         )}
 
@@ -202,14 +221,17 @@ const VaultDepositPush: React.FC<Props> = ({
           <TokenAmount
             title="Deposit"
             token={item.assetAddress}
-            amount={amount}
-            ltv={""}
+            amount={numAmount}
             totalTokenAmount={0}
           />
         </div>
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
-          <a className="underline" href="https://docs.more.markets/agreements/terms-of-use" target="_blank">
+          <a
+            className="underline"
+            href="https://docs.more.markets/agreements/terms-of-use"
+            target="_blank"
+          >
             Terms of Use.
           </a>{" "}
         </div>

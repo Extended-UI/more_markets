@@ -1,18 +1,18 @@
 import React from "react";
 import millify from "millify";
-import { isUndefined } from "lodash";
+import { isUndefined, toNumber } from "lodash";
 import IconToken from "../token/IconToken";
 import MoreButton from "../moreButton/MoreButton";
 import usePrice from "@/hooks/usePrice";
 
 interface Props {
   type: string;
-  value: number | undefined;
+  value?: string;
   token: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  balance: number;
-  setMax: (maxValue: number) => void;
+  balance: string;
+  setMax: (maxValue: string) => void;
 }
 
 const InputTokenMax: React.FC<Props> = ({
@@ -26,6 +26,8 @@ const InputTokenMax: React.FC<Props> = ({
 }) => {
   const { tokenPrice } = usePrice(token);
 
+  const numAmount = toNumber(value);
+
   return (
     <div className="w-full flex  rounded-[12px] more-input-bg-color justify-between items-center p-[16px] gap-4">
       <div className="flex w-full flex-col items-center gap-2">
@@ -36,10 +38,10 @@ const InputTokenMax: React.FC<Props> = ({
           className="noBorder noArrows input mt-0 text-left text-[20px] w-full more-input-text-color more-input-bg-color"
           placeholder={placeholder}
         />
-        {!isUndefined(value) && value > 0 && (
+        {!isUndefined(value) && numAmount > 0 && (
           <div className="flex mt-0 pl-3 text-[16px] justify-start w-full items-center">
             <span className="text-grey">
-              ${millify(tokenPrice * value, { precision: 2 })}
+              ${millify(tokenPrice * numAmount, { precision: 2 })}
             </span>
           </div>
         )}

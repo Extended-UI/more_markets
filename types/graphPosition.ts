@@ -2,15 +2,15 @@ interface IAmount {
   amount: string;
 }
 
-interface IId {
-  id: string;
-}
-
 export interface GraphPosition {
   id: string;
-  asset: IId;
+  asset: {
+    id: string;
+  };
   balance: string;
   borrows: IAmount[];
   repays: IAmount[];
-  market: IId;
+  market: {
+    id: string;
+  };
 }

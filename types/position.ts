@@ -4,6 +4,6 @@ export interface Position {
   borrowShares: bigint;
   collateral: bigint;
   lastMultiplier: bigint;
-  debtTokenMissed: bigint;
-  debtTokenGained: bigint;
+  // debtTokenMissed: bigint;
+  // debtTokenGained: bigint;
 }
