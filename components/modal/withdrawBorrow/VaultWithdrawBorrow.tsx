@@ -12,10 +12,10 @@ const VaultWithdraw: React.FC<IBorrowPositionProp> = ({
   updateInfo,
 }) => {
   const [step, setStep] = useState(1);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [txHash, setTxHash] = useState("");
 
-  const handleSetWithdraw = (amount: number) => {
+  const handleSetWithdraw = (amount: string) => {
     setAmount(amount);
     setStep(2);
   };
@@ -35,7 +35,7 @@ const VaultWithdraw: React.FC<IBorrowPositionProp> = ({
         <VaultWithdrawBorrowInput
           item={item}
           closeModal={closeModal}
-          setAmount={(amount: number) => handleSetWithdraw(amount)}
+          setAmount={handleSetWithdraw}
         />
       ) : step == 2 ? (
         <VaultWithdrawBorrowPush

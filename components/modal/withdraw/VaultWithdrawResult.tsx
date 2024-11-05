@@ -3,19 +3,12 @@
 import React, { useState, useEffect } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import Icon from "../../FontAwesomeIcon";
-import { InvestmentData } from "@/types";
+import { IInvestmentResult } from "@/types";
 import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 import { getTokenInfo, notifyError } from "@/utils/utils";
 
-interface Props {
-  amount: number;
-  txhash: string;
-  item: InvestmentData;
-  processDone: () => void;
-}
-
-const VaultWithdrawResult: React.FC<Props> = ({
+const VaultWithdrawResult: React.FC<IInvestmentResult> = ({
   item,
   txhash,
   amount,
@@ -48,30 +41,35 @@ const VaultWithdrawResult: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base">
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
-      <div className="text-[24px] mb-[40px] font-semibold">Transaction Confirmation</div>
-      <div className="more-bg-primary text-[#888] rounded-[12px] p-[20px] text-[20px] font-normal">
-        Withdraw {amount} {tokenInfo.symbol} from Vault
-      </div>
-
-      {txhash.length > 0 && (
-        <div className="text-[20px] font-medium mb-6 mt-[40px]">
-          <span>
-            {executed ? (
-              <Icon
-                icon="circle-check"
-                className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
-              />
-            ) : (
-              <Icon icon="circle" className="text-xl cursor-pointer mr-5  w-[20px] !h-[20px]" />
-            )}
-          </span>
-          {executed ? (
-            <>Transaction {txHashStr} has been successfully executed.</>
-          ) : (
-            <>Transaction {txHashStr} has been sent.</>
-          )}
+        <div className="text-[24px] mb-[40px] font-semibold">
+          Transaction Confirmation
         </div>
-      )}
+        <div className="more-bg-primary text-[#888] rounded-[12px] p-[20px] text-[20px] font-normal">
+          Withdraw {amount} {tokenInfo.symbol} from Vault
+        </div>
+
+        {txhash.length > 0 && (
+          <div className="text-[20px] font-medium mb-6 mt-[40px]">
+            <span>
+              {executed ? (
+                <Icon
+                  icon="circle-check"
+                  className="text-secondary text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
+                />
+              ) : (
+                <Icon
+                  icon="circle"
+                  className="text-xl cursor-pointer mr-5  w-[20px] !h-[20px]"
+                />
+              )}
+            </span>
+            {executed ? (
+              <>Transaction {txHashStr} has been successfully executed.</>
+            ) : (
+              <>Transaction {txHashStr} has been sent.</>
+            )}
+          </div>
+        )}
       </div>
       <div className="more-bg-primary rounded-b-[20px] px-[28px] py-[30px]">
         {executed ? (

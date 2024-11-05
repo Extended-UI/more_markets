@@ -29,6 +29,12 @@ export const MoreErrors: IMoreError[] = [
     message: "You are not authorized to sign this transaction.",
   },
   {
+    action: MoreAction.GENERAL,
+    error: "eth_signTypedData_v4",
+    message:
+      "Your wallet currently does not support signing transactions. Please try again later!",
+  },
+  {
     action: MoreAction.DEPOSIT,
     error: "all caps reached",
     message: "Your deposit exceeds the maximum deposit amount.",
@@ -42,12 +48,12 @@ export const MoreErrors: IMoreError[] = [
   {
     action: MoreAction.BORROW,
     error: "insufficient collateral",
-    message: "You do not supply enough collateral to borrow.",
+    message: "You do not have enough collateral to borrow.",
   },
   {
     action: MoreAction.BORROW_MORE,
     error: "insufficient collateral",
-    message: "You do not have enough collateral to increase borrow more.",
+    message: "You do not have enough collateral to borrow more.",
   },
   {
     action: MoreAction.REPAY,
@@ -58,6 +64,26 @@ export const MoreErrors: IMoreError[] = [
     action: MoreAction.ADD_COLLATERAL,
     error: "supply cap exceeded",
     message: "Your supplied collateral exceeds the maximum amount.",
+  },
+  {
+    action: MoreAction.WITHDRAW_COLLATERAL,
+    error: "insufficient collateral",
+    message: "You do not have enough collateral for maintaining your position.",
+  },
+  {
+    action: MoreAction.CLAIM,
+    error: "reward claim failed",
+    message: "You have claimed already.",
+  },
+  {
+    action: MoreAction.LOOP_DEPOSIT,
+    error: "loop deposit",
+    message: "Deposit failed.",
+  },
+  {
+    action: MoreAction.LOOP_WITHDRAW,
+    error: "loop withdraw",
+    message: "Withdraw failed.",
   },
 ];
 

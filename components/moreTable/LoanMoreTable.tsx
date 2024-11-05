@@ -15,6 +15,7 @@ import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 import { getPositions, getBorrowedAmount } from "@/utils/contract";
+import HoverCardComp from "../hoverCard/HoverCard";
 import {
   GraphPosition,
   BorrowPosition,
@@ -114,6 +115,8 @@ const LoanMoreTable: React.FC<Props> = ({
             (item) => item.collateral > BigInt(0) || item.loan > BigInt(0)
           );
         setBorrowPositions(borrowPositionList);
+      } else {
+        setBorrowPositions([]);
       }
     };
 
@@ -122,7 +125,7 @@ const LoanMoreTable: React.FC<Props> = ({
 
   return (
     <>
-      {borrowPositions.length > 0 && (
+      {userAddress && borrowPositions.length > 0 && (
         <>
           <h1 className="text-[30px] mb-8 mt-28 font-semibold">My Loans</h1>
           <div
@@ -195,21 +198,21 @@ const LoanMoreTable: React.FC<Props> = ({
                     <td className="px-6 py-[12.5px] items-center gap-2">
                       <div className="flex gap-2 items-center justify-between">
                         <div className="flex items-center">
-                        <div className="flex items-center">
-                          <IconToken
-                            className="mr-3 w-8 h-8"
-                            tokenName={item.inputToken.id}
+                          <div className="flex items-center">
+                            <IconToken
+                              className="mr-3 w-8 h-8"
+                              tokenName={item.inputToken.id}
+                            />
+                          </div>
+                          <FormatTokenMillion
+                            value={formatTokenValue(
+                              item.collateral,
+                              item.inputToken.id
+                            )}
+                            token={item.inputToken.id}
+                            totalValue={0}
+                            inTable={true}
                           />
-                        </div>
-                        <FormatTokenMillion
-                          value={formatTokenValue(
-                            item.collateral,
-                            item.inputToken.id
-                          )}
-                          token={item.inputToken.id}
-                          totalValue={0}
-                          inTable={true}
-                        />
                         </div>
                         <div
                           className="ml-8 flex gap-5"
@@ -242,20 +245,20 @@ const LoanMoreTable: React.FC<Props> = ({
                     </td>
 
                     <td className="px-6  py-[12.5px] items-center gap-2">
-                    <div className="flex gap-2 items-center justify-between">
-                    <div className="flex items-center">
-                        <IconToken
-                          className="mr-3 w-8 h-8"
-                          tokenName={item.borrowedToken.id}
-                        />
-                        <FormatTokenMillion
-                          value={formatTokenValue(
-                            item.loan,
-                            item.borrowedToken.id
-                          )}
-                          token={item.borrowedToken.id}
-                          totalValue={0}
-                        />
+                      <div className="flex gap-2 items-center justify-between">
+                        <div className="flex items-center">
+                          <IconToken
+                            className="mr-3 w-8 h-8"
+                            tokenName={item.borrowedToken.id}
+                          />
+                          <FormatTokenMillion
+                            value={formatTokenValue(
+                              item.loan,
+                              item.borrowedToken.id
+                            )}
+                            token={item.borrowedToken.id}
+                            totalValue={0}
+                          />
                         </div>
                         <div
                           className="ml-8 flex gap-5"
@@ -300,8 +303,11 @@ const LoanMoreTable: React.FC<Props> = ({
                       </div>
                     </td>
                     <td className="p-6 items-center">
-                      <div className="flex justify-start ml-3">
-                        <FormatPourcentage value={item.borrow_apr} />
+                      <div className="flex justify-start items-center ml-3">
+                        <div className="mr-3">
+                          <FormatPourcentage value={item.borrow_apr} />
+                        </div>
+                        {/* <HoverCardComp apy={item.netAPY} /> */}
                       </div>
                     </td>
                   </tr>

@@ -7,6 +7,7 @@ import TableHeaderCell from "./MoreTableHeader";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDeposit from "../modal/deposit/VaultDeposit";
 import IconToken from "../token/IconToken";
+import IconCurator from "../token/IconCurator";
 import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
@@ -14,6 +15,7 @@ import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
 import { formatTokenValue } from "@/utils/utils";
 import { InvestmentData, IInvestmentProps } from "@/types";
 import { getTokenBallance, getVaultDetail } from "@/utils/contract";
+import HoverCardComp from "../hoverCard/HoverCard";
 
 const DepositMoreTable: React.FC<IInvestmentProps> = ({
   investments,
@@ -69,7 +71,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
 
   return (
     <>
-      {vaults.length > 0 && (
+      {userAddress && vaults.length > 0 && (
         <>
           <h1 className="text-[30px] mb-8 mt-28 font-semibold">My Deposits</h1>
           <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
@@ -160,8 +162,16 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     </td>
                     <td className="p-6">
                       <div className="flex justify-start items-center">
-                        <FormatPourcentage value={item.netAPY} />
-
+                        <div className="mr-3">
+                          <FormatPourcentage
+                            value={item.netAPY.total_apy}
+                            multiplier={1}
+                          />
+                        </div>
+                        {(item.netAPY.box_apy > 0 ||
+                          item.programs.length > 0) && (
+                          <HoverCardComp apy={item.netAPY} />
+                        )}
                       </div>
                     </td>
                     <td className="p-6">
@@ -175,10 +185,7 @@ const DepositMoreTable: React.FC<IInvestmentProps> = ({
                     </td>
                     <td className="p-6">
                       <div className="flex justify-start items-center">
-                        <IconToken 
-                          className="mr-3 w-8 h-8"
-                          tokenName="wflow" />
-                        {item.curator}
+                        <IconCurator curator={item.curator} />
                       </div>
                     </td>
                     <td className="p-6">

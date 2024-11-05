@@ -10,6 +10,8 @@ import ListIconToken from "../token/ListIconToken";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { InvestmentData, IInvestmentProps } from "@/types";
+import IconCurator from "../token/IconCurator";
+import HoverCardComp from "../hoverCard/HoverCard";
 
 const EarnMoreTable: React.FC<IInvestmentProps> = ({
   investments,
@@ -22,6 +24,8 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
     router.push("/earn/" + item.vaultId);
   };
 
+  console.log(investments);
+
   return (
     <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
       <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
@@ -30,25 +34,25 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
         >
           <tr>
-            <th style={{ width: "400px" }} className="p-6">
+            <th className="w-[400px] p-6">
               <TableHeaderCell
                 title="Vault Name"
                 infoText="The name given to the vault by the curator."
               />
             </th>
-            <th style={{ width: "200px" }} className="p-6">
+            <th className="w-[200px] p-6">
               <TableHeaderCell
                 title="Deposit Token"
                 infoText="The token(s) eligible for deposit into the vault and which are lent to borrowers in order to generate yield."
               />
             </th>
-            <th style={{ width: "150px" }} className="p-6">
+            <th className="w-[150px] p-6">
               <TableHeaderCell
                 title="Net APY"
                 infoText="The annualized return you earn on your deposited amount after all fees. This rate fluctuates in real-time based on supply and demand in the underlying markets."
               />
             </th>
-            <th style={{ width: "200px" }} className="p-6">
+            <th className="w-[200px] p-6">
               <div className="flex justify-start">
                 <TableHeaderCell
                   title="Total Deposits"
@@ -56,19 +60,19 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                 />
               </div>
             </th>
-            <th style={{ width: "200px" }} className="p-6">
+            <th className="w-[200px] p-6">
               <TableHeaderCell
                 title="Curator"
                 infoText="The organization that manages the vault parameters such as included markets, allocations, caps and performance fees."
               />
             </th>
-            <th style={{ width: "200px" }} className="p-6">
+            <th className="w-[200px] p-6">
               <TableHeaderCell
                 title="Collateral"
                 infoText="The token(s) that borrowers must lock in order to borrow funds."
               />
             </th>
-            {/* <th style={{ width: "200px" }}>
+            {/* <th className="w-[200px]">
                   <div className="flex justify-start">
                     <TableHeaderCell
                       title="Unsecured"
@@ -83,7 +87,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                   backgroundColor: "#212121",
                   position: "static",
                   boxShadow: "inset 0 2px 0px 0px rgba(0, 0, 0, 0.2)",
-                  padding: '1.5rem'
+                  padding: "1.5rem",
                 }}
               />
             )}
@@ -124,8 +128,16 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
                 </div>
               </td>
               <td className="p-6 items-center h-full">
-                <div className="flex gap-1 justify-start">
-                  <FormatPourcentage value={item.netAPY} />
+                <div className="flex gap-1 justify-start items-center">
+                  <div className="mr-3">
+                    <FormatPourcentage
+                      value={item.netAPY.total_apy}
+                      multiplier={1}
+                    />
+                  </div>
+                  {(item.netAPY.box_apy > 0 || item.programs.length > 0) && (
+                    <HoverCardComp apy={item.netAPY} />
+                  )}
                 </div>
               </td>
               <td className="p-6 items-left h-full">
@@ -139,10 +151,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
               </td>
               <td className="p-6 items-center h-full">
                 <div className="items-center flex">
-                  <div className="mr-3 w-8 h-8">
-                    <IconToken tokenName="wflow" />
-                  </div>
-                  {item.curator}
+                  <IconCurator curator={item.curator} />
                 </div>
               </td>
               <td className="p-6 items-center h-full">

@@ -5,7 +5,6 @@ import FormatTokenMillion from "../tools/formatTokenMillion";
 interface Props {
   title: string;
   token: string;
-  ltv: string;
   totalTokenAmount: number;
   amount: number;
 }
@@ -13,7 +12,6 @@ interface Props {
 const TokenAmount: React.FC<Props> = ({
   title,
   token,
-  ltv,
   totalTokenAmount,
   amount,
 }) => {

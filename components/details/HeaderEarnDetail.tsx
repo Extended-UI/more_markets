@@ -1,10 +1,11 @@
 import React from "react";
 import { useAccount } from "wagmi";
-import ButtonDialog from "../buttonDialog/buttonDialog";
+import IconToken from "../token/IconToken";
+import IconCurator from "../token/IconCurator";
 import VaultDetail from "../modal/VaultDetail";
+import ButtonDialog from "../buttonDialog/buttonDialog";
 import VaultDeposit from "../modal/deposit/VaultDeposit";
 import VaultWithdraw from "../modal/withdraw/VaultWithdraw";
-import IconToken from "../token/IconToken";
 import { IInvestmentProp } from "@/types";
 
 const HeaderEarnDetail: React.FC<IInvestmentProp> = ({ item, updateInfo }) => {
@@ -20,14 +21,12 @@ const HeaderEarnDetail: React.FC<IInvestmentProp> = ({ item, updateInfo }) => {
         <div className="flex gap-2 items-center text-[16px] font-normal leading-normal">
           <IconToken
             tokenName={item.assetAddress}
-            className="w-6 h-6 mr-3"
+            className="w-6 h-6"
             showSymbol={true}
           />
         </div>
         <div className="flex gap-2 items-center text-[16px] font-normal leading-normal">
-          {/* <IconToken tokenName={vault.tokenSymbol} className="w-6 h-6" /> */}
-          <IconToken tokenName="wflow" className="w-6 h-6 mr-3" />
-          <div>{item.curator}</div>
+          <IconCurator classStr="w-6" curator={item.curator} />
         </div>
       </div>
       <div className="flex gap-4 text-[16px]">

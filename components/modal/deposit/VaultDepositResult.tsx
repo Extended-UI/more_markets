@@ -1,23 +1,16 @@
 "use client";
 
+import { toNumber } from "lodash";
 import React, { useEffect, useState } from "react";
 import Icon from "../../FontAwesomeIcon";
 import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
-import { InvestmentData } from "@/types";
+import { IInvestmentResult } from "@/types";
 import { notifyError } from "@/utils/utils";
 import { MoreAction } from "@/utils/const";
 import { waitForTransaction } from "@/utils/contract";
 
-interface Props {
-  amount: number;
-  txhash: string;
-  item: InvestmentData;
-  closeModal: () => void;
-  processDone: () => void;
-}
-
-const VaultDepositResult: React.FC<Props> = ({
+const VaultDepositResult: React.FC<IInvestmentResult> = ({
   item,
   amount,
   txhash,
@@ -64,8 +57,7 @@ const VaultDepositResult: React.FC<Props> = ({
           <TokenAmount
             title="Deposit"
             token={item.assetAddress}
-            amount={amount}
-            ltv={"ltv"}
+            amount={toNumber(amount)}
             totalTokenAmount={item.totalDeposits}
           />
         </div>

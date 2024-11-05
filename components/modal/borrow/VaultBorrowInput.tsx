@@ -1,15 +1,20 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { formatUnits, parseUnits } from "ethers";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
+import { formatUnits, parseUnits, ZeroAddress } from "ethers";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { IBorrowPosition } from "@/types";
-import { oraclePriceScale } from "@/utils/const";
-import { getTokenBallance, getTokenPairPrice } from "@/utils/contract";
+import { oraclePriceScale, initBalance } from "@/utils/const";
+import {
+  getTokenBallance,
+  getTokenPairPrice,
+  getPosition,
+  getBorrowedAmount,
+} from "@/utils/contract";
 import {
   getTokenInfo,
   getPremiumLltv,
@@ -18,11 +23,13 @@ import {
   wMulDown,
   formatTokenValue,
   formatNumberLocale,
+  getExtraMax,
+  validInputAmount,
 } from "@/utils/utils";
 
 interface Props extends IBorrowPosition {
   onlyBorrow?: boolean;
-  setAmount: (amount: number, borrow: number) => void;
+  setAmount: (amount: string, borrow: string) => void;
 }
 
 const VaultBorrowInput: React.FC<Props> = ({
@@ -31,11 +38,13 @@ const VaultBorrowInput: React.FC<Props> = ({
   setAmount,
   closeModal,
 }) => {
-  const [borrow, setBorrow] = useState<number>();
-  const [deposit, setDeposit] = useState<number>();
+  const [borrow, setBorrow] = useState("");
+  const [deposit, setDeposit] = useState("");
   const [pairPrice, setPairPrice] = useState(BigInt(0));
+  const [loan, setLoan] = useState(BigInt(0));
+  const [collateral, setCollateral] = useState(BigInt(0));
   const [supplyBalance, setSupplyBalance] =
-    useState<GetBalanceReturnType | null>(null);
+    useState<GetBalanceReturnType>(initBalance);
 
   const { address: userAddress } = useAccount();
 
@@ -49,76 +58,84 @@ const VaultBorrowInput: React.FC<Props> = ({
 
   const isPremiumUser = item.lastMultiplier != BigInt(1e18);
 
-  const handleInputDepositChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setDeposit(inputVal);
-  };
-
-  const handleInputBorrowChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setBorrow(inputVal);
-  };
-
-  const handleSetMaxToken = (maxValue: number) => {
-    setDeposit(maxValue);
-  };
-
-  const handleSetMaxFlow = (maxValue: number) => {
-    let maxBorrow = BigInt(0);
-    if (onlyBorrow) {
-      maxBorrow = mulDivDown(item.collateral, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(maxBorrow, item.lltv);
-      maxBorrow = maxBorrow >= item.loan ? maxBorrow - item.loan : BigInt(0);
-    } else if (deposit) {
-      const depositAmount = parseUnits(
-        deposit.toString(),
-        collateralToken.decimals
-      );
-      maxBorrow = mulDivDown(depositAmount, pairPrice, oraclePriceScale);
-      maxBorrow = wMulDown(maxBorrow, item.lltv);
-    }
-
-    setBorrow(Number(formatUnits(maxBorrow, borrowToken.decimals)));
-  };
-
-  const handleBorrow = () => {
-    if (borrow && borrow > 0) {
-      if (onlyBorrow) {
-        setAmount(0, borrow);
-      } else if (deposit && deposit > 0) {
-        setAmount(deposit, borrow);
-      }
-    }
-  };
-
   useEffect(() => {
     const initBalances = async () => {
-      const [userSupplyBalance, tokenPairPrice] = await Promise.all([
-        getTokenBallance(item.inputToken.id, userAddress),
-        getTokenPairPrice(item.marketParams.oracle),
-      ]);
+      const [userSupplyBalance, tokenPairPrice, positionInfo] =
+        await Promise.all([
+          getTokenBallance(item.inputToken.id, userAddress),
+          getTokenPairPrice(item.marketParams.oracle),
+          getPosition(userAddress || ZeroAddress, item.id),
+        ]);
 
-      setSupplyBalance(userAddress ? userSupplyBalance : null);
       setPairPrice(tokenPairPrice);
+      setSupplyBalance(userSupplyBalance);
+      if (positionInfo) {
+        setCollateral(positionInfo.collateral);
+        setLoan(
+          await getBorrowedAmount(
+            item.id,
+            positionInfo.lastMultiplier,
+            positionInfo.borrowShares
+          )
+        );
+      }
     };
 
     initBalances();
   }, [item, userAddress]);
 
+  const handleInputDepositChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setDeposit(event.target.value);
+  };
+
+  const handleInputBorrowChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setBorrow(event.target.value);
+  };
+
+  const handleSetMaxToken = (maxValue: string) => {
+    setDeposit(maxValue);
+  };
+
+  const handleSetMaxFlow = (maxValue: string) => {
+    const totalCollateral = onlyBorrow
+      ? item.collateral
+      : collateral + parseUnits(deposit, collateralToken.decimals);
+
+    let maxBorrow = mulDivDown(totalCollateral, pairPrice, oraclePriceScale);
+    maxBorrow = wMulDown(maxBorrow, item.lltv);
+    maxBorrow = getExtraMax(
+      maxBorrow,
+      onlyBorrow ? item.loan : loan,
+      borrowToken.decimals
+    );
+    setBorrow(formatUnits(maxBorrow, borrowToken.decimals));
+  };
+
+  const handleBorrow = () => {
+    if (validInputAmount(borrow)) {
+      if (onlyBorrow) {
+        setAmount("0", borrow);
+      } else if (validInputAmount(deposit)) {
+        setAmount(deposit, borrow);
+      }
+    }
+  };
+
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
-      <div className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4" onClick={closeModal}>
-        <img src={'/assets/icons/close.svg'} alt="close" className="w-[12px] h-[12px]"/>
+      <div
+        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+        onClick={closeModal}
+      >
+        <img
+          src={"/assets/icons/close.svg"}
+          alt="close"
+          className="w-[12px] h-[12px]"
+        />
       </div>
       <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
         <div className="text-[24px] mb-[40px] font-semibold">Borrow</div>
@@ -134,13 +151,12 @@ const VaultBorrowInput: React.FC<Props> = ({
                 onChange={handleInputDepositChange}
                 placeholder="0"
                 token={item.inputToken.id}
-                balance={supplyBalance ? Number(supplyBalance.formatted) : 0}
+                balance={supplyBalance.formatted}
                 setMax={handleSetMaxToken}
               />
             </div>
             <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-              Balance: {supplyBalance ? Number(supplyBalance.formatted) : 0}
-              {collateralToken.symbol}
+              Balance: {supplyBalance.formatted + " " + collateralToken.symbol}
             </div>
           </>
         )}
@@ -151,7 +167,7 @@ const VaultBorrowInput: React.FC<Props> = ({
           onChange={handleInputBorrowChange}
           placeholder="0"
           token={item.borrowedToken.id}
-          balance={availableLiquidity}
+          balance={availableLiquidity.toString()}
           setMax={handleSetMaxFlow}
         />
         <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">

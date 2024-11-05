@@ -1,6 +1,5 @@
 "use client";
 
-import { useAccount } from "wagmi";
 import React, { useState, useEffect } from "react";
 import LoanMoreTable from "@/components/moreTable/LoanMoreTable";
 import BorrowMoreTable from "@/components/moreTable/BorrowMoreTable";
@@ -10,8 +9,6 @@ import { convertAprToApy, fetchMarketAprs } from "@/utils/utils";
 // import { fetchMarkets, fetchPositions } from "@/utils/graph";
 
 const BorrowPage: React.FC = () => {
-  const { address: userAddress } = useAccount();
-
   // const [positions, setPositions] = useState<GraphPosition[]>([]);
   const [borrowMarkets, setBorrowMarkets] = useState<BorrowMarket[]>([]);
 
@@ -22,7 +19,6 @@ const BorrowPage: React.FC = () => {
       const [marketsArr, marketAprs] = await Promise.all([
         fetchMarkets(),
         fetchMarketAprs(aprDate),
-        // fetchPositions(userAddress),
       ]);
 
       const promises = marketsArr.map(async (marketItem) => {
@@ -54,44 +50,40 @@ const BorrowPage: React.FC = () => {
     };
 
     initFunc();
-  }, [userAddress]);
+  }, []);
 
   const updateInfo = async (marketId: string) => {
-    if (userAddress) {
-      // const [marketInfo, positionsArr] = await Promise.all([
-      const [marketInfo, marketAprs] = await Promise.all([
-        getMarketData(marketId),
-        fetchMarketAprs(aprDate, marketId),
-        // fetchPositions(userAddress),
-      ]);
+    // const [marketInfo, positionsArr] = await Promise.all([
+    const [marketInfo, marketAprs] = await Promise.all([
+      getMarketData(marketId),
+      fetchMarketAprs(aprDate, marketId),
+    ]);
 
-      const aprItem = marketAprs.find(
-        (marketApr) =>
-          marketApr.marketid.toLowerCase() == marketId.toLowerCase()
-      );
+    const aprItem = marketAprs.find(
+      (marketApr) => marketApr.marketid.toLowerCase() == marketId.toLowerCase()
+    );
 
-      // setPositions(positionsArr);
-      setBorrowMarkets((prevItems) =>
-        prevItems.map((item) =>
-          item.id.toLowerCase() == marketId.toLowerCase()
-            ? {
-                ...item,
-                borrow_apr: aprItem
-                  ? convertAprToApy(aprItem.borrow_apr, aprDate)
-                  : 0,
-                supply_usual_apr: aprItem
-                  ? convertAprToApy(aprItem.supply_usual_apr, aprDate)
-                  : 0,
-                supply_prem_apr: aprItem
-                  ? convertAprToApy(aprItem.supply_prem_apr, aprDate)
-                  : 0,
-                marketInfo: marketInfo.info,
-                marketParams: marketInfo.params,
-              }
-            : item
-        )
-      );
-    }
+    // setPositions(positionsArr);
+    setBorrowMarkets((prevItems) =>
+      prevItems.map((item) =>
+        item.id.toLowerCase() == marketId.toLowerCase()
+          ? {
+              ...item,
+              borrow_apr: aprItem
+                ? convertAprToApy(aprItem.borrow_apr, aprDate)
+                : 0,
+              supply_usual_apr: aprItem
+                ? convertAprToApy(aprItem.supply_usual_apr, aprDate)
+                : 0,
+              supply_prem_apr: aprItem
+                ? convertAprToApy(aprItem.supply_prem_apr, aprDate)
+                : 0,
+              marketInfo: marketInfo.info,
+              marketParams: marketInfo.params,
+            }
+          : item
+      )
+    );
   };
 
   return (

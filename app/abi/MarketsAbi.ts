@@ -1,6 +1,7 @@
 import { Abi } from "viem";
 
 export const MarketsAbi: Abi = [
+  { type: "constructor", inputs: [], stateMutability: "nonpayable" },
   {
     type: "function",
     name: "DOMAIN_SEPARATOR",
@@ -232,14 +233,7 @@ export const MarketsAbi: Abi = [
   {
     type: "function",
     name: "initialize",
-    inputs: [
-      { name: "newOwner", type: "address", internalType: "address" },
-      {
-        name: "_debtTokenFactory",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    inputs: [{ name: "newOwner", type: "address", internalType: "address" }],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -408,29 +402,8 @@ export const MarketsAbi: Abi = [
         internalType: "uint128",
       },
       { name: "collateral", type: "uint128", internalType: "uint128" },
-      {
-        name: "lastMultiplier",
-        type: "uint64",
-        internalType: "uint64",
-      },
-      {
-        name: "debtTokenMissed",
-        type: "uint128",
-        internalType: "uint128",
-      },
-      {
-        name: "debtTokenGained",
-        type: "uint128",
-        internalType: "uint128",
-      },
+      { name: "lastMultiplier", type: "uint64", internalType: "uint64" },
     ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "proxiableUUID",
-    inputs: [],
-    outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
     stateMutability: "view",
   },
   {
@@ -861,33 +834,6 @@ export const MarketsAbi: Abi = [
   },
   {
     type: "function",
-    name: "upgradeTo",
-    inputs: [
-      {
-        name: "newImplementation",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "upgradeToAndCall",
-    inputs: [
-      {
-        name: "newImplementation",
-        type: "address",
-        internalType: "address",
-      },
-      { name: "data", type: "bytes", internalType: "bytes" },
-    ],
-    outputs: [],
-    stateMutability: "payable",
-  },
-  {
-    type: "function",
     name: "withdraw",
     inputs: [
       {
@@ -1019,38 +965,6 @@ export const MarketsAbi: Abi = [
         type: "uint256",
         indexed: false,
         internalType: "uint256",
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: "event",
-    name: "AdminChanged",
-    inputs: [
-      {
-        name: "previousAdmin",
-        type: "address",
-        indexed: false,
-        internalType: "address",
-      },
-      {
-        name: "newAdmin",
-        type: "address",
-        indexed: false,
-        internalType: "address",
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: "event",
-    name: "BeaconUpgraded",
-    inputs: [
-      {
-        name: "beacon",
-        type: "address",
-        indexed: true,
-        internalType: "address",
       },
     ],
     anonymous: false,
@@ -1234,9 +1148,9 @@ export const MarketsAbi: Abi = [
     inputs: [
       {
         name: "version",
-        type: "uint8",
+        type: "uint64",
         indexed: false,
-        internalType: "uint8",
+        internalType: "uint64",
       },
     ],
     anonymous: false,
@@ -1524,19 +1438,6 @@ export const MarketsAbi: Abi = [
   },
   {
     type: "event",
-    name: "Upgraded",
-    inputs: [
-      {
-        name: "implementation",
-        type: "address",
-        indexed: true,
-        internalType: "address",
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: "event",
     name: "Withdraw",
     inputs: [
       {
@@ -1639,6 +1540,7 @@ export const MarketsAbi: Abi = [
       },
     ],
   },
+  { type: "error", name: "InvalidInitialization", inputs: [] },
   {
     type: "error",
     name: "InvalidIrxMaxValue",
@@ -1676,7 +1578,13 @@ export const MarketsAbi: Abi = [
       },
     ],
   },
+  {
+    type: "error",
+    name: "InvalidParamsForNonPremiumMarket",
+    inputs: [],
+  },
+  { type: "error", name: "LLTVsNotInAscendingOrder", inputs: [] },
   { type: "error", name: "MarketNotCreated", inputs: [] },
+  { type: "error", name: "NotInitializing", inputs: [] },
   { type: "error", name: "NotOwner", inputs: [] },
-  { type: "error", name: "ZeroAddress", inputs: [] },
 ] as const;

@@ -13,7 +13,6 @@ const Header: FC = () => {
   const { address: userAddress } = useAccount();
 
   return (
-    <>
     <header className="pt-3">
       <nav className="flex sm:flex-row flex-col justify-between items-center">
         <div className="w-full flex justify-between items-center">
@@ -37,7 +36,6 @@ const Header: FC = () => {
         </div>
       </nav>
     </header>
-    </>
   );
 };
 

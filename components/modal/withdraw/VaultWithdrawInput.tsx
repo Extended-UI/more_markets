@@ -5,15 +5,18 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import { ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
-import { InvestmentData } from "@/types";
+import { IInvestment } from "@/types";
 import { errMessages } from "@/utils/errors";
-import { getTokenInfo, formatNumberLocale, notify } from "@/utils/utils";
+import {
+  getTokenInfo,
+  formatNumberLocale,
+  notify,
+  validAmountWithBool,
+} from "@/utils/utils";
 
-interface Props {
-  item: InvestmentData;
+interface Props extends IInvestment {
   useMax: boolean;
-  closeModal: () => void;
-  setAmount: (amount: number) => void;
+  setAmount: (amount: string) => void;
   setUseMax: (useMax: boolean) => void;
 }
 
@@ -24,27 +27,23 @@ const VaultWithdrawInput: React.FC<Props> = ({
   closeModal,
   setUseMax,
 }) => {
-  const [withdraw, setWithdraw] = useState<number>();
+  const [withdraw, setWithdraw] = useState("");
 
   const tokenInfo = getTokenInfo(item.assetAddress);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputVal =
-      event.target.value.length > 0
-        ? parseFloat(event.target.value)
-        : undefined;
-    setWithdraw(inputVal);
+    setWithdraw(event.target.value);
     setUseMax(false);
   };
 
-  const handleSetMax = (maxValue: number) => {
+  const handleSetMax = (maxValue: string) => {
     setUseMax(true);
     setWithdraw(maxValue);
   };
 
   const handleWithdraw = () => {
-    if (withdraw && (useMax || withdraw > 0)) {
-      if (!useMax && withdraw > item.userDeposits) {
+    if (validAmountWithBool(withdraw, useMax)) {
+      if (!useMax && Number(withdraw) > item.userDeposits) {
         notify(errMessages.withdraw_exceeded);
       } else {
         setAmount(withdraw);
@@ -78,7 +77,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
             onChange={handleInputChange}
             placeholder="0"
             token={item.assetAddress}
-            balance={item.userDeposits}
+            balance={item.userDeposits.toString()}
             setMax={handleSetMax}
           />
         </div>
@@ -111,7 +110,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
           Withdraw <ArrowLongRightIcon className="w-4 h-4" /> Deposit APY /
           Projected Deposit APY
         </div>
-        <FormatTwoPourcentage value={item.netAPY} />
+        <FormatTwoPourcentage value={item.netAPY.total_apy} multiplier={1} />
       </div>
     </div>
   );
