@@ -107,7 +107,11 @@ const VaultBorrowInput: React.FC<Props> = ({
 
     let maxBorrow = mulDivDown(totalCollateral, pairPrice, oraclePriceScale);
     maxBorrow = wMulDown(maxBorrow, item.lltv);
-    maxBorrow = getExtraMax(maxBorrow, onlyBorrow ? item.loan : loan);
+    maxBorrow = getExtraMax(
+      maxBorrow,
+      onlyBorrow ? item.loan : loan,
+      borrowToken.decimals
+    );
     setBorrow(formatUnits(maxBorrow, borrowToken.decimals));
   };
 

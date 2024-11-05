@@ -1,3 +1,4 @@
+import { parseEther } from "ethers";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import { IToken } from "@/types";
 import { WETH9Abi } from "@/app/abi/WETH9Abi";
@@ -5,15 +6,14 @@ import { MarketsAbi } from "@/app/abi/MarketsAbi";
 import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
 import { MulticallAbi } from "@/app/abi/Multicall";
-import { LoopStrategyAbi } from "@/app/abi/LoopStrategyAbi";
 
+export const apyDivider = 1e2;
 export const WAD = BigInt(1e18);
 export const virtualAssets = BigInt(1);
 export const moreTolerance = BigInt(100);
 export const virtualShares = BigInt(1e6);
-export const oraclePriceScale = BigInt(1e36);
 export const apyMultiplier = BigInt(1e4);
-export const apyDivider = 1e2;
+export const oraclePriceScale = parseEther(WAD.toString());
 
 export const contracts = {
   MORE_MARKETS: "0xD6EEb3BD77F9b5eD185cA32526751eC2680AeF06",
