@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { FC } from "react";
 import { usePathname } from "next/navigation";
@@ -9,14 +10,14 @@ const Menu: FC = () => {
 
   return (
     <div className="flex space-x-16 text-[16px] mt-5">
-      <Link
+      {/* <Link
         href="/easy-mode"
         className={`${
           pathNamed.includes("/easy-mode") ? "glowing-text-primary !pb-5" : ""
         } hover:text-primary`}
       >
         Easy Mode
-      </Link>
+      </Link> */}
       <Link
         href="/earn"
         className={`${
