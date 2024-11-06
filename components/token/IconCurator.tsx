@@ -15,7 +15,7 @@ const IconCurator: React.FC<ICuratorProp> = ({ curator, classStr }) => {
     <>
       <div className={classStr ? classStr : "w-8 mr-3"}>
         <Image
-          src={`/assets/curators/${curator.toLowerCase()}.png`}
+          src={`/assets/curators/${curator.toLowerCase()}.svg`}
           alt="curator-icon"
           width={8}
           height={8}
