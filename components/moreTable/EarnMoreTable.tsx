@@ -24,8 +24,6 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
     router.push("/earn/" + item.vaultId);
   };
 
-  console.log(investments);
-
   return (
     <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
       <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">

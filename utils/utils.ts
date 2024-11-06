@@ -196,7 +196,6 @@ export const wMulDown = (x: bigint, y: bigint): bigint => {
 };
 
 export const getExtraMax = (x: bigint, y: bigint, decimals: number): bigint => {
-  console.log("decimals:", decimals);
   y = y + parseUnits("1", decimals - 4);
   return x >= y ? x - y : BigInt(0);
 };
