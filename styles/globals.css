@@ -254,3 +254,27 @@ h1 {
 .wallet-connected:hover > div{
   background-color: #171717;
 }
+
+
+/*scroll bar*/
+
+::-webkit-scrollbar{
+    right: 0;
+    width: 6px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #343434;
+    border-radius: 8px;
+    width: 6px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+*{
+  scrollbar-color:inherit !important
+}
