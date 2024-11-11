@@ -38,6 +38,7 @@ const TableHeaderCell: React.FC<Props> = ({
       }
       
       {title}
+      {infoText && (
       <div
         className="relative"
         onMouseEnter={() => setTooltipVisible(true)}
@@ -47,12 +48,13 @@ const TableHeaderCell: React.FC<Props> = ({
         {isTooltipVisible && (
           <div
             // style={{ top: "-5px", left: "16px" }}
-            className="absolute w-[400px] bottom-full mb-2 bg-[#212121] text-[#E0DFE3] text-s rounded-xl shadow-lg max-w-xs break-words whitespace-normal z-[999] leading-5 p-4 font-medium"
+            className="absolute w-[400px] bottom-full ml-[2rem] mb-[-7.5rem] bg-[#212121] text-[#E0DFE3] text-s rounded-xl shadow-lg max-w-xs break-words whitespace-normal z-[999] leading-5 p-4 font-medium"
           >
             {infoText}
           </div>
         )}
       </div>
+      )}
     </div>
   );
 };
