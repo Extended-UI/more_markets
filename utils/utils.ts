@@ -28,6 +28,7 @@ import {
   MoreAction,
   apyMultiplier,
   apyDivider,
+  oraclePriceScale,
 } from "./const";
 
 const errorDecoder = ErrorDecoder.create();
@@ -328,6 +329,33 @@ export const getVaultApyInfo = (
   };
 };
 
+export const getPositionHealth = (
+  inputToken: string,
+  borrowedToken: string,
+  pairPrice: bigint,
+  collateralAmount: bigint,
+  borrowAmount: bigint
+): number => {
+  const collateralToken = getTokenInfo(inputToken).decimals;
+  const borrowToken = getTokenInfo(borrowedToken).decimals;
+  const isBig = collateralToken >= borrowToken;
+  const decimalsPow = BigInt(
+    10 **
+      (isBig ? collateralToken - borrowToken : borrowToken - collateralToken)
+  );
+
+  const factorVal =
+    (collateralAmount *
+      pairPrice *
+      BigInt(100) *
+      (isBig ? BigInt(1) : decimalsPow)) /
+    borrowAmount /
+    oraclePriceScale /
+    (isBig ? decimalsPow : BigInt(1));
+
+  return factorVal > BigInt(0) ? 1e4 / Number(factorVal) : 0;
+};
+
 export const getPositionLtv = (
   collateralAmount: number,
   loanAmount: number,
@@ -337,13 +365,6 @@ export const getPositionLtv = (
   const collateralUsd = collateralPrice * collateralAmount;
   const ltvVal =
     collateralUsd > 0 ? (borrowPrice * loanAmount * 1e2) / collateralUsd : 0;
-  console.log(
-    collateralAmount,
-    loanAmount,
-    collateralPrice,
-    borrowPrice,
-    ltvVal
-  );
   return Math.trunc(ltvVal * 1e2) / 1e2;
 };
 

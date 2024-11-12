@@ -25,6 +25,7 @@ import {
   formatNumberLocale,
   getExtraMax,
   validInputAmount,
+  getPositionHealth,
 } from "@/utils/utils";
 
 interface Props extends IBorrowPosition {
@@ -43,8 +44,9 @@ const VaultBorrowInput: React.FC<Props> = ({
   const [pairPrice, setPairPrice] = useState(BigInt(0));
   const [loan, setLoan] = useState(BigInt(0));
   const [collateral, setCollateral] = useState(BigInt(0));
-  const [supplyBalance, setSupplyBalance] = useState<GetBalanceReturnType>(initBalance);
-  const [showMaxMsg, setShowMaxMsg] = useState(false)
+  const [supplyBalance, setSupplyBalance] =
+    useState<GetBalanceReturnType>(initBalance);
+  const [showMaxMsg, setShowMaxMsg] = useState(false);
 
   const { address: userAddress } = useAccount();
 
@@ -69,6 +71,7 @@ const VaultBorrowInput: React.FC<Props> = ({
 
       setPairPrice(tokenPairPrice);
       setSupplyBalance(userSupplyBalance);
+
       if (positionInfo) {
         setCollateral(positionInfo.collateral);
         setLoan(
@@ -84,16 +87,53 @@ const VaultBorrowInput: React.FC<Props> = ({
     initBalances();
   }, [item, userAddress]);
 
+  useEffect(() => {
+    checkHealth();
+  }, [pairPrice, deposit, borrow]);
+
   const handleInputDepositChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setDeposit(event.target.value);
   };
 
+  const checkHealth = () => {
+    const totalCollateral = onlyBorrow
+      ? item.collateral
+      : collateral +
+        (deposit.length > 0
+          ? parseUnits(deposit, collateralToken.decimals)
+          : BigInt(0));
+    const totalBorrow = onlyBorrow
+      ? item.loan
+      : loan +
+        (borrow.length > 0
+          ? parseUnits(borrow, borrowToken.decimals)
+          : BigInt(0));
+
+    if (totalBorrow > BigInt(0)) {
+      const positionHealth = getPositionHealth(
+        item.inputToken.id,
+        item.borrowedToken.id,
+        pairPrice,
+        totalCollateral,
+        totalBorrow
+      );
+
+      const lltvVal = formatTokenValue(item.lltv, "", 16);
+      if (positionHealth <= lltvVal - 5) {
+        setShowMaxMsg(false);
+      } else {
+        setShowMaxMsg(true);
+      }
+    }
+  };
+
   const handleInputBorrowChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setBorrow(event.target.value);
+    checkHealth();
   };
 
   const handleSetMaxToken = (maxValue: string) => {
@@ -113,7 +153,7 @@ const VaultBorrowInput: React.FC<Props> = ({
       borrowToken.decimals
     );
     setBorrow(formatUnits(maxBorrow, borrowToken.decimals));
-    setShowMaxMsg(true)
+    checkHealth();
   };
 
   const handleBorrow = () => {
@@ -129,18 +169,18 @@ const VaultBorrowInput: React.FC<Props> = ({
   return (
     <div className="more-bg-secondary w-full rounded-[20px] modal-base  ">
       <div className="w-full relative h-[60px]">
-      <div
-        className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
-        onClick={closeModal}
-      >
-        <img
-          src={"/assets/icons/close.svg"}
-          alt="close"
-          className="w-[12px] h-[12px]"
-        />
+        <div
+          className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
+          onClick={closeModal}
+        >
+          <img
+            src={"/assets/icons/close.svg"}
+            alt="close"
+            className="w-[12px] h-[12px]"
+          />
+        </div>
       </div>
-      </div>
-      <div className="px-[28px] pt-[20px] pb-[30px] font-[16px] overflow-auto max-h-[calc(100vh-28em)]">
+      <div className="px-[28px] pt-[20px] pb-[30px] font-[16px] overflow-auto">
         <div className="text-[24px] mb-[40px] font-semibold">Borrow</div>
         {!onlyBorrow && (
           <>
@@ -178,13 +218,17 @@ const VaultBorrowInput: React.FC<Props> = ({
           {borrowToken.symbol}
         </div>
         {showMaxMsg && (
-          <div className="mt-[40px]">
+          <div className="mt-8">
             <div className="text-[16px] p-[20px] text-[#E0DFE3] bg-[#E51F201A] border border-dashed border-[#E51F20] leading-[24px] rounded-[8px]">
-              Your loan position will be within 5% of the market liquidation threshold (LLTV). If you proceed, your position may result in an immediate liquidation of your collateral. It is strongly recommended to reduce the size of your loan to maintain a healthier position.
+              Your loan position will be within 5% of the market liquidation
+              threshold (LLTV). If you proceed, your position may result in an
+              immediate liquidation of your collateral. It is strongly
+              recommended to reduce the size of your loan to maintain a
+              healthier position.
             </div>
           </div>
         )}
-        <div className="flex justify-end mt-[40px] mb">
+        <div className="flex justify-end mt-8">
           <div className="mr-5">
             <MoreButton
               className="text-2xl py-2"
@@ -206,7 +250,7 @@ const VaultBorrowInput: React.FC<Props> = ({
       <div className="w-[50%] mx-15 flex justify-center mx-auto">
         <div className="glowing-text-secondary !p-0 w-full"></div>
       </div>
-      <div className="more-bg-primary rounded-b-[20px] px-[28px] pb-[40px] pt-[30px] text-[16px] font-normal">
+      <div className="more-bg-primary rounded-b-[20px] px-[28px] pb-[10px] pt-[30px] text-[16px] font-normal">
         <div className="flex justify-between">
           <div>1D Borrow APY:</div>
           <div>
@@ -217,8 +261,8 @@ const VaultBorrowInput: React.FC<Props> = ({
         </div>
         <div className="flex justify-between mt-10 pb-4">
           <div>LLTV:</div>
-          <div>
-            <FormatPourcentage value={formatTokenValue(item.lltv, "", 18)} />
+          <div style={{ color: showMaxMsg ? "#C02E2D" : "" }}>
+            {formatUnits(item.lltv, 16)} %
           </div>
         </div>
         {lltv2 && isPremiumUser && (
@@ -229,7 +273,6 @@ const VaultBorrowInput: React.FC<Props> = ({
             </div>
           </div>
         )}
-
         {/* <div className="flex justify-between mt-10 pb-4">
           <div>Your Credora Rating</div>
           <div className="">{0}</div>

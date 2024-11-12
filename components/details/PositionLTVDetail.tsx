@@ -25,10 +25,13 @@ const PositionLTVDetail: React.FC<Props> = ({ item }) => {
     borrowPrice
   );
 
+  const isSafe = positionLTV <= lltvVal - 10;
+  const bgColor = isSafe ? "#362120" : "#C02E2D";
+
   return (
     <div className="flex justify-between items-center mx-3">
       <div className="w-[80px] mr-[20px]">
-        <div style={{ color: "#F58420" }} className="text-[14px] mb-1">
+        <div style={{ color: bgColor }} className="text-[14px] mb-1">
           {positionLTV.toFixed(2)}%
         </div>
         <div className="text-[#888888] text-[14px]">Current LTV</div>
@@ -37,26 +40,28 @@ const PositionLTVDetail: React.FC<Props> = ({ item }) => {
         <div className="relative bg-white w-[100px] h-[3px]">
           <div
             style={{
-              backgroundColor: "#F58420",
+              backgroundColor: bgColor,
               width: `${positionLTV}%`,
             }}
             className="absolute h-[3px]"
           />
           <div
             style={{
-              backgroundColor: "#F58420",
+              backgroundColor: bgColor,
               left: `${lltvVal}%`,
             }}
             className="absolute w-[1px] h-[12px] top-[-4px]"
           />
         </div>
       </div>
-      <div className="w-[60px] ml-[20px]">
+      <div className="w-[140px] ml-[20px]">
         <div className="text-[#E0DFE3] text-[14px] mb-1">
           {lltvVal.toFixed(2)}
           <span className="text-[#888888] text-[14px]">%</span>
         </div>
-        <div className="text-[#888888] text-[14px]">LLTV</div>
+        <div className="text-[#888888] text-[14px] whitespace-nowrap">
+          Liquidation Threshold
+        </div>
       </div>
     </div>
   );

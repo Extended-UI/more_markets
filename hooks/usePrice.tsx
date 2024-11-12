@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getTokenPrice } from "@/utils/contract";
 
-const usePrice = (token: string | undefined) => {
+const   usePrice = (token: string | undefined) => {
   const [tokenPrice, setTokenPrice] = useState(0);
 
   const initPrice = async () => {

@@ -139,7 +139,7 @@ const LoanMoreTable: React.FC<Props> = ({
               //overflow: "visible",
             }}
           >
-            <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
+            <table className="w-full rounded-2xl text-sm text-left table overflow-x-scroll">
               <thead
                 className="bg-[#212121] h-20  text-white  text-xs"
                 style={{

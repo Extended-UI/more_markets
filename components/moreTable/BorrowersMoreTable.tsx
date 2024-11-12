@@ -9,7 +9,13 @@ import FormatPourcentage from "../tools/formatPourcentage";
 import { oraclePriceScale } from "@/utils/const";
 import { getTokenPairPrice } from "@/utils/contract";
 import { IMarketUser, IMarketUserProps } from "@/types";
-import { formatAddress, formatTokenValue, getTokenInfo } from "@/utils/utils";
+import {
+  formatAddress,
+  formatTokenValue,
+  getPositionHealth,
+  getTokenInfo,
+} from "@/utils/utils";
+import { id } from "ethers";
 
 const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
   marketUsers,
@@ -33,31 +39,19 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
       );
 
       if (totalBorrow > BigInt(0)) {
-        const collateralToken = getTokenInfo(item.inputToken.id).decimals;
-        const borrowToken = getTokenInfo(item.borrowedToken.id).decimals;
-        const isBig = collateralToken >= borrowToken;
-        const decimalsPow = BigInt(
-          10 **
-            (isBig
-              ? collateralToken - borrowToken
-              : borrowToken - collateralToken)
-        );
         _showList.map((showItem) => {
           showItem.borrow_percent =
             (formatTokenValue(showItem.borrow_amount, item.borrowedToken.id) *
               100) /
             formatTokenValue(totalBorrow, item.borrowedToken.id);
 
-          const factorVal =
-            (showItem.collateral_amount *
-              pairPrice *
-              BigInt(100) *
-              (isBig ? BigInt(1) : decimalsPow)) /
-            showItem.borrow_amount /
-            oraclePriceScale /
-            (isBig ? decimalsPow : BigInt(1));
-          showItem.health_factor =
-            factorVal > BigInt(0) ? 1e4 / Number(factorVal) : 0;
+          showItem.health_factor = getPositionHealth(
+            item.inputToken.id,
+            item.borrowedToken.id,
+            pairPrice,
+            showItem.collateral_amount,
+            showItem.borrow_amount
+          );
         });
 
         setShowList(
@@ -196,4 +190,5 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
     </div>
   );
 };
+
 export default BorrowersMoreTable;
