@@ -43,8 +43,8 @@ const VaultBorrowInput: React.FC<Props> = ({
   const [pairPrice, setPairPrice] = useState(BigInt(0));
   const [loan, setLoan] = useState(BigInt(0));
   const [collateral, setCollateral] = useState(BigInt(0));
-  const [supplyBalance, setSupplyBalance] =
-    useState<GetBalanceReturnType>(initBalance);
+  const [supplyBalance, setSupplyBalance] = useState<GetBalanceReturnType>(initBalance);
+  const [showMaxMsg, setShowMaxMsg] = useState(false)
 
   const { address: userAddress } = useAccount();
 
@@ -113,6 +113,7 @@ const VaultBorrowInput: React.FC<Props> = ({
       borrowToken.decimals
     );
     setBorrow(formatUnits(maxBorrow, borrowToken.decimals));
+    setShowMaxMsg(true)
   };
 
   const handleBorrow = () => {
@@ -126,7 +127,8 @@ const VaultBorrowInput: React.FC<Props> = ({
   };
 
   return (
-    <div className="more-bg-secondary w-full rounded-[20px] modal-base relative">
+    <div className="more-bg-secondary w-full rounded-[20px] modal-base  ">
+      <div className="w-full relative h-[60px]">
       <div
         className="rounded-full bg-[#343434] hover:bg-[#3f3f3f] p-6 absolute right-4 top-4"
         onClick={closeModal}
@@ -137,7 +139,8 @@ const VaultBorrowInput: React.FC<Props> = ({
           className="w-[12px] h-[12px]"
         />
       </div>
-      <div className="px-[28px] pt-[50px] pb-[30px] font-[16px]">
+      </div>
+      <div className="px-[28px] pt-[20px] pb-[30px] font-[16px] overflow-auto max-h-[calc(100vh-28em)]">
         <div className="text-[24px] mb-[40px] font-semibold">Borrow</div>
         {!onlyBorrow && (
           <>
@@ -174,6 +177,13 @@ const VaultBorrowInput: React.FC<Props> = ({
           Maximum Available to Borrow: {formatNumberLocale(availableLiquidity)}{" "}
           {borrowToken.symbol}
         </div>
+        {showMaxMsg && (
+          <div className="mt-[40px]">
+            <div className="text-[16px] p-[20px] text-[#E0DFE3] bg-[#E51F201A] border border-dashed border-[#E51F20] leading-[24px] rounded-[8px]">
+              Your loan position will be within 5% of the market liquidation threshold (LLTV). If you proceed, your position may result in an immediate liquidation of your collateral. It is strongly recommended to reduce the size of your loan to maintain a healthier position.
+            </div>
+          </div>
+        )}
         <div className="flex justify-end mt-[40px] mb">
           <div className="mr-5">
             <MoreButton

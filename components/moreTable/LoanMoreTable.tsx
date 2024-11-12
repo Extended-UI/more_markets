@@ -27,6 +27,11 @@ interface Props extends IBorrowMarketProps {
   // positions: GraphPosition[];
 }
 
+let lltvColor = '#F58420';
+let ltvColor = '#F58420';
+let ltvPercentage = '61.3%';
+let lltvPercentage = '83%'
+
 const LoanMoreTable: React.FC<Props> = ({
   // positions,
   borrowMarkets,
@@ -129,13 +134,13 @@ const LoanMoreTable: React.FC<Props> = ({
         <>
           <h1 className="text-[30px] mb-8 mt-28 font-semibold">My Loans</h1>
           <div
-            className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table"
+            className="overflow-x-auto rounded-2xl table-wrapper mb-16 more-table"
             style={{
               overflowX: "auto",
-              scrollbarWidth: "none",
+              scrollbarWidth: "auto",
               msOverflowStyle: "none",
               position: "relative",
-              overflow: "visible",
+              //overflow: "visible",
             }}
           >
             <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
@@ -173,6 +178,14 @@ const LoanMoreTable: React.FC<Props> = ({
                       <TableHeaderCell
                         title="1D Borrow APY"
                         infoText="The average annualized rate that borrowers paid over the trailing 24-hour period."
+                      />
+                    </div>
+                  </th>
+                  <th className="p-6">
+                    <div className="flex justify-start">
+                      <TableHeaderCell
+                        title="My LTV"
+                        infoText=""
                       />
                     </div>
                   </th>
@@ -309,6 +322,24 @@ const LoanMoreTable: React.FC<Props> = ({
                         </div>
                         {/* <HoverCardComp apy={item.netAPY} /> */}
                       </div>
+                    </td>
+                    <td className="p-6 items-center">
+                        <div className="flex justify-between items-center mx-3">
+                            <div className="w-[80px] mr-[20px]">
+                              <div style={{color: `${ltvColor}`}} className="text-[14px] mb-1">61.30%</div>
+                              <div className="text-[#888888] text-[14px]">Current LTV</div>
+                            </div>
+                            <div>
+                              <div className="relative bg-white w-[100px] h-[3px]">
+                                <div style={{ backgroundColor: `${ltvColor}`, width: `${ltvPercentage}`}} className="absolute h-[3px]"></div>
+                                <div style={{ backgroundColor: `${lltvColor}`, left: `${lltvPercentage}`}} className="absolute w-[1px] h-[12px] top-[-4px]"></div>
+                              </div>
+                            </div>
+                            <div className="w-[60px] ml-[20px]">
+                              <div className="text-[#E0DFE3] text-[14px] mb-1">83.00<span className="text-[#888888] text-[14px]">%</span></div>
+                              <div className="text-[#888888] text-[14px]">LLTV</div>
+                            </div>
+                        </div>
                     </td>
                   </tr>
                 ))}
