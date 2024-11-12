@@ -3,6 +3,8 @@
 import { useAccount } from "wagmi";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { formatUnits, parseUnits, ZeroAddress } from "ethers";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
@@ -88,30 +90,19 @@ const VaultBorrowInput: React.FC<Props> = ({
   }, [item, userAddress]);
 
   useEffect(() => {
-    checkHealth();
-  }, [pairPrice, deposit, borrow]);
-
-  const handleInputDepositChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDeposit(event.target.value);
-  };
-
-  const checkHealth = () => {
-    const totalCollateral = onlyBorrow
-      ? item.collateral
-      : collateral +
-        (deposit.length > 0
-          ? parseUnits(deposit, collateralToken.decimals)
-          : BigInt(0));
-    const totalBorrow = onlyBorrow
-      ? item.loan
-      : loan +
-        (borrow.length > 0
-          ? parseUnits(borrow, borrowToken.decimals)
-          : BigInt(0));
+    const totalCollateral =
+      (onlyBorrow ? item.collateral : collateral) +
+      (deposit.length > 0
+        ? parseUnits(deposit, collateralToken.decimals)
+        : BigInt(0));
+    const totalBorrow =
+      (onlyBorrow ? item.loan : loan) +
+      (borrow.length > 0
+        ? parseUnits(borrow, borrowToken.decimals)
+        : BigInt(0));
 
     if (totalBorrow > BigInt(0)) {
+      const lltvVal = formatTokenValue(item.lltv, "", 16);
       const positionHealth = getPositionHealth(
         item.inputToken.id,
         item.borrowedToken.id,
@@ -120,20 +111,25 @@ const VaultBorrowInput: React.FC<Props> = ({
         totalBorrow
       );
 
-      const lltvVal = formatTokenValue(item.lltv, "", 16);
       if (positionHealth <= lltvVal - 5) {
         setShowMaxMsg(false);
       } else {
         setShowMaxMsg(true);
       }
+    } else {
+      setShowMaxMsg(false);
     }
-  };
+  }, [pairPrice, deposit, borrow]);
 
+  const handleInputDepositChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setDeposit(event.target.value);
+  };
   const handleInputBorrowChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setBorrow(event.target.value);
-    checkHealth();
   };
 
   const handleSetMaxToken = (maxValue: string) => {
@@ -153,7 +149,6 @@ const VaultBorrowInput: React.FC<Props> = ({
       borrowToken.decimals
     );
     setBorrow(formatUnits(maxBorrow, borrowToken.decimals));
-    checkHealth();
   };
 
   const handleBorrow = () => {
@@ -262,7 +257,8 @@ const VaultBorrowInput: React.FC<Props> = ({
         <div className="flex justify-between mt-10 pb-4">
           <div>LLTV:</div>
           <div style={{ color: showMaxMsg ? "#C02E2D" : "" }}>
-            {formatUnits(item.lltv, 16)} %
+            <FontAwesomeIcon icon={faTriangleExclamation} />
+            {" " + formatUnits(item.lltv, 16)} %
           </div>
         </div>
         {lltv2 && isPremiumUser && (

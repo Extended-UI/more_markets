@@ -26,7 +26,7 @@ const PositionLTVDetail: React.FC<Props> = ({ item }) => {
   );
 
   const isSafe = positionLTV <= lltvVal - 10;
-  const bgColor = isSafe ? "#362120" : "#C02E2D";
+  const bgColor = isSafe ? "#F58420" : "#C02E2D";
 
   return (
     <div className="flex justify-between items-center mx-3">
@@ -54,13 +54,13 @@ const PositionLTVDetail: React.FC<Props> = ({ item }) => {
           />
         </div>
       </div>
-      <div className="w-[140px] ml-[20px]">
+      <div className="w-[100px] ml-[20px]">
         <div className="text-[#E0DFE3] text-[14px] mb-1">
           {lltvVal.toFixed(2)}
           <span className="text-[#888888] text-[14px]">%</span>
         </div>
         <div className="text-[#888888] text-[14px] whitespace-nowrap">
-          Liquidation Threshold
+          Liquidation LTV
         </div>
       </div>
     </div>
