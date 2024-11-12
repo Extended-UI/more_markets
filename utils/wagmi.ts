@@ -12,7 +12,7 @@ const flowMainnet = {
   rpcUrls: {
     default: {
       http: [
-        "https://flow-mainnet.g.alchemy.com/v2/giF5d0sHzxK4OoanZ-rwx6Z-jpLMuB1S",
+        // "https://flow-mainnet.g.alchemy.com/v2/giF5d0sHzxK4OoanZ-rwx6Z-jpLMuB1S",
         "https://mainnet.evm.nodes.onflow.org",
       ],
     },
@@ -37,10 +37,10 @@ export const config = createConfig({
   chains: [flowMainnet],
   connectors: [injected()],
   transports: {
-    // [flowMainnet.id]: http("https://mainnet.evm.nodes.onflow.org"),
-    [flowMainnet.id]: http(
-      "https://flow-mainnet.g.alchemy.com/v2/giF5d0sHzxK4OoanZ-rwx6Z-jpLMuB1S"
-    ),
+    [flowMainnet.id]: http("https://mainnet.evm.nodes.onflow.org"),
+    // [flowMainnet.id]: http(
+    //   "https://flow-mainnet.g.alchemy.com/v2/giF5d0sHzxK4OoanZ-rwx6Z-jpLMuB1S"
+    // ),
   },
   ssr: true,
   pollingInterval: 30_000,

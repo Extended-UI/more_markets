@@ -328,6 +328,25 @@ export const getVaultApyInfo = (
   };
 };
 
+export const getPositionLtv = (
+  collateralAmount: number,
+  loanAmount: number,
+  collateralPrice: number,
+  borrowPrice: number
+): number => {
+  const collateralUsd = collateralPrice * collateralAmount;
+  const ltvVal =
+    collateralUsd > 0 ? (borrowPrice * loanAmount * 1e2) / collateralUsd : 0;
+  console.log(
+    collateralAmount,
+    loanAmount,
+    collateralPrice,
+    borrowPrice,
+    ltvVal
+  );
+  return Math.trunc(ltvVal * 1e2) / 1e2;
+};
+
 const getRewardPrice = (priceInfo: string): bigint => {
   return BigInt(1);
 };

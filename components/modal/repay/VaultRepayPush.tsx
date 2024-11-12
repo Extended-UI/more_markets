@@ -21,6 +21,7 @@ import {
   delay,
   formatTokenValue,
   isFlow,
+  getPositionLtv,
 } from "@/utils/utils";
 import {
   getTokenAllowance,
@@ -52,29 +53,32 @@ const VaultRepayPush: React.FC<Props> = ({
 
   const borrowToken = getTokenInfo(item.borrowedToken.id);
   const collateralToken = getTokenInfo(item.inputToken.id);
-  const loanToken = borrowToken.symbol;
   const repayAmount = parseUnits(amount.toString(), borrowToken.decimals);
-  const loanAmount = formatTokenValue(item.loan, item.borrowedToken.id);
 
+  const loanAmount = formatTokenValue(item.loan, "", borrowToken.decimals);
   const collateralAmount = formatTokenValue(
     item.collateral,
     "",
     collateralToken.decimals
   );
-  const collateralUsd = collateralPrice * collateralAmount;
-  const beforeLtv =
-    collateralUsd > 0 ? (borrowPrice * loanAmount) / collateralUsd : 0;
-  const numAmount = toNumber(amount);
-  const afterLtv =
-    collateralUsd > 0
-      ? (borrowPrice * (loanAmount - numAmount)) / collateralUsd
-      : 0;
+  const beforeLtv = getPositionLtv(
+    collateralAmount,
+    loanAmount,
+    collateralPrice,
+    borrowPrice
+  );
 
-  const loanFlow = isFlow(item.borrowedToken.id);
+  const numAmount = toNumber(amount);
+  const afterLtv = getPositionLtv(
+    collateralAmount,
+    loanAmount - numAmount,
+    collateralPrice,
+    borrowPrice
+  );
 
   useEffect(() => {
     const initApprove = async () => {
-      if (loanFlow) {
+      if (isFlow(item.borrowedToken.id)) {
         setHasApprove(true);
       } else {
         const allowance = userAddress
@@ -91,7 +95,7 @@ const VaultRepayPush: React.FC<Props> = ({
     };
 
     initApprove();
-  }, [userAddress, item, repayAmount, loanFlow]);
+  }, [userAddress, item, repayAmount]);
 
   const doApprove = async () => {
     await setTokenAllowance(
@@ -155,7 +159,7 @@ const VaultRepayPush: React.FC<Props> = ({
             className="w-7 h-7"
           />
           <div className="text-l flex items-center'">
-            {collateralToken.symbol} / {loanToken}
+            {collateralToken.symbol} / {borrowToken.symbol}
           </div>
         </div>
         <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
@@ -179,16 +183,16 @@ const VaultRepayPush: React.FC<Props> = ({
           </div>
           <PositionChangeToken
             title="Borrow"
-            token={loanToken}
+            token={borrowToken.symbol}
             value={loanAmount}
             value2={loanAmount - numAmount}
           />
           <div className="flex flex-row justify-between items-center my-2">
             <div className="text-xl">LTV / Liquidation LTV</div>
             <div className="flex items-center gap-2">
-              <FormatPourcentage value={beforeLtv} />
+              <FormatPourcentage value={beforeLtv} multiplier={1} />
               <ArrowLongRightIcon className="w-4 h-4 text-grey" />
-              <FormatTwoPourcentage value={afterLtv} />
+              <FormatTwoPourcentage value={afterLtv} multiplier={1} />
             </div>
           </div>
 

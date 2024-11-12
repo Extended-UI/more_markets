@@ -11,6 +11,7 @@ import VaultBorrow from "../modal/borrow/VaultBorrow";
 import ButtonDialog from "../buttonDialog/buttonDialog";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
+import PositionLTVDetail from "../details/PositionLTVDetail";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
@@ -26,11 +27,6 @@ import {
 interface Props extends IBorrowMarketProps {
   // positions: GraphPosition[];
 }
-
-let lltvColor = '#F58420';
-let ltvColor = '#F58420';
-let ltvPercentage = '61.3%';
-let lltvPercentage = '83%'
 
 const LoanMoreTable: React.FC<Props> = ({
   // positions,
@@ -183,10 +179,7 @@ const LoanMoreTable: React.FC<Props> = ({
                   </th>
                   <th className="p-6">
                     <div className="flex justify-start">
-                      <TableHeaderCell
-                        title="My LTV"
-                        infoText=""
-                      />
+                      <TableHeaderCell title="My LTV" infoText="" />
                     </div>
                   </th>
                 </tr>
@@ -324,22 +317,7 @@ const LoanMoreTable: React.FC<Props> = ({
                       </div>
                     </td>
                     <td className="p-6 items-center">
-                        <div className="flex justify-between items-center mx-3">
-                            <div className="w-[80px] mr-[20px]">
-                              <div style={{color: `${ltvColor}`}} className="text-[14px] mb-1">61.30%</div>
-                              <div className="text-[#888888] text-[14px]">Current LTV</div>
-                            </div>
-                            <div>
-                              <div className="relative bg-white w-[100px] h-[3px]">
-                                <div style={{ backgroundColor: `${ltvColor}`, width: `${ltvPercentage}`}} className="absolute h-[3px]"></div>
-                                <div style={{ backgroundColor: `${lltvColor}`, left: `${lltvPercentage}`}} className="absolute w-[1px] h-[12px] top-[-4px]"></div>
-                              </div>
-                            </div>
-                            <div className="w-[60px] ml-[20px]">
-                              <div className="text-[#E0DFE3] text-[14px] mb-1">83.00<span className="text-[#888888] text-[14px]">%</span></div>
-                              <div className="text-[#888888] text-[14px]">LLTV</div>
-                            </div>
-                        </div>
+                      <PositionLTVDetail item={item} />
                     </td>
                   </tr>
                 ))}
