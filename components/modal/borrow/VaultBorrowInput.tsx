@@ -257,7 +257,7 @@ const VaultBorrowInput: React.FC<Props> = ({
         <div className="flex justify-between mt-10 pb-4">
           <div>LLTV:</div>
           <div style={{ color: showMaxMsg ? "#C02E2D" : "" }}>
-            <FontAwesomeIcon icon={faTriangleExclamation} />
+            {showMaxMsg && <FontAwesomeIcon icon={faTriangleExclamation} />}
             {" " + formatUnits(item.lltv, 16)} %
           </div>
         </div>
