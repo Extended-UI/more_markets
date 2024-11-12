@@ -187,9 +187,10 @@ export const getTokenPrice = async (token: string): Promise<number> => {
     const flowPrice = parseFloat(formatUnits(answerVal, decimalVal));
     if (isFlow(token)) return flowPrice;
     else {
-      return (
-        flowPrice * parseFloat(formatUnits(priceResult[2].result as bigint, 36))
+      const priceRatio = parseFloat(
+        formatUnits(priceResult[2].result as bigint, 36)
       );
+      return priceRatio == 0 ? flowPrice : flowPrice / priceRatio;
     }
   } catch {
     return 0;
