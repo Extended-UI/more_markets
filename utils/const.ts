@@ -1,3 +1,4 @@
+import { parseEther } from "ethers";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import { IToken } from "@/types";
 import { WETH9Abi } from "@/app/abi/WETH9Abi";
@@ -6,7 +7,6 @@ import { BundlerAbi } from "@/app/abi/BundlerAbi";
 import { Permit2Abi } from "@/app/abi/Permit2Abi";
 import { MulticallAbi } from "@/app/abi/Multicall";
 import { LoopStrategyAbi } from "@/app/abi/LoopStrategyAbi";
-import { parseEther } from "ethers";
 
 export const apyDivider = 1e2;
 export const WAD = BigInt(1e18);
