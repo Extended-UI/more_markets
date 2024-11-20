@@ -13,7 +13,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
   const utilization =
     totalSupply == BigInt(0)
       ? 0
-      : Number((totalBorrow * BigInt(100)) / totalSupply);
+      : Number((totalBorrow * BigInt(1e4)) / totalSupply);
 
   const borrowToken = getTokenInfo(item.borrowedToken.id);
 
@@ -26,7 +26,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           scrollbarWidth: "none", // Works in Firefox
           msOverflowStyle: "none", // Works in IE and Edge
           //width: "calc(100% + 2rem)",
-          width: '100%',
+          width: "100%",
           position: "relative",
           left: "0",
           overflow: "visible",
@@ -56,7 +56,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
             " " +
             borrowToken.symbol}
           <span className="text-secondary text-[14px] ml-4">
-            ({utilization}%)
+            ({utilization / 100}%)
           </span>
         </InfoDetailGrey>
         <InfoDetailGrey
