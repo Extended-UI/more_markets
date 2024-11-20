@@ -25,7 +25,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
   const utilization =
     totalSupply == BigInt(0)
       ? 0
-      : Number((item.marketInfo.totalBorrowAssets * BigInt(100)) / totalSupply);
+      : Number((item.marketInfo.totalBorrowAssets * BigInt(1e4)) / totalSupply);
 
   return (
     <>
@@ -65,7 +65,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
       </td>
       <td className="p-6">
         <div className="flex">
-          <FormatPourcentage value={utilization} multiplier={1} />
+          <FormatPourcentage value={utilization / 1e2} multiplier={1} />
         </div>
       </td>
       <td className="p-6">
