@@ -1,8 +1,7 @@
 import _ from "lodash";
 import mysql from "mysql2/promise";
-import { parseEther } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
-import { IVaultApr, IVaultProgram } from "@/types";
+import { IVaultApr } from "@/types";
 
 interface IVaultAprItem extends IVaultApr {
   count: number;
@@ -43,17 +42,18 @@ export async function GET(req: NextRequest, res: NextResponse) {
   if (vaultid.length > 0) {
     query += ` AND vaultid = '${vaultid}'`;
   }
-  const [[rows], [vaultPrograms], [vaultShares], [boxPrograms]] =
-    await Promise.all([
-      connection.query(query),
-      connection.query(
-        `SELECT * FROM vault_programs WHERE program_ended = '0'`
-      ),
-      connection.query(`SELECT * FROM vault_valid_shares`),
-      connection.query(
-        `SELECT * FROM vault_box_programs WHERE program_ended = '0'`
-      ),
-    ]);
+  // const [[rows], [vaultPrograms], [vaultShares], [boxPrograms]] =
+  //   await Promise.all([
+  //     connection.query(query),
+  //     connection.query(
+  //       `SELECT * FROM vault_programs WHERE program_ended = '0'`
+  //     ),
+  //     connection.query(`SELECT * FROM vault_valid_shares`),
+  //     connection.query(
+  //       `SELECT * FROM vault_box_programs WHERE program_ended = '0'`
+  //     ),
+  //   ]);
+  const [rows] = await connection.query(query);
 
   let vaultAprInfos: IVaultAprItem[] = [];
   for (let resultItem of rows as IVaultAprRow[]) {
@@ -64,39 +64,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
       vaultAprInfos[itemInd].count++;
       vaultAprInfos[itemInd].apr += Number(resultItem.supply_apr);
     } else {
-      const shareItem = (vaultShares as any[]).find(
-        (vaultShare) => vaultShare.vault_address == vaultId
-      );
-
       vaultAprInfos.push({
         vaultid: vaultId,
         count: 1,
         apr: Number(resultItem.supply_apr),
-        programs: _.compact(
-          (vaultPrograms as any[]).map((vaultProgram) => {
-            return vaultProgram.vault_address == vaultId &&
-              currentTime >= Number(vaultProgram.start_time)
-              ? ({
-                  total_reward: vaultProgram.total_reward,
-                  reward_decimals: vaultProgram.reward_decimals,
-                  price_info: vaultProgram.price_info || "",
-                } as unknown as IVaultProgram)
-              : null;
-          })
-        ),
-        boxes: _.compact(
-          (boxPrograms as any[]).map((boxProgram) => {
-            return boxProgram.vault_address == vaultId &&
-              currentTime >= Number(boxProgram.start_time)
-              ? parseEther(boxProgram.batch_mint_amount)
-              : null;
-          })
-        )
-          .reduce((memo, boxAmount) => (memo += boxAmount), BigInt(0))
-          .toString(),
-        total_shares: shareItem
-          ? BigInt(shareItem.total_amount).toString()
-          : "0",
+        programs: [],
+        boxes: "0",
+        total_shares: "0",
       });
     }
   }
