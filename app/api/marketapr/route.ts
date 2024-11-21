@@ -15,6 +15,7 @@ interface IMarketAprRow {
 }
 
 const DayInSec = 86400;
+const minInSec = 60;
 
 let connection: mysql.Connection | null;
 const initConnection = async (): Promise<mysql.Connection> => {
@@ -35,9 +36,10 @@ export async function GET(req: NextRequest, res: NextResponse) {
   const connection = await initConnection();
 
   const marketid = req.nextUrl.searchParams.get("marketid");
-  const targetDate = req.nextUrl.searchParams.get("targetDate");
-  const targetTime =
-    Math.floor(Date.now() / 1000) - DayInSec * Number(targetDate);
+  // const targetDate = req.nextUrl.searchParams.get("targetDate");
+  // const targetTime =
+  //   Math.floor(Date.now() / 1000) - DayInSec * Number(targetDate);
+  const targetTime = minInSec * 24;
 
   let query = `SELECT marketid, supply_apr_usual, supply_apr_premium, borrow_apr, apr_time FROM market_aprs WHERE apr_time >= '${targetTime}'`;
   if (marketid && marketid.length > 0) {
