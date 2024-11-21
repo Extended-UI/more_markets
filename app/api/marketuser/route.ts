@@ -20,9 +20,10 @@ const initConnection = async (): Promise<mysql.Connection> => {
 export async function GET(req: NextRequest, res: NextResponse) {
   const connection = await initConnection();
 
-  const marketid = req.nextUrl.searchParams.get("marketid");
-  const query = `SELECT user_address, collateral_amount, borrow_amount FROM market_users WHERE market_id = '${marketid}'`;
-  const [rows] = await connection.query(query);
+  // const marketid = req.nextUrl.searchParams.get("marketid");
+  // const query = `SELECT user_address, collateral_amount, borrow_amount FROM market_users WHERE market_id = '${marketid}'`;
+  // const [rows] = await connection.query(query);
 
-  return NextResponse.json({ users: rows as IMarketUserRow[] });
+  // return NextResponse.json({ users: rows as IMarketUserRow[] });
+  return NextResponse.json({ users: [] as IMarketUserRow[] });
 }
