@@ -12,6 +12,7 @@ import {
   formatTokenValue,
   getPremiumLltv,
   getAvailableLiquidity,
+  getUtilization,
 } from "@/utils/utils";
 
 interface Prop extends IBorrowMarketProp {
@@ -20,12 +21,6 @@ interface Prop extends IBorrowMarketProp {
 
 const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
   const { address: userAddress } = useAccount();
-
-  const totalSupply = item.marketInfo.totalSupplyAssets;
-  const utilization =
-    totalSupply == BigInt(0)
-      ? 0
-      : Number((item.marketInfo.totalBorrowAssets * BigInt(1e4)) / totalSupply);
 
   return (
     <>
@@ -65,7 +60,13 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
       </td>
       <td className="p-6">
         <div className="flex">
-          <FormatPourcentage value={utilization / 1e2} multiplier={1} />
+          <FormatPourcentage
+            value={getUtilization(
+              item.marketInfo.totalSupplyAssets,
+              item.marketInfo.totalBorrowAssets
+            )}
+            multiplier={1}
+          />
         </div>
       </td>
       <td className="p-6">

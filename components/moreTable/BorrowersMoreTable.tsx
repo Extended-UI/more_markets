@@ -3,10 +3,8 @@
 import React, { useEffect, useState } from "react";
 import FormatPrice from "../tools/formatPrice";
 import TableHeaderCell from "./MoreTableHeader";
-import usePagination from "@/hooks/usePagination";
 import Pagination from "../pagination/Pagination";
 import FormatPourcentage from "../tools/formatPourcentage";
-import { oraclePriceScale } from "@/utils/const";
 import { getTokenPairPrice } from "@/utils/contract";
 import { IMarketUser, IMarketUserProps } from "@/types";
 import {
@@ -15,12 +13,12 @@ import {
   getPositionHealth,
   getTokenInfo,
 } from "@/utils/utils";
-import { id } from "ethers";
 
 const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
   marketUsers,
   item,
 }) => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [showList, setShowList] = useState<IMarketUser[]>([]);
 
   useEffect(() => {
@@ -65,10 +63,8 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
     getPrice();
   }, [item, marketUsers]);
 
-  const itemsPerPage = 5;
-  const { currentPage } = usePagination(showList.length, itemsPerPage);
-
   // Calculate the current page data slice
+  const itemsPerPage = 5;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentPageData = showList.slice(startIndex, startIndex + itemsPerPage);
 
@@ -161,7 +157,6 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
                       )}
                       token={getTokenInfo(item.borrowedToken.id).symbol}
                     />
-                    x
                   </div>
                 </td>
 
@@ -184,7 +179,12 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
           </tbody>
         </table>
         <div className="w-full text-[14px] flex justify-start py-10 px-6">
-          <Pagination totalItems={showList.length} />
+          <Pagination
+            totalItems={showList.length}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
       </div>
     </div>

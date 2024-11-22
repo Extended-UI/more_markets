@@ -3,8 +3,6 @@ import SuppliersMoreTable from "../moreTable/SuppliersMoreTable";
 import BorrowersMoreTable from "../moreTable/BorrowersMoreTable";
 import { IMarketUserProps } from "@/types";
 // import LiquidationInfo from "./LiquidationInfo";
-// import TransactionsMoreTable from "../moreTable/TransactionMoreTable";
-// import SecondTransactionsMoreTable from "../moreTable/SecondTransactionMoreTable";
 
 const ActivityBorrowDetail: React.FC<IMarketUserProps> = ({
   marketUsers,
@@ -16,9 +14,7 @@ const ActivityBorrowDetail: React.FC<IMarketUserProps> = ({
       <div className="flex flex-col w-full">
         <SuppliersMoreTable item={item} marketUsers={marketUsers} />
         <BorrowersMoreTable item={item} marketUsers={marketUsers} />
-        {/* <TransactionsMoreTable />
-        <LiquidationInfo />
-        <SecondTransactionsMoreTable /> */}
+        {/* <LiquidationInfo /> */}
       </div>
     </div>
   );

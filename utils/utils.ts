@@ -406,3 +406,14 @@ const getVaultProgramApy = (
     })
     .value();
 };
+
+export const getUtilization = (
+  totalSupply: bigint,
+  totalBorrow: bigint
+): number => {
+  const utilization =
+    totalSupply == BigInt(0)
+      ? 0
+      : Number((totalBorrow * apyMultiplier) / totalSupply);
+  return utilization / 100;
+};

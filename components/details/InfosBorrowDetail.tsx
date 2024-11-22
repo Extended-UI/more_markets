@@ -1,7 +1,7 @@
 import millify from "millify";
 import InfoDetailGrey from "./InfoDetailGrey";
 import { BorrowMarket } from "@/types";
-import { formatTokenValue, getTokenInfo } from "@/utils/utils";
+import { formatTokenValue, getTokenInfo, getUtilization } from "@/utils/utils";
 
 interface Props {
   item: BorrowMarket;
@@ -10,11 +10,6 @@ interface Props {
 const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
   const totalSupply = item.marketInfo.totalSupplyAssets;
   const totalBorrow = item.marketInfo.totalBorrowAssets;
-  const utilization =
-    totalSupply == BigInt(0)
-      ? 0
-      : Number((totalBorrow * BigInt(100)) / totalSupply);
-
   const borrowToken = getTokenInfo(item.borrowedToken.id);
 
   return (
@@ -26,7 +21,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           scrollbarWidth: "none", // Works in Firefox
           msOverflowStyle: "none", // Works in IE and Edge
           //width: "calc(100% + 2rem)",
-          width: '100%',
+          width: "100%",
           position: "relative",
           left: "0",
           overflow: "visible",
@@ -56,7 +51,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
             " " +
             borrowToken.symbol}
           <span className="text-secondary text-[14px] ml-4">
-            ({utilization}%)
+            ({getUtilization(totalSupply, totalBorrow)}%)
           </span>
         </InfoDetailGrey>
         <InfoDetailGrey
