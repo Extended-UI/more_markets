@@ -8,6 +8,7 @@ import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import { BorrowPosition, IBorrowMarketProp } from "@/types";
 import HoverCardComp from "../hoverCard/HoverCard";
+import { maxAprRangeGap } from "@/utils/const";
 import {
   formatTokenValue,
   getPremiumLltv,
@@ -24,7 +25,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
 
   return (
     <>
-      <td className="p-6">
+      <td className="pl-3">
         <div className="flex items-center">
           <IconToken
             className="mr-3 w-8 h-8"
@@ -33,7 +34,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           />
         </div>
       </td>
-      <td className="p-6">
+      <td className="pl-3">
         <div className="flex items-center">
           <IconToken
             className="mr-3 w-8 h-8"
@@ -42,15 +43,22 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           />
         </div>
       </td>
-      <td className="p-6">
-        <div className="flex gap-1 justify-start">
+      <td className="pl-3">
+        <div className="flex gapl-3 justify-start">
           <FormatTwoPourcentage
             value={formatTokenValue(item.lltv, "", 18)}
             value2={getPremiumLltv(item.marketParams)}
           />
         </div>
       </td>
-      <td className="p-6">
+      <td className="pl-3">
+        <div className="flex gapl-3 justify-start">
+          <FormatTwoPourcentage
+            value={formatTokenValue(item.lltv, "", 18) - maxAprRangeGap}
+          />
+        </div>
+      </td>
+      <td className="pl-3">
         <div className="flex justify-start items-center">
           <div className="mr-3">
             <FormatPourcentage value={item.borrow_apr} />
@@ -58,7 +66,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           {/* <HoverCardComp apy={item.netAPY} /> */}
         </div>
       </td>
-      <td className="p-6">
+      <td className="pl-3">
         <div className="flex">
           <FormatPourcentage
             value={getUtilization(
@@ -69,7 +77,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           />
         </div>
       </td>
-      <td className="p-6">
+      <td className="pl-3">
         <div className="flex justify-start">
           <IconToken
             className="mr-3 w-8 h-8"

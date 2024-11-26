@@ -344,16 +344,17 @@ export const getPositionHealth = (
       (isBig ? collateralToken - borrowToken : borrowToken - collateralToken)
   );
 
+  const mulValue = 1e6;
   const factorVal =
     (collateralAmount *
       pairPrice *
-      BigInt(100) *
+      BigInt(mulValue) *
       (isBig ? BigInt(1) : decimalsPow)) /
     borrowAmount /
     oraclePriceScale /
     (isBig ? decimalsPow : BigInt(1));
 
-  return factorVal > BigInt(0) ? 1e4 / Number(factorVal) : 0;
+  return factorVal > BigInt(0) ? (mulValue * 1e2) / Number(factorVal) : 0;
 };
 
 export const getPositionLtv = (
@@ -415,5 +416,5 @@ export const getUtilization = (
     totalSupply == BigInt(0)
       ? 0
       : Number((totalBorrow * apyMultiplier) / totalSupply);
-  return utilization / 100;
+  return utilization / apyDivider;
 };

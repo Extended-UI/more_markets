@@ -10,7 +10,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { IBorrowPosition } from "@/types";
-import { oraclePriceScale, initBalance } from "@/utils/const";
+import { oraclePriceScale, initBalance, maxAprRangeGap } from "@/utils/const";
 import {
   getTokenBallance,
   getTokenPairPrice,
@@ -111,7 +111,7 @@ const VaultBorrowInput: React.FC<Props> = ({
         totalBorrow
       );
 
-      if (positionHealth <= lltvVal - 5) {
+      if (positionHealth <= lltvVal - maxAprRangeGap * 1e2) {
         setShowMaxMsg(false);
       } else {
         setShowMaxMsg(true);
@@ -142,7 +142,10 @@ const VaultBorrowInput: React.FC<Props> = ({
       : collateral + parseUnits(deposit, collateralToken.decimals);
 
     let maxBorrow = mulDivDown(totalCollateral, pairPrice, oraclePriceScale);
-    maxBorrow = wMulDown(maxBorrow, item.lltv);
+    maxBorrow = wMulDown(
+      maxBorrow,
+      item.lltv - parseUnits(maxAprRangeGap.toString())
+    );
     maxBorrow = getExtraMax(
       maxBorrow,
       onlyBorrow ? item.loan : loan,
@@ -152,7 +155,7 @@ const VaultBorrowInput: React.FC<Props> = ({
   };
 
   const handleBorrow = () => {
-    if (validInputAmount(borrow)) {
+    if (validInputAmount(borrow) && !showMaxMsg) {
       if (onlyBorrow) {
         setAmount("0", borrow);
       } else if (validInputAmount(deposit)) {
@@ -215,11 +218,10 @@ const VaultBorrowInput: React.FC<Props> = ({
         {showMaxMsg && (
           <div className="mt-8">
             <div className="text-[16px] p-[20px] text-[#E0DFE3] bg-[#E51F201A] border border-dashed border-[#E51F20] leading-[24px] rounded-[8px]">
-              Your loan position will be within 5% of the market liquidation
-              threshold (LLTV). If you proceed, your position may result in an
-              immediate liquidation of your collateral. It is strongly
-              recommended to reduce the size of your loan to maintain a
-              healthier position.
+              As the protocol ramps up TVL, borrowing on all markets is limited
+              to 5 percentage points less than the liquidation threshold. These
+              measures have been taken to ensure that loans originated with high
+              LTVs are not liquidated immediately.
             </div>
           </div>
         )}
@@ -237,7 +239,8 @@ const VaultBorrowInput: React.FC<Props> = ({
               className="text-2xl py-2"
               text={onlyBorrow ? "Borrow More" : "Borrow"}
               onClick={handleBorrow}
-              color="primary"
+              color={showMaxMsg ? "grey" : "primary"}
+              disabled1={showMaxMsg}
             />
           </div>
         </div>

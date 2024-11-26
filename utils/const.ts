@@ -16,6 +16,9 @@ export const virtualShares = BigInt(1e6);
 export const apyMultiplier = BigInt(1e4);
 export const oraclePriceScale = parseEther(WAD.toString());
 
+// set maxAprRangeGap% reduced value of LLTV
+export const maxAprRangeGap = 0.05; // 5%
+
 export const contracts = {
   MORE_MARKETS: "0x94A2a9202EFf6422ab80B6338d41c89014E5DD72",
   MORE_BUNDLER: "0x1f474e384712cA7EC0dEE3cD9E4c3905dC8beA18",
