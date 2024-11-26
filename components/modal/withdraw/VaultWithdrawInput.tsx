@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
-import { ArrowLongRightIcon } from "@heroicons/react/20/solid";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { IInvestment } from "@/types";
 import { errMessages } from "@/utils/errors";
@@ -47,13 +46,16 @@ const VaultWithdrawInput: React.FC<Props> = ({
           ])) as bigint,
           item.assetAddress
         );
-        setWithdrawable(
+        const withdrawCap =
           withdrawnAmount >= dailyWithdrawLimit
             ? 0
-            : dailyWithdrawLimit - withdrawnAmount
-        );
+            : dailyWithdrawLimit - withdrawnAmount;
+        setWithdrawable(withdrawCap);
+        if (withdrawCap == 0) setShowMaxMsg(true);
+        else setShowMaxMsg(false);
       } else {
         setWithdrawable(dailyWithdrawLimit);
+        setShowMaxMsg(true);
       }
     };
 
@@ -63,10 +65,8 @@ const VaultWithdrawInput: React.FC<Props> = ({
   useEffect(() => {
     if (
       withdraw.length > 0 &&
-      withdrawable >= 0 &&
-      Number(withdraw) > withdrawable
+      (Number(withdraw) == 0 || Number(withdraw) > withdrawable)
     ) {
-      console.log(withdraw, withdrawable);
       setShowMaxMsg(true);
     } else {
       setShowMaxMsg(false);
@@ -167,15 +167,20 @@ const VaultWithdrawInput: React.FC<Props> = ({
           <div className="w-[50%] mx-15 flex justify-center mx-auto">
             <div className="glowing-text-primary !pb-0 w-full" />
           </div>
-          <div className="flex items-center justify-between more-bg-primary rounded-b-[20px] px-[28px] pb-[40px] pt-[30px] text-[16px] font-normal">
-            <div className="flex items-center gap-2">
-              Withdraw <ArrowLongRightIcon className="w-4 h-4" /> Deposit APY /
-              Projected Deposit APY
+          <div className="items-center more-bg-primary rounded-b-[20px] px-12 py-8 text-[16px] font-normal">
+            <div className="flex justify-between">
+              <span>APY</span>
+              <FormatTwoPourcentage
+                value={item.netAPY.total_apy}
+                multiplier={1}
+              />
             </div>
-            <FormatTwoPourcentage
-              value={item.netAPY.total_apy}
-              multiplier={1}
-            />
+            <div className="flex justify-between pt-5">
+              <span>Available Liquidity</span>
+              <FormatTwoPourcentage
+                value={withdrawable.toFixed(2) + " " + tokenInfo.symbol}
+              />
+            </div>
           </div>
         </div>
       )}
