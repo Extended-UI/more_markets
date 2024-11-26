@@ -2,8 +2,8 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 import { clsx, type ClassValue } from "clsx";
-import { formatUnits, parseUnits, ZeroAddress, toBigInt } from "ethers";
 import { ErrorDecoder } from "ethers-decode-error";
+import { formatUnits, parseUnits, ZeroAddress, toBigInt } from "ethers";
 import { MoreErrors } from "@/utils/errors";
 import {
   IToken,
@@ -29,6 +29,7 @@ import {
   apyMultiplier,
   apyDivider,
   oraclePriceScale,
+  zeroBigInt,
 } from "./const";
 
 const errorDecoder = ErrorDecoder.create();
@@ -48,7 +49,7 @@ export const getVauleNum = (param: any): number => {
 };
 
 export const getVauleBigint = (param: any, ind: number): bigint => {
-  return param.result ? BigInt(param.result[ind]) : BigInt(0);
+  return param.result ? BigInt(param.result[ind]) : zeroBigInt;
 };
 
 export const getVauleBoolean = (param: any, ind: number): boolean => {
@@ -193,12 +194,12 @@ export const mulDivDown = (x: bigint, y: bigint, d: bigint): bigint => {
 
 export const wMulDown = (x: bigint, y: bigint): bigint => {
   const returnVal = mulDivDown(x, y, WAD);
-  return returnVal > moreTolerance ? returnVal - moreTolerance : BigInt(0);
+  return returnVal > moreTolerance ? returnVal - moreTolerance : zeroBigInt;
 };
 
 export const getExtraMax = (x: bigint, y: bigint, decimals: number): bigint => {
   y = y + parseUnits("1", decimals - 4);
-  return x >= y ? x - y : BigInt(0);
+  return x >= y ? x - y : zeroBigInt;
 };
 
 export const fetchVaultAprs = async (
@@ -274,6 +275,17 @@ export const fetchMarketUsers = async (
   });
   const marketAprList = await fetchResult.json();
   return marketAprList.users;
+};
+
+export const fetchVaultWithdraw = async (vaultId: string): Promise<bigint> => {
+  const fetchResult = await fetch("/api/vaultwithdraw?&vaultid=" + vaultId, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+  const vaultWithdraw = await fetchResult.json();
+  return BigInt(vaultWithdraw.withdrawAmount);
 };
 
 export const convertAprToApy = (apr: number, aprInterval: number): number => {
@@ -354,7 +366,7 @@ export const getPositionHealth = (
     oraclePriceScale /
     (isBig ? decimalsPow : BigInt(1));
 
-  return factorVal > BigInt(0) ? (mulValue * 1e2) / Number(factorVal) : 0;
+  return factorVal > zeroBigInt ? (mulValue * 1e2) / Number(factorVal) : 0;
 };
 
 export const getPositionLtv = (
@@ -374,7 +386,7 @@ const getRewardPrice = (priceInfo: string): bigint => {
 };
 
 const getBoxProgramApy = (boxes: bigint, deposited: bigint): number => {
-  if (deposited == BigInt(0)) return 0;
+  if (deposited == zeroBigInt) return 0;
 
   // 1box = 0.005FLOW
   return (
@@ -387,7 +399,7 @@ const getVaultProgramApy = (
   programs: IVaultProgram[],
   deposited: bigint
 ): IVaultAprItem[] => {
-  if (deposited == BigInt(0)) return [{ apy: 0, priceInfo: "" }];
+  if (deposited == zeroBigInt) return [{ apy: 0, priceInfo: "" }];
 
   return _.chain(programs)
     .groupBy((item) => item.price_info)
@@ -397,7 +409,7 @@ const getVaultProgramApy = (
           (memo +=
             parseUnits(program.total_reward, program.reward_decimals) *
             getRewardPrice(program.price_info)),
-        BigInt(0)
+        zeroBigInt
       );
 
       return {
@@ -413,7 +425,7 @@ export const getUtilization = (
   totalBorrow: bigint
 ): number => {
   const utilization =
-    totalSupply == BigInt(0)
+    totalSupply == zeroBigInt
       ? 0
       : Number((totalBorrow * apyMultiplier) / totalSupply);
   return utilization / apyDivider;

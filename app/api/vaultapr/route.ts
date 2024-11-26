@@ -2,6 +2,7 @@ import _ from "lodash";
 import mysql from "mysql2/promise";
 import { parseEther } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
+import { DayInSec } from "@/utils/const";
 import { IVaultApr, IVaultProgram } from "@/types";
 
 interface IVaultAprItem extends IVaultApr {
@@ -13,8 +14,6 @@ interface IVaultAprRow {
   vaultid: string;
   apr_time: string;
 }
-
-const DayInSec = 86400;
 
 let connection: mysql.Connection | null;
 const initConnection = async (): Promise<mysql.Connection> => {

@@ -10,7 +10,12 @@ import MoreButton from "../../moreButton/MoreButton";
 import InputTokenMax from "../../input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { IBorrowPosition } from "@/types";
-import { oraclePriceScale, initBalance, maxAprRangeGap } from "@/utils/const";
+import {
+  oraclePriceScale,
+  initBalance,
+  maxAprRangeGap,
+  zeroBigInt,
+} from "@/utils/const";
 import {
   getTokenBallance,
   getTokenPairPrice,
@@ -43,9 +48,9 @@ const VaultBorrowInput: React.FC<Props> = ({
 }) => {
   const [borrow, setBorrow] = useState("");
   const [deposit, setDeposit] = useState("");
-  const [pairPrice, setPairPrice] = useState(BigInt(0));
-  const [loan, setLoan] = useState(BigInt(0));
-  const [collateral, setCollateral] = useState(BigInt(0));
+  const [pairPrice, setPairPrice] = useState(zeroBigInt);
+  const [loan, setLoan] = useState(zeroBigInt);
+  const [collateral, setCollateral] = useState(zeroBigInt);
   const [supplyBalance, setSupplyBalance] =
     useState<GetBalanceReturnType>(initBalance);
   const [showMaxMsg, setShowMaxMsg] = useState(false);
@@ -94,14 +99,14 @@ const VaultBorrowInput: React.FC<Props> = ({
       (onlyBorrow ? item.collateral : collateral) +
       (deposit.length > 0
         ? parseUnits(deposit, collateralToken.decimals)
-        : BigInt(0));
+        : zeroBigInt);
     const totalBorrow =
       (onlyBorrow ? item.loan : loan) +
       (borrow.length > 0
         ? parseUnits(borrow, borrowToken.decimals)
-        : BigInt(0));
+        : zeroBigInt);
 
-    if (totalBorrow > BigInt(0)) {
+    if (totalBorrow > zeroBigInt) {
       const lltvVal = formatTokenValue(item.lltv, "", 16);
       const positionHealth = getPositionHealth(
         item.inputToken.id,

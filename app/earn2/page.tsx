@@ -9,8 +9,8 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import MoreButton from "@/components/moreButton/MoreButton";
 import InputTokenMax from "@/components/input/InputTokenMax";
 import TableHeaderCell from "@/components/moreTable/MoreTableHeader";
-import { contracts, initBalance, MoreAction } from "@/utils/const";
 import { notifyError, notify, validInputAmount, delay } from "@/utils/utils";
+import { contracts, initBalance, MoreAction, zeroBigInt } from "@/utils/const";
 import {
   depositToVaults,
   waitForTransaction,
@@ -41,8 +41,8 @@ const EarnPage2: React.FC = () => {
     flowBalance: initBalance,
     sharesBalance: initBalance,
     wflowBalance: initBalance,
-    userAssets: BigInt(0),
-    wflowAllowance: BigInt(0),
+    userAssets: zeroBigInt,
+    wflowAllowance: zeroBigInt,
   });
 
   const { address: userAddress } = useAccount();
@@ -78,8 +78,8 @@ const EarnPage2: React.FC = () => {
         flowBalance: initBalance,
         sharesBalance: initBalance,
         wflowBalance: initBalance,
-        userAssets: BigInt(0),
-        wflowAllowance: BigInt(0),
+        userAssets: zeroBigInt,
+        wflowAllowance: zeroBigInt,
       });
     }
   };
@@ -108,7 +108,7 @@ const EarnPage2: React.FC = () => {
               userAddress,
               false
             );
-            if (wflowBalance.value > BigInt(0))
+            if (wflowBalance.value > zeroBigInt)
               await unwrapWFlow(wflowBalance.value);
           }
 
@@ -179,7 +179,7 @@ const EarnPage2: React.FC = () => {
       ZeroAddress,
       account,
       "",
-      BigInt(0),
+      zeroBigInt,
       parseEther(deposit),
       0,
       true,

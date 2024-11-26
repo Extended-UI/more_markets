@@ -14,7 +14,7 @@ import FormatTokenMillion from "../tools/formatTokenMillion";
 import PositionLTVDetail from "../details/PositionLTVDetail";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
-import { maxAprRangeGap } from "@/utils/const";
+import { maxAprRangeGap, zeroBigInt } from "@/utils/const";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 import { getPositions, getBorrowedAmount } from "@/utils/contract";
 import HoverCardComp from "../hoverCard/HoverCard";
@@ -51,8 +51,8 @@ const LoanMoreTable: React.FC<Props> = ({
   //         );
 
   //         if (selPositions.length > 0) {
-  //           let totalLoan = BigInt(0);
-  //           let totalCollateral = BigInt(0);
+  //           let totalLoan = zeroBigInt;
+  //           let totalCollateral = zeroBigInt;
 
   //           for (const selPosition of selPositions) {
   //             if (selPosition.id.includes("-BORROWER-")) {
@@ -75,7 +75,7 @@ const LoanMoreTable: React.FC<Props> = ({
   //       const borrowMarketList = (await Promise.all(promises))
   //         .filter((item) => item !== undefined)
   //         .filter(
-  //           (item) => item.collateral > BigInt(0) && item.loan > BigInt(0)
+  //           (item) => item.collateral > zeroBigInt && item.loan > zeroBigInt
   //         );
   //       setBorrowPositions(borrowMarketList);
   //     }
@@ -114,7 +114,7 @@ const LoanMoreTable: React.FC<Props> = ({
         const borrowPositionList = (await Promise.all(promises))
           .filter((item) => item !== undefined)
           .filter(
-            (item) => item.collateral > BigInt(0) || item.loan > BigInt(0)
+            (item) => item.collateral > zeroBigInt || item.loan > zeroBigInt
           );
         setBorrowPositions(borrowPositionList);
       } else {

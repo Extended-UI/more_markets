@@ -6,6 +6,7 @@ import Pagination from "../pagination/Pagination";
 import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import { IMarketUserProps } from "@/types";
+import { zeroBigInt } from "@/utils/const";
 import { formatAddress, formatTokenValue } from "@/utils/utils";
 
 const SuppliersMoreTable: React.FC<IMarketUserProps> = ({
@@ -16,16 +17,16 @@ const SuppliersMoreTable: React.FC<IMarketUserProps> = ({
 
   let showList = marketUsers
     ? marketUsers.filter(
-        (marketUser) => marketUser.collateral_amount > BigInt(0)
+        (marketUser) => marketUser.collateral_amount > zeroBigInt
       )
     : [];
 
   const totalSupply = showList.reduce(
     (memo, showItem) => (memo += showItem.collateral_amount),
-    BigInt(0)
+    zeroBigInt
   );
 
-  if (totalSupply > BigInt(0)) {
+  if (totalSupply > zeroBigInt) {
     showList.map((showItem) => {
       showItem.collateral_percent =
         (formatTokenValue(showItem.collateral_amount, item.inputToken.id) *

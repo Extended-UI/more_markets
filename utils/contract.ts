@@ -41,6 +41,7 @@ import {
   gasLimit,
   vaultIds,
   marketIds,
+  zeroBigInt,
 } from "./const";
 import {
   getVaule,
@@ -59,7 +60,7 @@ const chainId = config.chains[0].id;
 
 const executeTransaction = async (
   multicallArgs: string[],
-  value: bigint = BigInt(0),
+  value: bigint = zeroBigInt,
   setGas: string = gasLimit
 ): Promise<string> => {
   const simulateResult = await simulateContract(config, {
@@ -127,7 +128,7 @@ export const getClaimedAmount = async (
 
 export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
   try {
-    if (oracle == ZeroAddress) return BigInt(0);
+    if (oracle == ZeroAddress) return zeroBigInt;
 
     const pairPrice = await readContract(config, {
       address: oracle as `0x${string}`,
@@ -137,7 +138,7 @@ export const getTokenPairPrice = async (oracle: string): Promise<bigint> => {
 
     return pairPrice as bigint;
   } catch {
-    return BigInt(0);
+    return zeroBigInt;
   }
 };
 
@@ -215,7 +216,7 @@ export const getBorrowedAmount = async (
   multiplier: bigint,
   shares: bigint
 ): Promise<bigint> => {
-  if (shares > BigInt(0)) {
+  if (shares > zeroBigInt) {
     const [totalBAMultiplier, totalBSMultiplier] = await readContracts(config, {
       contracts: [
         {
@@ -237,7 +238,7 @@ export const getBorrowedAmount = async (
       totalBSMultiplier.result as bigint
     );
   } else {
-    return BigInt(0);
+    return zeroBigInt;
   }
 };
 
@@ -253,7 +254,7 @@ export const getTokenPermit = async (args: any[]): Promise<bigint> => {
 
   return permitExpiration >= BigInt(Math.floor(Date.now() / 1000))
     ? permitAmount
-    : BigInt(0);
+    : zeroBigInt;
 };
 
 export const getTokenBallance = async (
@@ -304,8 +305,8 @@ export const getPositions = async (
     })
     .filter(
       (positionItem) =>
-        positionItem.collateral > BigInt(0) ||
-        positionItem.borrowShares > BigInt(0)
+        positionItem.collateral > zeroBigInt ||
+        positionItem.borrowShares > zeroBigInt
     );
 
   return positionDetails;
@@ -331,8 +332,8 @@ export const getPosition = async (
     // debtTokenGained: BigInt((fetchedPosition as any[])[5]),
   } as Position;
 
-  return positionItem.collateral > BigInt(0) ||
-    positionItem.borrowShares > BigInt(0)
+  return positionItem.collateral > zeroBigInt ||
+    positionItem.borrowShares > zeroBigInt
     ? positionItem
     : null;
 };
@@ -707,7 +708,7 @@ export const depositToVaults = async (
   ]);
   return await executeTransaction(
     multicallArgs,
-    useFlow ? amount : BigInt(0),
+    useFlow ? amount : zeroBigInt,
     easyMode ? "5" : gasLimit
   );
 };
@@ -886,7 +887,7 @@ export const supplycollateralAndBorrow = async (
   if (borroFlow) multicallArgs = addUnwrapNative(multicallArgs, account);
   return await executeTransaction(
     multicallArgs,
-    supplyFlow ? supplyAmount : BigInt(0)
+    supplyFlow ? supplyAmount : zeroBigInt
   );
 };
 
@@ -1077,7 +1078,7 @@ export const supplyCollateral = async (
   ]);
   return await executeTransaction(
     multicallArgs,
-    supplyFlow ? supplyAmount : BigInt(0)
+    supplyFlow ? supplyAmount : zeroBigInt
   );
 };
 

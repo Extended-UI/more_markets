@@ -5,6 +5,7 @@ import FormatPrice from "../tools/formatPrice";
 import TableHeaderCell from "./MoreTableHeader";
 import Pagination from "../pagination/Pagination";
 import FormatPourcentage from "../tools/formatPourcentage";
+import { zeroBigInt } from "@/utils/const";
 import { getTokenPairPrice } from "@/utils/contract";
 import { IMarketUser, IMarketUserProps } from "@/types";
 import {
@@ -27,16 +28,16 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
 
       let _showList = marketUsers
         ? marketUsers.filter(
-            (marketUser) => marketUser.borrow_amount > BigInt(0)
+            (marketUser) => marketUser.borrow_amount > zeroBigInt
           )
         : [];
 
       const totalBorrow = _showList.reduce(
         (memo, showItem) => (memo += showItem.borrow_amount),
-        BigInt(0)
+        zeroBigInt
       );
 
-      if (totalBorrow > BigInt(0)) {
+      if (totalBorrow > zeroBigInt) {
         _showList.map((showItem) => {
           showItem.borrow_percent =
             (formatTokenValue(showItem.borrow_amount, item.borrowedToken.id) *

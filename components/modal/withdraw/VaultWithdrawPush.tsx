@@ -11,7 +11,7 @@ import IconCurator from "@/components/token/IconCurator";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { IInvestmentPush } from "@/types";
-import { contracts, MoreAction } from "@/utils/const";
+import { contracts, MoreAction, zeroBigInt } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   withdrawFromVaults,
@@ -42,8 +42,8 @@ const VaultWithdrawPush: React.FC<Props> = ({
   const [hasAuth, setHasAuth] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [vaultNonce, setVaultNonce] = useState(BigInt(0));
-  const [authorizeNonce, setAuthorizeNonce] = useState(BigInt(0));
+  const [vaultNonce, setVaultNonce] = useState(zeroBigInt);
+  const [authorizeNonce, setAuthorizeNonce] = useState(zeroBigInt);
 
   const tokenInfo = getTokenInfo(item.assetAddress);
   const tokenAmount = parseUnits(amount.toString(), tokenInfo.decimals);
@@ -70,7 +70,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
               ),
               checkAuthorized(userAddress),
             ])
-          : [BigInt(0), false];
+          : [zeroBigInt, false];
         setHasAuth(authInfo);
         setHasPermit(tokenAllowance == MaxUint256);
       } else {
@@ -80,7 +80,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
               getAuthorizeNonce(userAddress),
               checkAuthorized(userAddress),
             ])
-          : [BigInt(0), BigInt(0), false];
+          : [zeroBigInt, zeroBigInt, false];
 
         setVaultNonce(nonce);
         setHasAuth(authInfo);

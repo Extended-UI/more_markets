@@ -8,8 +8,11 @@ import { Permit2Abi } from "@/app/abi/Permit2Abi";
 import { MulticallAbi } from "@/app/abi/Multicall";
 import { LoopStrategyAbi } from "@/app/abi/LoopStrategyAbi";
 
+export const DayInSec = 24 * 60 * 60;
+
 export const apyDivider = 1e2;
 export const WAD = BigInt(1e18);
+export const zeroBigInt = BigInt(0);
 export const virtualAssets = BigInt(1);
 export const moreTolerance = BigInt(100);
 export const virtualShares = BigInt(1e6);
@@ -18,6 +21,9 @@ export const oraclePriceScale = parseEther(WAD.toString());
 
 // set maxAprRangeGap% reduced value of LLTV
 export const maxAprRangeGap = 0.05; // 5%
+
+// set Vault's max withdrawable percent per day
+export const vaultDailyWithdraw = 10; // 10% of totalSupply
 
 export const contracts = {
   MORE_MARKETS: "0x94A2a9202EFf6422ab80B6338d41c89014E5DD72",
@@ -53,7 +59,7 @@ export const initBalance: GetBalanceReturnType = {
   decimals: 18,
   formatted: "0",
   symbol: "",
-  value: BigInt(0),
+  value: zeroBigInt,
 };
 
 export const marketsInstance = {
