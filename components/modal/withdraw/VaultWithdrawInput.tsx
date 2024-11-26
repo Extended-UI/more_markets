@@ -142,7 +142,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
                   The protocol is temporarily limiting withdrawals to protect
                   all users from significant spontaneous drawdowns in liquidity.
                   You can withdraw up to {withdrawable.toFixed(2)}{" "}
-                  {tokenInfo.symbol}
+                  {tokenInfo.symbol}.
                 </div>
               </div>
             )}
