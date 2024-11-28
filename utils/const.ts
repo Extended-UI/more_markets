@@ -1,12 +1,12 @@
 import { parseEther } from "ethers";
 import { type GetBalanceReturnType } from "@wagmi/core";
 import { IToken } from "@/types";
-import { WETH9Abi } from "@/app/abi/WETH9Abi";
-import { MarketsAbi } from "@/app/abi/MarketsAbi";
-import { BundlerAbi } from "@/app/abi/BundlerAbi";
-import { Permit2Abi } from "@/app/abi/Permit2Abi";
-import { MulticallAbi } from "@/app/abi/Multicall";
-import { LoopStrategyAbi } from "@/app/abi/LoopStrategyAbi";
+import { WETH9Abi } from "@/abi/WETH9Abi";
+import { MarketsAbi } from "@/abi/MarketsAbi";
+import { BundlerAbi } from "@/abi/BundlerAbi";
+import { Permit2Abi } from "@/abi/Permit2Abi";
+import { MulticallAbi } from "@/abi/Multicall";
+import { LoopStrategyAbi } from "@/abi/LoopStrategyAbi";
 
 export const DayInSec = 24 * 60 * 60;
 

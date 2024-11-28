@@ -17,7 +17,7 @@ import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
 import { maxAprRangeGap, zeroBigInt } from "@/utils/const";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 import { getPositions, getBorrowedAmount } from "@/utils/contract";
-import HoverCardComp from "../hoverCard/HoverCard";
+// import HoverCardComp from "../hoverCard/HoverCard";
 import {
   GraphPosition,
   BorrowPosition,

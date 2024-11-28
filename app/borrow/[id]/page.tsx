@@ -154,7 +154,6 @@ const BorrowDetailPage: React.FC = () => {
               closeModal={closeModal}
             />
           )}
-
           <GraphsBorrowDetails />
           <ActivityBorrowDetail item={borrowMarket} marketUsers={marketUsers} />
         </div>
