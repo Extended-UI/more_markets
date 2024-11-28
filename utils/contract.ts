@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { encodeFunctionData } from "viem";
 import { ZeroAddress, MaxUint256, parseUnits, formatUnits } from "ethers";
 import {
@@ -27,6 +28,7 @@ import {
   BorrowPosition,
   InvestmentData,
   IRewardClaim,
+  ILeaderDetail,
 } from "../types";
 import {
   contracts,
@@ -43,6 +45,7 @@ import {
   marketIds,
   zeroBigInt,
   tokens,
+  initLeaderInfo,
 } from "./const";
 import {
   getVaule,
@@ -107,13 +110,33 @@ const addUnwrapNative = (
   ]);
 };
 
-export const getUserLeaderboard = async (account: string) => {
+export const getUserLeaderboard = async (
+  account: string
+): Promise<ILeaderDetail> => {
   // get positions
-  let reqs = marketIds.map((marketId) => ({
+  let reqs: any[] = marketIds.map((marketId) => ({
     ...marketsInstance,
     functionName: "position",
     args: [marketId, account],
   }));
+
+  // get markets
+  reqs = reqs.concat(
+    marketIds.map((marketId) => ({
+      ...marketsInstance,
+      functionName: "market",
+      args: [marketId],
+    }))
+  );
+
+  // get marketParams
+  reqs = reqs.concat(
+    marketIds.map((marketId) => ({
+      ...marketsInstance,
+      functionName: "idToMarketParams",
+      args: [marketId],
+    }))
+  );
 
   // token prices
   {
@@ -146,6 +169,164 @@ export const getUserLeaderboard = async (account: string) => {
   const results = await readContracts(config, {
     contracts: reqs,
   });
+
+  // init token prices
+  let tokenPrices = [];
+  {
+    const startIndex = marketIds.length * 3;
+    const decimalVal = Number(results[startIndex].result);
+    const answerVal = results[startIndex + 1].result as bigint;
+    const flowPrice = parseFloat(formatUnits(answerVal, decimalVal));
+
+    let ii = 2;
+    for (const tokenAddr in tokens) {
+      if (isFlow(tokenAddr)) {
+        tokenPrices.push({
+          token: tokenAddr,
+          price: flowPrice,
+        });
+      } else {
+        const priceRatio = parseFloat(
+          formatUnits(results[startIndex + ii].result as bigint, 36)
+        );
+        tokenPrices.push({
+          token: tokenAddr,
+          price: priceRatio == 0 ? flowPrice : flowPrice / priceRatio,
+        });
+      }
+
+      ii++;
+    }
+  }
+
+  // init positions
+  const positions = _.compact(
+    Array.from(Array(marketIds.length).keys()).map((ii) => {
+      const fetchedPosition = results[ii];
+      const fetchedMarket = results[ii + marketIds.length];
+      const fetchedParams = results[ii + marketIds.length * 2];
+      const positionInfo = {
+        supplyShares: getVauleBigint(fetchedPosition, 0),
+        borrowShares: getVauleBigint(fetchedPosition, 1),
+        collateral: getVauleBigint(fetchedPosition, 2),
+        lastMultiplier: getVauleBigint(fetchedPosition, 3),
+      };
+      const marketInfo = {
+        totalSupplyAssets: getVauleBigint(fetchedMarket, 0),
+        totalSupplyShares: getVauleBigint(fetchedMarket, 1),
+      };
+      const paramsInfo = {
+        loanToken: getVauleString(fetchedParams, 1),
+        collateralToken: getVauleString(fetchedParams, 2),
+      };
+
+      return positionInfo.supplyShares > zeroBigInt ||
+        positionInfo.borrowShares > zeroBigInt ||
+        positionInfo.collateral > zeroBigInt
+        ? {
+            ...paramsInfo,
+            market: marketIds[ii],
+            supplyAssets:
+              marketInfo.totalSupplyShares == zeroBigInt
+                ? zeroBigInt
+                : toAssetsUp(
+                    positionInfo.supplyShares,
+                    marketInfo.totalSupplyAssets,
+                    marketInfo.totalSupplyShares
+                  ),
+            collateral: positionInfo.collateral,
+            borrowShares: positionInfo.borrowShares,
+            lastMultiplier: positionInfo.lastMultiplier,
+          }
+        : null;
+    })
+  );
+
+  // get info for multipliers
+  const marketsWithmultiplier = _.uniqWith(
+    positions.map((position) => ({
+      market: position.market,
+      lastMultiplier: position.lastMultiplier,
+    })),
+    _.isEqual
+  );
+  reqs = marketsWithmultiplier.map((marketWithmultiplier) => ({
+    ...marketsInstance,
+    functionName: "totalBorrowAssetsForMultiplier",
+    args: [marketWithmultiplier.market, marketWithmultiplier.lastMultiplier],
+  }));
+  reqs = reqs.concat(
+    marketsWithmultiplier.map((marketWithmultiplier) => ({
+      ...marketsInstance,
+      functionName: "totalBorrowSharesForMultiplier",
+      args: [marketWithmultiplier.market, marketWithmultiplier.lastMultiplier],
+    }))
+  );
+  const multiplierResults = await readContracts(config, {
+    contracts: reqs,
+  });
+  const multiplierItems = Array.from(
+    Array(marketsWithmultiplier.length).keys()
+  ).map((ii) => {
+    const multiplierItem = marketsWithmultiplier[ii];
+    return {
+      ...multiplierItem,
+      totalBorrowAssetsForMultiplier: multiplierResults[ii].result as bigint,
+      totalBorrowSharesForMultiplier: multiplierResults[
+        ii + marketsWithmultiplier.length
+      ].result as bigint,
+    };
+  });
+
+  const positionDetails = _.compact(
+    positions.map((position) => {
+      const selMultiplier = multiplierItems.find(
+        (multiplierItem) =>
+          multiplierItem.market == position.market &&
+          multiplierItem.lastMultiplier == position.lastMultiplier
+      );
+      const selCollateralPrice = tokenPrices.find(
+        (tokenPrice) =>
+          tokenPrice.token == position.collateralToken.toLowerCase()
+      );
+      const selBorrowPrice = tokenPrices.find(
+        (tokenPrice) => tokenPrice.token == position.loanToken.toLowerCase()
+      );
+      if (selMultiplier && selBorrowPrice && selCollateralPrice) {
+        const collateralDecimals = tokens[selCollateralPrice.token].decimals;
+        const borrowDecimals = tokens[selBorrowPrice.token].decimals;
+        const borrowAssets =
+          selMultiplier.totalBorrowSharesForMultiplier == zeroBigInt
+            ? zeroBigInt
+            : toAssetsUp(
+                position.borrowShares,
+                selMultiplier.totalBorrowAssetsForMultiplier,
+                selMultiplier.totalBorrowSharesForMultiplier
+              );
+        return {
+          supplyUSD:
+            parseFloat(formatUnits(position.supplyAssets, borrowDecimals)) *
+            selBorrowPrice.price,
+          collateralUSD:
+            parseFloat(formatUnits(position.collateral, collateralDecimals)) *
+            selCollateralPrice.price,
+          borrowUSD:
+            parseFloat(formatUnits(borrowAssets, borrowDecimals)) *
+            selCollateralPrice.price,
+        };
+      } else {
+        return null;
+      }
+    })
+  );
+
+  return positionDetails.reduce((memo, positionDeteail) => {
+    return {
+      supplyUSD: memo.supplyUSD + positionDeteail.supplyUSD,
+      borrowUSD: memo.borrowUSD + positionDeteail.borrowUSD,
+      collateralUSD: memo.collateralUSD + positionDeteail.collateralUSD,
+    };
+  }, initLeaderInfo);
 };
 
 export const getClaimedAmount = async (

@@ -1,11 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { FC } from "react";
+import Link from "next/link";
+import { useAccount } from "wagmi";
 import { usePathname } from "next/navigation";
 
 const Menu: FC = () => {
   const pathname = usePathname();
+  const { address: userAddress } = useAccount();
   const pathNamed = pathname ? pathname : "";
 
   return (
@@ -34,6 +36,18 @@ const Menu: FC = () => {
       >
         Borrow
       </Link>
+      {userAddress && (
+        <Link
+          href="/leaderboard"
+          className={`${
+            pathNamed.includes("/leaderboard")
+              ? "glowing-text-primary !pb-5"
+              : ""
+          } hover:text-primary`}
+        >
+          Leaderboard
+        </Link>
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { parseEther } from "ethers";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import { IToken } from "@/types";
+import { ILeaderDetail, IToken } from "@/types";
 import { WETH9Abi } from "@/abi/WETH9Abi";
 import { MarketsAbi } from "@/abi/MarketsAbi";
 import { BundlerAbi } from "@/abi/BundlerAbi";
@@ -60,6 +60,12 @@ export const initBalance: GetBalanceReturnType = {
   formatted: "0",
   symbol: "",
   value: zeroBigInt,
+};
+
+export const initLeaderInfo: ILeaderDetail = {
+  supplyUSD: 0,
+  borrowUSD: 0,
+  collateralUSD: 0,
 };
 
 export const marketsInstance = {
