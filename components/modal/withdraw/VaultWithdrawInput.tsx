@@ -55,7 +55,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
         else setShowMaxMsg(false);
       } else {
         setWithdrawable(dailyWithdrawLimit);
-        setShowMaxMsg(true);
+        setShowMaxMsg(false);
       }
     };
 
