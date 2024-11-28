@@ -12,11 +12,11 @@ import {
   simulateContract,
 } from "@wagmi/core";
 import { config } from "./wagmi";
-import { ERC20Abi } from "@/app/abi/ERC20Abi";
-import { VaultsAbi } from "@/app/abi/VaultsAbi";
-import { BundlerAbi } from "@/app/abi/BundlerAbi";
-import { OracleAbi } from "@/app/abi/OracleAbi";
-import { UrdAbi } from "@/app/abi/UrdAbi";
+import { ERC20Abi } from "@/abi/ERC20Abi";
+import { VaultsAbi } from "@/abi/VaultsAbi";
+import { BundlerAbi } from "@/abi/BundlerAbi";
+import { OracleAbi } from "@/abi/OracleAbi";
+import { UrdAbi } from "@/abi/UrdAbi";
 import {
   Market,
   MarketInfo,
@@ -42,6 +42,7 @@ import {
   vaultIds,
   marketIds,
   zeroBigInt,
+  tokens,
 } from "./const";
 import {
   getVaule,
@@ -104,6 +105,47 @@ const addUnwrapNative = (
     account,
     MaxUint256,
   ]);
+};
+
+export const getUserLeaderboard = async (account: string) => {
+  // get positions
+  let reqs = marketIds.map((marketId) => ({
+    ...marketsInstance,
+    functionName: "position",
+    args: [marketId, account],
+  }));
+
+  // token prices
+  {
+    reqs = reqs.concat([
+      {
+        address: getTokenInfo(contracts.WNATIVE).oracle as `0x${string}`,
+        abi: OracleAbi,
+        functionName: "decimals",
+        args: [],
+      },
+      {
+        address: getTokenInfo(contracts.WNATIVE).oracle as `0x${string}`,
+        abi: OracleAbi,
+        functionName: "latestAnswer",
+        args: [],
+      },
+    ]);
+    for (const tokenAddr in tokens) {
+      if (isFlow(tokenAddr)) continue;
+
+      reqs.push({
+        address: tokens[tokenAddr].oracle as `0x${string}`,
+        abi: OracleAbi,
+        functionName: "price",
+        args: [],
+      });
+    }
+  }
+
+  const results = await readContracts(config, {
+    contracts: reqs,
+  });
 };
 
 export const getClaimedAmount = async (
