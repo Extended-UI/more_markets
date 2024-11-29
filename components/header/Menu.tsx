@@ -34,14 +34,14 @@ const Menu: FC = () => {
       >
         Borrow
       </Link>
-      <Link
+      {/* <Link
         href="/leaderboard"
         className={`${
           pathNamed.includes("/leaderboard") ? "glowing-text-primary !pb-5" : ""
         } hover:text-primary`}
       >
         Leaderboard
-      </Link>
+      </Link> */}
     </div>
   );
 };
