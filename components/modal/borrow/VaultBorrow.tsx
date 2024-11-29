@@ -20,6 +20,7 @@ const VaultBorrow: React.FC<Props> = ({
   const [amount, setAmount] = useState("");
   const [borrow, setBorrow] = useState("");
   const [txHash, setTxHash] = useState("");
+  const [useFlow, setUseFlow] = useState(true);
 
   const handleSetBorrow = (amount: string, borrow: string) => {
     setStep(2);
@@ -42,6 +43,8 @@ const VaultBorrow: React.FC<Props> = ({
       {step == 1 ? (
         <VaultBorrowInput
           item={item}
+          useFlow={useFlow}
+          setUseFlow={setUseFlow}
           onlyBorrow={onlyBorrow}
           closeModal={closeModal}
           setAmount={handleSetBorrow}
@@ -49,6 +52,7 @@ const VaultBorrow: React.FC<Props> = ({
       ) : step == 2 ? (
         <VaultBorrowPush
           item={item}
+          useFlow={useFlow}
           onlyBorrow={onlyBorrow}
           supplyAmount={amount}
           borrowAmount={borrow}

@@ -3,13 +3,15 @@
 import { useAccount } from "wagmi";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
+import { formatUnits, parseUnits, ZeroAddress } from "ethers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { formatUnits, parseUnits, ZeroAddress } from "ethers";
-import MoreButton from "../../moreButton/MoreButton";
-import InputTokenMax from "../../input/InputTokenMax";
+import MoreToggle from "@/components/moreToggle/MoreToggle";
+import MoreButton from "@/components/moreButton/MoreButton";
+import InputTokenMax from "@/components/input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
 import { IBorrowPosition } from "@/types";
+import { errMessages } from "@/utils/errors";
 import {
   oraclePriceScale,
   initBalance,
@@ -33,27 +35,35 @@ import {
   getExtraMax,
   validInputAmount,
   getPositionHealth,
+  isFlow,
+  notify,
 } from "@/utils/utils";
 
 interface Props extends IBorrowPosition {
+  useFlow: boolean;
   onlyBorrow?: boolean;
+  setUseFlow: (useWflow: boolean) => void;
   setAmount: (amount: string, borrow: string) => void;
 }
 
 const VaultBorrowInput: React.FC<Props> = ({
   item,
+  useFlow,
   onlyBorrow,
   setAmount,
   closeModal,
+  setUseFlow,
 }) => {
   const [borrow, setBorrow] = useState("");
   const [deposit, setDeposit] = useState("");
+  const [showMaxMsg, setShowMaxMsg] = useState(false);
   const [pairPrice, setPairPrice] = useState(zeroBigInt);
   const [loan, setLoan] = useState(zeroBigInt);
   const [collateral, setCollateral] = useState(zeroBigInt);
   const [supplyBalance, setSupplyBalance] =
     useState<GetBalanceReturnType>(initBalance);
-  const [showMaxMsg, setShowMaxMsg] = useState(false);
+  const [wflowBalanceString, setWflowBalanceString] =
+    useState<GetBalanceReturnType>(initBalance);
 
   const { address: userAddress } = useAccount();
 
@@ -75,6 +85,12 @@ const VaultBorrowInput: React.FC<Props> = ({
           getTokenPairPrice(item.marketParams.oracle),
           getPosition(userAddress || ZeroAddress, item.id),
         ]);
+
+      if (isFlow(item.inputToken.id)) {
+        setWflowBalanceString(
+          await getTokenBallance(item.inputToken.id, userAddress, false)
+        );
+      }
 
       setPairPrice(tokenPairPrice);
       setSupplyBalance(userSupplyBalance);
@@ -164,9 +180,17 @@ const VaultBorrowInput: React.FC<Props> = ({
       if (onlyBorrow) {
         setAmount("0", borrow);
       } else if (validInputAmount(deposit)) {
-        setAmount(deposit, borrow);
+        if (Number(deposit) > Number(getSupplyBalance())) {
+          notify(errMessages.insufficient_amount);
+        } else {
+          setAmount(deposit, borrow);
+        }
       }
     }
+  };
+
+  const getSupplyBalance = (): string => {
+    return useFlow ? supplyBalance.formatted : wflowBalanceString.formatted;
   };
 
   return (
@@ -190,19 +214,28 @@ const VaultBorrowInput: React.FC<Props> = ({
             <div className="text-[16px] mb-5">
               Deposit {collateralToken.symbol} Collateral
             </div>
-            <div className="">
+            <div>
+              {isFlow(item.inputToken.id) && (
+                <div className="text-l text-[16px] mb-5">
+                  Use FLOW{" "}
+                  <MoreToggle checked={useFlow} setChecked={setUseFlow} />
+                </div>
+              )}
               <InputTokenMax
                 type="number"
                 value={deposit}
                 onChange={handleInputDepositChange}
                 placeholder="0"
                 token={item.inputToken.id}
-                balance={supplyBalance.formatted}
+                balance={getSupplyBalance()}
                 setMax={handleSetMaxToken}
               />
             </div>
             <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-              Balance: {supplyBalance.formatted + " " + collateralToken.symbol}
+              {"Balance: " +
+                getSupplyBalance() +
+                " " +
+                (useFlow ? collateralToken.symbol : "WFLOW")}
             </div>
           </>
         )}

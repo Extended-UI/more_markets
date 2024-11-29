@@ -3,27 +3,34 @@
 import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import MoreButton from "../../moreButton/MoreButton";
-import InputTokenMax from "../../input/InputTokenMax";
+import MoreToggle from "@/components/moreToggle/MoreToggle";
+import MoreButton from "@/components/moreButton/MoreButton";
+import InputTokenMax from "@/components/input/InputTokenMax";
 import FormatTokenMillion from "@/components/tools/formatTokenMillion";
 import { IInvestment } from "@/types";
 import { initBalance } from "@/utils/const";
 import { errMessages } from "@/utils/errors";
 import { getTokenBallance } from "@/utils/contract";
-import { getTokenInfo, notify, validInputAmount } from "@/utils/utils";
+import { getTokenInfo, notify, validInputAmount, isFlow } from "@/utils/utils";
 
 interface Props extends IInvestment {
+  useFlow: boolean;
   setAmount: (amount: string) => void;
+  setUseFlow: (useWflow: boolean) => void;
 }
 
 const VaultDepositInput: React.FC<Props> = ({
   item,
+  useFlow,
   setAmount,
   closeModal,
+  setUseFlow,
 }) => {
   const { address: userAddress } = useAccount();
   const [deposit, setDeposit] = useState("");
   const [balanceString, setBalanceString] =
+    useState<GetBalanceReturnType>(initBalance);
+  const [wflowBalanceString, setWflowBalanceString] =
     useState<GetBalanceReturnType>(initBalance);
 
   const tokenInfo = getTokenInfo(item.assetAddress);
@@ -31,8 +38,15 @@ const VaultDepositInput: React.FC<Props> = ({
   useEffect(() => {
     const initBalance = async () => {
       if (userAddress) {
-        const tokenBal = await getTokenBallance(item.assetAddress, userAddress);
-        setBalanceString(tokenBal);
+        setBalanceString(
+          await getTokenBallance(item.assetAddress, userAddress)
+        );
+
+        if (isFlow(item.assetAddress)) {
+          setWflowBalanceString(
+            await getTokenBallance(item.assetAddress, userAddress, false)
+          );
+        }
       }
     };
 
@@ -49,7 +63,7 @@ const VaultDepositInput: React.FC<Props> = ({
 
   const handleDeposit = () => {
     if (validInputAmount(deposit)) {
-      if (Number(deposit) > Number(balanceString.formatted)) {
+      if (Number(deposit) > Number(getBalanceStr())) {
         notify(errMessages.insufficient_amount);
       } else {
         setAmount(deposit);
@@ -57,6 +71,10 @@ const VaultDepositInput: React.FC<Props> = ({
     } else {
       notify(errMessages.invalid_amount);
     }
+  };
+
+  const getBalanceStr = (): string => {
+    return useFlow ? balanceString.formatted : wflowBalanceString.formatted;
   };
 
   return (
@@ -78,17 +96,23 @@ const VaultDepositInput: React.FC<Props> = ({
         <div className="text-l text-[16px] mb-5">
           Deposit {tokenInfo.symbol}
         </div>
+        {isFlow(item.assetAddress) && (
+          <div className="text-l text-[16px] mb-5">
+            Use FLOW <MoreToggle checked={useFlow} setChecked={setUseFlow} />
+          </div>
+        )}
+
         <InputTokenMax
           type="number"
           value={deposit}
           onChange={handleInputChange}
           placeholder="0"
           token={item.assetAddress}
-          balance={balanceString.formatted}
+          balance={getBalanceStr()}
           setMax={handleSetMax}
         />
         <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-          Balance: {balanceString.formatted} {tokenInfo.symbol}
+          Balance: {getBalanceStr()} {useFlow ? tokenInfo.symbol : "WFLOW"}
         </div>
         <div className="flex justify-end mt-[40px]">
           <div className="mr-5">

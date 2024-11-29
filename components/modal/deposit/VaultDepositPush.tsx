@@ -27,12 +27,14 @@ import {
 } from "@/utils/contract";
 
 interface Props extends IInvestmentPush {
+  useFlow: boolean;
   validDeposit: () => void;
 }
 
 const VaultDepositPush: React.FC<Props> = ({
   item,
   amount,
+  useFlow,
   setTxHash,
   closeModal,
   validDeposit,
@@ -48,7 +50,7 @@ const VaultDepositPush: React.FC<Props> = ({
     getTokenInfo(item.assetAddress).decimals
   );
 
-  const flowVault = isFlow(item.assetAddress);
+  const flowVault = isFlow(item.assetAddress) && useFlow;
   const isFlowWallet = connector
     ? connector.name.toLowerCase() == "flow wallet"
     : false;
@@ -174,10 +176,13 @@ const VaultDepositPush: React.FC<Props> = ({
           </div>
           <div className="flex gap-2 mb-5 text-[16px]">
             <span className="more-text-gray">Net APY:</span>
-            <FormatTwoPourcentage value={item.netAPY.total_apy} multiplier={1} />
+            <FormatTwoPourcentage
+              value={item.netAPY.total_apy}
+              multiplier={1}
+            />
           </div>
         </div>
-        {!flowVault && (
+        {flowVault && useFlow ? null : (
           <>
             <div className="relative more-bg-primary rounded-[12px] p-[20px] mb-6">
               <TokenAmount

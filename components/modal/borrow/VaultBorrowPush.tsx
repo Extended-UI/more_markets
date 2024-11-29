@@ -30,6 +30,7 @@ import {
 } from "@/utils/contract";
 
 interface Props extends IBorrowPosition {
+  useFlow: boolean;
   supplyAmount: string;
   borrowAmount: string;
   onlyBorrow?: boolean;
@@ -39,6 +40,7 @@ interface Props extends IBorrowPosition {
 
 const VaultBorrowPush: React.FC<Props> = ({
   item,
+  useFlow,
   onlyBorrow,
   supplyAmount,
   borrowAmount,
@@ -65,7 +67,7 @@ const VaultBorrowPush: React.FC<Props> = ({
     borrowToken.decimals
   );
 
-  const collateralFlow = isFlow(item.inputToken.id);
+  const collateralFlow = isFlow(item.inputToken.id) && useFlow;
   const isFlowWallet = connector
     ? connector.name.toLowerCase() == "flow wallet"
     : false;
@@ -183,6 +185,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         supplyTokenAmount,
         borrowTokenAmount,
         permitNonce,
+        useFlow,
         onlyBorrow ? true : false,
         isFlowWallet,
         item

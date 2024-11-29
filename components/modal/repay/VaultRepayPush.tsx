@@ -32,6 +32,7 @@ import {
 interface Props extends IBorrowPosition {
   amount: string;
   useMax: boolean;
+  useFlow: boolean;
   validRepay: () => void;
   setTxHash: (hash: string) => void;
 }
@@ -40,6 +41,7 @@ const VaultRepayPush: React.FC<Props> = ({
   item,
   amount,
   useMax,
+  useFlow,
   setTxHash,
   validRepay,
   closeModal,
@@ -78,7 +80,7 @@ const VaultRepayPush: React.FC<Props> = ({
 
   useEffect(() => {
     const initApprove = async () => {
-      if (isFlow(item.borrowedToken.id)) {
+      if (isFlow(item.borrowedToken.id) && useFlow) {
         setHasApprove(true);
       } else {
         const allowance = userAddress
@@ -113,6 +115,7 @@ const VaultRepayPush: React.FC<Props> = ({
       const txHash = await repayLoanViaMarkets(
         userAddress,
         repayAmount,
+        useFlow,
         useMax,
         item
       );

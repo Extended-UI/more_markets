@@ -14,6 +14,7 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState("");
   const [txHash, setTxHash] = useState("");
+  const [useFlow, setUseFlow] = useState(true);
 
   const handleSetDeposit = (amount: string) => {
     setAmount(amount);
@@ -35,12 +36,15 @@ const VaultDeposit: React.FC<Props> = ({ item, closeModal, updateInfo }) => {
         <VaultDepositInput
           item={item}
           closeModal={closeModal}
+          useFlow={useFlow}
+          setUseFlow={setUseFlow}
           setAmount={handleSetDeposit}
         />
       ) : step == 2 ? (
         <VaultDepositPush
           item={item}
           amount={amount}
+          useFlow={useFlow}
           setTxHash={setTxHash}
           closeModal={closeModal}
           validDeposit={handleValidDeposit}

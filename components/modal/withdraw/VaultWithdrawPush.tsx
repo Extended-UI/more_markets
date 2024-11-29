@@ -209,7 +209,10 @@ const VaultWithdrawPush: React.FC<Props> = ({
           </div>
           <div className="flex gap-2 mb-5 text-[16px]">
             <span className="more-text-gray">Net APY:</span>
-            <FormatTwoPourcentage value={item.netAPY.total_apy} multiplier={1} />
+            <FormatTwoPourcentage
+              value={item.netAPY.total_apy}
+              multiplier={1}
+            />
           </div>
         </div>
         {!isFlowWallet && (
