@@ -266,7 +266,7 @@ export const fetchVaultClaims = async (
 
 export const fetchMarketUsers = async (
   marketid: string
-): Promise<IMarketUserRow[]> => {
+): Promise<{ users: IMarketUserRow[]; collateral: string }> => {
   const fetchResult = await fetch("/api/marketuser?&marketid=" + marketid, {
     method: "GET",
     headers: {
@@ -274,7 +274,7 @@ export const fetchMarketUsers = async (
     },
   });
   const marketAprList = await fetchResult.json();
-  return marketAprList.users;
+  return marketAprList;
 };
 
 export const fetchVaultWithdraw = async (vaultId: string): Promise<bigint> => {

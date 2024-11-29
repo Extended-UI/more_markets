@@ -24,5 +24,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
   const query = `SELECT user_address, collateral_amount, borrow_amount FROM market_users WHERE market_id = '${marketid}'`;
   const [rows] = await connection.query(query);
 
-  return NextResponse.json({ users: rows as IMarketUserRow[] });
+  const [sumRows] = await connection.query(
+    `SELECT SUM(collateral_amount) as collateral_amount  from market_users WHERE market_id = '${marketid}'`
+  );
+  console.log(sumRows);
+
+  return NextResponse.json({
+    users: rows as IMarketUserRow[],
+    collateral: (sumRows as any[])[0].collateral_amount as string,
+  });
 }

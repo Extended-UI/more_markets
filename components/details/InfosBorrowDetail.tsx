@@ -17,10 +17,6 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
   const supplyAmount = formatTokenValue(totalSupply, item.borrowedToken.id);
   const borrowAmount = formatTokenValue(totalBorrow, item.borrowedToken.id);
   // formatTokenValue(totalSupply - totalBorrow, item.borrowedToken.id)
-  const collateralAmount = formatTokenValue(
-    item.marketInfo.totalSupplyAssets,
-    item.borrowedToken.id
-  );
 
   return (
     <div className="flex w-full flex-col overflow-visible">
@@ -62,7 +58,7 @@ const InfosBorrowDetails: React.FC<Props> = ({ item }) => {
           className="flex-1 m-2 min-w-[180px]"
         >
           <span className="text-[#888888] font-[600]">$ </span>
-          {millify(collateralAmount * collatTokenPrice, { precision: 2 })}
+          {millify(item.totalCollateral * collatTokenPrice, { precision: 2 })}
         </InfoDetailGrey>
         <InfoDetailGrey
           title="1D Borrow APY"

@@ -15,6 +15,7 @@ import {
   fetchMarketAprs,
   convertAprToApy,
   fetchMarketUsers,
+  formatTokenValue,
 } from "@/utils/utils";
 import {
   getMarketData,
@@ -22,7 +23,6 @@ import {
   fetchMarket,
   getBorrowedAmount,
 } from "@/utils/contract";
-
 import leftArrow from "@/public/assets/icons/left-arrow.svg";
 
 const BorrowDetailPage: React.FC = () => {
@@ -56,7 +56,7 @@ const BorrowDetailPage: React.FC = () => {
               marketApr.marketid.toLowerCase() == marketId.toLowerCase()
           );
 
-          const usersList = fetchedUsers.map((userItem) => {
+          const usersList = fetchedUsers.users.map((userItem) => {
             return {
               user_address: userItem.user_address,
               collateral_amount: BigInt(userItem.collateral_amount),
@@ -81,6 +81,10 @@ const BorrowDetailPage: React.FC = () => {
             supply_prem_apr: aprItem
               ? convertAprToApy(aprItem.supply_prem_apr, aprDate)
               : 0,
+            totalCollateral: formatTokenValue(
+              BigInt(fetchedUsers.collateral),
+              marketInfo.inputToken.id
+            ),
           } as BorrowMarket);
 
           if (userAddress) {
@@ -102,6 +106,7 @@ const BorrowDetailPage: React.FC = () => {
                 borrow_apr: 0,
                 supply_usual_apr: 0,
                 supply_prem_apr: 0,
+                totalCollateral: 0,
               });
           }
         } else {
