@@ -1,27 +1,14 @@
 "use client";
 
 import millify from "millify";
-import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
+import IconToken from "@/components/token/IconToken";
 import InfoDetailGrey from "@/components/details/InfoDetailGrey";
-import { ILeaderDetail } from "@/types";
-import { initLeaderInfo } from "@/utils/const";
+import TableHeaderCell from "@/components/moreTable/MoreTableHeader";
 import { getUserLeaderboard } from "@/utils/contract";
 
 const Leaderboard: React.FC = () => {
-  const [leaderInfo, setLeaderInfo] = useState<ILeaderDetail>(initLeaderInfo);
-  const { address: userAddress } = useAccount();
-
-  useEffect(() => {
-    const initUserInfo = async () => {
-      if (userAddress) {
-        const userDetails = await getUserLeaderboard(userAddress);
-        setLeaderInfo(userDetails);
-      }
-    };
-
-    initUserInfo();
-  }, [userAddress]);
+  useEffect(() => {}, []);
 
   const leaderDetail = (showVal: number): string => {
     return showVal == 0
@@ -33,42 +20,51 @@ const Leaderboard: React.FC = () => {
 
   return (
     <div className="mb-8 overflow-visible mt-14">
-      <div className="flex w-full flex-col overflow-visible">
-        <div
-          className="flex w-full overflow-x-auto"
-          style={{
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "none", // Works in Firefox
-            msOverflowStyle: "none", // Works in IE and Edge
-            //width: "calc(100% + 2rem)",
-            width: "100%",
-            position: "relative",
-            left: "0",
-            overflow: "visible",
-          }}
-        >
-          <InfoDetailGrey
-            title="Total Supply"
-            infoText=""
-            className="flex-1 m-2 ml-0 min-w-[180px]"
+      <div className="overflow-x-scroll table-wrapper mb-16 more-table">
+        <table className="w-full text-sm text-left table overflow-x-scroll">
+          <thead
+            className="bg-[#212121] h-20 text-white text-sm"
+            style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
           >
-            {"$ " + leaderDetail(leaderInfo.supplyUSD)}
-          </InfoDetailGrey>
-          <InfoDetailGrey
-            title="Total Collateral"
-            infoText=""
-            className="flex-1 m-2 min-w-[220px]"
-          >
-            {"$ " + leaderDetail(leaderInfo.collateralUSD)}
-          </InfoDetailGrey>
-          <InfoDetailGrey
-            title="Total Borrow"
-            infoText=""
-            className="flex-1 m-2 min-w-[180px]"
-          >
-            {"$ " + leaderDetail(leaderInfo.borrowUSD)}
-          </InfoDetailGrey>
-        </div>
+            <tr className="">
+              <th className="p-6">
+                <TableHeaderCell title="Address" infoText="" />
+              </th>
+              <th className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Total Deposits" infoText="" />
+                </div>
+              </th>
+              <th className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Total Borrow" infoText="" />
+                </div>
+              </th>
+              <th className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Total Collateral" infoText="" />
+                </div>
+              </th>
+
+              <th className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="$FLOW Rewards" infoText="" />
+                </div>
+              </th>
+              <th className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="Boxes" infoText="" />
+                </div>
+              </th>
+              <th className="p-6">
+                <div className="flex justify-start">
+                  <TableHeaderCell title="MORE Points" infoText="" />
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-transparent"></tbody>
+        </table>
       </div>
     </div>
   );

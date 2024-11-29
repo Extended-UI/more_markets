@@ -26,7 +26,7 @@ const EarnMoreTable: React.FC<IInvestmentProps> = ({
 
   return (
     <div className="overflow-x-scroll rounded-2xl table-wrapper mb-16 more-table">
-      <table className="w-full  rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
+      <table className="w-full rounded-2xl text-sm text-left table max-w-[1440px] overflow-x-scroll">
         <thead
           className="bg-[#212121] h-20 text-white text-sm"
           style={{ boxShadow: "inset 0 2px 10px 2px rgba(0, 0, 0, 0.2)" }}
