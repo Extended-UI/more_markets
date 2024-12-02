@@ -3,7 +3,7 @@
 import { useAccount } from "wagmi";
 import React, { useEffect, useState } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import MoreToggle from "@/components/moreToggle/MoreToggle";
+import MoreRadio from "@/components/moreRadio/MoreRadio";
 import MoreButton from "@/components/moreButton/MoreButton";
 import InputTokenMax from "@/components/input/InputTokenMax";
 import FormatTokenMillion from "@/components/tools/formatTokenMillion";
@@ -96,12 +96,11 @@ const VaultDepositInput: React.FC<Props> = ({
         <div className="text-l text-[16px] mb-5">
           Deposit {tokenInfo.symbol}
         </div>
-        {isFlow(item.assetAddress) && (
-          <div className="text-l text-[16px] mb-5">
-            Use FLOW <MoreToggle checked={useFlow} setChecked={setUseFlow} />
-          </div>
-        )}
-
+        <MoreRadio
+          useFlow={useFlow}
+          setUseFlow={setUseFlow}
+          asset={item.assetAddress}
+        />
         <InputTokenMax
           type="number"
           value={deposit}

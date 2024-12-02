@@ -4,7 +4,7 @@ import { useAccount } from "wagmi";
 import { formatUnits, parseUnits } from "ethers";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import MoreToggle from "@/components/moreToggle/MoreToggle";
+import MoreRadio from "@/components/moreRadio/MoreRadio";
 import MoreButton from "@/components/moreButton/MoreButton";
 import InputTokenMax from "@/components/input/InputTokenMax";
 import ListIconToken from "@/components/token/ListIconToken";
@@ -128,11 +128,11 @@ const VaultRepayInput: React.FC<Props> = ({
         </div>
         <div className="w-full flex flex-col justify-center">
           <div className="text-[16px] mb-5">Repay {loanToken.symbol}</div>
-          {isFlow(item.borrowedToken.id) && (
-            <div className="text-l text-[16px] mb-5">
-              Use FLOW <MoreToggle checked={useFlow} setChecked={setUseFlow} />
-            </div>
-          )}
+          <MoreRadio
+            useFlow={useFlow}
+            setUseFlow={setUseFlow}
+            asset={item.borrowedToken.id}
+          />
           <InputTokenMax
             type="number"
             value={repayAmount}

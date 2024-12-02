@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 interface ToggleMoreProps {
   checked: boolean;
   setChecked: (checked: boolean) => void;

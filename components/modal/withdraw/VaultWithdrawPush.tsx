@@ -264,12 +264,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
             value2={item.userDeposits - numAmount}
           />
         </div>
-
-        {/* <div className="flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4
-        Unwrap USDC
-        <MoreToggle />
-      </div> */}
-
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
           <a

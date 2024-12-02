@@ -6,7 +6,7 @@ import { type GetBalanceReturnType } from "@wagmi/core";
 import { formatUnits, parseUnits, ZeroAddress } from "ethers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import MoreToggle from "@/components/moreToggle/MoreToggle";
+import MoreRadio from "@/components/moreRadio/MoreRadio";
 import MoreButton from "@/components/moreButton/MoreButton";
 import InputTokenMax from "@/components/input/InputTokenMax";
 import FormatPourcentage from "@/components/tools/formatPourcentage";
@@ -215,12 +215,11 @@ const VaultBorrowInput: React.FC<Props> = ({
               Deposit {collateralToken.symbol} Collateral
             </div>
             <div>
-              {isFlow(item.inputToken.id) && (
-                <div className="text-l text-[16px] mb-5">
-                  Use FLOW{" "}
-                  <MoreToggle checked={useFlow} setChecked={setUseFlow} />
-                </div>
-              )}
+              <MoreRadio
+                useFlow={useFlow}
+                setUseFlow={setUseFlow}
+                asset={item.inputToken.id}
+              />
               <InputTokenMax
                 type="number"
                 value={deposit}
