@@ -2,8 +2,8 @@ import _ from "lodash";
 import { encodeFunctionData } from "viem";
 import { JsonRpcProvider, Wallet, parseUnits } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
-import { ERC20Abi } from "../../abi/ERC20Abi";
-import { MulticallAbi } from "../../abi/Multicall";
+import { ERC20Abi } from "@/abi/ERC20Abi";
+import { MulticallAbi } from "@/abi/Multicall";
 import { isFlow } from "@/utils/utils";
 import { contracts, tokens, faucetAmounts } from "@/utils/const";
 
