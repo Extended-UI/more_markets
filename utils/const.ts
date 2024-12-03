@@ -104,6 +104,8 @@ export const gasLimit = "0.7";
 
 export const blacklistedVaults: string[] = [];
 
+export const menus = ["Earn", "Borrow", "Leaderboard"];
+
 export const enum MoreAction {
   GENERAL = "general",
   DEPOSIT = "deposit",
