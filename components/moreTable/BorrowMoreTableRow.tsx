@@ -8,10 +8,12 @@ import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import { BorrowPosition, IBorrowMarketProp } from "@/types";
 import HoverCardComp from "../hoverCard/HoverCard";
+import { maxAprRangeGap } from "@/utils/const";
 import {
   formatTokenValue,
   getPremiumLltv,
   getAvailableLiquidity,
+  getUtilization,
 } from "@/utils/utils";
 
 interface Prop extends IBorrowMarketProp {
@@ -21,15 +23,9 @@ interface Prop extends IBorrowMarketProp {
 const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
   const { address: userAddress } = useAccount();
 
-  const totalSupply = item.marketInfo.totalSupplyAssets;
-  const utilization =
-    totalSupply == BigInt(0)
-      ? 0
-      : Number((item.marketInfo.totalBorrowAssets * BigInt(1e4)) / totalSupply);
-
   return (
     <>
-      <td className="p-6">
+      <td className="pl-3">
         <div className="flex items-center">
           <IconToken
             className="mr-3 w-8 h-8"
@@ -38,7 +34,7 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           />
         </div>
       </td>
-      <td className="p-6">
+      <td className="pl-3">
         <div className="flex items-center">
           <IconToken
             className="mr-3 w-8 h-8"
@@ -47,15 +43,22 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           />
         </div>
       </td>
-      <td className="p-6">
-        <div className="flex gap-1 justify-start">
+      <td className="pl-3">
+        <div className="flex gapl-3 justify-start">
           <FormatTwoPourcentage
             value={formatTokenValue(item.lltv, "", 18)}
             value2={getPremiumLltv(item.marketParams)}
           />
         </div>
       </td>
-      <td className="p-6">
+      <td className="pl-3">
+        <div className="flex gapl-3 justify-start">
+          <FormatTwoPourcentage
+            value={formatTokenValue(item.lltv, "", 18) - maxAprRangeGap}
+          />
+        </div>
+      </td>
+      <td className="pl-3">
         <div className="flex justify-start items-center">
           <div className="mr-3">
             <FormatPourcentage value={item.borrow_apr} />
@@ -63,12 +66,18 @@ const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
           {/* <HoverCardComp apy={item.netAPY} /> */}
         </div>
       </td>
-      <td className="p-6">
+      <td className="pl-3">
         <div className="flex">
-          <FormatPourcentage value={utilization / 100} multiplier={1} />
+          <FormatPourcentage
+            value={getUtilization(
+              item.marketInfo.totalSupplyAssets,
+              item.marketInfo.totalBorrowAssets
+            )}
+            multiplier={1}
+          />
         </div>
       </td>
-      <td className="p-6">
+      <td className="pl-3">
         <div className="flex justify-start">
           <IconToken
             className="mr-3 w-8 h-8"

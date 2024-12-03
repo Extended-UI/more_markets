@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import LoanMoreTable from "@/components/moreTable/LoanMoreTable";
 import BorrowMoreTable from "@/components/moreTable/BorrowMoreTable";
-import { GraphPosition, BorrowMarket } from "@/types";
+import { BorrowMarket } from "@/types";
 import { getMarketData, fetchMarkets } from "@/utils/contract";
 import { convertAprToApy, fetchMarketAprs } from "@/utils/utils";
 // import { fetchMarkets, fetchPositions } from "@/utils/graph";
@@ -45,8 +45,6 @@ const BorrowPage: React.FC = () => {
 
       const borrowMarketList = await Promise.all(promises);
       setBorrowMarkets(borrowMarketList);
-
-      // setPositions(positionsArr);
     };
 
     initFunc();

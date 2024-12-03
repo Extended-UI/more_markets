@@ -1,28 +1,32 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import TableHeaderCell from "./MoreTableHeader";
-import FormatTokenMillion from "../tools/formatTokenMillion";
+import Pagination from "../pagination/Pagination";
 import FormatPourcentage from "../tools/formatPourcentage";
+import FormatTokenMillion from "../tools/formatTokenMillion";
 import { IMarketUserProps } from "@/types";
+import { zeroBigInt } from "@/utils/const";
 import { formatAddress, formatTokenValue } from "@/utils/utils";
 
 const SuppliersMoreTable: React.FC<IMarketUserProps> = ({
   marketUsers,
   item,
 }) => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
   let showList = marketUsers
     ? marketUsers.filter(
-        (marketUser) => marketUser.collateral_amount > BigInt(0)
+        (marketUser) => marketUser.collateral_amount > zeroBigInt
       )
     : [];
 
   const totalSupply = showList.reduce(
     (memo, showItem) => (memo += showItem.collateral_amount),
-    BigInt(0)
+    zeroBigInt
   );
 
-  if (totalSupply > BigInt(0)) {
+  if (totalSupply > zeroBigInt) {
     showList.map((showItem) => {
       showItem.collateral_percent =
         (formatTokenValue(showItem.collateral_amount, item.inputToken.id) *
@@ -34,6 +38,11 @@ const SuppliersMoreTable: React.FC<IMarketUserProps> = ({
       (item1, item2) => item2.collateral_percent - item1.collateral_percent
     );
   }
+
+  // Calculate the current page data slice
+  const itemsPerPage = 5;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentPageData = showList.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div>
@@ -71,7 +80,7 @@ const SuppliersMoreTable: React.FC<IMarketUserProps> = ({
             </tr>
           </thead>
           <tbody className="bg-transparent">
-            {showList.map((showItem, index, arr) => (
+            {currentPageData.map((showItem, index, arr) => (
               <tr
                 key={index}
                 style={
@@ -121,6 +130,14 @@ const SuppliersMoreTable: React.FC<IMarketUserProps> = ({
             ))}
           </tbody>
         </table>
+        <div className="w-full text-[14px] flex justify-start py-10 px-6">
+          <Pagination
+            totalItems={showList.length}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
       </div>
     </div>
   );

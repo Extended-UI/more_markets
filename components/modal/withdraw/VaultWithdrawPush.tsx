@@ -11,7 +11,7 @@ import IconCurator from "@/components/token/IconCurator";
 import PositionChangeToken from "@/components/token/PositionChangeToken";
 import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { IInvestmentPush } from "@/types";
-import { contracts, MoreAction } from "@/utils/const";
+import { contracts, MoreAction, zeroBigInt } from "@/utils/const";
 import { getTimestamp, getTokenInfo, notifyError, delay } from "@/utils/utils";
 import {
   withdrawFromVaults,
@@ -42,8 +42,8 @@ const VaultWithdrawPush: React.FC<Props> = ({
   const [hasAuth, setHasAuth] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [vaultNonce, setVaultNonce] = useState(BigInt(0));
-  const [authorizeNonce, setAuthorizeNonce] = useState(BigInt(0));
+  const [vaultNonce, setVaultNonce] = useState(zeroBigInt);
+  const [authorizeNonce, setAuthorizeNonce] = useState(zeroBigInt);
 
   const tokenInfo = getTokenInfo(item.assetAddress);
   const tokenAmount = parseUnits(amount.toString(), tokenInfo.decimals);
@@ -70,7 +70,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
               ),
               checkAuthorized(userAddress),
             ])
-          : [BigInt(0), false];
+          : [zeroBigInt, false];
         setHasAuth(authInfo);
         setHasPermit(tokenAllowance == MaxUint256);
       } else {
@@ -80,7 +80,7 @@ const VaultWithdrawPush: React.FC<Props> = ({
               getAuthorizeNonce(userAddress),
               checkAuthorized(userAddress),
             ])
-          : [BigInt(0), BigInt(0), false];
+          : [zeroBigInt, zeroBigInt, false];
 
         setVaultNonce(nonce);
         setHasAuth(authInfo);
@@ -209,7 +209,10 @@ const VaultWithdrawPush: React.FC<Props> = ({
           </div>
           <div className="flex gap-2 mb-5 text-[16px]">
             <span className="more-text-gray">Net APY:</span>
-            <FormatTwoPourcentage value={item.netAPY.total_apy} multiplier={1} />
+            <FormatTwoPourcentage
+              value={item.netAPY.total_apy}
+              multiplier={1}
+            />
           </div>
         </div>
         {!isFlowWallet && (
@@ -261,12 +264,6 @@ const VaultWithdrawPush: React.FC<Props> = ({
             value2={item.userDeposits - numAmount}
           />
         </div>
-
-        {/* <div className="flex flex-row justify-between items-center h-20 pl-2 pr-8 pt-4
-        Unwrap USDC
-        <MoreToggle />
-      </div> */}
-
         <div className="pt-5 px-5 text-[16px] leading-10">
           By confirming this transaction, you agree to the{" "}
           <a

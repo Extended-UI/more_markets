@@ -4,11 +4,13 @@ import { useAccount } from "wagmi";
 import { formatUnits, parseUnits } from "ethers";
 import React, { useState, useEffect } from "react";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import MoreButton from "../../moreButton/MoreButton";
-import InputTokenMax from "../../input/InputTokenMax";
+import MoreRadio from "@/components/moreRadio/MoreRadio";
+import MoreButton from "@/components/moreButton/MoreButton";
+import InputTokenMax from "@/components/input/InputTokenMax";
 import ListIconToken from "@/components/token/ListIconToken";
 import { IBorrowPosition } from "@/types";
 import { initBalance } from "@/utils/const";
+import { errMessages } from "@/utils/errors";
 import { getTokenBallance } from "@/utils/contract";
 import {
   getTokenInfo,
@@ -16,24 +18,30 @@ import {
   formatTokenValue,
   notify,
   validInputAmount,
+  isFlow,
 } from "@/utils/utils";
-import { errMessages } from "@/utils/errors";
 
 interface Props extends IBorrowPosition {
+  useFlow: boolean;
   setAmount: (amount: string) => void;
   setUseMax: (useMax: boolean) => void;
+  setUseFlow: (useWflow: boolean) => void;
 }
 
 const VaultRepayInput: React.FC<Props> = ({
   item,
+  useFlow,
   setUseMax,
   setAmount,
   closeModal,
+  setUseFlow,
 }) => {
   const { address: userAddress } = useAccount();
 
   const [repayAmount, setRepayAmount] = useState("");
   const [loanBalance, setLoanBalance] =
+    useState<GetBalanceReturnType>(initBalance);
+  const [wflowBalanceString, setWflowBalanceString] =
     useState<GetBalanceReturnType>(initBalance);
 
   const collateralToken = getTokenInfo(item.inputToken.id).symbol;
@@ -42,10 +50,17 @@ const VaultRepayInput: React.FC<Props> = ({
 
   useEffect(() => {
     const initBalances = async () => {
-      if (userAddress)
+      if (userAddress) {
         setLoanBalance(
           await getTokenBallance(item.borrowedToken.id, userAddress)
         );
+
+        if (isFlow(item.borrowedToken.id)) {
+          setWflowBalanceString(
+            await getTokenBallance(item.borrowedToken.id, userAddress, false)
+          );
+        }
+      }
     };
 
     initBalances();
@@ -62,18 +77,19 @@ const VaultRepayInput: React.FC<Props> = ({
   };
 
   const handleSetMax = (maxValue: string) => {
-    if (loanBalance) {
+    const selBalance = useFlow ? loanBalance : wflowBalanceString;
+    if (selBalance) {
       const maxAmount =
-        loanBalance.value >= item.loan ? item.loan : loanBalance.value;
+        selBalance.value >= item.loan ? item.loan : selBalance.value;
 
       setRepayAmount(formatUnits(maxAmount, loanToken.decimals));
-      setUseMax(loanBalance.value >= item.loan ? true : false);
+      setUseMax(selBalance.value >= item.loan ? true : false);
     }
   };
 
   const handleRepay = () => {
     if (validInputAmount(repayAmount)) {
-      if (Number(repayAmount) > Number(loanBalance?.formatted)) {
+      if (Number(repayAmount) > Number(getRepayAmount())) {
         notify(errMessages.insufficient_amount);
       } else {
         setAmount(repayAmount);
@@ -81,6 +97,10 @@ const VaultRepayInput: React.FC<Props> = ({
     } else {
       notify(errMessages.invalid_amount);
     }
+  };
+
+  const getRepayAmount = (): string => {
+    return useFlow ? loanBalance.formatted : wflowBalanceString.formatted;
   };
 
   return (
@@ -108,17 +128,22 @@ const VaultRepayInput: React.FC<Props> = ({
         </div>
         <div className="w-full flex flex-col justify-center">
           <div className="text-[16px] mb-5">Repay {loanToken.symbol}</div>
+          <MoreRadio
+            useFlow={useFlow}
+            setUseFlow={setUseFlow}
+            asset={item.borrowedToken.id}
+          />
           <InputTokenMax
             type="number"
             value={repayAmount}
             onChange={handleInputChange}
             placeholder="0"
             token={item.borrowedToken.id}
-            balance={loanBalance.formatted}
+            balance={getRepayAmount()}
             setMax={handleSetMax}
           />
           <div className="text-right text-[16px] font-semibold more-text-gray px-4 mt-4">
-            Balance: {loanBalance?.formatted} {loanToken.symbol}
+            Balance: {getRepayAmount()} {useFlow ? loanToken.symbol : "WFLOW"}
           </div>
         </div>
         <div className="flex justify-end mt-[40px] ">

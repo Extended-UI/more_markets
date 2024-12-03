@@ -6,6 +6,7 @@ export interface BorrowMarket extends GraphMarket {
   borrow_apr: number;
   supply_usual_apr: number;
   supply_prem_apr: number;
+  totalCollateral: number;
   marketInfo: MarketInfo;
   marketParams: MarketParams;
 }

@@ -3,18 +3,23 @@
 import React, { useEffect, useState } from "react";
 import FormatPrice from "../tools/formatPrice";
 import TableHeaderCell from "./MoreTableHeader";
-import usePagination from "@/hooks/usePagination";
 import Pagination from "../pagination/Pagination";
 import FormatPourcentage from "../tools/formatPourcentage";
-import { oraclePriceScale } from "@/utils/const";
+import { zeroBigInt } from "@/utils/const";
 import { getTokenPairPrice } from "@/utils/contract";
 import { IMarketUser, IMarketUserProps } from "@/types";
-import { formatAddress, formatTokenValue, getTokenInfo } from "@/utils/utils";
+import {
+  formatAddress,
+  formatTokenValue,
+  getPositionHealth,
+  getTokenInfo,
+} from "@/utils/utils";
 
 const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
   marketUsers,
   item,
 }) => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [showList, setShowList] = useState<IMarketUser[]>([]);
 
   useEffect(() => {
@@ -23,41 +28,29 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
 
       let _showList = marketUsers
         ? marketUsers.filter(
-            (marketUser) => marketUser.borrow_amount > BigInt(0)
+            (marketUser) => marketUser.borrow_amount > zeroBigInt
           )
         : [];
 
       const totalBorrow = _showList.reduce(
         (memo, showItem) => (memo += showItem.borrow_amount),
-        BigInt(0)
+        zeroBigInt
       );
 
-      if (totalBorrow > BigInt(0)) {
-        const collateralToken = getTokenInfo(item.inputToken.id).decimals;
-        const borrowToken = getTokenInfo(item.borrowedToken.id).decimals;
-        const isBig = collateralToken >= borrowToken;
-        const decimalsPow = BigInt(
-          10 **
-            (isBig
-              ? collateralToken - borrowToken
-              : borrowToken - collateralToken)
-        );
+      if (totalBorrow > zeroBigInt) {
         _showList.map((showItem) => {
           showItem.borrow_percent =
             (formatTokenValue(showItem.borrow_amount, item.borrowedToken.id) *
               100) /
             formatTokenValue(totalBorrow, item.borrowedToken.id);
 
-          const factorVal =
-            (showItem.collateral_amount *
-              pairPrice *
-              BigInt(100) *
-              (isBig ? BigInt(1) : decimalsPow)) /
-            showItem.borrow_amount /
-            oraclePriceScale /
-            (isBig ? decimalsPow : BigInt(1));
-          showItem.health_factor =
-            factorVal > BigInt(0) ? 1e4 / Number(factorVal) : 0;
+          showItem.health_factor = getPositionHealth(
+            item.inputToken.id,
+            item.borrowedToken.id,
+            pairPrice,
+            showItem.collateral_amount,
+            showItem.borrow_amount
+          );
         });
 
         setShowList(
@@ -71,10 +64,8 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
     getPrice();
   }, [item, marketUsers]);
 
-  const itemsPerPage = 5;
-  const { currentPage } = usePagination(showList.length, itemsPerPage);
-
   // Calculate the current page data slice
+  const itemsPerPage = 5;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentPageData = showList.slice(startIndex, startIndex + itemsPerPage);
 
@@ -167,7 +158,6 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
                       )}
                       token={getTokenInfo(item.borrowedToken.id).symbol}
                     />
-                    x
                   </div>
                 </td>
 
@@ -190,10 +180,16 @@ const BorrowersMoreTable: React.FC<IMarketUserProps> = ({
           </tbody>
         </table>
         <div className="w-full text-[14px] flex justify-start py-10 px-6">
-          <Pagination totalItems={showList.length} />
+          <Pagination
+            totalItems={showList.length}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
       </div>
     </div>
   );
 };
+
 export default BorrowersMoreTable;

@@ -1,19 +1,29 @@
 import { parseEther } from "ethers";
 import { type GetBalanceReturnType } from "@wagmi/core";
-import { IToken } from "@/types";
-import { WETH9Abi } from "@/app/abi/WETH9Abi";
-import { MarketsAbi } from "@/app/abi/MarketsAbi";
-import { BundlerAbi } from "@/app/abi/BundlerAbi";
-import { Permit2Abi } from "@/app/abi/Permit2Abi";
-import { MulticallAbi } from "@/app/abi/Multicall";
+import { ILeaderDetail, IToken } from "@/types";
+import { WETH9Abi } from "@/abi/WETH9Abi";
+import { MarketsAbi } from "@/abi/MarketsAbi";
+import { BundlerAbi } from "@/abi/BundlerAbi";
+import { Permit2Abi } from "@/abi/Permit2Abi";
+import { MulticallAbi } from "@/abi/Multicall";
+import { LoopStrategyAbi } from "@/abi/LoopStrategyAbi";
+
+export const DayInSec = 24 * 60 * 60;
 
 export const apyDivider = 1e2;
 export const WAD = BigInt(1e18);
+export const zeroBigInt = BigInt(0);
 export const virtualAssets = BigInt(1);
 export const moreTolerance = BigInt(100);
 export const virtualShares = BigInt(1e6);
 export const apyMultiplier = BigInt(1e4);
 export const oraclePriceScale = parseEther(WAD.toString());
+
+// set maxAprRangeGap% reduced value of LLTV
+export const maxAprRangeGap = 0.05; // 5%
+
+// set Vault's max withdrawable percent per day
+export const vaultDailyWithdraw = 10; // 10% of totalSupply
 
 export const contracts = {
   MORE_MARKETS: "0xD6EEb3BD77F9b5eD185cA32526751eC2680AeF06",
@@ -82,7 +92,13 @@ export const initBalance: GetBalanceReturnType = {
   decimals: 18,
   formatted: "0",
   symbol: "",
-  value: BigInt(0),
+  value: zeroBigInt,
+};
+
+export const initLeaderInfo: ILeaderDetail = {
+  supplyUSD: 0,
+  borrowUSD: 0,
+  collateralUSD: 0,
 };
 
 export const marketsInstance = {
@@ -117,6 +133,8 @@ export const gasLimit = "0.8";
 export const blacklistedVaults: string[] = [
   "0xeabddabfe3d118092a4bbaf3c13bd923bc8f134e",
 ];
+
+export const menus = ["Earn", "Borrow", "Leaderboard"];
 
 export const enum MoreAction {
   GENERAL = "general",

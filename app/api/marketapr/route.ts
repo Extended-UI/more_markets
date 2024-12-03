@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 import { NextResponse, NextRequest } from "next/server";
 import { IMarketApr } from "@/types";
+import { DayInSec } from "@/utils/const";
 
 interface IMarketAprItem extends IMarketApr {
   count: number;
@@ -13,8 +14,6 @@ interface IMarketAprRow {
   apr_time: string;
   marketid: string;
 }
-
-const DayInSec = 86400;
 const minInSec = 60;
 
 let connection: mysql.Connection | null;

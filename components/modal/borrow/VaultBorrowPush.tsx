@@ -8,7 +8,7 @@ import MoreButton from "../../moreButton/MoreButton";
 import TokenAmount from "@/components/token/TokenAmount";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { IBorrowPosition } from "@/types";
-import { contracts, MoreAction } from "@/utils/const";
+import { contracts, MoreAction, zeroBigInt } from "@/utils/const";
 import {
   getTimestamp,
   getTokenInfo,
@@ -30,6 +30,7 @@ import {
 } from "@/utils/contract";
 
 interface Props extends IBorrowPosition {
+  useFlow: boolean;
   supplyAmount: string;
   borrowAmount: string;
   onlyBorrow?: boolean;
@@ -39,6 +40,7 @@ interface Props extends IBorrowPosition {
 
 const VaultBorrowPush: React.FC<Props> = ({
   item,
+  useFlow,
   onlyBorrow,
   supplyAmount,
   borrowAmount,
@@ -52,7 +54,7 @@ const VaultBorrowPush: React.FC<Props> = ({
   const [hasApprove, setHasApprove] = useState(false);
   const [hasPermit, setHasPermit] = useState(false);
   const [permitNonce, setPermitNonce] = useState(0);
-  const [authorizeNonce, setAuthorizeNonce] = useState(BigInt(0));
+  const [authorizeNonce, setAuthorizeNonce] = useState(zeroBigInt);
 
   const supplyToken = getTokenInfo(item.inputToken.id);
   const borrowToken = getTokenInfo(item.borrowedToken.id);
@@ -65,7 +67,7 @@ const VaultBorrowPush: React.FC<Props> = ({
     borrowToken.decimals
   );
 
-  const collateralFlow = isFlow(item.inputToken.id);
+  const collateralFlow = isFlow(item.inputToken.id) && useFlow;
   const isFlowWallet = connector
     ? connector.name.toLowerCase() == "flow wallet"
     : false;
@@ -89,7 +91,7 @@ const VaultBorrowPush: React.FC<Props> = ({
             getAuthorizeNonce(userAddress),
             checkAuthorized(userAddress),
           ])
-        : [0, BigInt(0), BigInt(0), false];
+        : [0, zeroBigInt, zeroBigInt, false];
 
       setHasAuth(authInfo);
       setPermitNonce(nonce);
@@ -183,6 +185,7 @@ const VaultBorrowPush: React.FC<Props> = ({
         supplyTokenAmount,
         borrowTokenAmount,
         permitNonce,
+        useFlow,
         onlyBorrow ? true : false,
         isFlowWallet,
         item

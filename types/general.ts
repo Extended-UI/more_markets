@@ -118,3 +118,9 @@ export interface IRewardClaim {
   amount: string;
   proof: string[];
 }
+
+export interface ILeaderDetail {
+  supplyUSD: number,
+  borrowUSD: number,
+  collateralUSD: number
+}

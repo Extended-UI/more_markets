@@ -1,7 +1,9 @@
 "use client";
-import Link from "next/link";
+
 import { FC } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { menus } from "@/utils/const";
 
 const Menu: FC = () => {
   const pathname = usePathname();
@@ -9,30 +11,19 @@ const Menu: FC = () => {
 
   return (
     <div className="flex space-x-16 text-[16px] mt-5">
-      {/* <Link
-        href="/easy-mode"
-        className={`${
-          pathNamed.includes("/easy-mode") ? "glowing-text-primary !pb-5" : ""
-        } hover:text-primary`}
-      >
-        Easy Mode
-      </Link> */}
-      <Link
-        href="/earn"
-        className={`${
-          pathNamed.includes("/earn") ? "glowing-text-primary !pb-5" : ""
-        } hover:text-primary`}
-      >
-        Earn
-      </Link>
-      <Link
-        href="/borrow"
-        className={`${
-          pathNamed.includes("/borrow") ? "glowing-text-secondary !pb-5" : ""
-        } hover:text-secondary`}
-      >
-        Borrow
-      </Link>
+      {menus.map((menu) => (
+        <Link
+          key={menu}
+          href={`/${menu.toLowerCase()}`}
+          className={`${
+            pathNamed.includes(menu.toLowerCase())
+              ? "glowing-text-primary !pb-5"
+              : ""
+          } hover:text-primary`}
+        >
+          {menu}
+        </Link>
+      ))}
     </div>
   );
 };

@@ -1,11 +1,9 @@
 "use client";
 
-import axios from "axios";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { config } from "@/utils/wagmi";
-import { CHAINALYSIS_KEY } from "@/utils/const";
 
 export const WalletConnect = () => {
   return (
@@ -19,33 +17,16 @@ export const WalletConnect = () => {
         mounted,
       }) => {
         let unsafe = false;
-        // if (account) {
-        //   axios
-        //     .get(
-        //       "https://public.chainalysis.com/api/v1/address/" +
-        //         account.address,
-        //       {
-        //         headers: {
-        //           Accept: "application/json",
-        //           "X-API-Key": CHAINALYSIS_KEY,
-        //         },
-        //       }
-        //     )
-        //     .then((resp) => {
-        //       const respData = resp.data;
-        //       console.log(respData, resp);
-        //       if (
-        //         !(
-        //           respData.identifications &&
-        //           respData.identifications.length == 0
-        //         )
-        //       )
-        //         unsafe = true;
-        //     })
-        //     .catch((err) => {
-        //       console.log(err);
-        //     });
-        // }
+        if (account) {
+          fetch("/api/chainalysis?account=" + account.address, {
+            method: "GET",
+            headers: {
+              "content-type": "application/json",
+            },
+          })
+            .then((resp) => resp.json())
+            .then((resp) => (unsafe = resp.unsafe));
+        }
 
         return (
           <div

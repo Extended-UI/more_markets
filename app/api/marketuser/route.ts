@@ -18,7 +18,7 @@ const initConnection = async (): Promise<mysql.Connection> => {
 };
 
 export async function GET(req: NextRequest, res: NextResponse) {
-  const connection = await initConnection();
+  // const connection = await initConnection();
 
   // const marketid = req.nextUrl.searchParams.get("marketid");
   // const query = `SELECT user_address, collateral_amount, borrow_amount FROM market_users WHERE market_id = '${marketid}'`;
