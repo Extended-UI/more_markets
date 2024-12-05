@@ -17,20 +17,9 @@ import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
 import { maxAprRangeGap, zeroBigInt } from "@/utils/const";
 import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 import { getPositions, getBorrowedAmount } from "@/utils/contract";
-// import HoverCardComp from "../hoverCard/HoverCard";
-import {
-  GraphPosition,
-  BorrowPosition,
-  BorrowMarket,
-  IBorrowMarketProps,
-} from "@/types";
+import { BorrowPosition, BorrowMarket, IBorrowMarketProps } from "@/types";
 
-interface Props extends IBorrowMarketProps {
-  // positions: GraphPosition[];
-}
-
-const LoanMoreTable: React.FC<Props> = ({
-  // positions,
+const LoanMoreTable: React.FC<IBorrowMarketProps> = ({
   borrowMarkets,
   updateInfo,
 }) => {
@@ -41,48 +30,6 @@ const LoanMoreTable: React.FC<Props> = ({
   const goToDetail = (item: BorrowMarket) => {
     router.push("/borrow/" + item.id);
   };
-
-  // useEffect(() => {
-  //   const initMarkets = async () => {
-  //     if (positions && borrowMarkets && borrowMarkets.length > 0) {
-  //       const promises = borrowMarkets.map(async (marketItem) => {
-  //         const selPositions = positions.filter(
-  //           (position) => position.market.id == marketItem.id
-  //         );
-
-  //         if (selPositions.length > 0) {
-  //           let totalLoan = zeroBigInt;
-  //           let totalCollateral = zeroBigInt;
-
-  //           for (const selPosition of selPositions) {
-  //             if (selPosition.id.includes("-BORROWER-")) {
-  //               for (const borrow of selPosition.borrows) {
-  //                 totalLoan += BigInt(borrow.amount);
-  //               }
-  //             } else if (selPosition.id.includes("-COLLATERAL-")) {
-  //               totalCollateral += BigInt(selPosition.balance);
-  //             }
-  //           }
-
-  //           return {
-  //             ...marketItem,
-  //             loan: totalLoan,
-  //             collateral: totalCollateral,
-  //           } as BorrowPosition;
-  //         }
-  //       });
-
-  //       const borrowMarketList = (await Promise.all(promises))
-  //         .filter((item) => item !== undefined)
-  //         .filter(
-  //           (item) => item.collateral > zeroBigInt && item.loan > zeroBigInt
-  //         );
-  //       setBorrowPositions(borrowMarketList);
-  //     }
-  //   };
-
-  //   initMarkets();
-  // }, [userAddress, positions, borrowMarkets]);
 
   useEffect(() => {
     const initMarkets = async () => {

@@ -2,7 +2,7 @@ import _ from "lodash";
 import mysql from "mysql2/promise";
 import { parseEther } from "ethers";
 import { NextResponse, NextRequest } from "next/server";
-import { DayInSec } from "@/utils/const";
+import { DayInSec, zeroBigInt } from "@/utils/const";
 import { IVaultApr, IVaultProgram } from "@/types";
 
 interface IVaultAprItem extends IVaultApr {
@@ -91,7 +91,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
               : null;
           })
         )
-          .reduce((memo, boxAmount) => (memo += boxAmount), BigInt(0))
+          .reduce((memo, boxAmount) => (memo += boxAmount), zeroBigInt)
           .toString(),
         total_shares: shareItem
           ? BigInt(shareItem.total_amount).toString()

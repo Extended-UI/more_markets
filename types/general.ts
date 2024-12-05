@@ -1,5 +1,5 @@
-import { BorrowMarket } from "./borrowMarket";
-import { BorrowPosition } from "./borrowPosition";
+import { BorrowMarket } from "./borrow";
+import { BorrowPosition } from "./borrow";
 import { InvestmentData } from "./investmentData";
 import { MoreAction } from "@/utils/const";
 
@@ -120,7 +120,22 @@ export interface IRewardClaim {
 }
 
 export interface ILeaderDetail {
-  supplyUSD: number,
-  borrowUSD: number,
-  collateralUSD: number
+  supplyUSD: number;
+  borrowUSD: number;
+  collateralUSD: number;
+}
+
+export interface ILeaderUser extends ILeaderDetail {
+  user: string;
+}
+
+export interface ITokenPrice {
+  token: string;
+  price: number;
+}
+
+export interface IUserReward {
+  user: string;
+  amount: string;
+  token: string;
 }

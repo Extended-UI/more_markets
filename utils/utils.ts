@@ -16,6 +16,7 @@ import {
   IVaultApy,
   IVaultAprItem,
   IRewardClaim,
+  IUserReward,
 } from "@/types";
 import {
   tokens,
@@ -217,6 +218,20 @@ export const fetchVaultAprs = async (
   );
   const vaultAprList = await fetchResult.json();
   return vaultAprList.vaultaprs;
+};
+
+export const fetchBoxUsers = async (): Promise<{
+  boxUsers: IUserReward[];
+  vaultRewards: IUserReward[];
+}> => {
+  const fetchResult = await fetch("/api/boxreward", {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+  const parsedResult = await fetchResult.json();
+  return parsedResult;
 };
 
 export const fetchMarketAprs = async (

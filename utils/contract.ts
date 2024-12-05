@@ -29,6 +29,7 @@ import {
   InvestmentData,
   IRewardClaim,
   ILeaderDetail,
+  ITokenPrice,
 } from "../types";
 import {
   contracts,
@@ -373,6 +374,68 @@ export const getLoopWithdraw = async (assets: bigint): Promise<bigint[]> => {
   });
 
   return withdrawInfo as unknown as bigint[];
+};
+
+export const getTokenPrices = async (): Promise<ITokenPrice[]> => {
+  // token prices
+  let reqs: any[] = [
+    {
+      address: getTokenInfo(contracts.WNATIVE).oracle as `0x${string}`,
+      abi: OracleAbi,
+      functionName: "decimals",
+      args: [],
+    },
+    {
+      address: getTokenInfo(contracts.WNATIVE).oracle as `0x${string}`,
+      abi: OracleAbi,
+      functionName: "latestAnswer",
+      args: [],
+    },
+  ];
+  for (const tokenAddr in tokens) {
+    if (isFlow(tokenAddr)) continue;
+
+    reqs.push({
+      address: tokens[tokenAddr].oracle as `0x${string}`,
+      abi: OracleAbi,
+      functionName: "price",
+      args: [],
+    });
+  }
+
+  const results = await readContracts(config, {
+    contracts: reqs,
+  });
+
+  // init token prices
+  let tokenPrices: ITokenPrice[] = [];
+  {
+    const decimalVal = Number(results[0].result);
+    const answerVal = results[1].result as bigint;
+    const flowPrice = parseFloat(formatUnits(answerVal, decimalVal));
+
+    let ii = 2;
+    for (const tokenAddr in tokens) {
+      if (isFlow(tokenAddr)) {
+        tokenPrices.push({
+          token: tokenAddr,
+          price: flowPrice,
+        });
+      } else {
+        const priceRatio = parseFloat(
+          formatUnits(results[ii].result as bigint, 36)
+        );
+        tokenPrices.push({
+          token: tokenAddr,
+          price: priceRatio == 0 ? flowPrice : flowPrice / priceRatio,
+        });
+      }
+
+      ii++;
+    }
+  }
+
+  return tokenPrices;
 };
 
 export const getTokenPrice = async (token: string): Promise<number> => {

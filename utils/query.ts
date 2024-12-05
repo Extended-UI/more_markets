@@ -117,3 +117,34 @@ export const marketFilterQuery = (marketId: string): DocumentNode => {
     }
   `;
 };
+
+export const leaderboardQuery = (): DocumentNode => {
+  return gql`
+    {
+      accounts(first: 1000) {
+        id
+        positions(first: 100) {
+          id
+          market {
+            totalSupply
+            totalSupplyShares
+            inputToken {
+              id
+            }
+            borrowedToken {
+              id
+            }
+          }
+          balance
+          shares
+          repays {
+            amount
+          }
+          borrows {
+            amount
+          }
+        }
+      }
+    }
+  `;
+};
