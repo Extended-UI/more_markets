@@ -31,6 +31,7 @@ import {
   apyDivider,
   oraclePriceScale,
   zeroBigInt,
+  deprecatedMarkets,
 } from "./const";
 
 const errorDecoder = ErrorDecoder.create();
@@ -444,4 +445,8 @@ export const getUtilization = (
       ? 0
       : Number((totalBorrow * apyMultiplier) / totalSupply);
   return utilization / apyDivider;
+};
+
+export const isDeprecatedMarket = (marketId: string): boolean => {
+  return deprecatedMarkets.indexOf(marketId) >= 0;
 };

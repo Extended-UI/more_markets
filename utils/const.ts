@@ -135,6 +135,10 @@ export const vaultIds = [
 export const marketIds = [
   "0x3dca1854528f8a9bff744889198eb07ceacdfe25937450965e62103cefc69aa5",
   "0x2ae0c40dc06f58ff0243b44116cd48cc4bdab19e2474792fbf1f413600ceab3a",
+  "0xc859b2fba2480766050b3046a69f1694e7236f9970a519bad0b193583843a09c",
+];
+export const deprecatedMarkets = [
+  "0x2ae0c40dc06f58ff0243b44116cd48cc4bdab19e2474792fbf1f413600ceab3a",
 ];
 export const curators: { [key: string]: string } = {
   "0xb37a5ba4060d6bfd00a3bfcb235bb596f13932bd": "Tentacle Labs",

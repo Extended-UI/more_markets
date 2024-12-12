@@ -15,9 +15,13 @@ import PositionLTVDetail from "../details/PositionLTVDetail";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import VaultWithdrawBorrow from "../modal/withdrawBorrow/VaultWithdrawBorrow";
 import { maxAprRangeGap, zeroBigInt } from "@/utils/const";
-import { formatTokenValue, getPremiumLltv } from "@/utils/utils";
 import { getPositions, getBorrowedAmount } from "@/utils/contract";
 import { BorrowPosition, BorrowMarket, IBorrowMarketProps } from "@/types";
+import {
+  formatTokenValue,
+  getPremiumLltv,
+  isDeprecatedMarket,
+} from "@/utils/utils";
 
 const LoanMoreTable: React.FC<IBorrowMarketProps> = ({
   borrowMarkets,
@@ -175,17 +179,19 @@ const LoanMoreTable: React.FC<IBorrowMarketProps> = ({
                           className="ml-8 flex gap-5"
                           onClick={(event) => event.stopPropagation()}
                         >
-                          <ButtonDialog color="secondary" buttonText="Add">
-                            {(closeModal) => (
-                              <div className="w-full h-full">
-                                <VaultAdd
-                                  item={item}
-                                  closeModal={closeModal}
-                                  updateInfo={updateInfo}
-                                />
-                              </div>
-                            )}
-                          </ButtonDialog>
+                          {!isDeprecatedMarket(item.id) && (
+                            <ButtonDialog color="secondary" buttonText="Add">
+                              {(closeModal) => (
+                                <div className="w-full h-full">
+                                  <VaultAdd
+                                    item={item}
+                                    closeModal={closeModal}
+                                    updateInfo={updateInfo}
+                                  />
+                                </div>
+                              )}
+                            </ButtonDialog>
+                          )}
                           <ButtonDialog color="grey" buttonText="Withdraw">
                             {(closeModal) => (
                               <div className="w-full h-full">
@@ -220,21 +226,23 @@ const LoanMoreTable: React.FC<IBorrowMarketProps> = ({
                           className="ml-8 flex gap-5"
                           onClick={(event) => event.stopPropagation()}
                         >
-                          <ButtonDialog
-                            color="secondary"
-                            buttonText="Borrow More"
-                          >
-                            {(closeModal) => (
-                              <div className="w-full h-full">
-                                <VaultBorrow
-                                  item={item}
-                                  onlyBorrow={true}
-                                  updateInfo={updateInfo}
-                                  closeModal={closeModal}
-                                />
-                              </div>
-                            )}
-                          </ButtonDialog>
+                          {!isDeprecatedMarket(item.id) && (
+                            <ButtonDialog
+                              color="secondary"
+                              buttonText="Borrow More"
+                            >
+                              {(closeModal) => (
+                                <div className="w-full h-full">
+                                  <VaultBorrow
+                                    item={item}
+                                    onlyBorrow={true}
+                                    updateInfo={updateInfo}
+                                    closeModal={closeModal}
+                                  />
+                                </div>
+                              )}
+                            </ButtonDialog>
+                          )}
                           <ButtonDialog color="grey" buttonText="Repay">
                             {(closeModal) => (
                               <div className="w-full h-full">

@@ -7,13 +7,13 @@ import FormatPourcentage from "../tools/formatPourcentage";
 import FormatTokenMillion from "../tools/formatTokenMillion";
 import FormatTwoPourcentage from "../tools/formatTwoPourcentage";
 import { BorrowPosition, IBorrowMarketProp } from "@/types";
-import HoverCardComp from "../hoverCard/HoverCard";
 import { maxAprRangeGap } from "@/utils/const";
 import {
   formatTokenValue,
   getPremiumLltv,
   getAvailableLiquidity,
   getUtilization,
+  isDeprecatedMarket,
 } from "@/utils/utils";
 
 interface Prop extends IBorrowMarketProp {
@@ -22,6 +22,8 @@ interface Prop extends IBorrowMarketProp {
 
 const BorrowMoreTableRow: React.FC<Prop> = ({ item, index, updateInfo }) => {
   const { address: userAddress } = useAccount();
+
+  if (isDeprecatedMarket(item.id)) return null;
 
   return (
     <>
