@@ -113,8 +113,8 @@ const BorrowDetailPage: React.FC = () => {
           router.push("/borrow");
         }
       } catch (err) {
-        console.log(err);
-        // router.push("/borrow");
+        // console.log(err);
+        router.push("/borrow");
       }
     };
 
