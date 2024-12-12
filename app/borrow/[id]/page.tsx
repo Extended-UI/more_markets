@@ -82,7 +82,7 @@ const BorrowDetailPage: React.FC = () => {
               ? convertAprToApy(aprItem.supply_prem_apr, aprDate)
               : 0,
             totalCollateral: formatTokenValue(
-              BigInt(fetchedUsers.collateral),
+              BigInt(fetchedUsers.collateral ? fetchedUsers.collateral : "0"),
               marketInfo.inputToken.id
             ),
           } as BorrowMarket);

@@ -28,10 +28,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
     `SELECT SUM(collateral_amount) as collateral_amount from market_users WHERE market_id = '${marketid}'`
   );
 
-  const selCollateral = (sumRows as any[])[0].collateral_amount;
-
   return NextResponse.json({
     users: rows as IMarketUserRow[],
-    collateral: selCollateral ? selCollateral.toString() : "0",
+    collateral: (sumRows as any[])[0].collateral_amount as string,
   });
 }
