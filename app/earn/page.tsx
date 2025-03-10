@@ -58,7 +58,7 @@ const EarnPage: React.FC = () => {
             vaultName: vault.name,
             assetAddress: vault.asset.id,
             netAPY: getVaultApyInfo(aprItem, aprDates),
-            programs: aprItem?.programs,
+            programs: aprItem ? aprItem.programs : [],
             totalDeposits: formatTokenValue(deposited, vault.asset.id),
             curator: vault.curator ? vault.curator.id : "",
             collateral: uniq(activeCollaterals),

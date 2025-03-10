@@ -124,7 +124,7 @@ const EarnDetailPage: React.FC = () => {
               vaultName: fetchedVault.name,
               assetAddress: fetchedVault.asset.id,
               netAPY: getVaultApyInfo(aprItem, aprDate),
-              programs: aprItem?.programs,
+              programs: aprItem ? aprItem.programs : [],
               userDeposits: formatTokenValue(userAssets, fetchedVault.asset.id),
               userShares: vaultShares.value,
               totalDeposits: formatTokenValue(
