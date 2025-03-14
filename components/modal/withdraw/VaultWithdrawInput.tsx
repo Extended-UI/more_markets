@@ -12,7 +12,7 @@ import {
   getTokenInfo,
   formatNumberLocale,
   notify,
-  validAmountWithBool,
+  validInputAmount,
   fetchVaultWithdraw,
   formatTokenValue,
 } from "@/utils/utils";
@@ -61,8 +61,9 @@ const VaultWithdrawInput: React.FC<Props> = ({
     if (Number(withdraw) >= item.userDeposits) {
       setUseMax(true);
       setWithdraw(item.userDeposits.toString());
+    } else {
+      setUseMax(false);
     }
-    else setUseMax(false);
   }, [withdrawable, withdraw]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,12 +77,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
   };
 
   const handleWithdraw = () => {
-    if (validAmountWithBool(withdraw, useMax)) {
-      if (Number(withdraw) == 0) {
-        notify(errMessages.invalid_amount);
-        return;
-      }
-  
+    if (validInputAmount(withdraw)) {
       if (!useMax && Number(withdraw) > item.userDeposits) {
         notify(errMessages.withdraw_exceeded);
       } else {
