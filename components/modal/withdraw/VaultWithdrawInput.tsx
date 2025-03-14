@@ -7,7 +7,7 @@ import FormatTwoPourcentage from "@/components/tools/formatTwoPourcentage";
 import { IInvestment } from "@/types";
 import { errMessages } from "@/utils/errors";
 import { getVaultDetail } from "@/utils/contract";
-import { zeroBigInt, vaultDailyWithdraw } from "@/utils/const";
+import { zeroBigInt } from "@/utils/const";
 import {
   getTokenInfo,
   formatNumberLocale,
@@ -31,14 +31,12 @@ const VaultWithdrawInput: React.FC<Props> = ({
   setUseMax,
 }) => {
   const [withdraw, setWithdraw] = useState("");
-  const [showMaxMsg, setShowMaxMsg] = useState(false);
   const [withdrawable, setWithdrawable] = useState(-1);
 
   useEffect(() => {
     const fetchWithdraw = async () => {
       const withdrawShares = await fetchVaultWithdraw(item.vaultId);
-      const dailyWithdrawLimit =
-        (item.totalDeposits * vaultDailyWithdraw) / 1e2;
+      const withdrawLimit = item.totalDeposits;
       if (withdrawShares > zeroBigInt) {
         const withdrawnAmount = formatTokenValue(
           (await getVaultDetail(item.vaultId, "convertToAssets", [
@@ -47,15 +45,12 @@ const VaultWithdrawInput: React.FC<Props> = ({
           item.assetAddress
         );
         const withdrawCap =
-          withdrawnAmount >= dailyWithdrawLimit
+          withdrawnAmount >= withdrawLimit
             ? 0
-            : dailyWithdrawLimit - withdrawnAmount;
+            : withdrawLimit - withdrawnAmount;
         setWithdrawable(withdrawCap);
-        if (withdrawCap == 0) setShowMaxMsg(true);
-        else setShowMaxMsg(false);
       } else {
-        setWithdrawable(dailyWithdrawLimit);
-        setShowMaxMsg(false);
+        setWithdrawable(withdrawLimit);
       }
     };
 
@@ -63,16 +58,10 @@ const VaultWithdrawInput: React.FC<Props> = ({
   }, [item]);
 
   useEffect(() => {
-    if (
-      withdraw.length > 0 &&
-      (Number(withdraw) == 0 || Number(withdraw) > withdrawable)
-    ) {
-      setShowMaxMsg(true);
-    } else {
-      setShowMaxMsg(false);
+    if (Number(withdraw) >= item.userDeposits) {
+      setUseMax(true);
+      setWithdraw(item.userDeposits.toString());
     }
-
-    if (Number(withdraw) >= item.userDeposits) setUseMax(true);
     else setUseMax(false);
   }, [withdrawable, withdraw]);
 
@@ -88,12 +77,15 @@ const VaultWithdrawInput: React.FC<Props> = ({
 
   const handleWithdraw = () => {
     if (validAmountWithBool(withdraw, useMax)) {
-      if (!showMaxMsg) {
-        if (!useMax && Number(withdraw) > item.userDeposits) {
-          notify(errMessages.withdraw_exceeded);
-        } else {
-          setAmount(withdraw);
-        }
+      if (Number(withdraw) == 0) {
+        notify(errMessages.invalid_amount);
+        return;
+      }
+  
+      if (!useMax && Number(withdraw) > item.userDeposits) {
+        notify(errMessages.withdraw_exceeded);
+      } else {
+        setAmount(withdraw);
       }
     } else {
       notify(errMessages.invalid_amount);
@@ -136,16 +128,6 @@ const VaultWithdrawInput: React.FC<Props> = ({
               Your Deposits: {formatNumberLocale(item.userDeposits)}{" "}
               {tokenInfo.symbol}
             </div>
-            {showMaxMsg && (
-              <div className="mt-8">
-                <div className="text-[16px] p-[20px] text-[#E0DFE3] bg-[#E51F201A] border border-dashed border-[#E51F20] leading-[24px] rounded-[8px]">
-                  The protocol is temporarily limiting withdrawals to protect
-                  all users from significant spontaneous drawdowns in liquidity.
-                  You can withdraw up to {withdrawable.toFixed(2)}{" "}
-                  {tokenInfo.symbol}.
-                </div>
-              </div>
-            )}
             <div className="flex justify-end mt-8">
               <div className="mr-5">
                 <MoreButton
@@ -159,8 +141,7 @@ const VaultWithdrawInput: React.FC<Props> = ({
                 className="text-2xl py-2"
                 text="Withdraw"
                 onClick={handleWithdraw}
-                color={showMaxMsg ? "grey" : "primary"}
-                disabled1={showMaxMsg}
+                color="primary"
               />
             </div>
           </div>
